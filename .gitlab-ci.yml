@@ -1,0 +1,25 @@
+variables:
+  TAGGER_IMAGE: 486234852809.dkr.ecr.us-east-1.amazonaws.com/ci/integrations-core:tagger
+  TAGGER_EMAIL: packages@datadoghq.com
+  TAGGER_NAME: ci.marketplace
+
+stages:
+  - release
+
+release-auto:
+  stage: release
+  image: $TAGGER_IMAGE
+  only:
+    - master
+  except:
+    - schedules
+  script:
+    - ddev --version
+    - ddev config set repos.marketplace `pwd`
+    - ddev config set repo marketplace
+    # ssh-agent performed in the main script to be persisted
+    - eval "$(ssh-agent -s)"
+    - ./.gitlab/release/git-auth.sh
+    # Prefix every line with a timestamp
+    - ./.gitlab/release/tag-release.sh 2>&1 | ts "[%H:%M:%S %Z]  "
+  tags: [ "runner:main", "size:large" ]
