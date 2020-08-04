@@ -1,0 +1,96 @@
+## All options defined here are available to all instances.
+#
+init_config:
+
+    ## @param service - string - optional
+    ## Attach the tag `service:<SERVICE>` to every metric, event, and service check emitted by this integration.
+    ##
+    ## Additionally, this sets the default `service` for every log source.
+    #
+    # service: <SERVICE>
+
+    ## @param min_collection_interval - number - required
+    ## This changes the collection interval of the check. For more information, see:
+    ## https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+    ##
+    ## Office 365 metrics are recommended on 300s intervals to prevent API throttling.
+    #
+    min_collection_interval: 300
+
+## Every instance is scheduled independent of the others.
+#
+instances:
+
+    ## @param tenant_id - string - required
+    ## Azure Active Directory Organization (Tenant) ID.
+    ## https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview
+    #
+  - tenant_id: <TENANT_ID>
+
+    ## @param client_id - string - required
+    ## Azure Active Directory app registration client ID
+    ## https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps
+    #
+    client_id: <CLIENT_ID>
+
+    ## @param client_secret - string - required
+    ## Azure Active Directory app registration client secret
+    ## https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps
+    #
+    client_secret: <CLIENT_SECRET>
+
+    ## @param username - string - optional - default: user@example.com
+    ## Office 365 user principal name (email address) for synthetic checks
+    #
+    # username: user@example.com
+
+    ## @param password - string - optional
+    ## Office 365 user password for synthetic checks
+    #
+    # password: <PASSWORD>
+
+    ## @param email_address - string - optional - default: email@example.com
+    ## Mailbox for synthetic email probe deliveries. Mailbox must be configured to
+    ## forward messages to 'probe@synth-rapdev.io'.
+    #
+    # email_address: email@example.com
+
+    ## @param enable_outlook - boolean - optional - default: True
+    ## Change to false to disable metric collection on Outlook
+    #
+    # enable_outlook: true
+
+    ## @param enable_onedrive - boolean - optional - default: True
+    ## Change to false to disable metric collection on OneDrive
+    #
+    # enable_onedrive: true
+
+    ## @param enable_sharepoint - boolean - optional - default: True
+    ## Change to false to disable metric collection on SharePoint
+    #
+    # enable_sharepoint: true
+
+    ## @param enable_skype - boolean - optional - default: True
+    ## Change to false to disable metric collection on Skype For Business
+    #
+    # enable_skype: true
+
+    ## @param enable_teams - boolean - optional - default: True
+    ## Change to false to disable metric collection on Teams
+    #
+    # enable_teams: true
+
+    ## @param enable_yammer - boolean - optional - default: True
+    ## Change to false to disable metric collection on Yammer
+    #
+    # enable_yammer: true
+
+    ## @param enable_synthetics - boolean - optional - default: True
+    ## Change to false to disable Office 365 synthetic checks
+    #
+    # enable_synthetics: true
+
+    ## @param enable_synthetic_email - boolean - optional - default: True
+    ## Change to false to disable Office 365 synthetic email checks     
+    #
+    # enable_synthetic_email: true

@@ -1,0 +1,31 @@
+{
+  "id": 20429523,
+  "name": "[Office365] - {{o365_app.name}} performance degraded at {{office.name}}",
+  "type": "query alert",
+  "query": "avg(last_4h):anomalies(avg:rapdev.o365.synthetic.response.time{*} by {o365_app,office,operation}, 'basic', 2, direction='above', alert_window='last_10m', interval=60, count_default_zero='true') >= 1",
+  "message": "{{#is_alert}}\nALERT - Performance degradation has been detected at {{office.name}} while testing the {{operation.name}} function for {{o365_app.name}}.  \n{{/is_alert}} \n\n{{#is_alert_recovery}} \nRECOVERED - Performance degradation has recovered at {{office.name}} while testing the {{operation.name}} function for {{o365_app.name}}.  \n{{/is_alert_recovery}}",
+  "tags": [
+    "env:office365"
+  ],
+  "options": {
+    "notify_audit": false,
+    "locked": false,
+    "timeout_h": 0,
+    "silenced": {},
+    "include_tags": true,
+    "no_data_timeframe": null,
+    "require_full_window": true,
+    "new_host_delay": 300,
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "escalation_message": "",
+    "threshold_windows": {
+      "recovery_window": "last_10m",
+      "trigger_window": "last_10m"
+    },
+    "thresholds": {
+      "critical": 1,
+      "critical_recovery": 0
+    }
+  }
+}

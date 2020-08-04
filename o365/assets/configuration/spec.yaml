@@ -1,0 +1,141 @@
+name: Office 365
+files:
+- name: o365.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+    - name: min_collection_interval
+      required: true
+      value:
+        example: 300
+        type: number
+      description: |
+        This changes the collection interval of the check. For more information, see:
+        https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+    
+        Office 365 metrics are recommended on 300s intervals to prevent API throttling.
+  - template: instances
+    options:
+      - name: tenant_id
+        required: true
+        multiple: false
+        value:
+          type: string
+        description: |
+          Azure Active Directory Organization (Tenant) ID.
+          https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview
+      - name: client_id
+        required: true
+        multiple: false
+        value:
+          type: string
+        description: |
+          Azure Active Directory app registration client ID
+          https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps
+      - name: client_secret
+        required: true
+        multiple: false
+        value:
+          type: string
+          secret: true
+        description: |
+          Azure Active Directory app registration client secret
+          https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps
+      - name: username
+        required: false
+        multiple: false
+        value:
+          example: user@example.com
+          type: string
+        description: |
+          Office 365 user principal name (email address) for synthetic checks
+      - name: password
+        required: false
+        multiple: false
+        value:
+          type: string
+          secret: true
+        description: |
+          Office 365 user password for synthetic checks
+      - name: email_address
+        required: false
+        multiple: false
+        value:
+          example: email@example.com
+          type: string
+        description: |
+          Mailbox for synthetic email probe deliveries. Mailbox must be configured to
+          forward messages to 'probe@synth-rapdev.io'.
+      - name: enable_outlook
+        required: false
+        multiple: false
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          Change to false to disable metric collection on Outlook
+      - name: enable_onedrive
+        required: false
+        multiple: false
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          Change to false to disable metric collection on OneDrive
+      - name: enable_sharepoint
+        required: false
+        multiple: false
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          Change to false to disable metric collection on SharePoint
+      - name: enable_skype
+        required: false
+        multiple: false
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          Change to false to disable metric collection on Skype For Business
+      - name: enable_teams
+        required: false
+        multiple: false
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          Change to false to disable metric collection on Teams
+      - name: enable_yammer
+        required: false
+        multiple: false
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          Change to false to disable metric collection on Yammer
+      - name: enable_synthetics
+        required: false
+        multiple: false
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          Change to false to disable Office 365 synthetic checks
+      - name: enable_synthetic_email
+        required: false
+        multiple: false
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          Change to false to disable Office 365 synthetic email checks     
