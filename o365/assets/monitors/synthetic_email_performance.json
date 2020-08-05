@@ -1,11 +1,12 @@
 {
   "id": 20429599,
-  "name": "[Office365] Synthetic Email checks degraded to/from {{region.name}}",
+  "name": "[Office 365] Synthetic Email checks degraded to/from {{region.name}}",
   "type": "query alert",
   "query": "avg(last_4h):anomalies(avg:rapdev.o365.synthetic.email.rtt{*} by {region}, 'basic', 2, direction='above', alert_window='last_15m', interval=60, count_default_zero='true') >= 1",
   "message": "{{#is_alert}}\nALERT - Performance degradation has been detected for emails being sent to/from {{region.name}}   \n{{/is_alert}} \n\n{{#is_alert_recovery}} \nRESTORED - Performance degradation has been restored for emails being sent to/from {{region.name}}   \n{{/is_alert_recovery}}",
   "tags": [
-    "env:office365"
+    "env:office365",
+    "integration:rapdev-o365"
   ],
   "options": {
     "notify_audit": false,
@@ -27,5 +28,8 @@
       "critical": 1,
       "critical_recovery": 0
     }
+  },
+  "recommended_monitor_metadata": {
+    "description": "Alert when synthetic email degredation occurs for your Office 365 integration."
   }
 }

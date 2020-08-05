@@ -1,11 +1,12 @@
 {
   "id": 20429746,
-  "name": "[Office365] - {{o365_app.name}} check failed for {{office.name}}",
+  "name": "[Office 365] - {{o365_app.name}} check failed for {{office.name}}",
   "type": "metric alert",
   "query": "avg(last_5m):avg:rapdev.o365.synthetic.response{*} by {o365_app,office,operation} < 1",
   "message": "{{#is_alert}}\nALERT - Synthetic check for {{o365_app.name}} failed from {{office.name}} \n{{/is_alert}} \n\n{{#is_alert_recovery}}\nRECOVERED - Synthetic check for {{o365_app.name}} recovered from {{office.name}} \n{{/is_alert_recovery}}",
   "tags": [
-    "env:office365"
+    "env:office365",
+    "integration:rapdev-o365"
   ],
   "options": {
     "notify_audit": false,
@@ -22,5 +23,8 @@
     "thresholds": {
       "critical": 1
     }
+  },
+  "recommended_monitor_metadata": {
+    "description": "Alert when synthetic application responses fail for your Office 365 integration."
   }
 }

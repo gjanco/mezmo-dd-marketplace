@@ -25,6 +25,10 @@ Below are some screenshots of the dashboard that is included with the integratio
 
 ## Setup
 
+### Datadog Integration Install
+
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365=1.0.0`
+
 ### Microsoft Office 365 Configuration
 
 The Microsoft Office 365 integration requires permissions managed through your organization's Azure Active Directory as well as a dedicated "integration user account" to perform synthetic operations.
