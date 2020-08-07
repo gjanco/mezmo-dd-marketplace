@@ -1,0 +1,28 @@
+name: Synthetic Email 
+files:
+- name: syntheticemail.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+    - name: min_collection_interval
+      required: true
+      value:
+        example: 300
+        type: number
+      description: |
+        This changes the collection interval of the check. For more information, see:
+        https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+    
+        Synthetic Email metrics are generated on 300s intervals
+  - template: instances
+    options:
+      - name: email_address
+        required: true
+        multiple: false
+        value:
+          example: email@example.com
+          type: string
+        description: |
+          Mailbox for synthetic email probe deliveries. Mailbox must be configured to
+          forward messages to 'probe@synth-rapdev.io'.

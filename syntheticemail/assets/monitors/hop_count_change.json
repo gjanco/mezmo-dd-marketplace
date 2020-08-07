@@ -1,0 +1,30 @@
+{
+  "id": 20430067,
+  "name": "[SyntheticEmail] Hop-count change detected from {{region.name}} to {{email.name}}",
+  "type": "query alert",
+  "query": "change(avg(last_5m),last_5m):avg:rapdev.syntheticemail.hops{*} by {region,email} > 0",
+  "message": "{{#is_alert}}\nALERT - Hop counts change detected on mailbox {{email.name}} for emails being sent to/from {{region.name}} \n{{/is_alert}}",
+  "tags": [
+    "env:synthetic-email",
+    "integration:rapdev-syntheticemail"
+  ],
+  "options": {
+    "notify_audit": false,
+    "locked": false,
+    "timeout_h": 0,
+    "silenced": {},
+    "include_tags": true,
+    "no_data_timeframe": null,
+    "require_full_window": true,
+    "new_host_delay": 300,
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "escalation_message": "",
+    "thresholds": {
+      "critical": 0
+    }
+  },
+  "recommended_monitor_metadata": {
+    "description": "Alert when SMTP relay hop count changes for monitored mailbox in the Synthetic Email integration."
+  }
+}
