@@ -1,0 +1,26 @@
+{
+	"id": 20790367,
+	"name": "Trek10 AWS Coverage Advisor - New Unmonited Metric Available",
+	"type": "event alert",
+	"query": "events('priority:all tags:new_rec_type:cust,new_rec_type:t10').rollup('count').last('4h') > 0",
+	"message": "{{#is_alert}}\nTrek10 has added a new CloudWatch metric to its database of recommended metrics to monitor. This new metric was also discovered in your Datadog account and the metric doesn't have a corresponding metric monitor. Please check out the dashboard https://app.datadoghq.com/dashboard/lists?q=coverage+advisor for the full report.\n\n\n<<insert your notification endpoint here>>\n\nTo see a sample of specific metrics added check: {{event.text}} \n\n{{/is_alert}}",
+	"tags": [
+		"integration:trek10-aws-coverage-advisor"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"thresholds": {
+			"critical": 0
+		},
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0
+	},
+	"recommended_monitor_metadata": {
+		"description": "Alert when Trek10 adds a new CloudWatch metric to its database that doesn't have a corresponding monitor (note this means the metric can have been long standing in the account)."
+	}
+}
