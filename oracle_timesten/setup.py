@@ -28,7 +28,7 @@ CHECKS_BASE_REQ = 'datadog-checks-base>=11.0.0'
 
 
 setup(
-    name='rapdev-oracle_timesten',
+    name='datadog-oracle_timesten',
     version=ABOUT['__version__'],
     description='Oracle TimesTen integration check',
     long_description=long_description,
