@@ -1,0 +1,117 @@
+## All options defined here are available to all instances.
+#
+init_config:
+
+    ## @param service - string - optional
+    ## Attach the tag `service:<SERVICE>` to every metric, event, and service check emitted by this integration.
+    ##
+    ## Additionally, this sets the default `service` for every log source.
+    #
+    # service: <SERVICE>
+
+## Every instance is scheduled independent of the others.
+#
+instances:
+
+    ## @param database - string - required
+    ## Oracle TimesTen database connection string
+    #
+  - database: 'master1:timestendirect'
+
+    ## @param username - string - required
+    ## Oracle TimesTen database username
+    #
+    username: datadog
+
+    ## @param password - string - required
+    ## Oracle TimesTen database password
+    #
+    password: datadog
+
+    ## @param hostname - string - required
+    ## Oracle TimesTen database hostname
+    #
+    hostname: 127.0.0.1
+
+    ## @param timesten_home - string - required
+    ## Oracle TimesTen client home path
+    #
+    timesten_home: '/u01/app/oratta/timesten/tt181'
+
+    ## @param endpoint - string - required
+    ## Datadog log intake API endpoint
+    #
+    endpoint: https://http-intake.logs.datadoghq.com/v1/input/
+
+    ## @param verbose_flag - integer - required
+    ## Verbosity flag
+    #
+    verbose_flag: 1
+
+    ## @param logs_flag - integer - required
+    ## Enable logs flag
+    #
+    logs_flag: 1
+
+    ## @param _re - object - required
+    ## Map of regex patterns for metric sampling
+    #
+    _re:
+        'Summary 0': '^Begin Snap:[ ]{1,}([0-9]{1,})[ ]{1,}([0-9- :.]{1,})$'
+        'Summary 1': '^End Snap:[ ]{1,}([0-9]{1,})[ ]{1,}([0-9- :.]{1,})$'
+        'Summary 2': '^Elapsed Time:[ ]{1,}([0-9]{1,})[ ]{1,}secs$'
+        'Memory Usage and Connections': '^([a-z._]{1,})[ ]{1,}([0-9]{1,})[ ]{1,}([0-9]{1,})[ ]{0,}$'
+        'Load Profile 0': '^([A-z %]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})$'
+        'Load Profile 1': '^([A-z %]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}[A-z %]{1,}[ ]{1,}[0-9.]{1,}$'
+        'Load Profile 2': '^[A-z %]{1,}[ ]{1,}[0-9.]{1,}[ ]{1,}([A-z %]{1,})[ ]{1,}([0-9.]{1,})$'
+        'Instance Efficiency Percentage (Target 100%)': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([A-z-._ %/]{1,})[ ]{1,}([0-9.]{1,})$'
+        'Statement Statistics': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+        'Transaction Statistics': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+        '1. SQL Sort by Executions': '^([0-9]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9]{1,})[ ]{1,}(.*)$'
+        '2. SQL Sort by Preparations': '^([0-9]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9]{1,})[ ]{1,}(.*)$'
+        '3. Top SQL Command Texts': '^([0-9]{1,})[ ]{1,}(.*)$'
+        'PL/SQL Memory Statistics': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.-]{1,})[ ]{1,}(ttPLSQLMemoryStats)$'
+        'Replication Statistics': '^([0-9/]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([A-z0-9/-:]{1,})$'
+        'Parallel Replication/AWT Statistics': '^([a-z.0-9_]{1,})[ ]{1,}([0-9-.]{1,})[ ]{1,}([0-9-.]{1,})[ ]{1,}([A-z0-9/-:]{1,})[ ]{1,}(v\$repstats) (view)$'
+        'Log Statistics': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+        'Log Holds': '^(.*) (ttLogHolds), (ttBookmark)$'
+        'CheckPoint Statistics': '^([A-z._ %-)(]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+        'Cache Group Statistics': ''
+        'Grid Statistics': ''
+        'DB Activity Statistics': '^([A-z._ %-)(]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+        'Latch Statistics': ''
+        'Lock Statistics': '^[ ]{1,}([A-z._ %-)(]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+        'XLA Information': ''
+        'Configuration Parameters': ''
+
+    ## @param tags - list of strings - optional
+    ## A list of tags to attach to every metric and service check emitted by this instance.
+    ##
+    ## Learn more about tagging at https://docs.datadoghq.com/tagging
+    #
+    # tags:
+    #   - <KEY_1>:<VALUE_1>
+    #   - <KEY_2>:<VALUE_2>
+
+    ## @param service - string - optional
+    ## Attach the tag `service:<SERVICE>` to every metric, event, and service check emitted by this integration.
+    ##
+    ## Overrides any `service` defined in the `init_config` section.
+    #
+    # service: <SERVICE>
+
+    ## @param min_collection_interval - integer - optional - default: 15
+    ## This changes the collection interval of the check. For more information, see:
+    ## https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+    #
+    min_collection_interval: 15
+
+    ## @param empty_default_hostname - boolean - optional - default: false
+    ## This forces the check to send metrics with no hostname.
+    ##
+    ## This is useful for cluster-level checks.
+    #
+    # empty_default_hostname: false
+
+
+

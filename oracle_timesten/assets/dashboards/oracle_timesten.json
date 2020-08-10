@@ -1,0 +1,1183 @@
+{
+    "author_info": {
+        "author_name": "RapDev"
+    },
+    "board_title": "Oracle TimesTen",
+    "description": "",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "DBName",
+            "prefix": "dbname"
+        },
+        {
+            "default": "*",
+            "name": "Host",
+            "prefix": "host"
+        }
+    ],
+    "widgets": [
+        {
+            "height": 9,
+            "tile_def": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "90"
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_yellow",
+                                "value": "99.9999999"
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": "99.9999999"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.CommandCacheHitPerc{$DBName,$Host}"
+                    }
+                ],
+                "viz": "query_value"
+            },
+            "title": true,
+            "title_align": "center",
+            "title_size": 16,
+            "title_text": "Command Cache Hits",
+            "type": "query_value",
+            "width": 20,
+            "x": -1,
+            "y": 21
+        },
+        {
+            "bgcolor": "white",
+            "font_size": "18",
+            "height": 5,
+            "html": "Efficiency Metrics",
+            "text_align": "center",
+            "tick": true,
+            "tick_edge": "bottom",
+            "tick_pos": "50%",
+            "type": "note",
+            "width": 42,
+            "x": 0,
+            "y": 14
+        },
+        {
+            "check": "oracle_timesten",
+            "group_by": [],
+            "grouping": "cluster",
+            "height": 12,
+            "tags": [
+                "*"
+            ],
+            "title": true,
+            "title_align": "center",
+            "title_size": 16,
+            "title_text": "TimesTen Connection Status",
+            "type": "check_status",
+            "width": 20,
+            "x": 22,
+            "y": 0
+        },
+        {
+            "height": 9,
+            "tile_def": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "90"
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_yellow",
+                                "value": "99.99999999"
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": "99.99999999"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.LockHitPerc{$DBName,$Host}"
+                    }
+                ],
+                "viz": "query_value"
+            },
+            "title": true,
+            "title_align": "center",
+            "title_size": 16,
+            "title_text": "Lock Hits",
+            "type": "query_value",
+            "width": 20,
+            "x": 22,
+            "y": 21
+        },
+        {
+            "height": 9,
+            "tile_def": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "90"
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_yellow",
+                                "value": "99.9999999"
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": "99.9999999"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.Non_ParseExecsPerc{$DBName,$Host}"
+                    }
+                ],
+                "viz": "query_value"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Non-Parse Executions",
+            "type": "query_value",
+            "width": 20,
+            "x": 0,
+            "y": 34
+        },
+        {
+            "height": 9,
+            "tile_def": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "90"
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_yellow",
+                                "value": "99.9999999"
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": "99.9999999"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.LogBufferNoWaitPerc{$DBName,$Host}"
+                    }
+                ],
+                "viz": "query_value"
+            },
+            "title": true,
+            "title_align": "center",
+            "title_size": 16,
+            "title_text": "No Wait Log Buffer",
+            "type": "query_value",
+            "width": 20,
+            "x": 22,
+            "y": 34
+        },
+        {
+            "height": 16,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(max:rapdev.oracle_timesten.SQL_Sort_by_Executions{$DBName,$Host} by {cmdtext}, 10, 'max', 'desc')"
+                    }
+                ],
+                "viz": "toplist"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Max SQL Sort by Executions",
+            "type": "toplist",
+            "width": 64,
+            "x": 67,
+            "y": 161
+        },
+        {
+            "bgcolor": "white",
+            "font_size": "16",
+            "height": 6,
+            "html": "SQL Statistics",
+            "text_align": "center",
+            "tick": true,
+            "tick_edge": "bottom",
+            "tick_pos": "50%",
+            "type": "note",
+            "width": 64,
+            "x": 67,
+            "y": 134
+        },
+        {
+            "height": 16,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(max:rapdev.oracle_timesten.SQL_Sort_by_Preparations{$DBName,$Host} by {cmdtext}, 10, 'max', 'desc')"
+                    }
+                ],
+                "viz": "toplist"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Max SQL Sort by Preparations",
+            "type": "toplist",
+            "width": 64,
+            "x": 67,
+            "y": 141
+        },
+        {
+            "bgcolor": "white",
+            "font_size": "18",
+            "height": 6,
+            "html": "Memory",
+            "text_align": "center",
+            "tick": true,
+            "tick_edge": "bottom",
+            "tick_pos": "50%",
+            "type": "note",
+            "width": 64,
+            "x": 0,
+            "y": 153
+        },
+        {
+            "height": 16,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "avg:rapdev.oracle_timesten.memory.db.size.temp_in_use.kb{$DBName,$Host}",
+                        "style": {
+                            "palette": "warm",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    },
+                    {
+                        "q": "avg:rapdev.oracle_timesten.memory.db.size.temp_allocated.kb{$DBName,$Host}",
+                        "style": {
+                            "palette": "warm",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Average Temp Memory Used vs Allocated (bytes)",
+            "type": "timeseries",
+            "width": 31,
+            "x": 0,
+            "y": 161
+        },
+        {
+            "height": 16,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "avg:rapdev.oracle_timesten.memory.db.size.perm_in_use.kb{$DBName,$Host}",
+                        "style": {
+                            "palette": "warm",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    },
+                    {
+                        "q": "avg:rapdev.oracle_timesten.memory.db.size.perm_allocated.kb{$DBName,$Host}",
+                        "style": {
+                            "palette": "warm",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Average Perm Memory Used vs Allocated (bytes)",
+            "type": "timeseries",
+            "width": 31,
+            "x": 33,
+            "y": 161
+        },
+        {
+            "height": 12,
+            "sizing": "zoom",
+            "type": "image",
+            "url": "https://www.i-programmer.info/images/stories/News/2012/JAN/B/oracletimeten.jpg",
+            "width": 20,
+            "x": 0,
+            "y": 0
+        },
+        {
+            "height": 13,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Logs Behind (B)",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "0"
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "limit": 10,
+                        "order": "desc",
+                        "q": "avg:rapdev.oracle_timesten.Log_Behind_B{$DBName,$Host} by {peer}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Logs Behind (E)",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "0"
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.Log_Behind_E{$DBName,$Host} by {peer}"
+                    }
+                ],
+                "viz": "query_table"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Log Replication",
+            "type": "query_table",
+            "width": 39,
+            "x": 0,
+            "y": 53
+        },
+        {
+            "height": 13,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "RPS (B)",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "0"
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "limit": 10,
+                        "order": "desc",
+                        "q": "avg:rapdev.oracle_timesten.RPS_B{$DBName,$Host} by {peer}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "RPS (E)",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "0"
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.RPS_E{$DBName,$Host} by {peer}"
+                    }
+                ],
+                "viz": "query_table"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "RPS Replication",
+            "type": "query_table",
+            "width": 39,
+            "x": 42,
+            "y": 53
+        },
+        {
+            "height": 13,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "TPS (B)",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "0"
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:rapdev.oracle_timesten.TPS_B{$DBName,$Host} by {peer}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "TPS (E)",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "0"
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.TPS_E{$DBName,$Host} by {peer}"
+                    }
+                ],
+                "viz": "query_table"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "TPS Replication",
+            "type": "query_table",
+            "width": 39,
+            "x": 0,
+            "y": 70
+        },
+        {
+            "height": 13,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Latency (B)",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "0"
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:rapdev.oracle_timesten.Latency_B{$DBName,$Host} by {peer}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "Latency (E)",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": "0"
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.Latency_E{$DBName,$Host} by {peer}"
+                    }
+                ],
+                "viz": "query_table"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Replication Latency",
+            "type": "query_table",
+            "width": 39,
+            "x": 42,
+            "y": 70
+        },
+        {
+            "bgcolor": "white",
+            "font_size": "18",
+            "height": 5,
+            "html": "Replication",
+            "text_align": "center",
+            "tick": true,
+            "tick_edge": "bottom",
+            "tick_pos": "50%",
+            "type": "note",
+            "width": 81,
+            "x": 0,
+            "y": 46
+        },
+        {
+            "bgcolor": "white",
+            "font_size": "18",
+            "height": 5,
+            "html": "Statement Statistics",
+            "text_align": "center",
+            "tick": true,
+            "tick_edge": "bottom",
+            "tick_pos": "50%",
+            "type": "note",
+            "width": 47,
+            "x": 84,
+            "y": 46
+        },
+        {
+            "height": 30,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "per_second(avg:rapdev.oracle_timesten.stmt.executes.drops{$DBName,$Host}), per_second(avg:rapdev.oracle_timesten.stmt.executes.alters{$DBName,$Host}), per_second(avg:rapdev.oracle_timesten.stmt.executes.selects{$DBName,$Host}), per_second(avg:rapdev.oracle_timesten.stmt.executes.updates{$DBName,$Host}), per_second(avg:rapdev.oracle_timesten.stmt.executes.inserts{$DBName,$Host})",
+                        "style": {
+                            "palette": "dog_classic",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Statement Execution (rate/s)",
+            "type": "timeseries",
+            "width": 47,
+            "x": 84,
+            "y": 53
+        },
+        {
+            "height": 16,
+            "tile_def": {
+                "custom_links": [],
+                "group": [],
+                "noGroupHosts": false,
+                "noMetricHosts": false,
+                "nodeType": "host",
+                "requests": [
+                    {
+                        "q": "avg:system.cpu.idle{oracle_timesten,$DBName,$Host} by {host}",
+                        "type": "size"
+                    },
+                    {
+                        "q": "max:rapdev.oracle_timesten.CommandCacheHitPerc{oracle_timesten,$DBName,$Host} by {host}",
+                        "type": "fill"
+                    }
+                ],
+                "scope": [
+                    "oracle_timesten"
+                ],
+                "style": {
+                    "palette": "green_to_orange",
+                    "paletteFlip": false
+                },
+                "viz": "hostmap"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "TimesTen Database Hosts",
+            "type": "hostmap",
+            "width": 39,
+            "x": 0,
+            "y": 87
+        },
+        {
+            "height": 16,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "per_second(max:rapdev.oracle_timesten.memory.connections.disconnected{$DBName,$Host} by {dbname})",
+                        "style": {
+                            "palette": "dog_classic",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    },
+                    {
+                        "q": "per_second(max:rapdev.oracle_timesten.memory.connections.established.direct{$DBName,$Host} by {dbname})",
+                        "style": {
+                            "palette": "warm",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    },
+                    {
+                        "q": "per_second(max:rapdev.oracle_timesten.memory.connections.established.threshold_exceeded{$DBName,$Host} by {dbname})",
+                        "style": {
+                            "palette": "dog_classic",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "bars"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Database Connections Rates (rate/s)",
+            "type": "timeseries",
+            "width": 39,
+            "x": 42,
+            "y": 87
+        },
+        {
+            "height": 17,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "max:rapdev.oracle_timesten.stmt.prepares.command_cache_miss{$DBName,$Host}",
+                        "style": {
+                            "palette": "warm",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "bars"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Command Cache Miss",
+            "type": "timeseries",
+            "width": 47,
+            "x": 84,
+            "y": 86
+        },
+        {
+            "height": 17,
+            "tile_def": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": "99"
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": "99"
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": "500"
+                            }
+                        ],
+                        "q": "max:rapdev.oracle_timesten.total_hold{$DBName,$Host}"
+                    }
+                ],
+                "viz": "query_value"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Log Hold (MB)",
+            "type": "query_value",
+            "width": 35,
+            "x": 96,
+            "y": 0
+        },
+        {
+            "bgcolor": "white",
+            "font_size": "18",
+            "height": 6,
+            "html": "Locks",
+            "text_align": "center",
+            "tick": true,
+            "tick_edge": "bottom",
+            "tick_pos": "50%",
+            "type": "note",
+            "width": 64,
+            "x": 0,
+            "y": 107
+        },
+        {
+            "height": 16,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "avg:rapdev.oracle_timesten.lock.timeouts{$DBName,$Host} by {dbname}",
+                        "style": {
+                            "palette": "dog_classic",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Average Lock Timeouts",
+            "type": "timeseries",
+            "width": 64,
+            "x": 0,
+            "y": 134
+        },
+        {
+            "height": 16,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "avg:rapdev.oracle_timesten.lock.locks_granted.immediate{$DBName,$Host} by {dbname}",
+                        "style": {
+                            "palette": "cool",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "area"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Average Immediate Lock Grants",
+            "type": "timeseries",
+            "width": 31,
+            "x": 0,
+            "y": 115
+        },
+        {
+            "height": 16,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "avg:rapdev.oracle_timesten.lock.locks_granted.wait{$DBName,$Host} by {dbname}",
+                        "style": {
+                            "palette": "cool",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "area"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Average Locks Granted after Waiting",
+            "type": "timeseries",
+            "width": 31,
+            "x": 33,
+            "y": 115
+        },
+        {
+            "height": 16,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "avg:rapdev.oracle_timesten.hold.checkpoint{$DBName,$Host} by {dbdescription}",
+                        "style": {
+                            "palette": "cool",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "bars"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Average Checkpoint Holds",
+            "type": "timeseries",
+            "width": 31,
+            "x": 67,
+            "y": 115
+        },
+        {
+            "height": 16,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "avg:rapdev.oracle_timesten.hold.replication{$DBName,$Host} by {dbdescription}",
+                        "style": {
+                            "palette": "dog_classic",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "bars"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Average Replication Holds",
+            "type": "timeseries",
+            "width": 31,
+            "x": 100,
+            "y": 115
+        },
+        {
+            "bgcolor": "white",
+            "font_size": "18",
+            "height": 6,
+            "html": "Holds",
+            "text_align": "center",
+            "tick": true,
+            "tick_edge": "bottom",
+            "tick_pos": "50%",
+            "type": "note",
+            "width": 64,
+            "x": 67,
+            "y": 107
+        },
+        {
+            "height": 22,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "avg:rapdev.oracle_timesten.total_hold{$DBName,$Host} by {dbname}",
+                        "style": {
+                            "palette": "dog_classic",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Total Hold (logfilesize)",
+            "type": "timeseries",
+            "width": 35,
+            "x": 96,
+            "y": 21
+        },
+        {
+            "height": 17,
+            "tile_def": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Active",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:rapdev.oracle_timesten.replication_state.ACTIVE{$DBName,$Host} by {dbname}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Standby",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": "0"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.replication_state.STANDBY{$DBName,$Host} by {dbname}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Failed",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": "0"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.replication_state.FAILED{$DBName,$Host} by {dbname}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Idle",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_gray",
+                                "value": "0"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.replication_state.IDLE{$DBName,$Host} by {dbname}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Recovering",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": "0"
+                            }
+                        ],
+                        "q": "avg:rapdev.oracle_timesten.replication_state.RECOVERING{$DBName,$Host} by {dbname}"
+                    }
+                ],
+                "viz": "query_table"
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Replication State",
+            "type": "query_table",
+            "width": 50,
+            "x": 44,
+            "y": 0
+        },
+        {
+            "height": 22,
+            "legend": false,
+            "tile_def": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "label": "\u00a0Active\u00a0",
+                        "type": "ok dashed",
+                        "value": "y = 1"
+                    },
+                    {
+                        "label": "\u00a0Standby\u00a0",
+                        "type": "info dashed",
+                        "value": "y = 2"
+                    },
+                    {
+                        "label": "\u00a0Failed\u00a0",
+                        "type": "error dashed",
+                        "value": "y = 3"
+                    },
+                    {
+                        "label": "\u00a0Idle\u00a0",
+                        "type": "info dashed",
+                        "value": "y = 4"
+                    },
+                    {
+                        "label": "\u00a0Recovering\u00a0",
+                        "type": "warning dashed",
+                        "value": "y = 5"
+                    }
+                ],
+                "requests": [
+                    {
+                        "q": "avg:rapdev.oracle_timesten.replication_state{$DBName,$Host} by {dbname}",
+                        "style": {
+                            "palette": "dog_classic",
+                            "type": "solid",
+                            "width": "normal"
+                        },
+                        "type": "line"
+                    }
+                ],
+                "viz": "timeseries",
+                "yaxis": {
+                    "includeZero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "title": true,
+            "title_align": "left",
+            "title_size": 16,
+            "title_text": "Replication State",
+            "type": "timeseries",
+            "width": 50,
+            "x": 44,
+            "y": 21
+        }
+    ]
+}

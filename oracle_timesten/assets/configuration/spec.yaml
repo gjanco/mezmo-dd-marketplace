@@ -1,0 +1,107 @@
+name: Oracle TimesTen
+files:
+- name: oracle_timesten.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+      - name: database
+        required: true
+        multiple: false
+        value:
+          type: string
+          example: "master1:timestendirect"
+        description: |
+          Oracle TimesTen database
+      - name: username
+        required: true
+        multiple: false
+        value:
+          type: string
+          example: "datadog"
+        description: |
+          Oracle TimesTen database username
+      - name: password
+        required: true
+        multiple: false
+        value:
+          type: string
+          example: "datadog"
+        description: |
+          Oracle TimesTen database password
+      - name: hostname
+        required: true
+        multiple: false
+        value:
+          type: string
+          example: "127.0.0.1"
+        description: |
+          Oracle TimesTen database hostname
+      - name: timesten_home
+        required: true
+        multiple: false
+        value:
+          type: string
+          example: "/u01/app/oratta/timesten/tt181"
+        description: |
+          Oracle TimesTen client home path
+      - name: endpoint
+        required: true
+        multiple: false
+        value:
+          type: string
+          example: "https://http-intake.logs.datadoghq.com/v1/input/"
+        description: |
+          Datadog log intake endpoint
+      - name: verbose_flag
+        required: true
+        multiple: false
+        value:
+          type: integer
+          example: 1
+        description: |
+          Verbose flag
+      - name: logs_flag
+        required: true
+        multiple: false
+        value:
+          type: integer
+          example: 1
+        description: |
+          logs_flag
+      - name: _re
+        required: true
+        multiple: false
+        value:
+          type: object
+          example:
+            'Summary 0': '^Begin Snap:[ ]{1,}([0-9]{1,})[ ]{1,}([0-9- :.]{1,})$'
+            'Summary 1': '^End Snap:[ ]{1,}([0-9]{1,})[ ]{1,}([0-9- :.]{1,})$'
+            'Summary 2': '^Elapsed Time:[ ]{1,}([0-9]{1,})[ ]{1,}secs$'
+            'Memory Usage and Connections': '^([a-z._]{1,})[ ]{1,}([0-9]{1,})[ ]{1,}([0-9]{1,})[ ]{0,}$'
+            'Load Profile 0': '^([A-z %]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})$'
+            'Load Profile 1': '^([A-z %]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}[A-z %]{1,}[ ]{1,}[0-9.]{1,}$'
+            'Load Profile 2': '^[A-z %]{1,}[ ]{1,}[0-9.]{1,}[ ]{1,}([A-z %]{1,})[ ]{1,}([0-9.]{1,})$'
+            'Instance Efficiency Percentage (Target 100%)': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([A-z-._ %/]{1,})[ ]{1,}([0-9.]{1,})$'
+            'Statement Statistics': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+            'Transaction Statistics': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+            '1. SQL Sort by Executions': '^([0-9]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9]{1,})[ ]{1,}(.*)$'
+            '2. SQL Sort by Preparations': '^([0-9]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9]{1,})[ ]{1,}(.*)$'
+            '3. Top SQL Command Texts': '^([0-9]{1,})[ ]{1,}(.*)$'
+            'PL/SQL Memory Statistics': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.-]{1,})[ ]{1,}(ttPLSQLMemoryStats)$'
+            'Replication Statistics': '^([0-9/]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([0-9/-]{1,})[ ]{1,}([A-z0-9/-:]{1,})$'
+            'Parallel Replication/AWT Statistics': '^([a-z.0-9_]{1,})[ ]{1,}([0-9-.]{1,})[ ]{1,}([0-9-.]{1,})[ ]{1,}([A-z0-9/-:]{1,})[ ]{1,}(v\$repstats) (view)$'
+            'Log Statistics': '^([A-z._ %-]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}([0-9.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+            'Log Holds': '^(.*) (ttLogHolds), (ttBookmark)$'
+            'CheckPoint Statistics': '^([A-z._ %-)(]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+            'Cache Group Statistics': ''
+            'Grid Statistics': ''
+            'DB Activity Statistics': '^([A-z._ %-)(]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+            'Latch Statistics': ''
+            'Lock Statistics': '^[ ]{1,}([A-z._ %-)(]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}([0-9/.]{1,})[ ]{1,}(SystemStats), (monitor table)$'
+            'XLA Information': ''
+            'Configuration Parameters': ''
+        description: |
+        
