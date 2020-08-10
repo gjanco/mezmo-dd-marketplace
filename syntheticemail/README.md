@@ -1,5 +1,3 @@
-# Synthetic Email Checks
-
 ## Overview
 
 [![Synthetic Email Introduction](https://raw.githubusercontent.com/DataDog/marketplace/master/syntheticemail/images/video.png)](https://www.youtube.com/watch?v=IUCkv93oLNA)
@@ -8,12 +6,13 @@ This integration monitors email mailboxes and measures full send-receive synthet
 
 Below are some screenshots of the dashboard that is included with the integration.
 
-### Synthetic Email and response times
+### Synthetic Email and Response Times
+
 ![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/syntheticemail/images/1.png)
 
 ## Setup
 
-### Datadog Integration Install
+### Integration Install
 
 1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-syntheticemail==1.0.0`
 
@@ -24,12 +23,13 @@ Below are some screenshots of the dashboard that is included with the integratio
 3. Set the target email address configured in steps 1 and 2 by updating `email_address: {your@email.address}` in the syntheticemail.d/syntheticemail.yaml.
 4. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7).
 
-## Validation
+### Validation
 
 [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-status-and-information) and look for `syntheticemail` under the Checks section.
 
 ## Pricing
-$250 per mailbox per month
+
+$250 per mailbox
 
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
@@ -37,9 +37,6 @@ For support or feature requests please contact RapDev.io through the following c
  - Email: integrations@rapdev.io 
  - Chat: [RapDev.io/products](https://rapdev.io/products)
  - Phone: 855-857-0222 
-
-## Vendor Information
-[RapDev.io](http://rapdev.io)
 
 Made with ❤️ in Boston
 
