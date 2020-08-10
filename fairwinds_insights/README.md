@@ -96,3 +96,10 @@ Fairwinds Insights provides integrations for a variety of great open source tool
 * Automated notification of Helm charts that are out of date
 
 [1]: https://insights.fairwinds.com
+
+### Refund Policy
+
+Insights Cancellation and Refund Policy:
+
+Fairwinds Insights is provided as a month-to-month subscription that you, the customer, may discontinue at any time in the ways made available to you through your DataDog Marketplace account. If you discontinue your subscription, you will be billed only for the remainder of the monthly billing period then in effect. Insights does not 
+provide refunds of any fees already paid.
