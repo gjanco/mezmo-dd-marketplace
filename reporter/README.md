@@ -16,16 +16,19 @@ This integration will setup a new dashboard in your Datadog instance called **Da
 
 ![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/reporter/images/1.png)
 
----
-*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
-
 ## Setup
-Below are some screenshots of the reporter application and how to get setup.
+You can use Public or Private dashboards with the reporter.  To start navigate to the **Datadog Reporter Dashboard** and **create a new account**. Your Datadog username and password will not work.  
+
+For **Public Dashboards** do the following:
 
 ![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/reporter/images/1.png)
+
 1. Paste the link to any public Datadog dashboard
+
 2. Add the list of emails you want to send the report to
+
 3. Select the frequency and timeframe for your dashboards
+
 4. Click save and send
 
 You will see a loading screen for a few seconds, then get redirected to your dashboard where you will find a list of your reporting jobs.
@@ -35,7 +38,30 @@ You will see a loading screen for a few seconds, then get redirected to your das
 Once the job is saved, you'll get a confirmation.
 
 ![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/reporter/images/3.png)
+
 Your reports will be sent by email as an attachement as shown above.
+
+For **Private Dashboards** do the following:
+
+1. Create a new Datadog account that has RO access, and verify that you can login using it.
+
+2. Navigate to the **Settings** tab, and enter an API Key, Application Key, and a the Username and Password for your RO account.
+
+3. Navigate to *Create a Job*, and click on the *Linked Datadog Account*
+
+4. Select a dashboard from the dropdown menu.
+
+5. Add the list of emails you want to send the report to
+
+6. Select the frequency and timeframe for your dashboards
+
+7. Click save and send
+
+Your reports will be sent by email as an attachement as shown above.
+
+## Pricing
+
+$250/month for unlimited reports
 
 ## Support
 
@@ -47,11 +73,9 @@ For support or feature requests please contact RapDev.io through the following c
  
  Made with ❤️ in Boston
 
-## Pricing
+ ---
 
-$250/month for unlimited reports
+*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
 
-## Vendor Information
 
-[RapDev.io](http://rapdev.io)
 
