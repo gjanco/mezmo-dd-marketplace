@@ -23,11 +23,21 @@ Below are some screenshots of the dashboard that is included with the integratio
 ### Teams, Calendar and OneDrive synthetics
 ![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/o365/images/5.png)
 
+### Tiered Pricing
+Tiered pricing for Office 365 active users counts over 1,000 are available. Contact [integrations@rapdev.io](mailto:integrations@rapdev.io) to activate the tiered pricing.
+
+| Office 365 Users | $ / User / Month |
+| ---------------- | ---------------- |
+| 1 - 999          | $0.50            |
+| 1000 - 4,999     | $0.35            |
+| 5000 - 9,999     | $0.25            |
+| 10,000+          | $0.10            |
+
 ## Setup
 
 ### Datadog Integration Install
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365=1.0.0`
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==1.0.0`
 
 ### Microsoft Office 365 Configuration
 
@@ -40,8 +50,6 @@ The Microsoft Office 365 integration requires permissions managed through your o
 3. [Create a new Azure Active Directory Application Registration](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app).
 
 	3.1. Create a [New Registration](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps). Select a name that will clearly distinguish the application registration, e.g. *DatadogIntegration*.
-
-	3.2. In the App registration detail, make note of the `Application (client) ID` and the `Directory (tenant) ID` values to the `o365.d/o365.yaml` configuration file as `client_id` and `tenant_id`, respectively.
 	
 	3.2. Configure the DatadogIntegration application API permissions. 
 
@@ -88,22 +96,13 @@ The Microsoft Office 365 integration requires permissions managed through your o
 
 7. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7).
 
-## Validation
+### Validation
 
 [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-status-and-information) and look for `o365` under the Checks section.
 
-## FAQ
-### How often does the Microsoft Graph API update the reports?
-The Microsoft Graph Reports API updates reports approximately every 24 hours.
+## Pricing 
 
-### What aggregation period is the integration using?
-Microsoft Graph provides aggregation periods of 7, 30, 90 and 180 days. The Microsoft Office 365 integration is using the 7 day aggregation period for reports pulled from the Graph API.
-
-### What events are captured by this integration?
-Microsoft's Office 365 Service Communications API is leveraged to create events from incident messages.
-
-## Pricing
-$0.10 per user per month
+$0.50 / User / Month
 
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
@@ -112,11 +111,10 @@ For support or feature requests please contact RapDev.io through the following c
  - Chat: [RapDev.io/products](https://rapdev.io/products)
  - Phone: 855-857-0222 
 
-## Vendor Information
-[RapDev.io](http://rapdev.io)
-
-Made with ❤️ in Boston
+Tiered discounts for Office 365 users over 1,000 are available. Contact us at [integrations@rapdev.io](mailto:integration@rapdev.io).
 
 ---
+
+Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
