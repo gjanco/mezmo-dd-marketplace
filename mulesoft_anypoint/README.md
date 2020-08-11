@@ -60,7 +60,7 @@ Follow the instructions below to install and configure this check for an Agent r
 To install the mulesoft_anypoint check on your host:
 
 1. [Download and install the Datadog Agent](https://app.datadoghq.com/account/settings#agent/overview).
-2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-ioconnect-mulesoft-anypoint == 1.0.0`
+2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-ioconnect-mulesoft-anypoint == 1.0.1`
   
 ### Configuration
 
