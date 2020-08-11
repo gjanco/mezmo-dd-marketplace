@@ -1,0 +1,104 @@
+init_config:
+
+    ## This section contains the common configuration used by all the instance executions
+
+    ## @param hosts - object - required
+    ## Grouping of all the hosts definitions needed by MuleSoft Anypoint Integration
+    ## Some hosts are specific to some APIs, if so, it is specified in the description
+    ## It must include the following elements:
+    ##
+    ##     anypoint: The Anypoint server host url.
+    ##     It is preconfigured with https://anypoint.mulesoft.com but it could be different for EU or GOV
+    ##
+    ##     object_store_v2: The Specific Region Object Store V2 server host url
+    ##     See https://docs.mulesoft.com/object-store/osv2-apis for the full list of available hosts
+    ##     This host definition is used by the Object Store API
+    ##     Example value:
+    ##     object_store_v2: https://object-store-us-east-1.anypoint.mulesoft.com
+    ##
+    ##     object_store_v2_stats: The Object Store V2 Stats server host url
+    ##     This host definition is used by the Object Store V2 Stats API
+    ##     Example value:
+    ##     object_store_v2_stats: https://object-store-stats.anypoint.mulesoft.com
+    ##
+    ##     mule_server: The URL or IP of the Server running a Mule Runtime with the Mule Agent
+    ##     This host definition is used by the ARM APIs
+    ##     Example value:
+    ##     mule_server: http://localhost:9999
+    ##
+    ##     oauth_provider: The Oauth Provider url that allow obtain a Bearer token used to make requests to all the APIs
+    ##     It is preconfigured with https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token
+    ##     but it could be different for EU or GOV Mule Regions
+    #
+    hosts:
+          anypoint: https://anypoint.mulesoft.com
+          object_store_v2: https://object-store-us-east-1.anypoint.mulesoft.com
+          object_store_v2_stats: https://object-store-stats.anypoint.mulesoft.com
+          mule_server: <ON_PREMISE_MULE_SERVER>
+          oauth_provider: https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token
+
+    ## @param client_id - string - required
+    ## The Client ID for the authentication API
+    #
+    client_id: <CLIENT_ID>
+
+    ## @param client_secret - string - required
+    ## The Client Secret for the authentication API
+    #
+    client_secret: <CLIENT_SECRET>
+
+    ## @param env_id - string - required
+    ## The Environment ID for environment specific requests
+    #
+    env_id: <ENV_ID>
+
+    ## @param org_id - string - required
+    ## The Organization ID for the requests that requires to specify it
+    #
+    org_id: <ORG_ID>
+
+    ## @param api_key - string - required
+    ## The API key provided when you purchased the product
+    #
+    api_key: <API_KEY>
+
+    ## @param customer_key - string - required
+    ## The Customer key provided when you purchased the product
+    #
+    customer_key: <CUSTOMER_KEY>
+
+    ## @param connection_wait_time - integer - optional
+    ## The number of seconds that authentication method will wait until next retry
+    ## If not specified it is defaulted to 2
+    #
+    connection_wait_time: 2
+
+    ## @param connection_attempts_num - integer - optional
+    ## The number of retry attempts that authentication method will perform
+    ## If not specified it is defaulted to 3
+    #
+    connection_attempts_num: 3
+
+instances:
+
+    ## This section contains a list of instances defined following the YAML list item notation -
+    ## Each instance is scheduled independently to run a set of APIs with a specific threads number configuration
+
+    ## @param min_collection_interval - integer - optional
+    ## The time in seconds between executions
+    ## If not specified it is defaulted to 86400
+    #
+  - min_collection_interval: 86400
+
+    ## @param threads - integer - required
+    ## The number of allowed parallel threads running the instance
+    #
+    threads: 32
+
+    ## @param api_filter - string - optional
+    ## List of APIs to execute within the instance following the YAML list item notation -
+    ## If not specified, all the APIs are executed
+    #
+    api_filter:
+      - access_management
+      

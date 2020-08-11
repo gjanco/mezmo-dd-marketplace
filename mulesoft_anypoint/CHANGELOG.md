@@ -1,0 +1,2 @@
+# CHANGELOG - mulesoft_anypoint
+

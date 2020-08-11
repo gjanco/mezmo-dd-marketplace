@@ -1,0 +1,72 @@
+{
+  "api_name": "object_store",
+  "host_key": "object_store_v2",
+  "url": "/api/v1",
+  "endpoints": [
+    {
+      "url": "/organizations/{orgId}/environments/{envId}/stores",
+      "ep_name": "stores",
+      "uri_params": {
+        "orgId": "org_id",
+        "envId": "env_id"
+      },
+      "paging": {
+        "type": "page_token",
+        "list_root": "$.values",
+        "param": "nextPageToken",
+        "next_page": "$.nextPageToken"
+      },
+      "endpoints": [
+        {
+          "parent_root": "$.values.[*]",
+          "parent_data": {
+            "store": "$.storeId"
+          },
+          "url": "/{store}/partitions",
+          "ep_name": "partitions",
+          "uri_params": {
+            "store": "{store}"
+          },
+          "paging": {
+            "type": "page_token",
+            "list_root": "$.values",
+            "param": "nextPageToken",
+            "next_page": "$.nextPageToken"
+          },
+          "endpoints": [
+            {
+              "parent_root": "$.values.[*]",
+              "parent_data": {
+                "partitionId": "$"
+              },
+              "url": "/{partitionId}/keys",
+              "ep_name": "keys",
+              "uri_params": {
+                "partitionId": "{partitionId}"
+              },
+              "paging": {
+                "type": "page_token",
+                "list_root": "$.values",
+                "param": "nextPageToken",
+                "next_page": "$.nextPageToken"
+              },
+              "selectors": [
+                {
+                  "type": "count",
+                  "expr_str": "$.values.[*].keyId",
+                  "field_expr_str": "1",
+                  "metrics": {
+                    "DEFAULT": "defined"
+                  },
+                  "tags_expr_str": {
+                    "domain": "{store}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

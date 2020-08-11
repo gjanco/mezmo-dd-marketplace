@@ -1,0 +1,30 @@
+{
+  "name": "[IO Connect MuleSoft Anypoint] A Mule® server {{server_name.name}} is disconnected",
+  "type": "query alert",
+  "query": "sum(last_1m):avg:ioconnect.mulesoft.anypoint.arm_rest_services.servers.stopped{*} by {server_name,env_id,server_mule_version}.as_count().rollup(max, 60) >= 1",
+  "message": "Your server {{server_name.name}} has been disconnected during the last minute.\n\nPlease check {{server_name.name}} with {{server_mule_version.name}} mule version in {{env_id.name}} environment.",
+  "tags": [
+    "integration:ioconnect-mulesoft-anypoint"
+  ],
+  "options": {
+    "notify_audit": false,
+    "locked": false,
+    "timeout_h": 0,
+    "silenced": {},
+    "include_tags": true,
+    "no_data_timeframe": null,
+    "require_full_window": true,
+    "new_host_delay": 300,
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "escalation_message": "",
+    "thresholds": {
+      "critical": 1,
+      "warning": 0,
+      "critical_recovery": 0
+    }
+  },
+  "recommended_monitor_metadata": {
+    "description": "Triggers an alert when an Mule server is disconnected."
+  }
+}

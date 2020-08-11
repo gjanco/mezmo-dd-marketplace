@@ -1,0 +1,62 @@
+{
+  "api_name": "object_store_v2_stats",
+  "host_key": "object_store_v2_stats",
+  "url": "/api/v1",
+  "endpoints": [
+    {
+      "url": "/organizations/{orgId}",
+      "ep_name": "organizations",
+      "excluded_base_tags": [
+        "org_id"
+      ],
+      "uri_params": {
+        "orgId": "org_id"
+      },
+      "query_params": {
+        "startDate": "%prev",
+        "endDate": "%current",
+        "period": "&1hour"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$[*].objectStoreRequestCount",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "count"
+          },
+          "tags_expr_str": {
+          }
+        }
+      ],
+      "endpoints": [
+        {
+          "parent_root": "$",
+          "parent_data": {},
+          "url": "/environments/{envId}",
+          "ep_name": "environments",
+          "uri_params": {
+            "envId": "env_id"
+          },
+          "query_params": {
+            "startDate": "%prev",
+            "endDate": "%current",
+            "period": "&1hour"
+          },
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$[*].objectStoreRequestCount",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "count"
+              },
+              "tags_expr_str": {
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

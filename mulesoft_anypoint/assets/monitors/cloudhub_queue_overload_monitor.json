@@ -1,0 +1,29 @@
+{
+  "name": "[IO Connect MuleSoft Anypoint] A CloudHub™ Mule® application has a message in VM queue: {{application_name.name}}",
+  "type": "query alert",
+  "query": "sum(last_1m):avg:ioconnect.mulesoft.anypoint.cloudhub.applications.queues.queued{*} by {env_id,application_name,queue_name}.as_count().rollup(max, 60) >= 1",
+  "message": "Your application has a message in VM queue.\n\nVM queue name: ¨{{queue_name.name}} \nApplication name: {{application_name.name}} \nEnvironment: {{env_id.name}} ",
+  "tags": [
+    "integration:ioconnect-mulesoft-anypoint"
+  ],
+  "options": {
+    "notify_audit": false,
+    "locked": false,
+    "timeout_h": 0,
+    "new_host_delay": 300,
+    "require_full_window": true,
+    "notify_no_data": false,
+    "renotify_interval": "0",
+    "escalation_message": "",
+    "no_data_timeframe": null,
+    "include_tags": true,
+    "thresholds": {
+      "critical": 1,
+      "warning": 0,
+      "critical_recovery": 0
+    }
+  },
+  "recommended_monitor_metadata": {
+    "description": "Triggers an alert when a CloudHub Application has a message in a VM queue."
+  }
+}

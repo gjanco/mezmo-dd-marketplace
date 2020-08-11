@@ -1,0 +1,577 @@
+{
+  "api_name": "cloudhub",
+  "url": "/cloudhub/api",
+  "endpoints": [
+    {
+      "url": "/v2/applications",
+      "ep_name": "applications",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$[*].status",
+          "field_expr_str": "$[*].workers.amount",
+          "metrics": {
+            "STARTED": "workers.active",
+            "DEFAULT": "workers.inactive"
+          },
+          "tags_expr_str": {
+            "mule_version": "$[*].muleVersion.version",
+            "deployment_group": "$[*].deploymentGroup.name",
+            "application_name": "$[*].domain",
+            "workers_weight": "$[*].workers.type.weight"
+          }
+        },
+        {
+          "type": "count",
+          "expr_str": "$[*].status",
+          "field_expr_str": "1",
+          "metrics": {
+            "STARTED": "started",
+            "DEFAULT": "stopped"
+          },
+          "tags_expr_str": {
+            "mule_version": "$[*].muleVersion.version",
+            "deployment_group": "$[*].deploymentGroup.name",
+            "application_name": "$[*].domain",
+            "workers_weight": "$[*].workers.type.weight"
+          }
+        }
+      ],
+      "endpoints": [
+        {
+          "parent_root": "$[*]",
+          "parent_data": {
+            "domain": "$.domain",
+            "deploymentGroupName": "$.deploymentGroup.name"
+          },
+          "url": "/{domain}/dashboardStats",
+          "ep_name": "dashboard.stats",
+          "uri_params": {
+            "domain": "{domain}"
+          },
+          "query_params": {
+            "startDate": "%prev",
+            "endDate": "%current",
+            "interval": "&60000"
+          },
+          "headers": {
+            "X-ANYPNT-ENV-ID": "env_id"
+          },
+          "ignored_values": [
+            -1
+          ],
+          "selectors": [
+            {
+              "type": "gauge",
+              "expr_str": "",
+              "field_expr_str": "$.workerStatistics.[*].statistics.diskReadBytes.*",
+              "metrics": {
+                "DEFAULT": "disk.read"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}"
+              }
+            },
+            {
+              "type": "gauge",
+              "expr_str": "",
+              "field_expr_str": "$.workerStatistics.[*].statistics.memoryTotalUsed.*",
+              "metrics": {
+                "DEFAULT": "memory.used"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}"
+              }
+            },
+            {
+              "type": "gauge",
+              "expr_str": "",
+              "field_expr_str": "$.workerStatistics.[*].statistics.memoryPercentageUsed.*",
+              "metrics": {
+                "DEFAULT": "memory.percentage.used"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}"
+              }
+            },
+            {
+              "type": "gauge",
+              "expr_str": "",
+              "field_expr_str": "$.workerStatistics.[*].statistics.memoryTotalMax",
+              "metrics": {
+                "DEFAULT": "memory.total.max"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}"
+              }
+            },
+            {
+              "type": "gauge",
+              "expr_str": "",
+              "field_expr_str": "$.workerStatistics.[*].statistics.cpu.*",
+              "metrics": {
+                "DEFAULT": "cpu.used"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}"
+              }
+            },
+            {
+              "type": "gauge",
+              "expr_str": "",
+              "field_expr_str": "$.workerStatistics.[*].statistics.networkIn.*",
+              "metrics": {
+                "DEFAULT": "network_in"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}"
+              }
+            },
+            {
+              "type": "gauge",
+              "expr_str": "",
+              "field_expr_str": "$.workerStatistics.[*].statistics.networkOut.*",
+              "metrics": {
+                "DEFAULT": "network_out"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}"
+              }
+            }
+          ]
+        },
+        {
+          "parent_root": "$[*]",
+          "parent_data": {
+            "domain": "$.domain",
+            "deploymentGroupName": "$.deploymentGroup.name"
+          },
+          "url": "/{domain}/queueStatistics",
+          "ep_name": "queues",
+          "uri_params": {
+            "domain": "{domain}"
+          },
+          "paging": {
+            "type": "offset",
+            "list_root": "$.queues",
+            "limit": 25,
+            "param_limit": "limit",
+            "param": "offset"
+          },
+          "headers": {
+            "X-ANYPNT-ENV-ID": "env_id"
+          },
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$.queues.[*].id",
+              "field_expr_str": "$.queues.[*].queued",
+              "metrics": {
+                "DEFAULT": "queued"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}",
+                "queue_name": "$.queues.[*].name",
+                "status": "$.queues.[*].status"
+              }
+            },
+            {
+              "type": "count",
+              "expr_str": "$.queues.[*].id",
+              "field_expr_str": "$.queues.[*].inFlight",
+              "metrics": {
+                "DEFAULT": "inflight"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}",
+                "queue_name": "$.queues.[*].name",
+                "status": "$.queues.[*].status"
+              }
+            }
+          ]
+        },
+        {
+          "parent_root": "$[*]",
+          "parent_data": {
+            "domain": "$.domain",
+            "deploymentGroupName": "$.deploymentGroup.name"
+          },
+          "host_key": "anypoint",
+          "url": "/cloudhub/api/applications/{domain}/schedules",
+          "ep_name": "schedules",
+          "uri_params": {
+            "domain": "{domain}"
+          },
+          "headers": {
+            "X-ANYPNT-ENV-ID": "env_id"
+          },
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$.[*].id",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "count"
+              },
+              "tags_expr_str": {
+                "application_name": "{domain}",
+                "deployment_group": "{deploymentGroupName}",
+                "scheduler_name": "$.[*].name",
+                "flow_name": "$.[*].flow",
+                "enabled": "$.[*].enabled",
+                "status": "$.[*].status",
+                "schedule_period": "$.[*].schedule.period"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "/notifications",
+      "ep_name": "notifications",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id"
+      },
+      "paging": {
+        "type": "offset",
+        "list_root": "$.data",
+        "limit": 25,
+        "param_limit": "limit",
+        "param": "offset"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.data.[*].read",
+          "field_expr_str": "1",
+          "metrics": {
+            "True": "read",
+            "False": "unread"
+          },
+          "tags_expr_str": {
+            "priority": "$.data.[*].priority",
+            "application_name": "$.data.[*].domain"
+          }
+        }
+      ]
+    },
+    {
+      "url": "/v2/alerts",
+      "ep_name": "alerts",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id"
+      },
+      "paging": {
+        "type": "offset",
+        "list_root": "$.data",
+        "limit": 25,
+        "param_limit": "limit",
+        "param": "offset"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.data.[*].id",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "count"
+          },
+          "tags_expr_str": {
+            "alert_name": "$.data.[*].name",
+            "alert_severity": "$.data.[*].severity",
+            "alert_resources": "$.data.[*].condition.resources.[*]",
+            "alert_type": "$.data.[*].conditionType",
+            "action_type": "$.data.[*].actions.[*].type"
+          }
+        }
+      ],
+      "endpoints": [
+        {
+          "parent_root": "$.data.[*]",
+          "parent_data": {
+            "id": "$.id",
+            "name": "$.name"
+          },
+          "url": "/{id}/history",
+          "ep_name": "history",
+          "uri_params": {
+            "id": "{id}"
+          },
+          "headers": {
+            "X-ANYPNT-ENV-ID": "env_id"
+          },
+          "paging": {
+            "type": "offset",
+            "list_root": "$.data",
+            "limit": 25,
+            "param_limit": "limit",
+            "param": "offset"
+          },
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$.data.[*].triggeredAt",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "count"
+              },
+              "tags_expr_str": {
+                "alert_name": "{name}",
+                "alert_resource": "$.data.[*].context.resource",
+                "user": "$.data.[*].context.user",
+                "action_type": "$.data.[*].actions.[*].type",
+                "alert_type": "$.data.[*].condition.type",
+                "alert_severity": "$.data.[*].severity"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "/mule-versions",
+      "ep_name": "versions",
+      "excluded_base_tags": [
+        "env_id",
+        "org_id"
+      ],
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.data.[*].version",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "count"
+          },
+          "tags_expr_str": {
+            "version": "$.data.[*].version",
+            "recommended": "$.data.[*].recommended",
+            "end_of_support_date": "$.data.[*].endOfSupportDate",
+            "end_of_life_date": "$.data.[*].endOfLifeDate",
+            "state": "$.data.[*].state"
+          }
+        }
+      ]
+    },
+    {
+      "url": "/organization",
+      "ep_name": "organization",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id"
+      },
+      "selectors": [
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.plan.maxProductionWorkers",
+          "metrics": {
+            "DEFAULT": "plan.max_production_workers"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.plan.maxSandboxWorkers",
+          "metrics": {
+            "DEFAULT": "plan.max_sandbox_workers"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.plan.maxPremiumConnectors",
+          "metrics": {
+            "DEFAULT": "plan.max_premium_connectors"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.plan.maxStaticIps",
+          "metrics": {
+            "DEFAULT": "plan.max_static_ips"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.plan.maxDeploymentGroups",
+          "metrics": {
+            "DEFAULT": "plan.max_deployment_groups"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.premiumConnectors",
+          "metrics": {
+            "DEFAULT": "usage.premium_connectors"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.productionApplications",
+          "metrics": {
+            "DEFAULT": "usage.production_applications"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.sandboxApplications",
+          "metrics": {
+            "DEFAULT": "usage.sandbox_applications"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.designApplications",
+          "metrics": {
+            "DEFAULT": "usage.design_applications"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.productionWorkers",
+          "metrics": {
+            "DEFAULT": "usage.production_workers"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.sandboxWorkers",
+          "metrics": {
+            "DEFAULT": "usage.sandbox_workers"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.designWorkers",
+          "metrics": {
+            "DEFAULT": "usage.design_workers"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.staticIps",
+          "metrics": {
+            "DEFAULT": "usage.static_ips"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.vpcs",
+          "metrics": {
+            "DEFAULT": "usage.vpcs"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.vpns",
+          "metrics": {
+            "DEFAULT": "usage.vpns"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.loadbalancers",
+          "metrics": {
+            "DEFAULT": "usage.loadbalancers"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.loadbalancerWorkers",
+          "metrics": {
+            "DEFAULT": "usage.loadbalancer_workers"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "",
+          "field_expr_str": "$.usage.deploymentGroups",
+          "metrics": {
+            "DEFAULT": "usage.deployment_groups"
+          },
+          "tags_expr_str": {
+            "org_name": "$.name"
+          }
+        }
+      ]
+    }
+  ]
+}

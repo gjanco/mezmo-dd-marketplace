@@ -1,0 +1,224 @@
+{
+  "api_name": "exchange_experience",
+  "url": "/exchange/api/v1",
+  "endpoints": [
+    {
+      "url": "/assets",
+      "ep_name": "assets",
+      "paging": {
+        "type": "offset",
+        "list_root": "$",
+        "limit": 25,
+        "param_limit": "limit",
+        "param": "offset"
+      },
+      "query_params": {
+        "organizationId": "org_id"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$[*].status",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "count"
+          },
+          "tags_expr_str": {
+            "asset_name": "$[*].name",
+            "asset_type": "$[*].type",
+            "version": "$[*].version",
+            "is_public": "$[*].isPublic",
+            "created_date": "$[*].createdAt"
+          }
+        }
+      ],
+      "endpoints": [
+        {
+          "parent_root": "$[*]",
+          "parent_data": {
+            "groupId": "$.groupId",
+            "assetId": "$.assetId",
+            "version": "$.version",
+            "name": "$.name",
+            "type": "$.type"
+          },
+          "host_key": "anypoint",
+          "url": "/exchange/api/v1/organizations/{orgId}/assets/{groupId}/{assetId}/public",
+          "uri_params": {
+            "orgId": "org_id",
+            "groupId": "{groupId}",
+            "assetId": "{assetId}"
+          },
+          "ep_name": "public",
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$[*].productAPIVersion",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "count"
+              },
+              "tags_expr_str": {
+                "asset_name": "{name}",
+                "asset_type": "{type}",
+                "version": "{version}"
+              }
+            }
+          ]
+        },
+        {
+          "parent_root": "$[*]",
+          "parent_data": {
+            "groupId": "$.groupId",
+            "assetId": "$.assetId",
+            "version": "$.version",
+            "name": "$.name",
+            "type": "$.type"
+          },
+          "host_key": "anypoint",
+          "url": "/exchange/api/v1/organizations/{orgId}/assets/{groupId}/{assetId}/users",
+          "uri_params": {
+            "orgId": "org_id",
+            "groupId": "{groupId}",
+            "assetId": "{assetId}"
+          },
+          "ep_name": "users",
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$[*].username",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "count"
+              },
+              "tags_expr_str": {
+                "asset_name": "{name}",
+                "asset_type": "{type}",
+                "version": "{version}",
+                "user": "$[*].username",
+                "role": "$[*].role"
+              }
+            }
+          ]
+        },
+        {
+          "parent_root": "$[*]",
+          "parent_data": {
+            "groupId": "$.groupId",
+            "assetId": "$.assetId",
+            "version": "$.version",
+            "name": "$.name",
+            "type": "$.type"
+          },
+          "host_key": "anypoint",
+          "url": "/exchange/api/v1/organizations/{orgId}/assets/{groupId}/{assetId}/{version}/portal",
+          "uri_params": {
+            "orgId": "org_id",
+            "groupId": "{groupId}",
+            "assetId": "{assetId}",
+            "version": "{version}"
+          },
+          "ep_name": "portal.published",
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$.draftStatus",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "count"
+              },
+              "tags_expr_str": {
+                "group_id": "$.groupId",
+                "asset_name": "$.assetId",
+                "asset_type": "{type}",
+                "version": "{version}"
+              }
+            }
+          ]
+        },
+        {
+          "parent_root": "$[*]",
+          "parent_data": {
+            "groupId": "$.groupId",
+            "assetId": "$.assetId",
+            "version": "$.version",
+            "name": "$.name",
+            "type": "$.type"
+          },
+          "host_key": "anypoint",
+          "url": "/exchange/api/v1/organizations/{orgId}/assets/{groupId}/{assetId}/{version}/rating",
+          "uri_params": {
+            "orgId": "org_id",
+            "groupId": "{groupId}",
+            "assetId": "{assetId}",
+            "version": "{version}"
+          },
+          "ep_name": "rating",
+          "selectors": [
+            {
+              "type": "gauge",
+              "expr_str": "",
+              "field_expr_str": "$.rating",
+              "metrics": {
+                "DEFAULT": "number"
+              },
+              "tags_expr_str": {
+                "group_id": "$.groupId",
+                "asset_name": "$.assetId",
+                "asset_type": "{type}",
+                "version": "{version}",
+                "number_of_rates": "$.numberOfRates"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "/organizations/{orgId}/categories",
+      "ep_name": "categories",
+      "uri_params": {
+        "orgId": "org_id"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$[*].tagKey",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "count"
+          },
+          "tags_expr_str": {
+            "category_name": "$[*].displayName",
+            "category_values": "$[*].acceptedValues",
+            "category_type": "$[*].assetTypeRestrictions",
+            "data_type": "$[*].dataType",
+            "created_date": "$[*].createdDate"
+          }
+        }
+      ]
+    },
+    {
+      "url": "/organizations/{orgId}/fields",
+      "ep_name": "fields",
+      "uri_params":{
+        "orgId": "org_id"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$[*].tagKey",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "count"
+          },
+          "tags_expr_str": {
+            "field_name": "$[*].displayName",
+            "field_values": "$[*].acceptedValues",
+            "field_type": "$[*].assetTypeRestrictions"
+          }
+        }
+      ]
+    }
+  ]
+}

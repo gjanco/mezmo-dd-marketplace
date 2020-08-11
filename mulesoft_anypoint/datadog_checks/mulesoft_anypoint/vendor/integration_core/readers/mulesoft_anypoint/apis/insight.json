@@ -1,0 +1,99 @@
+{
+  "api_name": "insight",
+  "url": "/cloudhub/api",
+  "endpoints": [
+    {
+      "url": "/v2/applications",
+      "ep_name": "cloudhub.applications",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id"
+      },
+      "endpoints": [
+        {
+          "parent_root": "$[*]",
+          "parent_data": {
+            "app_domain": "$.domain",
+            "app_deployment_group": "$.deploymentGroup.name"
+          },
+          "host_key": "anypoint",
+          "url": "/insight/v1/products/cloudhub/applications/{domain}/transactions",
+          "ep_name": "transactions",
+          "method":  "POST",
+          "body": {"searchParameters":[]},
+          "uri_params": {
+            "domain": "{app_domain}"
+          },
+          "query_params": {
+            "count": "&50"
+          },
+          "headers": {
+            "X-ANYPNT-ORG-ID": "org_id",
+            "X-ANYPNT-ENV-ID": "env_id",
+            "Content-type": "&application/json"
+          },
+          "paging": {
+            "type": "offset",
+            "list_root": "$.transactions",
+            "limit": 25,
+            "param_limit": "limit",
+            "param": "offset"
+          },
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$.transactions.[*].id",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "count"
+              },
+              "tags_expr_str": {
+                "domain": "{app_domain}",
+                "deployment_group": "{app_deployment_group}",
+                "duration": "$.transactions.[*].duration",
+                "start_time": "$.transactions.[*].started",
+                "status": "$.transactions.[*].status"
+              }
+            }
+          ],
+          "endpoints": [
+            {
+              "parent_root": "$.transactions.[*]",
+              "parent_data": {
+                "transaction_id": "$.id",
+                "transaction_status": "$.status"
+              },
+              "url": "/{id}",
+              "ep_name": "details",
+              "uri_params": {
+                "id": "{transaction_id}"
+              },
+              "headers": {
+                "X-ANYPNT-ORG-ID": "org_id",
+                "X-ANYPNT-ENV-ID": "env_id"
+              },
+              "selectors": [
+                {
+                  "type": "count",
+                  "expr_str": "$[*].name",
+                  "field_expr_str": "1",
+                  "metrics": {
+                    "DEFAULT": "count"
+                  },
+                  "tags_expr_str": {
+                    "domain": "{app_domain}",
+                    "deployment_group": "{app_deployment_group}",
+                    "status": "{transaction_status}",
+                    "transaction_name": "$[*].name",
+                    "transaction_type": "$[*].type",
+                    "flow_name": "$[*].flowName",
+                    "correlation_id": "$[*].systemProperties.MESSAGE_CORRELATION_ID"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

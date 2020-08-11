@@ -1,0 +1,960 @@
+{
+  "api_name": "arm_monitoring_query",
+  "url": "/hybrid/api/v1",
+  "endpoints": [
+    {
+      "url": "/applications",
+      "ep_name": "applications",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id",
+        "X-ANYPNT-ORG-ID": "org_id"
+      },
+      "endpoints": [
+        {
+          "parent_root": "$.data.[*]",
+          "parent_data": {
+            "appId": "$.id",
+            "appName": "$.name"
+          },
+          "host_key": "anypoint",
+          "url": "/monitoring/query/api/v1/organizations/{orgId}/environments/{envId}/applications/{appId}",
+          "uri_params": {
+            "orgId": "org_id",
+            "envId": "env_id",
+            "appId": "{appId}"
+          },
+          "query_params": {
+            "from": "%prev",
+            "to": "%current"
+          },
+          "selectors": [
+            {
+              "type": "gauge",
+              "field_expr_str": "$.applications.[*].metrics.message-count.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "message_count"
+              },
+              "tags_expr_str": {
+                "application_id": "{appId}",
+                "application_name": "{appName}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.applications.[*].metrics.response-time.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "response_time"
+              },
+              "tags_expr_str": {
+                "application_id": "{appId}",
+                "application_name": "{appName}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.applications.[*].metrics.error-count.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "error_count"
+              },
+              "tags_expr_str": {
+                "application_id": "{appId}",
+                "application_name": "{appName}"
+              }
+            }
+          ]
+        },
+        {
+          "parent_root": "$.data.[*]",
+          "parent_data": {
+            "appId": "$.id",
+            "appName": "$.name"
+          },
+          "url": "/{appId}/flows",
+          "uri_params": {
+            "appId": "{appId}"
+          },
+          "headers": {
+            "X-ANYPNT-ENV-ID": "env_id",
+            "X-ANYPNT-ORG-ID": "org_id"
+          },
+          "endpoints": [
+            {
+              "parent_root": "$.data.[*]",
+              "parent_data": {
+                "flowId": "$.id",
+                "flowName": "$.name"
+              },
+              "host_key": "anypoint",
+              "url": "/monitoring/query/api/v1/organizations/{orgId}/environments/{envId}/applications/{appId}/flows",
+              "ep_name": "flows",
+              "uri_params": {
+                "orgId": "org_id",
+                "envId": "env_id",
+                "appId": "{appId}"
+              },
+              "query_params": {
+                "from": "%prev",
+                "to": "%current",
+                "id": "{flowId}"
+              },
+              "selectors": [
+                {
+                  "type": "gauge",
+                  "field_expr_str": "$.flows.[*].metrics.message-count.aggregate.avg",
+                  "metrics": {
+                    "DEFAULT": "message_count"
+                  },
+                  "tags_expr_str": {
+                    "application_id": "{appId}",
+                    "application_name": "{appName}",
+                    "flow_id": "{flowId}",
+                    "flow_name": "{flowName}"
+                  }
+                },
+                {
+                  "type": "gauge",
+                  "field_expr_str": "$.flows.[*].metrics.response-time.aggregate.avg",
+                  "metrics": {
+                    "DEFAULT": "response_time"
+                  },
+                  "tags_expr_str": {
+                    "application_id": "{appId}",
+                    "application_name": "{appName}",
+                    "flow_id": "{flowId}",
+                    "flow_name": "{flowName}"
+                  }
+                },
+                {
+                  "type": "gauge",
+                  "field_expr_str": "$.flows.[*].metrics.error-count.aggregate.avg",
+                  "metrics": {
+                    "DEFAULT": "error_count"
+                  },
+                  "tags_expr_str": {
+                    "application_id": "{appId}",
+                    "application_name": "{appName}",
+                    "flow_id": "{flowId}",
+                    "flow_name": "{flowName}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "/servers",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id",
+        "X-ANYPNT-ORG-ID": "org_id"
+      },
+      "endpoints": [
+        {
+          "parent_root": "$.data.[*]",
+          "parent_data": {
+            "targetId": "$.id",
+            "targetName": "$.name",
+            "targetType": "$.type"
+          },
+          "host_key": "anypoint",
+          "url": "/monitoring/query/api/v1/organizations/{orgId}/environments/{envId}/targets/{targetId}",
+          "ep_name": "targets",
+          "uri_params": {
+            "orgId": "org_id",
+            "envId": "env_id",
+            "targetId": "{targetId}"
+          },
+          "query_params": {
+            "from": "%prev",
+            "to": "%current"
+          },
+          "selectors": [
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.cpu-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "cpu_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.memory-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "memory_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.memory-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "memory_committed"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.memory-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "memory_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.thread-count.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "thread_count"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.load-average.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "load_average"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.eden-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "eden_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.eden-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "eden_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.eden-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "eden_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.survivor-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "survivor_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.survivor-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "survivor_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.survivor-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "survivor_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.metaspace-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "metaspace_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.metaspace-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "metaspace_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.metaspace-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "metaspace_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.tenured-gen-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "tenured_gen_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.tenured-gen-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "tenured_gen_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.tenured-gen-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "tenured_gen_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.class-loading-loaded.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "class_loading_loaded"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.class-loading-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "class_loading_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "/serverGroups",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id",
+        "X-ANYPNT-ORG-ID": "org_id"
+      },
+      "endpoints": [
+        {
+          "parent_root": "$.data.[*]",
+          "parent_data": {
+            "targetId": "$.id",
+            "targetName": "$.name",
+            "targetType": "$.type"
+          },
+          "host_key": "anypoint",
+          "url": "/monitoring/query/api/v1/organizations/{orgId}/environments/{envId}/targets/{targetId}",
+          "ep_name": "targets",
+          "uri_params": {
+            "orgId": "org_id",
+            "envId": "env_id",
+            "targetId": "{targetId}"
+          },
+          "query_params": {
+            "from": "%prev",
+            "to": "%current"
+          },
+          "selectors": [
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.cpu-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "cpu_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.memory-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "memory_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.memory-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "memory_committed"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.memory-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "memory_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.thread-count.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "thread_count"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.load-average.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "load_average"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.eden-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "eden_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.eden-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "eden_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.eden-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "eden_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.survivor-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "survivor_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.survivor-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "survivor_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.survivor-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "survivor_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.metaspace-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "metaspace_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.metaspace-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "metaspace_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.metaspace-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "metaspace_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.tenured-gen-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "tenured_gen_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.tenured-gen-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "tenured_gen_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.tenured-gen-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "tenured_gen_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.class-loading-loaded.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "class_loading_loaded"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.class-loading-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "class_loading_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "/clusters",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id",
+        "X-ANYPNT-ORG-ID": "org_id"
+      },
+      "endpoints": [
+        {
+          "parent_root": "$.data.[*]",
+          "parent_data": {
+            "targetId": "$.id",
+            "targetName": "$.name",
+            "targetType": "$.type"
+          },
+          "host_key": "anypoint",
+          "url": "/monitoring/query/api/v1/organizations/{orgId}/environments/{envId}/targets/{targetId}",
+          "ep_name": "targets",
+          "uri_params": {
+            "orgId": "org_id",
+            "envId": "env_id",
+            "targetId": "{targetId}"
+          },
+          "query_params": {
+            "from": "%prev",
+            "to": "%current"
+          },
+          "selectors": [
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.cpu-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "cpu_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.memory-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "memory_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.memory-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "memory_committed"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.memory-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "memory_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.thread-count.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "thread_count"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.load-average.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "load_average"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.eden-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "eden_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.eden-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "eden_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.eden-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "eden_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.survivor-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "survivor_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.survivor-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "survivor_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.survivor-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "survivor_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.metaspace-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "metaspace_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.metaspace-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "metaspace_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.metaspace-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "metaspace_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.tenured-gen-usage.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "tenured_gen_usage"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.tenured-gen-committed.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "tenured_gen_commited"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.tenured-gen-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "tenured_gen_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.class-loading-loaded.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "class_loading_loaded"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            },
+            {
+              "type": "gauge",
+              "field_expr_str": "$.targets.[*].metrics.class-loading-total.aggregate.avg",
+              "metrics": {
+                "DEFAULT": "class_loading_total"
+              },
+              "tags_expr_str": {
+                "target_id": "$.targets.[*].id",
+                "target_name": "{targetName}",
+                "target_type": "{targetType}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

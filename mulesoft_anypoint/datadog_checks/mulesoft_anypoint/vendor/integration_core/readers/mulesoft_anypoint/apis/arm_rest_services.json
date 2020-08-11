@@ -1,0 +1,101 @@
+{
+  "api_name": "arm_rest_services",
+  "url": "/hybrid/api/v1",
+  "endpoints": [
+    {
+      "url": "/servers",
+      "ep_name": "servers",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id",
+        "X-ANYPNT-ORG-ID": "org_id"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.data.[*].status",
+          "field_expr_str": "1",
+          "metrics": {
+            "RUNNING": "started",
+            "DEFAULT": "stopped"
+          },
+          "tags_expr_str": {
+            "server_name": "$.data.[*].name",
+            "cluster_name": "$.data.[*].clusterName",
+            "server_mule_version": "$.data.[*].muleVersion",
+            "server_agent_version": "$.data.[*].agentVersion"
+          }
+        }
+      ]
+    },
+    {
+      "url": "/applications",
+      "ep_name": "applications",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id",
+        "X-ANYPNT-ORG-ID": "org_id"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.data.[*].lastReportedStatus",
+          "field_expr_str": "1",
+          "metrics": {
+            "STARTED": "started",
+            "DEFAULT": "stopped"
+          },
+          "tags_expr_str": {
+            "application_name": "$.data.[*].name"
+          }
+        }
+      ]
+    },
+    {
+      "url": "/clusters",
+      "ep_name": "clusters",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id",
+        "X-ANYPNT-ORG-ID": "org_id"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.data.[*].status",
+          "field_expr_str": "1",
+          "metrics": {
+            "RUNNING": "started",
+            "DEFAULT": "stopped"
+          },
+          "tags_expr_str": {
+            "cluster_name": "$.data.[*].name"
+          }
+        }
+      ]
+    },
+    {
+      "url": "/alerts",
+      "ep_name": "alerts",
+      "headers": {
+        "X-ANYPNT-ENV-ID": "env_id",
+        "X-ANYPNT-ORG-ID": "org_id"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.data.[*].severity",
+          "field_expr_str": "1",
+          "metrics": {
+            "CRITICAL": "critical",
+            "WARNING": "warning",
+            "DEFAULT": "info"
+          },
+          "tags_expr_str": {
+            "alert_name": "$.data.[*].name",
+            "alert_severity": "$.data.[*].severity",
+            "alert_condition_type": "$.data.[*].condition.type",
+            "triggered_at": "$.data.[*].createdAt"
+          }
+        }
+      ]
+    }
+  ]
+}

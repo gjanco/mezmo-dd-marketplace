@@ -1,0 +1,30 @@
+{
+  "name": "[IO Connect MuleSoft Anypoint] An On-Premise Mule® application is stopped: {{application_name.name}}",
+  "type": "query alert",
+  "query": "sum(last_1m):avg:ioconnect.mulesoft.anypoint.arm_rest_services.applications.stopped{*} by {application_name,env_id}.as_count().rollup(max, 60) >= 1",
+  "message": "Your application has stopped.\n\nPlease review the application {{application_name.name}} in the target {{server_name.name}}, environment {{env_id.name}}.",
+  "tags": [
+    "integration:ioconnect-mulesoft-anypoint"
+  ],
+  "options": {
+    "notify_audit": false,
+    "locked": false,
+    "timeout_h": 0,
+    "silenced": {},
+    "include_tags": true,
+    "no_data_timeframe": null,
+    "require_full_window": true,
+    "new_host_delay": 300,
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "escalation_message": "",
+    "thresholds": {
+      "critical": 1,
+      "warning": 0,
+      "critical_recovery": 0
+    }
+  },
+  "recommended_monitor_metadata": {
+    "description": "Triggers an alert when an On-Prem Application is reported as stopped"
+  }
+}

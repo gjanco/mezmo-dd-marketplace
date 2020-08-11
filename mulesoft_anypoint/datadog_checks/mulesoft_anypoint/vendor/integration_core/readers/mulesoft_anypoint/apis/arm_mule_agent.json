@@ -1,0 +1,102 @@
+{
+  "api_name": "arm_mule_agent",
+  "url": "/mule",
+  "host_key": "mule_server",
+  "endpoints": [
+    {
+      "url": "/applications",
+      "ep_name": "applications",
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$[*].state",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "count"
+          },
+          "tags_expr_str": {
+            "application_name": "$[*].name",
+            "domain": "$[*].domain",
+            "status": "$[*].state"
+          }
+        }
+      ],
+      "endpoints": [
+        {
+          "parent_root": "$.[*]",
+          "parent_data": {
+            "appName": "$.name",
+            "appDomain": "$.domain"
+          },
+          "url": "/{appName}/flows",
+          "uri_params": {
+            "appName": "{appName}"
+          },
+          "ep_name": "flows",
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$[*].status",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "count"
+              },
+              "tags_expr_str": {
+                "flow_name": "$[*].name",
+                "application_name": "{appName}",
+                "domain": "{appDomain}",
+                "status": "$[*].status"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "/clusters",
+      "ep_name": "clusters",
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.clusterId",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "count"
+          },
+          "tags_expr_str": {
+            "cluster_id": "$.clusterId",
+            "cluster_node_number": "$.nodeNumber",
+            "cluster_member_uuid": "$.memberUUID",
+            "clustering_ip": "$.clusteringIp"
+          }
+        }
+      ],
+      "endpoints": [
+        {
+          "parent_root": "$",
+          "parent_data": {
+            "clusterId": "$.clusterId"
+          },
+          "url": "/members",
+          "ep_name": "members",
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$.[*].uuid",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "count"
+              },
+              "tags_expr_str": {
+                "cluster_id": "{clusterId}",
+                "cluster_member_uuid": "$[*].uuid",
+                "member_ip": "$.[*].ip",
+                "member_port": "$.[*].port"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
