@@ -19,7 +19,7 @@ CHECKS_BASE_REQ = "datadog-checks-base>=11.0.0"
 
 
 setup(
-    name="datadog-ioconnect-mulesoft-anypoint",
+    name="datadog-mulesoft_anypoint",
     version=ABOUT["__version__"],
     description="The mulesoft_anypoint check",
     long_description=long_description,
