@@ -49,7 +49,7 @@ To install the oracle_timesten check on your host:
 
 1. Install the integration.
 ```
-sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-oracle_timesten==1.0.1`
+sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-oracle_timesten==1.0.1
 ```
 
 ### Configuration
