@@ -66,13 +66,13 @@ sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-o
   endpoint: https://http‐intake.logs.datadoghq.com/v1/input/
 ```
   
-  See the [sample oracle_timesten.d/conf.yaml][3] for all available configuration options.
+  See the sample `oracle_timesten.d/conf.yaml.example` provided during the integration installation for all available configuration options.
 
-2. [Restart the Datadog Agent][4].
+2. [Restart the Datadog Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent).
 
 ### Validation
 
-[Run the Agent's status subcommand][5] and look for `oracle_timesten` under the Checks section.
+[Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-information) and look for `oracle_timesten` under the Checks section.
 
 Alternatively, you can get detailed information about the integration using the following command.
 ```
