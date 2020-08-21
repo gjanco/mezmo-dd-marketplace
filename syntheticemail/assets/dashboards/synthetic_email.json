@@ -1,465 +1,503 @@
 {
+    "title": "Synthetic Email",
+    "description": "",
     "author_info": {
         "author_name": "RapDev"
     },
-    "board_title": "Synthetic Email",
-    "description": "",
-    "template_variables": [
-        {
-            "default": "*",
-            "name": "region",
-            "prefix": "region"
-        },
-        {
-            "default": "*",
-            "name": "email",
-            "prefix": "email"
-        }
-    ],
     "widgets": [
-        {
-            "bgcolor": "blue",
-            "font_size": "24",
-            "height": 7,
-            "html": " US-EAST-1",
-            "text_align": "right",
-            "tick": true,
-            "tick_edge": "right",
-            "tick_pos": "50%",
-            "type": "note",
-            "width": 18,
-            "x": 0,
-            "y": 22
+      {
+        "id": 0,
+        "definition": {
+          "type": "note",
+          "content": " US-EAST-1",
+          "background_color": "blue",
+          "font_size": "24",
+          "text_align": "right",
+          "show_tick": true,
+          "tick_pos": "50%",
+          "tick_edge": "right"
         },
-        {
-            "height": 17,
-            "sizing": "fit",
-            "type": "image",
-            "url": "https://files.rapdev.io/images/rapdev-dash-logo.png",
-            "width": 18,
-            "x": 0,
-            "y": 0
-        },
-        {
-            "bgcolor": "blue",
-            "font_size": "24",
-            "height": 7,
-            "html": "EU-CENTRAL-1",
-            "text_align": "center",
-            "tick": true,
-            "tick_edge": "right",
-            "tick_pos": "50%",
-            "type": "note",
-            "width": 18,
-            "x": 0,
-            "y": 37
-        },
-        {
-            "bgcolor": "blue",
-            "font_size": "24",
-            "height": 10,
-            "html": "AP-SOUTHEAST-2",
-            "text_align": "center",
-            "tick": true,
-            "tick_edge": "right",
-            "tick_pos": "50%",
-            "type": "note",
-            "width": 18,
-            "x": 0,
-            "y": 53
-        },
-        {
-            "height": 15,
-            "legend": false,
-            "tile_def": {
-                "requests": [
-                    {
-                        "q": "avg:rapdev.syntheticemail.rtt{$region,$email} by {region}",
-                        "style": {
-                            "palette": "warm",
-                            "type": "solid",
-                            "width": "normal"
-                        },
-                        "type": "line"
-                    }
-                ],
-                "viz": "timeseries",
-                "yaxis": {
-                    "includeZero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Average RTT by Region (ms)",
-            "type": "timeseries",
-            "width": 61,
-            "x": 20,
-            "y": 0
-        },
-        {
-            "height": 15,
-            "tile_def": {
-                "requests": [
-                    {
-                        "q": "top(avg:rapdev.syntheticemail.rtt{$region,$email} by {region,email}, 10, 'mean', 'desc')"
-                    }
-                ],
-                "viz": "toplist"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Top Average RTT (ms)",
-            "type": "toplist",
-            "width": 61,
-            "x": 82,
-            "y": 0
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": false,
-                "custom_unit": "ms",
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.syntheticemail.rtt{region:us-east-1,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Average RTT (ms)",
-            "type": "query_value",
-            "width": 30,
-            "x": 20,
-            "y": 18
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": true,
-                "custom_unit": "hops",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.syntheticemail.hops{region:us-east-1,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Hops Count",
-            "type": "query_value",
-            "width": 30,
-            "x": 51,
-            "y": 18
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": true,
-                "custom_unit": "s",
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.syntheticemail.last_sent{region:us-east-1,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Seconds Elapsed Since Last Email",
-            "type": "query_value",
-            "width": 30,
-            "x": 82,
-            "y": 18
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": true,
-                "custom_unit": "s",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": "<=",
-                                "palette": "white_on_green",
-                                "value": "330"
-                            },
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_yellow",
-                                "value": "330"
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_red",
-                                "value": "660"
-                            }
-                        ],
-                        "q": "avg:rapdev.syntheticemail.last_seen{region:us-east-1,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Last Infrastructure Check-In (seconds)",
-            "type": "query_value",
-            "width": 30,
-            "x": 113,
-            "y": 18
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": false,
-                "custom_unit": "ms",
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.syntheticemail.rtt{region:eu-central-1,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Average RTT (ms)",
-            "type": "query_value",
-            "width": 30,
-            "x": 20,
-            "y": 34
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": true,
-                "custom_unit": "hops",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.syntheticemail.hops{region:eu-central-1,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Hops Count",
-            "type": "query_value",
-            "width": 30,
-            "x": 51,
-            "y": 34
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": true,
-                "custom_unit": "s",
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.syntheticemail.last_sent{region:eu-central-1,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Seconds Elapsed Since Last Email",
-            "type": "query_value",
-            "width": 30,
-            "x": 82,
-            "y": 34
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": true,
-                "custom_unit": "s",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": "<=",
-                                "palette": "white_on_green",
-                                "value": "330"
-                            },
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_yellow",
-                                "value": "330"
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_red",
-                                "value": "660"
-                            }
-                        ],
-                        "q": "avg:rapdev.syntheticemail.last_seen{region:eu-central-1,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Last Infrastructure Check-In (seconds)",
-            "type": "query_value",
-            "width": 30,
-            "x": 113,
-            "y": 34
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": false,
-                "custom_unit": "ms",
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.syntheticemail.rtt{region:ap-southeast-2,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Average RTT (ms)",
-            "type": "query_value",
-            "width": 30,
-            "x": 20,
-            "y": 50
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": true,
-                "custom_unit": "hops",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.syntheticemail.hops{region:eu-central-1,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Hops Count",
-            "type": "query_value",
-            "width": 30,
-            "x": 51,
-            "y": 50
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": true,
-                "custom_unit": "s",
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.syntheticemail.last_sent{region:ap-southeast-2,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Seconds Elapsed Since Last Email",
-            "type": "query_value",
-            "width": 30,
-            "x": 82,
-            "y": 50
-        },
-        {
-            "height": 13,
-            "tile_def": {
-                "autoscale": true,
-                "custom_unit": "s",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": "<=",
-                                "palette": "white_on_green",
-                                "value": "330"
-                            },
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_yellow",
-                                "value": "330"
-                            },
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_green",
-                                "value": "660"
-                            }
-                        ],
-                        "q": "avg:rapdev.syntheticemail.last_seen{region:ap-southeast-2,$email}"
-                    }
-                ],
-                "viz": "query_value"
-            },
-            "time": {},
-            "title": true,
-            "title_align": "left",
-            "title_size": 16,
-            "title_text": "Last Infrastructure Check-In (seconds)",
-            "type": "query_value",
-            "width": 30,
-            "x": 113,
-            "y": 50
+        "layout": {
+          "x": 0,
+          "y": 22,
+          "width": 18,
+          "height": 7
         }
-    ]
-}
+      },
+      {
+        "id": 1,
+        "definition": {
+          "type": "image",
+          "url": "https://files.rapdev.io/images/rapdev-dash-logo.png",
+          "sizing": "fit"
+        },
+        "layout": {
+          "x": 0,
+          "y": 0,
+          "width": 18,
+          "height": 17
+        }
+      },
+      {
+        "id": 2,
+        "definition": {
+          "type": "note",
+          "content": "EU-CENTRAL-1",
+          "background_color": "blue",
+          "font_size": "24",
+          "text_align": "center",
+          "show_tick": true,
+          "tick_pos": "50%",
+          "tick_edge": "right"
+        },
+        "layout": {
+          "x": 0,
+          "y": 37,
+          "width": 18,
+          "height": 7
+        }
+      },
+      {
+        "id": 3,
+        "definition": {
+          "type": "note",
+          "content": "AP-SOUTHEAST-2",
+          "background_color": "blue",
+          "font_size": "24",
+          "text_align": "center",
+          "show_tick": true,
+          "tick_pos": "50%",
+          "tick_edge": "right"
+        },
+        "layout": {
+          "x": 0,
+          "y": 53,
+          "width": 18,
+          "height": 10
+        }
+      },
+      {
+        "id": 4,
+        "definition": {
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.rtt{$region,$email} by {region}",
+              "display_type": "line",
+              "style": {
+                "palette": "warm",
+                "line_type": "solid",
+                "line_width": "normal"
+              }
+            }
+          ],
+          "custom_links": [],
+          "yaxis": {
+            "label": "",
+            "scale": "linear",
+            "min": "auto",
+            "max": "auto",
+            "include_zero": true
+          },
+          "title": "Average RTT by Region (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false
+        },
+        "layout": {
+          "x": 20,
+          "y": 0,
+          "width": 61,
+          "height": 17
+        }
+      },
+      {
+        "id": 5,
+        "definition": {
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(avg:rapdev.syntheticemail.rtt{$region,$email} by {region,email}, 10, 'mean', 'desc')"
+            }
+          ],
+          "custom_links": [],
+          "title": "Top Average RTT (ms)",
+          "title_size": "16",
+          "title_align": "left"
+        },
+        "layout": {
+          "x": 82,
+          "y": 0,
+          "width": 61,
+          "height": 17
+        }
+      },
+      {
+        "id": 6,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.rtt{region:us-east-1,$email}",
+              "aggregator": "avg"
+            }
+          ],
+          "custom_links": [],
+          "title": "Average RTT (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": false,
+          "custom_unit": "ms",
+          "precision": 0
+        },
+        "layout": {
+          "x": 20,
+          "y": 18,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 7,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.hops{region:us-east-1,$email}",
+              "aggregator": "avg"
+            }
+          ],
+          "custom_links": [],
+          "title": "Hops Count",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": true,
+          "custom_unit": "hops",
+          "precision": 2
+        },
+        "layout": {
+          "x": 51,
+          "y": 18,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 8,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.last_sent{region:us-east-1,$email}",
+              "aggregator": "avg"
+            }
+          ],
+          "custom_links": [],
+          "title": "Seconds Elapsed Since Last Email",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": true,
+          "custom_unit": "s",
+          "precision": 0
+        },
+        "layout": {
+          "x": 82,
+          "y": 18,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 9,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.last_seen{region:us-east-1,$email}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "comparator": "<=",
+                  "value": 330,
+                  "palette": "white_on_green"
+                },
+                {
+                  "comparator": ">",
+                  "value": 330,
+                  "palette": "white_on_yellow"
+                },
+                {
+                  "comparator": ">=",
+                  "value": 660,
+                  "palette": "white_on_red"
+                }
+              ]
+            }
+          ],
+          "custom_links": [],
+          "title": "Last Infrastructure Check-In (seconds)",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": true,
+          "custom_unit": "s",
+          "precision": 2
+        },
+        "layout": {
+          "x": 113,
+          "y": 18,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 10,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.rtt{region:eu-central-1,$email}",
+              "aggregator": "avg"
+            }
+          ],
+          "custom_links": [],
+          "title": "Average RTT (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": false,
+          "custom_unit": "ms",
+          "precision": 0
+        },
+        "layout": {
+          "x": 20,
+          "y": 34,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 11,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.hops{region:eu-central-1,$email}",
+              "aggregator": "avg"
+            }
+          ],
+          "custom_links": [],
+          "title": "Hops Count",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": true,
+          "custom_unit": "hops",
+          "precision": 2
+        },
+        "layout": {
+          "x": 51,
+          "y": 34,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 12,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.last_sent{region:eu-central-1,$email}",
+              "aggregator": "avg"
+            }
+          ],
+          "custom_links": [],
+          "title": "Seconds Elapsed Since Last Email",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": true,
+          "custom_unit": "s",
+          "precision": 0
+        },
+        "layout": {
+          "x": 82,
+          "y": 34,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 13,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.last_seen{region:eu-central-1,$email}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "comparator": "<=",
+                  "value": 330,
+                  "palette": "white_on_green"
+                },
+                {
+                  "comparator": ">",
+                  "value": 330,
+                  "palette": "white_on_yellow"
+                },
+                {
+                  "comparator": ">=",
+                  "value": 660,
+                  "palette": "white_on_red"
+                }
+              ]
+            }
+          ],
+          "custom_links": [],
+          "title": "Last Infrastructure Check-In (seconds)",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": true,
+          "custom_unit": "s",
+          "precision": 2
+        },
+        "layout": {
+          "x": 113,
+          "y": 34,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 14,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.rtt{region:ap-southeast-2,$email}",
+              "aggregator": "avg"
+            }
+          ],
+          "custom_links": [],
+          "title": "Average RTT (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": false,
+          "custom_unit": "ms",
+          "precision": 0
+        },
+        "layout": {
+          "x": 20,
+          "y": 50,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 15,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.hops{region:eu-central-1,$email}",
+              "aggregator": "avg"
+            }
+          ],
+          "custom_links": [],
+          "title": "Hops Count",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": true,
+          "custom_unit": "hops",
+          "precision": 2
+        },
+        "layout": {
+          "x": 51,
+          "y": 50,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 16,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.last_sent{region:ap-southeast-2,$email}",
+              "aggregator": "avg"
+            }
+          ],
+          "custom_links": [],
+          "title": "Seconds Elapsed Since Last Email",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": true,
+          "custom_unit": "s",
+          "precision": 0
+        },
+        "layout": {
+          "x": 82,
+          "y": 50,
+          "width": 30,
+          "height": 15
+        }
+      },
+      {
+        "id": 17,
+        "definition": {
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "avg:rapdev.syntheticemail.last_seen{region:ap-southeast-2,$email}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "comparator": "<=",
+                  "value": 330,
+                  "palette": "white_on_green"
+                },
+                {
+                  "comparator": ">",
+                  "value": 330,
+                  "palette": "white_on_yellow"
+                },
+                {
+                  "comparator": ">",
+                  "value": 660,
+                  "palette": "white_on_green"
+                }
+              ]
+            }
+          ],
+          "custom_links": [],
+          "title": "Last Infrastructure Check-In (seconds)",
+          "title_size": "16",
+          "title_align": "left",
+          "autoscale": true,
+          "custom_unit": "s",
+          "precision": 2
+        },
+        "layout": {
+          "x": 113,
+          "y": 50,
+          "width": 30,
+          "height": 15
+        }
+      }
+    ],
+    "template_variables": [
+      {
+        "name": "region",
+        "default": "*",
+        "prefix": "region"
+      },
+      {
+        "name": "email",
+        "default": "*",
+        "prefix": "email"
+      }
+    ],
+    "layout_type": "free",
+    "is_read_only": true,
+    "notify_list": [],
+    "id": 30378
+  }
