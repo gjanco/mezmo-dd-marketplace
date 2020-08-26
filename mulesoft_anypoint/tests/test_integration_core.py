@@ -40,8 +40,8 @@ def test_load_config(test_path, test_utils):
     test_utils = os.path.join(root_path, "tests", test_utils)
     configs = load_config(test_utils, None)
     assert len(configs) == 2
-    assert "test1" in configs[0]
-    assert "etest1" in configs[1]
+    assert "test1" in configs[1]
+    assert "etest1" in configs[0]
     configs = load_config(test_utils, "test_config")
     assert len(configs) == 1
     assert "test1" in configs[0]

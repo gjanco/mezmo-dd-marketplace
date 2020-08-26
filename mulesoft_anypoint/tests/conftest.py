@@ -1,7 +1,6 @@
 import os
 
 import pytest
-
 from datadog_checks.dev import docker_run, get_docker_hostname, get_here
 
 from .docker.common import load_endpoints

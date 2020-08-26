@@ -4,44 +4,61 @@
 
 The Datadog Mule® Integration is an Agent-based integration that collects metrics from MuleSoft products and uploads them into Datadog. 
 
-Datadog Mule® Integration Bundle 
-
-- 120+ metrics 
-- 4 out-of-the-box dashboards 
-- 9 out-of-the-box monitors 
-- Datadog Connector for Mule 4 
+![Datadog Mule® Integration Bundle](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_bundle.png)
 
 You can use these metrics to take advantage of the out-of-the-box dashboards and monitors or you can create your own visualizations.
 
-### The observability you need for your Mule applications
+### **The observability you need for your Mule applications**
 
-Use our out-of-the-box dashboards or build your own visualizations
-
-Operations (Infrastructure, Alerts and Resource Allocation Dashboards) 
+#### Operations (_Infrastructure, Alerts and Resource Allocation Dashboards_) 
 
 - Monitor the health of your Mule servers, applications, and other IT infrastructure 
 - Receive and visualize alerts about your Mule infrastructure 
-- Gain insights about your Anypoint Platform resource allocation of your organization 
+- Gain insights about your Anypoint Platform resources allocation of your organization 
 
-Development (Optimization Dashboard) 
+![Operations: Infrastructure dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_ops_infra.png)
+
+![Operations: Resources allocation and usage dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_ops_allocation.png)
+
+#### Development (_Optimization Dashboard_) 
 
 - Quickly identify memory, CPU, and network issues in your Mule applications 
 - Find bottlenecks in your Mule applications to optimize performance 
 - Instrument your Mule applications with our Datadog Connector for Mule 4 for troubleshooting purposes 
 
-Executive (Cost-optimization and Downtime Dashboard) 
+![Development: Optimizations dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_dev_optimization.png)
+
+#### Executive (_Cost-optimization and Downtime Dashboard_) 
 
 - Analyze and forecast your ROI based on used and unused resources 
 - Get visibility of the system uptime of your Mule investment 
 
-Metrics are collected from the following MuleSoft products: 
+![Executives: Cost optimization dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_exec_cost_optimization.png)
+
+#### Metrics are collected from the following MuleSoft products: 
 
 - Mule runtime for both CloudHub and on-premise standalone servers 
 - Anypoint Exchange 
 - Anypoint Access Management 
 - Object Store v2 
 
-### Troubleshooting
+### **Instrument your Mule applications with our Datadog Mule 4 Connector**
+
+![Datadog Connector for Mule 4](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_mule_connector.png)
+
+Use the Datadog Connector for Mule 4 with Datadog APM tracing to gain visibility using the out-of-the-box performance dashboards.
+
+![Datadog APM](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_apm_traces.png)
+
+Measure the performance of the operations in your flows as granular as needed using spans.
+
+![Datadog APM](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_apm_trace.png)
+
+Also, correlate the logs generated within a transaction in a single trace to narrow down any performance optimization or troubleshooting scope.
+
+![Datadog APM](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_apm_logs.png)
+
+### **Troubleshooting**
 
 Need help? Contact us: [support_ddp@ioconnectservices.com][9].
 
@@ -60,7 +77,7 @@ Follow the instructions below to install and configure this check for an Agent r
 To install the mulesoft_anypoint check on your host:
 
 1. [Download and install the Datadog Agent](https://app.datadoghq.com/account/settings#agent/overview).
-2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-mulesoft-anypoint==1.0.2`
+2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-mulesoft-anypoint==1.0.3`
   
 ### Configuration
 
