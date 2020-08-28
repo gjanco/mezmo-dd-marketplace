@@ -1,0 +1,1051 @@
+{
+    "author_info": {
+        "author_name": "RapDev"
+    },
+    "description": null,
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "UCSBladePortRX",
+            "prefix": "ucsbladeportrx"
+        },
+        {
+            "default": "*",
+            "name": "UCSBladePortTX",
+            "prefix": "ucsbladeporttx"
+        },
+        {
+            "default": "*",
+            "name": "Host",
+            "prefix": "host"
+        },
+        {
+            "default": "rd-cisco-ucs",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "default": "*",
+            "name": "UCSBladeSlot",
+            "prefix": "ucsbladeslot"
+        },
+        {
+            "default": "*",
+            "name": "UCSBladeDescription",
+            "prefix": "ucsbladedesc"
+        },
+        {
+            "default": "*",
+            "name": "UCSPSU",
+            "prefix": "ucsbladepsu"
+        },
+        {
+            "default": "*",
+            "name": "UCSTemp",
+            "prefix": "ucsbladetemp"
+        },
+        {
+            "default": "*",
+            "name": "UCSSPartitionName",
+            "prefix": "ucsbladeslot"
+        },
+        {
+            "default": "*",
+            "name": "UCSDiskName",
+            "prefix": "ucsdiskname"
+        }
+    ],
+    "title": "RapDev Cisco UCS Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 70
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_yellow",
+                                "value": 85
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 85
+                            }
+                        ],
+                        "q": "avg:snmp.CPU.Utilization{$Host,$SNMP_Profile,$IP}"
+                    }
+                ],
+                "title": "CPU Usage (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2982620659761563,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "max",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 70
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_yellow",
+                                "value": 85
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 85
+                            }
+                        ],
+                        "q": "avg:snmp.Memory.Utilization{$Host,$IP,$SNMP_Profile}"
+                    }
+                ],
+                "title": "Memory Usage (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7601844369777891,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "Days",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP}/8640000"
+                    }
+                ],
+                "title": "System Up Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5415230504466305,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Admin State",
+                        "limit": 100,
+                        "order": "desc",
+                        "q": "avg:snmp.Admin.State{$Host,$SNMP_Profile,$IP} by {bladedesc,bladeslot}"
+                    }
+                ],
+                "title": "Blade Inventory",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 314638572478095,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 1.01
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "avg:snmp.Admin.State{$Host,$SNMP_Profile,$IP,$UCSBladeSlot,$UCSBladeDescription}"
+                    }
+                ],
+                "title": "Blade Admin Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 824589956326519,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 42
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Memory.Free{$Host,$SNMP_Profile,$IP,$UCSBladeSlot} by {ucsbladeslot}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Memory.Speed{$Host,$SNMP_Profile,$IP,$UCSBladeSlot} by {ucsbladeslot}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Blade Available Memory",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 7759666687647625,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 42
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Admin State",
+                        "limit": 100,
+                        "order": "desc",
+                        "q": "avg:snmp.Admin.State{$Host,$SNMP_Profile,$IP} by {bladedesc,bladeslot,systemdescription}"
+                    }
+                ],
+                "title": "Blade Inventory",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 8680527164239457,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 42
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Blade.Core.Count{$Host,$SNMP_Profile,$IP,$UCSBladeSlot,$UCSBladeDescription} by {ucsbladeslot}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Blade Number of Cores",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 8601811472227772,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 68
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Blade.Thread.Count{$Host,$SNMP_Profile,$IP,$UCSBladeSlot,$UCSBladeDescription} by {ucsbladeslot}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Blade Number of Threads",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 761560083155333,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 68
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Blade.Cpu.Count{$Host,$SNMP_Profile,$IP,$UCSBladeSlot,$UCSBladeDescription} by {ucsbladeslot}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Blade Number of CPU's",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 7566076407094653,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 68
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "CPU Count",
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:snmp.Blade.Cpu.Count{*} by {ucsbladedesc, ucsbladeslot}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Core Count",
+                        "q": "avg:snmp.Blade.Core.Count{*} by {ucsbladedesc,ucsbladeslot}"
+                    }
+                ],
+                "title": "CPU Count by Blade",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 5653726023964511,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 84
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InBroadcastPkts{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutBroadcastPkts{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "UCS Broadcast Packets",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 627782948329755,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 110
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InMulticastPkts{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutMulticastPkts{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "UCS Multicast Packets",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 1400677089531850,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 110
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InJumboPkts{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutJumboPkts{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "UCS Jumbo Packets",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 1660197412142840,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 110
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InUnicastPkts{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutUnicastPkts{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "UCS Unicast Packets",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 8952145840986284,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 126
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutBytes{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InBytes{$Host,$SNMP_Profile,$IP,$UCSBladePortRX,$UCSBladePortTX} by {ucsbladeportrx,ucsbladeporttx}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "UCS Total Bytes",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 1050791433203196,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 126
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:snmp.Interface.OutBytes{$UCSBladePortRX} by {ucsbladeporttx}, 10, 'mean', 'desc')",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Top 10 Ports (RX)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 1049672282815794,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 126
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:snmp.Interface.InBytes{$UCSBladePortTX} by {ucsbladeportrx}, 10, 'mean', 'desc')",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Top 10 Ports (TX)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 6231515316310789,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 143
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "RX Total Byles",
+                        "limit": 100,
+                        "order": "desc",
+                        "q": "avg:snmp.Interface.InBytes{$Host,$SNMP_Profile,$IP} by {ucsbladeporttx}"
+                    }
+                ],
+                "title": "Local Interfaces",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 1007216330371407,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 143
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.PowerSupply.Operability{$Host,$SNMP_Profile,$IP} by {powersupply}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Blade Power Supply Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 8224997769932944,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 169
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.PowerSupply.Thermal{$Host,$SNMP_Profile,$IP,$UCSPSU} by {powersupply}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "UCS Power Supply Thermal",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 3509151587220234,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 169
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "q": "avg:snmp.Storage.Size{$Host,$SNMP_Profile,$IP,$UCSSPartitionName} by {storagedevice}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Storage.Used{$Host,$SNMP_Profile,$IP,$UCSSPartitionName} by {storagedevice}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Local Storage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 2883103193591784,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": -1,
+                "y": 195
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0Online\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0Offline\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0Present\u00a0",
+                        "value": "y = 10"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0Not Present\u00a0",
+                        "value": "y = 11"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Disk.Status{$Host,$SNMP_Profile,$IP,$UCSDiskName} by {disk}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Disk.Presence{$Host,$SNMP_Profile,$IP,$UCSDiskName} by {disk}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Disk States",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 4421900116786214,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 195
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.VsanMember.Status{$Host,$SNMP_Profile,$IP} by {vsan}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Storage vSAN Members",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 8981448924419973,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 195
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Storage Usage",
+                        "limit": 10,
+                        "order": "desc",
+                        "q": "avg:snmp.Storage.Used{*} by {storagedevice}"
+                    }
+                ],
+                "title": "Storage Usage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 5897434415541480,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 210
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "vSAN Members",
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:snmp.VsanMember.Status{$Host,$SNMP_Profile,$IP} by {vsan}"
+                    }
+                ],
+                "title": "vSAN Members",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 8744951424892209,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 210
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.TempStatsAvg{$SNMP_Profile,$IP,$Host,$UCSTemp} by {bladetemp}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "UCS Temp Sensors (Front)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 7043757394572331,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": -1,
+                "y": 236
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.TempStatsRearAvg{$IP,$SNMP_Profile,$Host,$UCSTemp} by {bladetemp}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "UCS Temp Sensors (Rear)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 897000236172782,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 236
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Temp Sensors",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 8755565202064936,
+            "layout": {
+                "height": 7,
+                "width": 120,
+                "x": 13,
+                "y": 227
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Local Storage",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3671390354565170,
+            "layout": {
+                "height": 7,
+                "width": 120,
+                "x": 13,
+                "y": 186
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Chassis Power Supply",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 7094593853801566,
+            "layout": {
+                "height": 7,
+                "width": 120,
+                "x": 13,
+                "y": 160
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Chassis Network",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 1525565879318076,
+            "layout": {
+                "height": 7,
+                "width": 120,
+                "x": 13,
+                "y": 101
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Blade CPUs",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 7278585115629012,
+            "layout": {
+                "height": 7,
+                "width": 120,
+                "x": 13,
+                "y": 59
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Blades",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 6405722464607009,
+            "layout": {
+                "height": 7,
+                "width": 120,
+                "x": 13,
+                "y": 33
+            }
+        }
+    ]
+}

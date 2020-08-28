@@ -1,0 +1,28 @@
+{
+	"name": "Dell iDRAC - System LCD Status Issue on {{snmp_device.name}}",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:snmp.System.Lcd.Status{snmp_profile:rd-dell-idrac} by {snmp_device} > 4.5",
+	"message": "{{#is_alert}}\nSystem LCD Status is in a bad state on {{snmp_device.name}} \n\n1 = Other\n2 = Other\n3 = OK\n4 = Non-Critical\n5 = Critical\n6 = Non-Recoverable\n\n{{/is_alert}} \n\n{{#is_alert_recovery}}\nSystem LCD Status has recovered on {{snmp_device.name}} \n\n1 = Other\n2 = Other\n3 = OK\n4 = Non-Critical\n5 = Critical\n6 = Non-Recoverable\n\n{{/is_alert_recovery}}",
+	"tags": [
+		"check_type:snmp",
+		"hardware:idrac"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": null,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"thresholds": {
+			"critical": 4.5,
+			"warning": 3.5,
+			"critical_recovery": 3
+		}
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"name": "Dell iDRAC - Disk Issue with {{disk.name}} on {{snmp_device.name}}",
+	"type": "query alert",
+	"query": "avg(last_5m):max:snmp.Disk.State{snmp_profile:rd-dell-idrac} by {snmp_device,disk} > 3.1",
+	"message": "{{#is_alert}}\nOne of the DRAC Disks on {{snmp_device.name}} has an issue. \n\n1 = Unknown\n2 = Ready\n3 = Online\n4 = Foreign\n5 = Offline\n6 = Blocked\n7 = Failed\n8 = Non-RAID\n9 = Removed\n{{/is_alert}} \n\n{{#is_alert_recovery}}\nDRAC Disk issue resolved on {{snmp_device.name}}.\n\n1 = Unknown\n2 = Ready\n3 = Online\n4 = Foreign\n5 = Offline\n6 = Blocked\n7 = Failed\n8 = Non-RAID\n9 = Removed\n{{/is_alert_recovery}}",
+	"tags": [
+		"check_type:snmp",
+		"hardware:idrac"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": null,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"thresholds": {
+			"critical": 3.1,
+			"critical_recovery": 3
+		}
+	}
+}

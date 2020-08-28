@@ -1,0 +1,915 @@
+{
+    "author_info": {
+        "author_name": "RapDev"
+    },
+    "description": null,
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "Interface",
+            "prefix": "interface"
+        },
+        {
+            "default": "*",
+            "name": "InterfaceDescription",
+            "prefix": "interfacedescription"
+        },
+        {
+            "default": "rd-cisco-meraki",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "default": "*",
+            "name": "DeviceName",
+            "prefix": "devicename"
+        },
+        {
+            "default": "*",
+            "name": "NetworkName",
+            "prefix": "networkname"
+        },
+        {
+            "default": "*",
+            "name": "Product",
+            "prefix": "productcode"
+        }
+    ],
+    "title": "RapDev Cisco Meraki Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:snmp.DeviceClientCount{$IP,$DeviceName,$NetworkName,$Product,snmp_profile:meraki-cloud}"
+                    }
+                ],
+                "title": "Meraki Clients Connected",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8621652685419251,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:snmp.DeviceStatus{$SNMP_Profile,$IP,$DeviceName,$NetworkName,$Product,snmp_profile:meraki-cloud}"
+                    }
+                ],
+                "title": "Meraki Devices Online",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4338144443322930,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "sum:snmp.DeviceClientCount{$NetworkName,$DeviceName,$Product,snmp_profile:meraki-cloud}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Total Clients Connected",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7890853776551963,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(sum:snmp.DeviceClientCount{$DeviceName,$NetworkName,$Product,snmp_profile:meraki-cloud} by {networkname}, 10, 'last', 'desc')"
+                    }
+                ],
+                "title": "Top Client Connections by Network Name",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 5402704674265497,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(sum:snmp.DeviceClientCount{$DeviceName,$NetworkName,$Product,snmp_profile:meraki-cloud} by {devicename}, 10, 'last', 'desc')"
+                    }
+                ],
+                "title": "Top Client Connections by Device",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 8248967691186749,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(sum:snmp.DeviceClientCount{$DeviceName,$NetworkName,$Product,snmp_profile:meraki-cloud} by {productcode}, 10, 'max', 'desc')"
+                    }
+                ],
+                "title": "Top Client Connections by Product Type",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 6954929254163056,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "sum:snmp.DeviceClientCount{$DeviceName,$NetworkName,$Product,snmp_profile:meraki-cloud} by {networkname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Clients per Network",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5300356738745629,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": -1,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "sum:snmp.DeviceClientCount{$DeviceName,$NetworkName,$Product,snmp_profile:meraki-cloud} by {devicename}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Clients per Device",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3744450423157351,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "error dashed",
+                        "label": " Problem ",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "ok dashed",
+                        "label": " OK ",
+                        "value": "y = 1"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "min:snmp.DeviceStatus{$DeviceName,$NetworkName,$Product,snmp_profile:meraki-cloud} by {devicename}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Meraki Device Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5875651785569316,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Device.Interface.RecvPkts{$Interface,snmp_profile:meraki-cloud} by {interface}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Device.Interface.SentPkts{$Interface,snmp_profile:meraki-cloud} by {interface}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Interface Packets Send/Receive",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6296900489388556,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 66
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Device.Interface.RecvBytes{$Interface,snmp_profile:meraki-cloud} by {interface}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Device.Interface.SentBytes{$Interface,snmp_profile:meraki-cloud} by {interface}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Interface Bytes Send/Receive",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4738992096224403,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 66
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(sum:snmp.Device.Interface.RecvBytes{$DeviceName,$NetworkName,$Product,snmp_profile:meraki-cloud} by {interface}, 10, 'last', 'desc')"
+                    }
+                ],
+                "title": "Device Throughput by Interface",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 2563713232269355,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 66
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 2
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "avg:snmp.Interface.AdminStatus{$IP,$Interface,$InterfaceDescription,snmp_profile:meraki-7k}"
+                    }
+                ],
+                "title": "Interface Admin Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7251075657890975,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 91
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InOctets{$IP,$Interface,$InterfaceDescription,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutOctets{$IP,$Interface,$InterfaceDescription,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Bytes In & Bytes Out",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 585824710611001,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 91
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InBroadcastPkts{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutBroadcastPkts{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "In & Out Broadcasts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4878396324921466,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 91
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InUnicastPkts{$IP,$Interface,$InterfaceDescription,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutUnicastPkts{$IP,$Interface,$InterfaceDescription,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "In & Out Unicast Packets",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8663577097452210,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 107
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InMulticastPkts{$IP,$Interface,$InterfaceDescription,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutMulticastPkts{$IP,$Interface,$InterfaceDescription,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "In & Out MultiCastPkts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6832243975741060,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 107
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "q": "avg:snmp.Interface.InErrors{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutErrors{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k} by {interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "In & Out Errors",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 585682559634339,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 107
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 2
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "avg:snmp.Interface.OperStatus{$Interface,$IP,$InterfaceDescription,snmp_profile:meraki-7k}"
+                    }
+                ],
+                "title": "Interface Operation Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5934328292737413,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 123
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "b/s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:snmp.Interface.Speed{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k}"
+                    }
+                ],
+                "title": "Interface Speed",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1576637738092872,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 123
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Admin Status",
+                        "q": "avg:snmp.Interface.AdminStatus{$Interface, $InterfaceDescription, $IP, snmp_profile:meraki-7k} by {interface,interfacedescription}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "Oper Status",
+                        "limit": 100,
+                        "order": "asc",
+                        "q": "avg:snmp.Interface.OperStatus{$Interface, $InterfaceDescription, $IP, snmp_profile:meraki-7k} by {interface,interfacedescription}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "Speed",
+                        "q": "avg:snmp.Interface.Speed{$Interface, $InterfaceDescription, $IP, snmp_profile:meraki-7k} by {interface,interfacedescription}"
+                    }
+                ],
+                "title": "Local Interfaces",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 7609282799359072,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 123
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 3,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.Interface.InOctets{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k}.as_rate()/avg:snmp.Interface.Speed{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k}/1000"
+                    }
+                ],
+                "title": "% Utilization In",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7319904167616221,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 139
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 3,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.Interface.OutOctets{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k}.as_rate()/avg:snmp.Interface.Speed{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k}/1000"
+                    }
+                ],
+                "title": "% Utilization Out",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 711718831111353,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 139
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InOctets{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k} by {interface}.as_rate()/avg:snmp.Interface.Speed{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k} by {interface}/10000",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutOctets{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k} by {interface}.as_rate()/avg:snmp.Interface.Speed{$Interface,$InterfaceDescription,$IP,snmp_profile:meraki-7k} by {interface}/10000",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Interface Utilization (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 626740438176397,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 139
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "Days",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.sysUpTimeInstance{$SNMP_Profile,$IP,snmp_profile:meraki-7k}/8640000"
+                    }
+                ],
+                "title": "System Up Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3915810089166053,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 155
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Meraki Device Details",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 5588077094683467,
+            "layout": {
+                "height": 6,
+                "width": 120,
+                "x": 13,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Meraki Interface Throughput",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3690199445333648,
+            "layout": {
+                "height": 6,
+                "width": 120,
+                "x": 13,
+                "y": 58
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Switch Interfaces",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 2001379436265232,
+            "layout": {
+                "height": 6,
+                "width": 120,
+                "x": 13,
+                "y": 83
+            }
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+{
+	"name": "Barracuda CGF - Service {{service.name}}  State Change on {{snmp_device.name}}",
+	"type": "query alert",
+	"query": "avg(last_1h):anomalies(avg:snmp.Service.State{snmp_profile:rd-barracuda-cgf} by {snmp_device,service}, 'basic', 2, direction='both', alert_window='last_5m', interval=20, count_default_zero='true') >= 0.1",
+	"message": "{{#is_alert}}\nService {{service.name}}'s state changed, this is likely indicating a failover state or the services crashing.  Review the dashboard for more details\n{{/is_alert}} \n\n{{#is_recovery}}\nService {{service.name}}'s state is back to normal.\n{{/is_recovery}}",
+	"tags": [
+		"check_type:snmp",
+		"hardware:barracudacgf"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": 10,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": true,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"threshold_windows": {
+			"recovery_window": "last_5m",
+			"trigger_window": "last_5m"
+		},
+		"thresholds": {
+			"critical": 0.1,
+			"critical_recovery": 0.09
+		}
+	}
+}

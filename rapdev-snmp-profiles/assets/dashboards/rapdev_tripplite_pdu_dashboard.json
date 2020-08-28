@@ -1,0 +1,687 @@
+{
+    "author_info": {
+        "author_name": "RapDev"
+    },
+    "description": null,
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "OutletDescription",
+            "prefix": "outletdescription"
+        },
+        {
+            "default": "*",
+            "name": "OutletName",
+            "prefix": "outletname"
+        },
+        {
+            "default": "*",
+            "name": "Circuit",
+            "prefix": "circuit"
+        },
+        {
+            "default": "*",
+            "name": "Breaker",
+            "prefix": "breaker"
+        },
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "default": "rd-tripplite-pdu",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        }
+    ],
+    "title": "RapDev Tripplite PDU Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "max",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 70
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 70
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 80
+                            }
+                        ],
+                        "q": "max:snmp.CircuitUtilization{$IP,$SNMP_Profile,$Circuit}*0.01"
+                    }
+                ],
+                "title": "Circuit Utilization (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4781617148679787,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "amps",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:snmp.CircuitTotalCurrent{$IP,$SNMP_Profile,$Circuit}/100"
+                    }
+                ],
+                "title": "Total Current (A)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6734168414323441,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "watt",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "sum:snmp.OutletWatts{$IP,$SNMP_Profile,$OutletName}"
+                    }
+                ],
+                "title": "Output Power (w)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6894237558221345,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "v",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.InputVoltage{$IP,$SNMP_Profile}/10"
+                    }
+                ],
+                "title": "Input Voltage (v)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5821890342392364,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "v",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.HighTransferVoltage{$IP,$SNMP_Profile}/10"
+                    }
+                ],
+                "title": "High Transfer Voltage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 36339905015687,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "v",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.LowTransferVoltage{$IP,$SNMP_Profile}/10"
+                    }
+                ],
+                "title": "Low Transfer Voltage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2990964999438026,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "hz",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.PhaseFreqneucy{$IP,$SNMP_Profile}/10"
+                    }
+                ],
+                "title": "Phase Frequency (hz)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6749396696050293,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.LowTransferVoltage{$SNMP_Profile,$IP}/10",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.HighTransferVoltage{$SNMP_Profile,$IP}/10",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.InputVoltage{$SNMP_Profile,$IP}/10",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Low High Transfer Voltage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3530499134273203,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.OutletWatts{$OutletDescription,$OutletName,$IP} by {outletname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Outlet Consumptions (watts)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3385641548300147,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 66
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.OutletCurrent{$OutletDescription,$OutletName,$IP} by {outletname}*0.01",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Outlet Consumption (Current Amps)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 560125514639805,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 66
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0OK\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0Problem\u00a0",
+                        "value": "y = 1"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.OutletState{$OutletDescription,$OutletName,$IP} by {outletname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Outlet State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7522381236254407,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 66
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0Circuit 1\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0Circuit 2\u00a0",
+                        "value": "y = 1"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.OutletCircuit{$OutletDescription,$OutletName,$IP} by {outletname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Outlet Circuit",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2999858095112480,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 82
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "max",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 70
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 70
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 80
+                            }
+                        ],
+                        "q": "max:snmp.CircuitUtilization{$IP,$Circuit,$SNMP_Profile}*0.01"
+                    }
+                ],
+                "title": "Circuit Utilization (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3468985652548579,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 107
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.CircuitTotalPower{$IP,$Circuit,$SNMP_Profile}"
+                    }
+                ],
+                "title": "Circuit Power (Watts)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8101255575020104,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 107
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.CircuitTotalCurrent{$IP,$Circuit,$SNMP_Profile} by {circuit}*0.01",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Circuit Current (Amps)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4772604877481914,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 107
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.CircuitUtilization{$IP,$Circuit,$SNMP_Profile} by {circuit}*0.01",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Circuit Utilization (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7465571760544649,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 123
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.CircuitTotalPower{$IP,$Circuit,$SNMP_Profile} by {circuit}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Circuit Power (Watts)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2650988680849976,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 123
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.BreakerStatus{$Breaker,$IP,$SNMP_Profile} by {breaker}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "title": "Breaker Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3981413688449871,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 123
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Circuits & Breakers",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 7588182471523180,
+            "layout": {
+                "height": 6,
+                "width": 120,
+                "x": 11,
+                "y": 99
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Outlets",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 2107486133471673,
+            "layout": {
+                "height": 6,
+                "width": 120,
+                "x": 11,
+                "y": 58
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Voltage Stats",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 2627599661200303,
+            "layout": {
+                "height": 6,
+                "width": 120,
+                "x": 11,
+                "y": 17
+            }
+        }
+    ]
+}

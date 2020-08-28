@@ -1,0 +1,29 @@
+{
+	"name": "Barracuda CGF - High Memory on {{snmp_device.name}}",
+	"type": "query alert",
+	"query": "avg(last_1m):( avg:snmp.Memory.Used{snmp_profile:rd-barracuda-cgf} by {snmp_device} / avg:snmp.Memory.Total{snmp_profile:rd-barracuda-cgf} by {snmp_device} ) * 100 > 90",
+	"message": "{{#is_alert}}\nMemory consumption is getting high on {{snmp_device.name}}\n{{/is_alert}} \n\n{{#is_recovery}}\nMemory consumption is back to normal on {{snmp_device.name}}\n{{/is_recovery}}",
+	"tags": [
+		"check_type:snmp",
+		"hardware:barracudacgf"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": 10,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": true,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"thresholds": {
+			"critical": 90,
+			"warning": 70,
+			"critical_recovery": 89,
+			"warning_recovery": 69
+		}
+	}
+}

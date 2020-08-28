@@ -1,0 +1,62 @@
+{
+    "author_info": {
+        "author_name": "RapDev"
+    },
+    "description": null,
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "Datacenter",
+            "prefix": "location"
+        },
+        {
+            "default": "*",
+            "name": "Manufacturer",
+            "prefix": "manufacturer"
+        },
+        {
+            "default": "*",
+            "name": "SystemName",
+            "prefix": "sysname"
+        },
+        {
+            "default": "*",
+            "name": "ModelName",
+            "prefix": "modelname"
+        },
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        }
+    ],
+    "title": "SNMP Device Inventory",
+    "widgets": [
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Uptime",
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:snmp.sysUpTimeInstance{$Datacenter, $Manufacturer, $IP, $SystemName, $ModelName} by {snmp_device,sysname,manufacturer,model,chassisversion,softwareversion,serialnumber}"
+                    }
+                ],
+                "time": {},
+                "title": "SNMP Device Inventory",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 752631267578176,
+            "layout": {
+                "height": 32,
+                "width": 118,
+                "x": 0,
+                "y": 0
+            }
+        }
+    ]
+}

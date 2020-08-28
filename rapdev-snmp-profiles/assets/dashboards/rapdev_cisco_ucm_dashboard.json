@@ -1,0 +1,689 @@
+{
+    "author_info": {
+        "author_name": "RapDev"
+    },
+    "description": null,
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "InterfaceDescription",
+            "prefix": "interfacedescription"
+        },
+        {
+            "default": "*",
+            "name": "Host",
+            "prefix": "host"
+        },
+        {
+            "default": "rd-cisco-ucm",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "default": "*",
+            "name": "Interface",
+            "prefix": "interface"
+        }
+    ],
+    "title": "RapDev Cisco UCM Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "Days",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP}/8640000"
+                    }
+                ],
+                "title": "System Up Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5652348037903055,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "q": "avg:snmp.Phones.Registered{$Host,$SNMP_Profile,$IP} by {sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Gateways.Registered{$Host,$SNMP_Profile,$IP} by {sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.CTIDevices.Registered{$Host,$SNMP_Profile,$IP} by {sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "q": "avg:snmp.MediaDevices.Registered{$Host,$SNMP_Profile,$IP} by {sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Total Registered Devices",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8415686722504213,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.Phones.Registered{$Host,$SNMP_Profile,$IP}+avg:snmp.Gateways.Registered{$Host,$SNMP_Profile,$IP}+avg:snmp.CTIDevices.Registered{$Host,$SNMP_Profile,$IP}+avg:snmp.MediaDevices.Registered{$Host,$SNMP_Profile,$IP}"
+                    }
+                ],
+                "title": "Registered Devices",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5677700327640840,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": -2
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Phones.Registered{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Phones.Rejected{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "bars",
+                        "q": "avg:snmp.Phones.Unregistered{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Phone Registrations",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5243536035894332,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.MediaDevices.Registered{$Host,$SNMP_Profile,$IP}"
+                    }
+                ],
+                "title": "Registered Media Devices",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7099581433327413,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.CTIDevices.Registered{$Host,$SNMP_Profile,$IP}"
+                    }
+                ],
+                "title": "Registered CTI Devices",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2500208241920981,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.Gateways.Registered{$Host,$SNMP_Profile,$IP}"
+                    }
+                ],
+                "title": "Registered Gateways",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2799898182052498,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.Phones.Registered{$Host,$SNMP_Profile,$IP}"
+                    }
+                ],
+                "title": "Registered Phones",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7732988072856134,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.Phones.Unregistered{$Host,$SNMP_Profile,$IP} by {service}"
+                    }
+                ],
+                "title": "Unregistered Phones",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5181903548427032,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 2
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "avg:snmp.Interface.AdminStatus{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface}"
+                    }
+                ],
+                "title": "Interface Admin Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4361715295150758,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 66
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.InOctets{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutOctets{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Bytes In & Bytes Out",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7494322251686875,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 66
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "q": "avg:snmp.Interface.InErrors{$InterfaceDescription,$Host,$SNMP_Profile,$IP,$Interface} by {interfacedescription}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Interface.OutErrors{$InterfaceDescription,$Host,$SNMP_Profile,$IP,$Interface} by {interfacedescription}.as_count()",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "In & Out Errors",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5956184078283932,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 66
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "custom_unit": "b/s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.Interface.Speed{$InterfaceDescription,$Host,$SNMP_Profile,$IP,$Interface}"
+                    }
+                ],
+                "title": "Interface Speed",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4955194020902272,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 82
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Admin Status",
+                        "limit": 100,
+                        "order": "asc",
+                        "q": "avg:snmp.Interface.AdminStatus{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "Int Speed",
+                        "q": "avg:snmp.Interface.Speed{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "Oper Status",
+                        "q": "avg:snmp.Interface.OperStatus{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}"
+                    }
+                ],
+                "title": "Local Interfaces",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 7642871157240486,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 82
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0Runnable\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0Running\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0Not Runnable\u00a0",
+                        "value": "y = 3"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Process.Status{$Host,$SNMP_Profile,$IP} by {process}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Process States",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3786255400934971,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 107
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:snmp.Process.Status{$Host,$SNMP_Profile,$IP} by {process}, 100, 'last', 'desc')"
+                    }
+                ],
+                "title": "UCM Process Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 4603168035526795,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 48,
+                "y": 107
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Process.Cpu.Time{$SNMP_Profile,$IP,$Host} by {process}/1000",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "CPU Time (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6670951569608427,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 96,
+                "y": 107
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Process.Memory.Time{$SNMP_Profile,$IP,$Host} by {process}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Memory Consumption",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5300323932949121,
+            "layout": {
+                "height": 15,
+                "width": 47,
+                "x": 0,
+                "y": 123
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Process",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 6141686572852465,
+            "layout": {
+                "height": 6,
+                "width": 120,
+                "x": 12,
+                "y": 99
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Interfaces",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 7359929305452334,
+            "layout": {
+                "height": 6,
+                "width": 120,
+                "x": 12,
+                "y": 58
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Registration Stats",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 820753876293252,
+            "layout": {
+                "height": 6,
+                "width": 120,
+                "x": 12,
+                "y": 17
+            }
+        }
+    ]
+}
