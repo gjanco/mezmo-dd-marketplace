@@ -3,13 +3,12 @@
 
 [![RapDev SNMP Profiles Introduction](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/video.png)](https://www.youtube.com/watch?v=SVT9hqV7aD4&list=PLa2zzueYDhHrjODIXryBX_RakQIL6nmOh)
 
-Our SNMP Profiles support over 150 devices profiles natively, and has pre-built dashboards for all supported hardware devices to help you monitor them instantly. Our engineers have spent hundreds of hours tuning the profiles to ensure that they collect all relevant metrics with the necessary tags, including serial numbers, firmware versions, hardware versions, and more. Our integration can be deployed in minutes and start monitoring, visualizing, and alerting immediately.
+The RapDev SNMP Profiles package supports over 150 device profiles natively, and has pre-built dashboards for all supported hardware devices to help you monitor them instantly. Several hundred hours have gone into tuning the profiles to ensure that they collect all relevant metrics with the necessary tags, including serial numbers, firmware versions, hardware versions, and more. This integration can be deployed in minutes and start monitoring, visualizing, and alerting immediately.
 
-We will give you access to several profiles, and will auto-deploy a number of new dashboards on your instance.  It will scan the subnets provided in the ```conf.yaml``` configuration, automatically detect any supported hardware, and start polling the OIDs using the native Datadog SNMP integration.  
+The integration will give you access to hundreds of YAML profiles, and will auto-deploy a number of new dashboards on your instance. It will then use the native Datadog SNMP Autodiscovery to automatically detect any supported hardware, and start polling the OIDs using the native Datadog SNMP integration.
+There is no need for you to manage, edit, modify, or update any SNMP profiles on your Datadog agent or YAML. All of that is taken care of with this integration, and you can simply start monitoring and alerting.
 
-There is no need for you to manage, edit, modify, or update any SNMP profiles on your Datadog agent or YAML.  All of that is taken care of with our integration, and you can simply start monitoring and alerting.
-
-Below are some screenshots of some dashboards that come out of the box with our supported device profiles.
+Below are some screenshots of the dashboards that come out of the box with this integration.
 
 ### Dashboard for Cisco Meraki
 ![Screenshot6](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/6.png)
@@ -109,7 +108,7 @@ Linux\
  
  Windows\
  `%PROGRAMDATA%\Datadog\conf.d\snmp.d\profiles\*`\
- `%PROGRAMFILES\Datadog\Datadog Agent\embedded\lib\python<VER>\site-packages\datadog_checks\snmp\data\profiles\*`
+ `%PROGRAMFILES%\Datadog\Datadog Agent\embedded\lib\site-packages\datadog_checks\snmp\data\profiles\*`
 
 2. Download the [snmp-profiles.zip](https://files.rapdev.io/datadog/snmp-profiles.zip) file from RapDev's site.
 

@@ -1,0 +1,425 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "default": "rd-apc-pdu-2g",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "default": "*",
+            "name": "Host",
+            "prefix": "host"
+        },
+        {
+            "default": "*",
+            "name": "PowerBank",
+            "prefix": "bankid"
+        }
+    ],
+    "title": "RapDev APC PDU Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "kW h",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.GroupTotalEnergy{$IP,$SNMP_Profile,$Host}/10"
+                    }
+                ],
+                "title": "Total Group Energy",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7309238462896054,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "Days",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.sysUpTimeInstance{$IP,$SNMP_Profile,$Host}/8640000"
+                    }
+                ],
+                "title": "System Up Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6916255011485180,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 77,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.DeviceStatusLoadState{$IP,$SNMP_Profile,$Host}"
+                    }
+                ],
+                "title": "Current Load State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8617803978370700,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 38,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Power & Phase",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 4094499453322462,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "kW",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:snmp.DeviceStatusPower{$IP,$SNMP_Profile,$Host}/100"
+                    }
+                ],
+                "title": "Power Consumption",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4872982735142116,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 38,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 1
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "q": "max:snmp.DeviceStatusPowerSupplyAlarm{$IP,$SNMP_Profile,$Host}"
+                    }
+                ],
+                "title": "Power Supply Alarm",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 814923896886792,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.PhaseStatusCurrent{$IP,$SNMP_Profile,$Host} by {snmp_device}/10",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Phase Load (amps)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8937361369406194,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 77,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.PhaseStatusVoltage{$IP,$SNMP_Profile,$Host} by {snmp_device}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Phase Voltage (volts)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8645470568583018,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 39
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "kW",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "max:snmp.DeviceStatusPeakPower{$IP,$SNMP_Profile,$Host}/100"
+                    }
+                ],
+                "title": "Peak Power",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8470230069456260,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 38,
+                "y": 39
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Input Banks",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3509069949949594,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 55
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Current{$IP,$SNMP_Profile,$Host,$PowerBank} by {bankid,snmp_device}/10",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "time": {},
+                "title": "Current Draw (amps)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2924387962863934,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0LowLoad\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0Normal\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0NearOverload\u00a0",
+                        "value": "y = 3"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0Overload\u00a0",
+                        "value": "y = 4"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Load.State{$IP,$SNMP_Profile,$Host,$PowerBank} by {bankid,snmp_device}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "time": {},
+                "title": "Load State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4604724627213756,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 38,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.DeviceStatusPower{$IP,$SNMP_Profile,$Host} by {snmp_device}/100",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Power Consumption (kW)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8864161057969100,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 77,
+                "y": 39
+            }
+        }
+    ]
+}

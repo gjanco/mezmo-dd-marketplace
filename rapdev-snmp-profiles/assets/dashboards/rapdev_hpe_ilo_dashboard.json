@@ -1,8 +1,6 @@
 {
-    "author_info": {
-        "author_name": "RapDev"
-    },
-    "description": null,
+    "author_name": "RapDev",
+    "description": "",
     "layout_type": "free",
     "template_variables": [
         {
@@ -16,7 +14,7 @@
             "prefix": "snmp_device"
         },
         {
-            "default": "rd-hpe-ilo",
+            "default": "rd-hpe-ilo4",
             "name": "SNMP_Profile",
             "prefix": "snmp_profile"
         }
@@ -26,23 +24,23 @@
         {
             "definition": {
                 "custom_links": [],
-                "precision": 2,
+                "precision": 0,
                 "requests": [
                     {
                         "aggregator": "last",
                         "conditional_formats": [
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_green",
                                 "value": 2
                             },
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_yellow",
                                 "value": 3
                             },
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_red",
                                 "value": 4
                             }
@@ -58,31 +56,31 @@
             "id": 4196458301764728,
             "layout": {
                 "height": 15,
-                "width": 47,
+                "width": 17,
                 "x": 0,
-                "y": 8
+                "y": 7
             }
         },
         {
             "definition": {
                 "custom_links": [],
-                "precision": 2,
+                "precision": 0,
                 "requests": [
                     {
                         "aggregator": "avg",
                         "conditional_formats": [
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_green",
                                 "value": 2
                             },
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_yellow",
                                 "value": 3
                             },
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_red",
                                 "value": 4
                             }
@@ -98,31 +96,31 @@
             "id": 1817542717433529,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 8
+                "width": 15,
+                "x": 18,
+                "y": 7
             }
         },
         {
             "definition": {
                 "custom_links": [],
-                "precision": 2,
+                "precision": 0,
                 "requests": [
                     {
                         "aggregator": "avg",
                         "conditional_formats": [
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_green",
                                 "value": 2
                             },
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_yellow",
                                 "value": 3
                             },
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_red",
                                 "value": 4
                             }
@@ -138,31 +136,31 @@
             "id": 3178862690194008,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 96,
-                "y": 8
+                "width": 15,
+                "x": 34,
+                "y": 7
             }
         },
         {
             "definition": {
                 "custom_links": [],
-                "precision": 2,
+                "precision": 0,
                 "requests": [
                     {
                         "aggregator": "avg",
                         "conditional_formats": [
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_green",
-                                "value": 2
+                                "value": 2.1
                             },
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_yellow",
                                 "value": 3
                             },
                             {
-                                "comparator": ">=",
+                                "comparator": "<=",
                                 "palette": "white_on_red",
                                 "value": 4
                             }
@@ -178,18 +176,17 @@
             "id": 4863386619493555,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 0,
-                "y": 24
+                "width": 17,
+                "x": 50,
+                "y": 7
             }
         },
         {
             "definition": {
-                "custom_links": [],
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.TempSensor.Value{$Host,$IP,$SNMP_Profile} by {tempsensor}",
+                        "q": "avg:snmp.TempSensor.Value{$Host,$IP,$SNMP_Profile} by {snmp_device,sensor}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -197,22 +194,30 @@
                         }
                     }
                 ],
+                "show_legend": false,
+                "time": {},
                 "title": "Temperature Sensors (C)",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 8152566412953097,
             "layout": {
                 "height": 15,
-                "width": 47,
+                "width": 39,
                 "x": 0,
-                "y": 49
+                "y": 30
             }
         },
         {
             "definition": {
-                "custom_links": [],
                 "markers": [
                     {
                         "display_type": "ok dashed",
@@ -238,7 +243,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Fan.Status{$SNMP_Profile,$IP,$Host} by {fan}",
+                        "q": "avg:snmp.Fan.Status{$SNMP_Profile,$IP,$Host} by {fan,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -246,17 +251,26 @@
                         }
                     }
                 ],
+                "show_legend": false,
+                "time": {},
                 "title": "Fan Status",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 8347770074230749,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 49
+                "width": 40,
+                "x": 40,
+                "y": 30
             }
         },
         {
@@ -265,7 +279,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Memory.CPUCount{$Host,$SNMP_Profile,$IP} by {memoryslot}",
+                        "q": "avg:snmp.Memory.CPUCount{$Host,$SNMP_Profile,$IP} by {memoryslot,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -273,17 +287,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Memory Module CPU Number",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 3045759484420356,
             "layout": {
                 "height": 15,
-                "width": 47,
+                "width": 39,
                 "x": 0,
-                "y": 74
+                "y": 53
             }
         },
         {
@@ -309,7 +331,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Memory.Status{$Host,$SNMP_Profile,$IP} by {memoryslot}",
+                        "q": "avg:snmp.Memory.Status{$Host,$SNMP_Profile,$IP} by {memoryslot,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -317,17 +339,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Memory Module Status",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 7217595170477104,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 74
+                "width": 40,
+                "x": 40,
+                "y": 53
             }
         },
         {
@@ -336,7 +366,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Memory.Size{$Host,$SNMP_Profile,$IP} by {memoryslot}",
+                        "q": "avg:snmp.Memory.Size{$Host,$SNMP_Profile,$IP} by {memoryslot,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -344,17 +374,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Memory Size",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 3104306029744362,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 96,
-                "y": 74
+                "width": 36,
+                "x": 81,
+                "y": 53
             }
         },
         {
@@ -385,7 +423,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.PowerSupply.Status{$Host,$SNMP_Profile,$IP} by {powersupply}",
+                        "q": "avg:snmp.PowerSupply.Status{$Host,$SNMP_Profile,$IP} by {powersupply,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -393,17 +431,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Power Supply State",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 4174755557499714,
             "layout": {
                 "height": 15,
-                "width": 47,
+                "width": 39,
                 "x": 0,
-                "y": 90
+                "y": 69
             }
         },
         {
@@ -429,7 +475,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.PowerSupply.RedundancyStatus{$Host,$SNMP_Profile,$IP} by {powersupply}",
+                        "q": "avg:snmp.PowerSupply.RedundancyStatus{$Host,$SNMP_Profile,$IP} by {powersupply,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -437,17 +483,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Power Supply Redundancy State",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 8336057152992917,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 90
+                "width": 40,
+                "x": 40,
+                "y": 69
             }
         },
         {
@@ -478,7 +532,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Disk.State{$Host,$SNMP_Profile,$IP} by {disk}",
+                        "q": "avg:snmp.Disk.State{$Host,$SNMP_Profile,$IP} by {disk,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -486,17 +540,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Disk State",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 6393127316974586,
             "layout": {
                 "height": 15,
-                "width": 47,
+                "width": 39,
                 "x": 0,
-                "y": 115
+                "y": 92
             }
         },
         {
@@ -505,7 +567,7 @@
                 "requests": [
                     {
                         "display_type": "area",
-                        "q": "avg:snmp.Disk.Reads{$Host,$SNMP_Profile,$IP} by {disk}",
+                        "q": "avg:snmp.Disk.Reads{$Host,$SNMP_Profile,$IP} by {disk,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -514,7 +576,7 @@
                     },
                     {
                         "display_type": "area",
-                        "q": "avg:snmp.Disk.Writes{$Host,$SNMP_Profile,$IP} by {disk}",
+                        "q": "avg:snmp.Disk.Writes{$Host,$SNMP_Profile,$IP} by {disk,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -522,17 +584,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Disk Reads / Writes",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 2590010790619240,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 115
+                "width": 40,
+                "x": 40,
+                "y": 92
             }
         },
         {
@@ -541,7 +611,7 @@
                 "requests": [
                     {
                         "display_type": "area",
-                        "q": "avg:snmp.Disk.Reads{$Host,$SNMP_Profile,$IP} by {disk}",
+                        "q": "avg:snmp.Disk.Reads{$Host,$SNMP_Profile,$IP} by {disk,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -550,7 +620,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Disk.Writes{$Host,$SNMP_Profile,$IP} by {disk}",
+                        "q": "avg:snmp.Disk.Writes{$Host,$SNMP_Profile,$IP} by {disk,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -558,17 +628,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Disk Bytes Read / Written",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 5545819810986989,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 96,
-                "y": 115
+                "width": 36,
+                "x": 81,
+                "y": 92
             }
         },
         {
@@ -577,7 +655,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Disk.Size{$Host,$SNMP_Profile,$IP} by {disk}",
+                        "q": "avg:snmp.Disk.Size{$Host,$SNMP_Profile,$IP} by {disk,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -585,15 +663,75 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Disk Size",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 5547321410073675,
             "layout": {
                 "height": 15,
-                "width": 47,
+                "width": 39,
+                "x": 0,
+                "y": 108
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0OK\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0Degraded\u00a0",
+                        "value": "y = 3"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0Failed\u00a0",
+                        "value": "y = 4"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.ControllerBoard.State{$Host,$SNMP_Profile,$IP} by {controller,snmp_device}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "RAID Controller Board State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5426371915943807,
+            "layout": {
+                "height": 15,
+                "width": 39,
                 "x": 0,
                 "y": 131
             }
@@ -621,7 +759,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ControllerBoard.State{$Host,$SNMP_Profile,$IP} by {controller}",
+                        "q": "avg:snmp.Controller.State{$Host,$SNMP_Profile,$IP} by {controller,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -629,61 +767,25 @@
                         }
                     }
                 ],
-                "title": "RAID Controller Board State",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries"
-            },
-            "id": 5426371915943807,
-            "layout": {
-                "height": 15,
-                "width": 47,
-                "x": 0,
-                "y": 156
-            }
-        },
-        {
-            "definition": {
-                "custom_links": [],
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 2"
-                    },
-                    {
-                        "display_type": "warning dashed",
-                        "label": "\u00a0Degraded\u00a0",
-                        "value": "y = 3"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Failed\u00a0",
-                        "value": "y = 4"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Controller.State{$Host,$SNMP_Profile,$IP} by {controller}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
+                "show_legend": false,
                 "title": "RAID Controller State",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 6183831916839449,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 156
+                "width": 40,
+                "x": 40,
+                "y": 131
             }
         },
         {
@@ -709,7 +811,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Controller.DriveWriteCache.State{$Host,$SNMP_Profile,$IP} by {controller}",
+                        "q": "avg:snmp.Controller.DriveWriteCache.State{$Host,$SNMP_Profile,$IP} by {controller,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -717,17 +819,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "RAID Controller Write Cache State",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 8650933338365,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 96,
-                "y": 156
+                "width": 36,
+                "x": 81,
+                "y": 131
             }
         },
         {
@@ -758,7 +868,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.LogicalDisk.Status{$Host,$SNMP_Profile,$IP} by {logicaldisk}",
+                        "q": "avg:snmp.LogicalDisk.Status{$Host,$SNMP_Profile,$IP} by {logicaldisk,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -766,17 +876,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Logical Disk Status",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 7634551277307021,
             "layout": {
                 "height": 15,
-                "width": 47,
+                "width": 39,
                 "x": 0,
-                "y": 173
+                "y": 147
             }
         },
         {
@@ -807,7 +925,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.LogicalDisk.FTState{$Host,$SNMP_Profile,$IP} by {logicaldisk}",
+                        "q": "avg:snmp.LogicalDisk.FTState{$Host,$SNMP_Profile,$IP} by {logicaldisk,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -815,17 +933,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Logical Disk FT State",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 5077413776683956,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 173
+                "width": 40,
+                "x": 40,
+                "y": 147
             }
         },
         {
@@ -834,7 +960,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.LogicalDisk.Size{$Host,$SNMP_Profile,$IP} by {logicaldisk}",
+                        "q": "avg:snmp.LogicalDisk.Size{$Host,$SNMP_Profile,$IP} by {logicaldisk,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -842,17 +968,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "Logical Disk Size",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 8609298789650375,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 96,
-                "y": 173
+                "width": 36,
+                "x": 81,
+                "y": 147
             }
         },
         {
@@ -878,7 +1012,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Accelerator.BackupPowerSource{$Host,$SNMP_Profile,$IP} by {accelerator}",
+                        "q": "avg:snmp.Accelerator.BackupPowerSource{$Host,$SNMP_Profile,$IP} by {accelerator,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -886,17 +1020,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "RAID Accelerator Backup Power Source",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 2977545199898901,
             "layout": {
                 "height": 15,
-                "width": 47,
+                "width": 39,
                 "x": 0,
-                "y": 198
+                "y": 170
             }
         },
         {
@@ -927,7 +1069,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Accelerator.BatteryStatus{$Host,$SNMP_Profile,$IP} by {accelerator}",
+                        "q": "avg:snmp.Accelerator.BatteryStatus{$Host,$SNMP_Profile,$IP} by {accelerator,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -935,17 +1077,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "RAID Accelerator Battery Status",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 6770397317524685,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 198
+                "width": 40,
+                "x": 40,
+                "y": 170
             }
         },
         {
@@ -971,7 +1121,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Accelerator.State{$Host,$SNMP_Profile,$IP}",
+                        "q": "avg:snmp.Accelerator.State{$Host,$SNMP_Profile,$IP} by {snmp_device,accelerator}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -979,17 +1129,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "RAID Accelerator State",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 229112016981354,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 96,
-                "y": 198
+                "width": 36,
+                "x": 81,
+                "y": 170
             }
         },
         {
@@ -1020,7 +1178,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Accelerator.Status{$Host,$SNMP_Profile,$IP}",
+                        "q": "avg:snmp.Accelerator.Status{$Host,$SNMP_Profile,$IP} by {accelerator,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -1028,17 +1186,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "RAID Accelerator Status",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 5016225880183533,
             "layout": {
                 "height": 15,
-                "width": 47,
+                "width": 39,
                 "x": 0,
-                "y": 214
+                "y": 186
             }
         },
         {
@@ -1059,7 +1225,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Accelerator.WriteCacheState{$Host,$SNMP_Profile,$IP}",
+                        "q": "avg:snmp.Accelerator.WriteCacheState{$Host,$SNMP_Profile,$IP} by {accelerator,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -1067,17 +1233,25 @@
                         }
                     }
                 ],
+                "show_legend": false,
                 "title": "RAID Accelerator Write Cache %",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "timeseries"
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
             "id": 681326032846693,
             "layout": {
                 "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 214
+                "width": 40,
+                "x": 40,
+                "y": 186
             }
         },
         {
@@ -1094,9 +1268,9 @@
             "id": 1026545282252163,
             "layout": {
                 "height": 6,
-                "width": 120,
-                "x": 11,
-                "y": 190
+                "width": 117,
+                "x": 0,
+                "y": 163
             }
         },
         {
@@ -1113,9 +1287,9 @@
             "id": 2505487121086086,
             "layout": {
                 "height": 6,
-                "width": 120,
-                "x": 11,
-                "y": 148
+                "width": 117,
+                "x": 0,
+                "y": 124
             }
         },
         {
@@ -1132,9 +1306,9 @@
             "id": 5288987534206932,
             "layout": {
                 "height": 6,
-                "width": 120,
-                "x": 11,
-                "y": 107
+                "width": 117,
+                "x": 0,
+                "y": 85
             }
         },
         {
@@ -1151,9 +1325,9 @@
             "id": 4000094884614181,
             "layout": {
                 "height": 6,
-                "width": 120,
-                "x": 11,
-                "y": 66
+                "width": 117,
+                "x": 0,
+                "y": 46
             }
         },
         {
@@ -1170,9 +1344,9 @@
             "id": 7883155178594074,
             "layout": {
                 "height": 6,
-                "width": 120,
-                "x": 11,
-                "y": 41
+                "width": 117,
+                "x": 0,
+                "y": 23
             }
         },
         {
@@ -1189,9 +1363,34 @@
             "id": 6608085025783395,
             "layout": {
                 "height": 6,
-                "width": 120,
-                "x": 11,
+                "width": 117,
+                "x": 0,
                 "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "System Health",
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:snmp.HealthMIB.State{*} by {sysname,snmp_device,productid,productname,serialnumber,snmp_profile}"
+                    }
+                ],
+                "title": "HPE iLO Inventory",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 1032032548297774,
+            "layout": {
+                "height": 15,
+                "width": 49,
+                "x": 68,
+                "y": 7
             }
         }
     ]
