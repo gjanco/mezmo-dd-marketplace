@@ -2,8 +2,10 @@
 # All rights reserved
 # Licensed under a 3-clause BSD style license (see LICENSE)
 
+import os
 import csv
 import json
+import requests
 import traceback
 from datetime import date, datetime, timedelta, timezone
 
@@ -11,11 +13,15 @@ from datetime import date, datetime, timedelta, timezone
 from random import choice
 from string import ascii_letters
 
-import requests
-
-# from datadog_agent import get_config
 from datadog_checks.base import AgentCheck
 from dateutil.parser import parse
+
+from datadog_checks.base import AgentCheck
+try:
+    from datadog_agent import get_config
+except ImportError:
+    def get_config(key):
+        return ""
 
 REQUIRED_TAGS = [
     "vendor:rapdev",
@@ -33,6 +39,17 @@ class O365Check(AgentCheck):
         self.billing_metric = "{}.{}".format("datadog.marketplace", self.metric_prefix)
         self.service_check_name = "{}.status".format(self.metric_prefix)
 
+        # patch in proxy configuration for requests
+        proxyConfig = get_config("proxy")
+        if proxyConfig:
+            httpProxy = proxyConfig.get("http", None)
+            httpsProxy = proxyConfig.get("https", None)
+
+            if httpProxy:
+                os.environ["http_proxy"] = httpProxy
+            if httpsProxy:
+                os.environ["https_proxy"] = httpsProxy
+
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
         self.today = datetime.now(tz=timezone.utc).date()
         self.events_token = {}
@@ -40,6 +57,60 @@ class O365Check(AgentCheck):
         self.synthetics_token = {}
         self.synthetic_email_api_key = "KIcolOzDSn2tdHppEnCmF5bVbAGSHDiN43eWkcWR"
         self.tags.append("{}:{}".format("tenant_id", self.instance.get("tenant_id", None)))
+
+        ###########################################################################################
+        ## Microsoft 365 Synthetics
+        ###########################################################################################
+        if self.instance.get("enable_synthetics", True):
+            self.do_check("Synthetics.Authorization", "set_synthetics_token", instance)
+            self.do_check(
+                "Synthetics.Outlook.Calendar",
+                "get_calendar_synthetic_metrics",
+                instance,
+            )
+            self.do_check(
+                "Synthetics.OneDrive.File", "get_onedrive_synthetic_metrics", instance
+            )
+            self.do_check(
+                "Synthetics.Teams.Chat", "get_teams_synthetic_metrics", instance
+            )
+        else:
+            self.service_check(
+                self.service_check_name,
+                AgentCheck.UNKNOWN,
+                tags=self.tags + ["service:{}".format("Synthetics.Authorization")],
+            )
+            self.service_check(
+                self.service_check_name,
+                AgentCheck.UNKNOWN,
+                tags=self.tags + ["service:{}".format("Synthetics.Outlook.Calendar")],
+            )
+            self.service_check(
+                self.service_check_name,
+                AgentCheck.UNKNOWN,
+                tags=self.tags + ["service:{}".format("Synthetics.OneDrive.File")],
+            )
+            self.service_check(
+                self.service_check_name,
+                AgentCheck.UNKNOWN,
+                tags=self.tags + ["service:{}".format("Synthetics.Teams.Chat")],
+            )
+
+        ###########################################################################################
+        ## Email Synthetics
+        ###########################################################################################
+        if self.instance.get("enable_synthetic_email", True):
+            self.do_check("Synthetics.Email", "get_email_synthetic_metrics", instance)
+        else:
+            self.service_check(
+                self.service_check_name,
+                AgentCheck.UNKNOWN,
+                tags=self.tags + ["service:{}".format("Synthetics.Email")],
+            )
+
+        if self.instance.get("probe_mode", False):
+            self.log.info("probe mode detected, skipping reports")
+            return
 
         ###########################################################################################
         ## Microsoft 365 Graph Authorization
@@ -276,57 +347,6 @@ class O365Check(AgentCheck):
                 AgentCheck.UNKNOWN,
                 tags=self.tags + ["service:{}".format("Reports.Yammer.Groups")],
             )
-
-        ###########################################################################################
-        ## Microsoft 365 Synthetics
-        ###########################################################################################
-        if self.instance.get("enable_synthetics", True):
-            self.do_check("Synthetics.Authorization", "set_synthetics_token", instance)
-            self.do_check(
-                "Synthetics.Outlook.Calendar",
-                "get_calendar_synthetic_metrics",
-                instance,
-            )
-            self.do_check(
-                "Synthetics.OneDrive.File", "get_onedrive_synthetic_metrics", instance
-            )
-            self.do_check(
-                "Synthetics.Teams.Chat", "get_teams_synthetic_metrics", instance
-            )
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.Authorization")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.Outlook.Calendar")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.OneDrive.File")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.Teams.Chat")],
-            )
-
-        ###########################################################################################
-        ## Email Synthetics
-        ###########################################################################################
-        if self.instance.get("enable_synthetic_email", True):
-            self.do_check("Synthetics.Email", "get_email_synthetic_metrics", instance)
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.Email")],
-            )
-
         return
 
     def do_check(self, service, check, instance):
@@ -424,13 +444,13 @@ class O365Check(AgentCheck):
         return
 
     def get_synthetic_http_metric(
-        self, metric_pre, verb, url, headers, proxies, data, tags
+        self, metric_pre, verb, url, headers, data, tags
     ):
         metric_tags = tags.copy()
 
         try:
             r = requests.request(
-                verb.upper(), url=url, headers=headers, proxies=proxies, data=data
+                verb.upper(), url=url, headers=headers, data=data
             )
         except Exception as e:
             self.gauge("{}.response".format(metric_pre), float(0), tags=metric_tags)
@@ -469,8 +489,7 @@ class O365Check(AgentCheck):
             "client_id": client_id,
             "client_secret": client_secret,
         }
-        proxies = self.get_instance_proxy(instance, url)
-        r = requests.post(url, data=data, proxies=proxies)
+        r = requests.post(url, data=data)
         r.raise_for_status()
 
 
@@ -523,7 +542,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         app_fields = [
             "Exchange",
@@ -579,7 +597,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -608,7 +626,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         app_fields = ["Windows", "Mac", "Windows 10 Mobile", "iOS", "Android"]
@@ -638,7 +655,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -661,7 +678,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -762,7 +778,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -788,7 +804,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         app_fields = ["Web", "Windows Phone", "Android Phone", "iOS", "Mac", "Windows"]
@@ -815,7 +830,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -838,7 +853,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -881,7 +895,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -907,7 +921,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -944,7 +957,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -967,7 +980,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         app_fields = [
@@ -1005,7 +1017,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1028,7 +1040,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -1096,7 +1107,7 @@ class O365Check(AgentCheck):
         ]
         ## Need computed metrics for overages on quotas ?? ##
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1122,7 +1133,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -1171,7 +1181,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1194,7 +1204,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -1237,7 +1246,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1263,7 +1272,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -1319,7 +1327,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1342,7 +1350,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -1399,7 +1406,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1425,7 +1432,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -1482,7 +1488,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1505,7 +1511,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         app_fields = ["Windows", "Windows Phone", "Android Phone", "iPhone", "iPad"]
@@ -1532,7 +1537,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1555,7 +1560,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {}
@@ -1581,7 +1585,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1604,7 +1608,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {}
@@ -1630,7 +1633,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1653,7 +1656,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {}
@@ -1676,7 +1678,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1699,7 +1701,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {}
@@ -1724,7 +1725,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1747,7 +1748,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {}
@@ -1772,7 +1772,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1795,7 +1795,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {}
@@ -1814,7 +1813,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1837,7 +1836,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {}
@@ -1862,7 +1860,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1885,7 +1883,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {}
@@ -1910,7 +1907,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1933,7 +1930,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {}
@@ -1955,7 +1951,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -1981,7 +1977,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -2025,7 +2020,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -2048,7 +2043,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         app_fields = [
@@ -2090,7 +2084,7 @@ class O365Check(AgentCheck):
                 }
             )
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -2113,7 +2107,6 @@ class O365Check(AgentCheck):
         )
         token = self.reports_token.get("access_token", None)
         headers = {"Authorization": "Bearer {}".format(token)}
-        proxies = self.get_instance_proxy(instance, url)
 
         prefix = self.metric_prefix
         tag_fields = {
@@ -2161,7 +2154,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        with requests.get(url, headers=headers, proxies=proxies, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
             for row in csv.DictReader(lines):
@@ -2189,7 +2182,6 @@ class O365Check(AgentCheck):
         email_address = self.instance.get("email_address")
 
         """ /checkin """
-        proxies = self.get_instance_proxy(instance, checkin_url)
         res = requests.post(
             checkin_url,
             headers=headers,
@@ -2197,17 +2189,14 @@ class O365Check(AgentCheck):
                 "emailAddress": email_address,
                 "checkVersion": self.check_version,
             },
-            proxies=proxies,
         )
         res.raise_for_status()
 
         """ /metrics """
-        proxies = self.get_instance_proxy(instance, metrics_url)
         res = requests.post(
             metrics_url,
             headers=headers,
             json={"emailAddress": email_address},
-            proxies=proxies,
         )
         res.raise_for_status()
 
@@ -2284,13 +2273,11 @@ class O365Check(AgentCheck):
 
         """ [Read] Calendar """
         url = "{}/users/{}/calendar".format(graph_url, username)
-        proxies = self.get_instance_proxy(instance, url)
         res = self.get_synthetic_http_metric(
             metric_prefix,
             "GET",
             url,
             headers,
-            proxies,
             None,
             metric_tags + ["operation:read"],
         )
@@ -2331,13 +2318,11 @@ class O365Check(AgentCheck):
                 ],
             }
 
-            proxies = self.get_instance_proxy(instance, url)
             res = self.get_synthetic_http_metric(
                 metric_prefix,
                 "POST",
                 url,
                 headers,
-                proxies,
                 json.dumps(data, default=str),
                 metric_tags + ["operation:create"],
             )
@@ -2358,13 +2343,11 @@ class O365Check(AgentCheck):
                     },
                 }
 
-                proxies = self.get_instance_proxy(instance, url)
                 res = self.get_synthetic_http_metric(
                     metric_prefix,
                     "PATCH",
                     url,
                     headers,
-                    proxies,
                     json.dumps(data, default=str),
                     metric_tags + ["operation:update"],
                 )
@@ -2373,13 +2356,11 @@ class O365Check(AgentCheck):
                 url = "{}/users/{}/calendar/events/{}".format(
                     graph_url, username, event_id
                 )
-                proxies = self.get_instance_proxy(instance, url)
                 res = self.get_synthetic_http_metric(
                     metric_prefix,
                     "DELETE",
                     url,
                     headers,
-                    proxies,
                     json.dumps(data, default=str),
                     metric_tags + ["operation:delete"],
                 )
@@ -2405,13 +2386,11 @@ class O365Check(AgentCheck):
 
         """ [Read] User's OneDrive """
         url = "{}/users/{}/drive".format(graph_url, username)
-        proxies = self.get_instance_proxy(instance, url)
         res = self.get_synthetic_http_metric(
             metric_prefix,
             "GET",
             url,
             headers,
-            proxies,
             None,
             metric_tags + ["operation:read"],
         )
@@ -2429,13 +2408,11 @@ class O365Check(AgentCheck):
             url = "{}/users/{}/drive/root:/ddagent-synthetic/dd-agent-{}.txt:/content".format(
                 graph_url, username, drive_ts
             )
-            proxies = self.get_instance_proxy(instance, url)
             res = self.get_synthetic_http_metric(
                 metric_prefix,
                 "PUT",
                 url,
                 headers,
-                proxies,
                 content,
                 metric_tags + ["operation:create"],
             )
@@ -2449,13 +2426,11 @@ class O365Check(AgentCheck):
                 )
                 data = {"name": "{}-modified.txt".format(drive_ts)}
 
-                proxies = self.get_instance_proxy(instance, url)
                 res = self.get_synthetic_http_metric(
                     metric_prefix,
                     "PATCH",
                     url,
                     headers,
-                    proxies,
                     json.dumps(data, default=str),
                     metric_tags + ["operation:update"],
                 )
@@ -2464,13 +2439,11 @@ class O365Check(AgentCheck):
                 url = "{}/users/{}/drive/items/{}".format(
                     graph_url, username, drive_item_id
                 )
-                proxies = self.get_instance_proxy(instance, url)
                 res = self.get_synthetic_http_metric(
                     metric_prefix,
                     "DELETE",
                     url,
                     headers,
-                    proxies,
                     None,
                     metric_tags + ["operation:delete"],
                 )
@@ -2496,8 +2469,7 @@ class O365Check(AgentCheck):
 
         """ [Read] User's joined teams """
         url = "{}/me/joinedTeams".format(graph_url)
-        proxies = self.get_instance_proxy(instance, url)
-        res = requests.get(url, headers=headers, proxies=proxies)
+        res = requests.get(url, headers=headers)
         res.raise_for_status()
 
         team_id = None
@@ -2510,13 +2482,11 @@ class O365Check(AgentCheck):
         if team_id:
             """ [Read] List Teams' channels """
             url = "{}/teams/{}/channels".format(graph_url, team_id)
-            proxies = self.get_instance_proxy(instance, url)
             res = self.get_synthetic_http_metric(
                 metric_prefix,
                 "GET",
                 url,
                 headers,
-                proxies,
                 None,
                 metric_tags + ["operation:read"],
             )
@@ -2540,13 +2510,11 @@ class O365Check(AgentCheck):
                         )
                     }
                 }
-                proxies = self.get_instance_proxy(instance, url)
                 res = self.get_synthetic_http_metric(
                     metric_prefix,
                     "POST",
                     url,
                     headers,
-                    proxies,
                     json.dumps(data, default=str),
                     metric_tags + ["operation:create"],
                 )
@@ -2561,13 +2529,11 @@ class O365Check(AgentCheck):
                         graph_url, team_id, channel_id, message_id
                     )
                     data = {"body": {"content": "Synthetic Message Reply",}}
-                    proxies = self.get_instance_proxy(instance, url)
                     res = self.get_synthetic_http_metric(
                         metric_prefix,
                         "POST",
                         url,
                         headers,
-                        proxies,
                         json.dumps(data, default=str),
                         metric_tags + ["operation:update"],
                     )

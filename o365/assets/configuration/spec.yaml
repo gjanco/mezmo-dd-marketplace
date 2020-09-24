@@ -67,6 +67,17 @@ files:
         description: |
           Mailbox for synthetic email probe deliveries. Mailbox must be configured to
           forward messages to 'probe@synth-rapdev.io'.
+      - name: probe_mode
+        required: false
+        multiple: false
+        value:
+          example: true
+          default: false
+          type: boolean
+        description: |
+          Change to true to enable "probe mode". In probe mode, the integration will
+          only run synthetics checks. Office 365 usage metrics will not be collected by
+          the agent integration when set to "true".
       - name: enable_outlook
         required: false
         multiple: false
@@ -138,4 +149,14 @@ files:
           default: true
           type: boolean
         description: |
-          Change to false to disable Office 365 synthetic email checks     
+          Change to false to disable Office 365 synthetic email checks
+      - name: min_collection_interval
+        required: true
+        value:
+          example: 300
+          type: number
+        description: |
+          This changes the collection interval of the check. For more information, see:
+          https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+      
+          Office 365 metrics are recommended on 300s intervals to prevent API throttling.   
