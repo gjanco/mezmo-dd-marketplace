@@ -122,9 +122,14 @@ Windows\
 
 4. Fill in your conf.yaml with the necessary IP or network addresses for discovery. See the file `snmp-profiles\conf.yaml.example_rapdev` for example configuration.
 
-## Pricing
+## Tiered Pricing
 
-$10 / device / month
+| SNMP Devices       | $ / Device / Month |
+| ------------------ | ------------------ |
+| 1 - 49             | $6                 |
+| 50 - 99            | $5                 |
+| 100 - 499          | $4.50              |
+| 500+               | $4                 |
 
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
