@@ -63,7 +63,7 @@ More information about the above requirements can be found in the [Integration a
 ### 3. Submit a pull request for review.
 Please create a Draft PR for any work in progress, and use regular PRs when your changes are ready for Datadog's engineering team to review. If a regular PR has already been submitted, please open a new PR for any future changes.
 
-Datadog reviewers will call out the priority of their comments, and once you have addressed all required changes, your integration you will be published.
+Datadog reviewers will add the priority of their comments. When all required changes have been addressed, your integration will be published.
 
 **Note:** For new marketplace integrations, once the Integration Tile has been merged in the marketplace repo, we will first enable the tile for just your sandbox account. This will allow you to validate and submit any necessary changes to the tile or documentation before it is enabled for all users. 
 
@@ -75,13 +75,25 @@ Datadog reviewers will call out the priority of their comments, and once you hav
 The [Marketplace](https://app.datadoghq.com/marketplace) can be accessed from the Integrations tab in the Datadog app.
 
 **How does pricing work?**\
-Partners can list their integration in the Marketplace using one of the following pricing types:
-- Free
-- One-time
-- Flat cost
-- Unique count of tag value
+Datadog Partners can list their integration in the Marketplace using one of the following pricing options. **Note**: All integration purchases begin with a 14-day free trial.
+- **free:** There is no billing associated with the integration, and no metering/usage metric is required.
+ 
+- **one_time:** Charges a single fee at the time of purchase, and no additional charges in the future. No metering/usage metric is required.
 
-All Marketplace integrations purchases begin with a 14-day free trial. 
+- **flat_fee:** Charges a recurring flat fee per month regardless of a customer's usage. For example, a partner may charge a customer $100/month. No metering/usage metric is required.
+
+- **Tag_count:** Allows partners to charge based on a customer's usage. For example, vendors can charge per unique user, device, or database. A metering metric is required for tracking usage. The `tag_count` metering metric must be in the manifest.json to appear in a partner's Marketplace tile, and in the metadata.csv to register the metric in Datadog's backend. For `tag_count`, Datadog calculates the top 99% of hourly usage for the billing cycle.
+
+Example JSON:
+```
+"pricing": [{
+    "billing_type": "tag_count",
+    "unit_price": 1,
+    “metric”: “datadog.marketplace.partner_name.integration_name”,
+    “tag”: ”user”
+    “unit_label”: “Integration Name User”,
+}]
+```
 
 **What is the Marketplace's release cadence?**\
 Datadog Marketplace practices CI/CD. Datadog's engineering team will review pull requests as they are submitted.
