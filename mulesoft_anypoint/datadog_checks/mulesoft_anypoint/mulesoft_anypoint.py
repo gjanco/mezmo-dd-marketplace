@@ -10,7 +10,6 @@ from .vendor.integration_core.integration_core import (  # isort:skip
 from .vendor.integration_core.ireporter import (  # isort:skip
     IReporter,  # isort:skip
     ReportItemType,  # isort:skip
-    ReportItem,  # isort:skip
     CheckStatus,  # isort:skip
 )  # isort:skip
 
@@ -83,19 +82,13 @@ class MulesoftAnypointCheck(AgentCheck):
             + str(len(results))
         )
         self._logger.debug(results_log)
-        check_result = ReportItem(
-            name=self._service_check_name,
-            report_type=ReportItemType.SERVICE_CHECK,
-            value=CheckStatus.OK,
-            message="",
-        )
         for ep_result in results:
             if ep_result.value == CheckStatus.CRITICAL:
                 message = "Check result {}: {}".format(
                     ep_result.value, ep_result.message
                 )
                 self._logger.error(message)
-            message = "Reporting {} ".format(check_result.name)
+            message = "Reporting {} ".format(ep_result.name)
             self._logger.debug(message)
             self._reporter.report_metric(ep_result)
 

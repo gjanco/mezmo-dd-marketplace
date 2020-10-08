@@ -1,6 +1,7 @@
 import os
 
 import pytest
+
 from datadog_checks.dev import get_here
 from datadog_checks.mulesoft_anypoint import MulesoftAnypointCheck
 
@@ -48,10 +49,12 @@ def run_integration(aggregator, instances, configured_init_config, check_metrics
                             metric_type=aggregator.METRIC_ENUM_MAP[metric.get("type")],
                         )
             aggregator.assert_service_check(
-                ".".join([metric_prefix, SERVICE_CHECK]), MulesoftAnypointCheck.OK,
+                ".".join([metric_prefix, SERVICE_CHECK]),
+                MulesoftAnypointCheck.OK,
             )
             aggregator.assert_service_check(
-                ".".join([metric_prefix, LICENSE_CHECK]), MulesoftAnypointCheck.OK,
+                ".".join([metric_prefix, LICENSE_CHECK]),
+                MulesoftAnypointCheck.OK,
             )
 
 
@@ -69,23 +72,6 @@ def create_base_tags(endpoints, end, configured_init_config):
 @pytest.mark.usefixtures("dd_environment")
 def test_multi_api(aggregator, instance2, instance3, configured_init_config):
     run_integration(aggregator, [instance2, instance3], configured_init_config)
-
-
-@pytest.mark.integration
-@pytest.mark.usefixtures("dd_environment")
-def test_no_license(aggregator, instance4, configured_init_config_no_license):
-    os.environ["mininterval"] = "-1"
-    run_integration(
-        aggregator, [instance4], configured_init_config_no_license, check_metrics=False
-    )
-    metric_prefix = get_metrics_prefix(BASE_PREFIX, instance4.get("app_env"))
-    aggregator.assert_service_check(
-        ".".join([metric_prefix, SERVICE_CHECK]), MulesoftAnypointCheck.CRITICAL,
-    )
-    aggregator.assert_service_check(
-        ".".join([metric_prefix, LICENSE_CHECK]), MulesoftAnypointCheck.CRITICAL,
-    )
-    del os.environ["mininterval"]
 
 
 def conf_api_list():
@@ -133,26 +119,32 @@ def test_collect_results(
 
     check._report_service_check([check_ok, license_ok])
     aggregator.assert_service_check(
-        ".".join([metric_prefix, SERVICE_CHECK]), MulesoftAnypointCheck.OK,
+        ".".join([metric_prefix, SERVICE_CHECK]),
+        MulesoftAnypointCheck.OK,
     )
     aggregator.assert_service_check(
-        ".".join([metric_prefix, LICENSE_CHECK]), MulesoftAnypointCheck.OK,
+        ".".join([metric_prefix, LICENSE_CHECK]),
+        MulesoftAnypointCheck.OK,
     )
 
     aggregator.reset()
     check._report_service_check([check_critical, license_ok])
     aggregator.assert_service_check(
-        ".".join([metric_prefix, SERVICE_CHECK]), MulesoftAnypointCheck.CRITICAL,
+        ".".join([metric_prefix, SERVICE_CHECK]),
+        MulesoftAnypointCheck.CRITICAL,
     )
     aggregator.assert_service_check(
-        ".".join([metric_prefix, LICENSE_CHECK]), MulesoftAnypointCheck.OK,
+        ".".join([metric_prefix, LICENSE_CHECK]),
+        MulesoftAnypointCheck.OK,
     )
 
     aggregator.reset()
     check._report_service_check([check_critical, license_critical])
     aggregator.assert_service_check(
-        ".".join([metric_prefix, SERVICE_CHECK]), MulesoftAnypointCheck.CRITICAL,
+        ".".join([metric_prefix, SERVICE_CHECK]),
+        MulesoftAnypointCheck.CRITICAL,
     )
     aggregator.assert_service_check(
-        ".".join([metric_prefix, LICENSE_CHECK]), MulesoftAnypointCheck.CRITICAL,
+        ".".join([metric_prefix, LICENSE_CHECK]),
+        MulesoftAnypointCheck.CRITICAL,
     )

@@ -29,6 +29,10 @@ init_config:
     ##     oauth_provider: The Oauth Provider url that allow obtain a Bearer token used to make requests to all the APIs
     ##     It is preconfigured with https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token
     ##     but it could be different for EU or GOV Mule Regions
+    ##
+    ##     basic_auth_provider: The Basic Authentication to obtain a Bearer token used to make requests to all the APIs
+    ##     It is preconfigured with https://anypoint.mulesoft.com/accounts/login
+    ##     but it could be different for EU or GOV Mule Regions
     #
     hosts:
           anypoint: https://anypoint.mulesoft.com
@@ -36,16 +40,35 @@ init_config:
           object_store_v2_stats: https://object-store-stats.anypoint.mulesoft.com
           mule_server: <ON_PREMISE_MULE_SERVER>
           oauth_provider: https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token
+          basic_auth_provider: https://anypoint.mulesoft.com/accounts/login
 
-    ## @param client_id - string - required
+    ## @param client_id - string - optional
     ## The Client ID for the authentication API
+    ## Either one of client_id or username must be defined. 
+    ## If both are defined, the Connected App (client_id and client_secret) authentication is used.
     #
     client_id: <CLIENT_ID>
 
-    ## @param client_secret - string - required
+    ## @param client_secret - string - optional
     ## The Client Secret for the authentication API
+    ## Either one of client_secret or password must be defined. 
+    ## If both are defined, the Connected App (client_id and client_secret) authentication is used.
     #
     client_secret: <CLIENT_SECRET>
+
+    ## @param username - string - optional
+    ## The user name for the authentication API
+    ## Either one of client_id or username must be defined. 
+    ## If both are defined, the Connected App (client_id and client_secret) authentication is used.
+    #
+    username: <USERNAME>
+
+    ## @param password - string - optional
+    ## The user password for the authentication API
+    ## Either one of client_secret or password must be defined. 
+    ## If both are defined, the Connected App (client_id and client_secret) authentication is used.
+    #
+    password: <PASSWORD>
 
     ## @param env_id - string - required
     ## The Environment ID for environment specific requests
@@ -57,15 +80,10 @@ init_config:
     #
     org_id: <ORG_ID>
 
-    ## @param api_key - string - required
-    ## The API key provided when you purchased the product
-    #
-    api_key: <API_KEY>
-
     ## @param customer_key - string - required
     ## The Customer key provided when you purchased the product
     #
-    customer_key: <CUSTOMER_KEY>
+    customer_key:
 
     ## @param connection_wait_time - integer - optional
     ## The number of seconds that authentication method will wait until next retry

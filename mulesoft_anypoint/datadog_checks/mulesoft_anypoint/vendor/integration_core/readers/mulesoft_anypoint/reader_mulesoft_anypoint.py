@@ -2,12 +2,11 @@ import json
 import os
 import platform
 from datetime import datetime, timedelta
+from enum import Enum
 from subprocess import PIPE, Popen
 
 import yaml
 
-from ...core_remote.auth import AuthConnectionError, BearerAuth
-from ...core_remote.remote_http import HttpCaller
 from ...integration_core import get_abs_path, get_metrics_prefix
 from ...ireader import IReader
 from ...ireporter import CheckStatus, ReportItem, ReportItemType
@@ -16,6 +15,14 @@ BASE_PREFIX = "ioconnect.mulesoft.anypoint"
 SERVICE_CHECK = "can_connect"
 LICENSE_CHECK = "license_valid"
 BASE_TAGS = ["env_id", "org_id"]
+
+
+class ExecutionResult(Enum):
+    OK = 0
+    UNEXPECTED_ERROR = 1
+    LICENSE_ERROR = 2
+    CUSTOMER_PROVISIONED = 3
+    CUSTOMER_ALREADY_PROVISIONED_ERROR = 4
 
 
 class ReaderMulesoftAnypoint(IReader):
@@ -39,16 +46,9 @@ class ReaderMulesoftAnypoint(IReader):
         self._metric_prefix = get_metrics_prefix(
             BASE_PREFIX, self._config.get("app_env") or "prod"
         )
-        self._auth = BearerAuth(
-            url=self._config["hosts"].get("oauth_provider"),
-            client_id=self._config.get("client_id"),
-            client_secret=self._config.get("client_secret"),
-            attempts_num=self._config.get("connection_attempts_num") or 3,
-            wait_time=self._config.get("connection_wait_time") or 2,
-        )
-        self._http_caller = HttpCaller(self._auth)
         self._results = []
         self._add_to_queue_callback = None
+        self._customer_key = None
 
     def set_add_to_queue_callback(self, add_to_queue_callback):
         self._add_to_queue_callback = add_to_queue_callback
@@ -68,7 +68,7 @@ class ReaderMulesoftAnypoint(IReader):
         reader_path = get_abs_path(os.path.join("readers", "mulesoft_anypoint"))
         apis_path = os.path.join(reader_path, "apis")
         reader_jar = os.path.join(
-            reader_path, "remote-metric-reader-1.0.0-jar-with-dependencies.jar"
+            reader_path, "remote-metric-reader-1.1.0-jar-with-dependencies.jar"
         )
         reader_main = "com.ioconnect.datadog.DatadogApp"
         jmx_options = []
@@ -86,7 +86,6 @@ class ReaderMulesoftAnypoint(IReader):
             "--mprefix=" + "ioconnect.mulesoft.anypoint",
             "--dhkey=" + "anypoint",
             "--apis=" + apis_path,
-            "--token=" + self._auth.get_access_token(),
             "--prevts=" + self._prev_execution,
             "--currentts=" + self._current_execution,
         ]
@@ -122,18 +121,23 @@ class ReaderMulesoftAnypoint(IReader):
             line = process.stdout.readline()
             if not line:
                 break
-            report_item = ReportItem(json_data=json.loads(line))
-            value_with_tags__format = "Reporting: {} type: {} value: {} with tags: {}".format(
-                report_item.name,
-                report_item.report_type,
-                str(report_item.value),
-                str(report_item.tags),
-            )
-            self._logger.debug(value_with_tags__format)
-            if report_item.report_type == ReportItemType.SERVICE_CHECK:
-                self._results.append(report_item)
-            else:
-                self._add_to_queue_callback(report_item)
+            try:
+                report_item = ReportItem(json_data=json.loads(line))
+                value_with_tags__format = (
+                    "Reporting: {} type: {} value: {} with tags: {}".format(
+                        report_item.name,
+                        report_item.report_type,
+                        str(report_item.value),
+                        str(report_item.tags),
+                    )
+                )
+                self._logger.debug(value_with_tags__format)
+                if report_item.report_type == ReportItemType.SERVICE_CHECK:
+                    self._results.append(report_item)
+                else:
+                    self._add_to_queue_callback(report_item)
+            except ValueError:
+                self._customer_key = line.decode("utf-8").rstrip(os.linesep)
 
         output, errors = process.communicate()
         output = output.decode("utf-8")
@@ -176,38 +180,120 @@ class ReaderMulesoftAnypoint(IReader):
             value=CheckStatus.OK,
             message="",
         )
-        try:
-            self._auth.connect(self._http_caller)
-        except Exception as ex:
-            message = str(ex)
-            if isinstance(ex, AuthConnectionError):
-                # pylint: disable=E1101
-                message += str(ex.response.get_data())
-            self._logger.error(message)
-            check_result.value = CheckStatus.CRITICAL
-            license_result.value = CheckStatus.CRITICAL
-            check_result.message = str(ex)
-            license_result.message = str(ex)
-            self._results.append(check_result)
-            return
-        return_code = self._execute_jar()
+        return_code = ExecutionResult(self._execute_jar())
         check_result.message = ""
-        if return_code == 0:
+        if "windows" in platform.system().lower():
+            conf_yaml = (
+                "C:\\ProgramData\\Datadog\\conf.d\\mulesoft_anypoint.d\\conf.yaml"
+            )
+        else:
+            if "darwin" in platform.system().lower():
+                conf_yaml = os.path.expanduser(
+                    "~/.datadog-agent/conf.d/mulesoft_anypoint.d/conf.yaml"
+                )
+            else:
+                conf_yaml = "/etc/datadog-agent/conf.d/mulesoft_anypoint.d/conf.yaml"
+        if return_code == ExecutionResult.OK:
             check_result.value = CheckStatus.OK
             license_result.value = CheckStatus.OK
-        if return_code == 1:
+        if return_code == ExecutionResult.UNEXPECTED_ERROR:
             check_result.value = CheckStatus.CRITICAL
             message = "Failed running the Remote Metric Reader. See the log for details"
             self._logger.error(message)
             check_result.message = message
-        if return_code == 2:
+        if return_code == ExecutionResult.LICENSE_ERROR:
             check_result.value = CheckStatus.CRITICAL
             license_result.value = CheckStatus.CRITICAL
             message = "Invalid license, please reach out to support"
             self._logger.error(message)
             check_result.message = message
             license_result.message = message
-
+        if return_code == ExecutionResult.CUSTOMER_PROVISIONED:
+            message__format = "Generated customer_key:{} for org_id:{}".format(
+                self._customer_key, self._config.get("org_id")
+            )
+            self._logger.info(message__format)
+            lines = []
+            try:
+                with open(conf_yaml, "r") as file:
+                    pos_org_id = -1
+                    pos_instances = -1
+                    pos = 0
+                    customer_key_name = "customer_key:"
+                    updated = False
+                    for line in file:
+                        if not updated:
+                            if line.find("org_id:") != -1:
+                                pos_org_id = pos
+                            if line.find("instances:") != -1:
+                                pos_instances = pos
+                            found = line.find(customer_key_name)
+                            if found != -1:
+                                line = str(
+                                    line[: found + len(customer_key_name)]
+                                    + " "
+                                    + self._customer_key
+                                    + "\n",
+                                )
+                                updated = True
+                        pos += 1
+                        lines.append(line)
+                    if not updated:
+                        if pos_org_id != -1:
+                            lines.insert(
+                                pos_org_id + 1,
+                                "\n    "
+                                + customer_key_name
+                                + " "
+                                + self._customer_key
+                                + "\n",
+                            )
+                        else:
+                            lines.insert(
+                                pos_instances,
+                                "\n    "
+                                + customer_key_name
+                                + " "
+                                + self._customer_key
+                                + "\n",
+                            )
+                with open(conf_yaml, "w") as file:
+                    for line in lines:
+                        file.write(line)
+                    file.flush()
+                    self._config["customer_key"] = self._customer_key
+                    self._logger.info(
+                        "Successfully updated the conf.yaml file with the customer_key. Restart the Datadog Agent "
+                        "to get all the API instances working with the newly configured customer_key."
+                    )
+                    self.execute()
+                    return
+            except Exception:
+                message = (
+                    "Cannot update the {} file with the customer_key. Please, update it manually setting"
+                    " the value of the customer_key property and restart the Datadog Agent".format(
+                        conf_yaml
+                    )
+                )
+                self._logger.warning(message)
+                check_result.value = CheckStatus.CRITICAL
+                license_result.value = CheckStatus.CRITICAL
+                check_result.message = message
+                license_result.message = message
+        if return_code == ExecutionResult.CUSTOMER_ALREADY_PROVISIONED_ERROR:
+            message = (
+                "Customer already provisioned for org_id:{}. See the log to find the customer key and "
+                "configure it in the {} file. If this is the first run and you got the 'Successfully updated the "
+                "conf.yaml file' then you just need to restart the Datadog Agent. For detailed configuration "
+                "instructions, visit https://docs.ioconnectservices.com/".format(
+                    self._config.get("org_id"), conf_yaml
+                )
+            )
+            self._logger.error(message)
+            check_result.value = CheckStatus.CRITICAL
+            license_result.value = CheckStatus.CRITICAL
+            check_result.message = message
+            license_result.message = message
         self._results.append(check_result)
         self._results.append(license_result)
         self._prev_execution = self._current_execution

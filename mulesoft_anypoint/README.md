@@ -77,11 +77,11 @@ Follow the instructions below to install and configure this check for an Agent r
 To install the mulesoft_anypoint check on your host:
 
 1. [Download and install the Datadog Agent](https://app.datadoghq.com/account/settings#agent/overview).
-2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-mulesoft-anypoint==1.0.3`
+2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-mulesoft-anypoint==1.1.0`
   
 ### Configuration
 
-1. Edit the `mulesoft_anypoint.d/conf.yaml` file, in the `conf.d/` folder at the root of your Agent's configuration directory to start collecting your mulesoft_anypoint performance data. See the [sample mulesoft_anypoint.d/conf.yaml][3] for all available configuration options.
+1. Edit the `mulesoft_anypoint.d/conf.yaml` file, in the `conf.d/` folder at the root of your Agent's configuration directory to start collecting your mulesoft_anypoint performance data. On Linux systems, ensure the owner of the `conf.yaml` file is `dd-agent`. On OS X systems, ensure the owner of the `conf.yaml` file is the system user running the agent. See the [sample mulesoft_anypoint.d/conf.yaml][3] for all available configuration options.
 2. [Restart the Agent][4].
 
 #### Sample configuration

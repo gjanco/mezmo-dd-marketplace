@@ -1,6 +1,7 @@
 import os
 
 import pytest
+
 from datadog_checks.dev import docker_run, get_docker_hostname, get_here
 
 from .docker.common import load_endpoints
@@ -19,12 +20,6 @@ from .docker.conn_mock import (  # isort:skip
 
 from datadog_checks.mulesoft_anypoint.vendor.integration_core.core_parsing import (  # isort:skip
     RegexParser,  # isort:skip
-)  # isort:skip
-from datadog_checks.mulesoft_anypoint.vendor.integration_core.core_remote.auth import (  # isort:skip
-    BearerAuth,  # isort:skip
-)  # isort:skip
-from datadog_checks.mulesoft_anypoint.vendor.integration_core.core_remote.remote_http import (  # isort:skip
-    HttpCaller,  # isort:skip
 )  # isort:skip
 from datadog_checks.mulesoft_anypoint.vendor.integration_core.core_threading import (  # isort:skip
     MultithreadingPool,  # isort:skip
@@ -236,16 +231,6 @@ def multithreading_pool_4():
     return MultithreadingPool(4)
 
 
-# HTTP FIXTURES
-@pytest.fixture(scope="module")
-def bearer_auth():
-    return BearerAuth(
-        "http://localhost:8000/accounts/api/v2/oauth2/token",
-        "client_id",
-        "client_secret",
-    )
-
-
 @pytest.fixture(scope="session")
 def auth_resp():
     return {
@@ -262,16 +247,6 @@ def ok_resp():
 @pytest.fixture(scope="module")
 def test_url():
     return "http://localhost:8000/test_url"
-
-
-@pytest.fixture(scope="module")
-def http_caller_no_auth():
-    return HttpCaller()
-
-
-@pytest.fixture(scope="module")
-def http_caller_bearer_auth(bearer_auth):
-    return HttpCaller(bearer_auth)
 
 
 # INTEGRATION CORE FIXTURES

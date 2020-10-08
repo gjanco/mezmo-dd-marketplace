@@ -19,7 +19,9 @@ def get_metrics_prefix(base_prefix, env=None):
 
 def get_abs_path(path):
     return os.path.join(
-        os.path.dirname(os.path.abspath(__path__[0])), "integration_core", path,
+        os.path.dirname(os.path.abspath(__path__[0])),
+        "integration_core",
+        path,
     )
 
 
