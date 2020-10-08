@@ -1,14 +1,16 @@
-# Trek10 AWS Coverage Advisor
+# Trek10 Monitoring AWS Coverage Advisor
 
 ## Overview
-Coverage Advisor helps you rest easy knowing critical AWS CloudWatch Metrics that are in your Datadog account are being monitored. With monitor alerting, dashboarding, and coverage reports you will be able to keep monitors up to date with your AWS infrastructure as it evolves.
+Coverage Advisor monitors critical AWS CloudWatch metrics in your Datadog account. It is built on Trek10’s continuously updated database of monitoring recommendations, based on our years of experience running cloud native operations with Datadog and AWS. With a coverage report, dashboard, and alerts for new recommendations, you are able to keep monitors up to date with your AWS infrastructure as it evolves.
 
-After signup our integration will clone over a dashboard into your Datadog account. We will also expose two event monitors in the Datadog recommended monitors page. The first event monitor will alert you when Trek10 discovers important AWS CloudWatch metrics that have recently been addeded in your account which don't have corresponding monitors. The second event monitor will let you know when we have added new CloudWatch metrics to our recommendations list. Finally the dashboard will give you a view of your Datadog's account monitoring status as well as let you generate a report of what metrics are / are not monitored.
+After signup, this integration copies a dashboard into your Datadog account and exposes two event monitors on the Datadog recommended monitors page.
+
+The dashboard shows a view of your Datadog's account monitoring status and lets you generate a report for monitored and unmonitored metrics. The first event monitor alerts you when Trek10 discovers new important AWS CloudWatch metrics without corresponding monitors. The second event monitor informs you of new CloudWatch metrics added to our recommendations list that matches AWS services you use.
 
 ![](https://raw.githubusercontent.com/DataDog/marketplace/master/trek10_coverage_advisor/images/maindashview.png)
 
 
-*Have a specific request for this Datadog tool, looking for an AWS managed services partner, or need something with completely related to AWS or Datadog? Reach out to our sales team and let us explore how we can help you*
+*Have a specific request for this Datadog tool, looking for 24/7 managed services for AWS with a platform built on Datadog, or need expertise on AWS or Datadog? Reach out to our sales team [sales team](trek10.com/contact) and let us explore how we can help you*
 
 ### Metrics
 * Trek10 will push a metric nightly, trek10.coverage.aws_metric_count, that can be used to see how many metrics are currently being ingested into your Datadog account that don't have monitors for them. The metric will have the tag `metric_type` that can be filtered down to the values `all_metrics`, `metrics_monitored`, and `monitoring_recommendations`. 
@@ -19,20 +21,19 @@ After signup our integration will clone over a dashboard into your Datadog accou
 ![](https://raw.githubusercontent.com/DataDog/marketplace/master/trek10_coverage_advisor/images/event_image.png)
    
 ### Monitors
-* Trek10 provides a monitor to alert you when you have unmonitored services.
+* Trek10 provides two monitors to alert you when you have unmonitored services.
     
 ### Dashboards
-* Trek10 provides a centralized, high level, dashboard that allows you to see a count of unmonitored services, generate PDF reports, see last updated time, and more.
+* Trek10 provides a centralized, high level, dashboard that allows you to see a count of unmonitored metrics, see recent recommendations, generate a PDF report of all recommendations, and control whether the integration checks your account nightly for new recommendations.
+
 
 ## Setup
 No big setup required!
-  1.  Click the configuration tab.
-  2. Fill in your email and hit submit.
-  3. You will receive an email (within 1 business day) from Trek10 with a one-time link.
-  4. Click link.
-  5. Fill out the form with Datadog API and APP keys. To read more about Datadog API/APP keys see [datadog docs](https://docs.datadoghq.com/account_management/api-app-keys/). 
-  6. After the keys are submitted, we will be automatically clone over your custom dashboard.
-  7. Finally head over to Datadog's recommended monitors and clone over the two event monitors.
+  1. The purchaser will receive an email (within 1 business day) from Trek10 with a one-time link.
+  2. Click link to get sent to a secure form.
+  3. Fill out the form with Datadog API and APP keys. To read more about Datadog API/APP keys see [datadog docs](https://docs.datadoghq.com/account_management/api-app-keys/). 
+  4. After the keys are submitted, we will be automatically clone over your custom dashboard.
+  5. Finally head over to Datadog's recommended monitors and clone over the two event monitors `Trek10 Monitoring AWS Coverage Advisor - New Unmonited Metric Available` and `Trek10 Monitoring AWS Coverage Advisor - New Unmonitored Metric Discovered`.
 
 
 
@@ -48,7 +49,7 @@ No big setup required!
 
 
 ## Pricing
-* They say nothing in life is free, but this integration is.
+* The current price is $100/mo per Datadog account.
 
 
 
