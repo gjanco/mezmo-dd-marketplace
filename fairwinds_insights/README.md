@@ -4,17 +4,17 @@
 
 ![Dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/fairwinds_insights/images/dashboard.png)
 
-### Validate your Kubernetes configurations
+### Software to protect and optimize your mission-critical Kubernetes applications
 
-#### Improve your security posture
+#### Streamline handoffs from development to operations
 
-* Scan containers for vulnerabilities
-* Validate deployment configurations
-* Audit clusters for weaknesses
+* Define and control custom policies across multiple clusters
+* Enforce guardrails and best practices with an admission controller
+* Integration container scanning and deployment validation into CI/CD workflows
 
-#### Reduce costs
+#### Monitor and optimize Kubernetes costs
 
-* Gain visibility into application resource usage
+* Gain visibility into workload resource usage and estimated costs
 * Determine the right CPU and memory settings for your workloads
 
 #### Save time
@@ -22,11 +22,10 @@
 * Integrate Kubernetes configuration recommendations with your existing Datadog dashboards
 * Improve collaboration with Slack integration
 
-## Pricing
+#### Reduce risk
 
-Fairwinds Insights includes a 14-day free trial period, at which point you will be billed $1,299 per month per Kubernetes cluster where the Fairwinds Insights Agent is installed. 
-
-For additional pricing options, including pricing per node and volume discounts, please reach out to sales@fairwinds.com.
+* Monitor containers for known vulnerabilities
+* Validate Kubernetes deployment configurations
 
 ## Setup
 
@@ -62,8 +61,7 @@ Fairwinds Insights does not include any service checks.
 
 For support or requests, please contact Fairwinds through the following channels:
 
-Phone: +1 617-202-3659
-Email: sales@fairwinds.com
+Phone: +1 617-202-3659 Email: sales@fairwinds.com
 
 Documentation is available [here](https://insights.docs.fairwinds.com/). It covers setup and integration as well as ongoing usage to get the most out of Fairwinds Insights.
 
@@ -71,7 +69,7 @@ Documentation is available [here](https://insights.docs.fairwinds.com/). It cove
 
 **How does Fairwinds Insights work?**
 
-Fairwinds Insights provides a unified, multi-cluster view into three categories of Kubernetes configuration issues: security, efficiency, and reliability. Fairwinds Insights makes it easy to deploy multiple open-source tools through a single helm installation. This one-time install helps engineers avoid custom work for installing and configuring each tool. 
+Fairwinds Insights provides a unified, multi-cluster view into three categories of Kubernetes configuration issues: security, efficiency, and reliability. Fairwinds Insights makes it easy to deploy multiple open-source tools through a single helm installation. This one-time install helps engineers avoid custom work for installing and configuring each tool. The software also adds policy management capabilities so engineering teams can define and enforce guardrails for deployments into Kubernetes clusters.
  
 **What’s a plugin?**
 
@@ -87,13 +85,14 @@ Fairwinds Insights aggregates findings from each plugin and publishes it into a 
 
 **What plugins does Fairwinds Insights include?**
 
-Fairwinds Insights provides integrations for a variety of great open source tools you use today, including [Polaris](https://github.com/FairwindsOps/polaris), [Goldilocks](https://github.com/FairwindsOps/goldilocks/), and [Trivy Container Scanning](https://github.com/aquasecurity/trivy). For the complete list, please visit the [Fairwinds Insights documentation center](https://insights.docs.fairwinds.com/). Just a few of the example findings are listed below:
+Fairwinds Insights provides integrations for a variety of great open source tools you use today, including [Polaris](https://github.com/FairwindsOps/polaris), [Goldilocks](https://github.com/FairwindsOps/goldilocks/), [Open Policy Agent](https://www.openpolicyagent.org/), and [Trivy Container Scanning](https://github.com/aquasecurity/trivy). For the complete list, please visit the [Fairwinds Insights documentation center](https://insights.docs.fairwinds.com/). Just a few of the example findings are listed below:
 
 * Container vulnerabilities
 * Security issues with Kubernetes deployments (e.g., deployments configured to run as root)
 * Cluster-level weaknesses (e.g., exposed pods, information disclosures, etc.)
 * Kubernetes CVEs
 * Automated notification of Helm charts that are out of date
+* Custom Kubernetes policies and configuration checks
 
 [1]: https://insights.fairwinds.com
 
@@ -101,5 +100,4 @@ Fairwinds Insights provides integrations for a variety of great open source tool
 
 Insights Cancellation and Refund Policy:
 
-Fairwinds Insights is provided as a month-to-month subscription that you, the customer, may discontinue at any time in the ways made available to you through your DataDog Marketplace account. If you discontinue your subscription, you will be billed only for the remainder of the monthly billing period then in effect. Insights does not 
-provide refunds of any fees already paid.
+Fairwinds Insights is provided as a month-to-month subscription that you, the customer, may discontinue at any time in the ways made available to you through your DataDog Marketplace account. If you discontinue your subscription, you will be billed only for the remainder of the monthly billing period then in effect. Insights does not provide refunds of any fees already paid.
