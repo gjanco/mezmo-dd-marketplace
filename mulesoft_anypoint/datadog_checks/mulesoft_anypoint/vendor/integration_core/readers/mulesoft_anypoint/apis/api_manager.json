@@ -1,0 +1,390 @@
+{
+  "api_name": "api_manager",
+  "url": "/apimanager/api/v1/organizations/{orgId}",
+  "uri_params": {
+    "orgId": "org_id"
+  },
+  "endpoints": [
+    {
+      "url": "/environments/{envId}/apis",
+      "uri_params": {
+        "envId": "env_id"
+      },
+      "paging": {
+        "type": "offset",
+        "list_root": "$.assets",
+        "limit": 25,
+        "param_limit": "limit",
+        "param": "offset"
+      },
+      "endpoints": [
+        {
+          "parent_root": "$.assets.[*]",
+          "parent_data": {
+            "assetId": "$.assetId"
+          },
+          "query_params": {
+            "assetId": "{assetId}"
+          },
+          "url": "",
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$.assets.[*].apis.[*].id",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "apis"
+              },
+              "tags_expr_str": {
+                "api_id": "$.assets[*].id",
+                "instance_id": "$.assets.[*].apis.[*].id",
+                "asset_name": "$.assets.[*].assetId",
+                "asset_version": "$.assets.[*].apis.[*].assetVersion",
+                "product_version": "$.assets.[*].apis.[*].productVersion",
+                "instance_label": "$.assets.[*].apis.[*].instanceLabel",
+                "deprecated": "$.assets.[*].apis.[*].deprecated",
+                "is_public": "$.assets.[*].apis.[*].isPublic",
+                "stage": "$.assets.[*].apis.[*].stage",
+                "active_contracts_count": "$.assets.[*].apis.[*].activeContractsCount"
+              }
+            }
+          ],
+          "endpoints": [
+            {
+              "parent_root": "$.assets.[0].apis.[*]",
+              "parent_data": {
+                "environmentApiId": "$.id"
+              },
+              "url": "/{environmentApiId}/policies",
+              "ep_name": "apis",
+              "uri_params": {
+                "environmentApiId": "{environmentApiId}"
+              },
+              "selectors": [
+                {
+                  "type": "count",
+                  "expr_str": "$.policies.[*].policyId",
+                  "field_expr_str": "1",
+                  "metrics": {
+                    "DEFAULT": "policies"
+                  },
+                  "tags_expr_str": {
+                    "policy_template_id": "$.policies.[*].policyTemplateId",
+                    "policy_id": "$.policies.[*].policyId",
+                    "policy_group_id": "$.policies.[*].template.groupId",
+                    "asset_name": "$.policies.[*].template.assetId",
+                    "asset_version": "$.policies.[*].template.assetVersion",
+                    "instance_id": "{environmentApiId}"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_root": "$.assets.[0].apis.[*]",
+              "parent_data": {
+                "environmentApiId": "$.id"
+              },
+              "url": "/{environmentApiId}/tiers",
+              "ep_name": "apis",
+              "uri_params": {
+                "environmentApiId": "{environmentApiId}"
+              },
+              "selectors": [
+                {
+                  "type": "count",
+                  "expr_str": "$.tiers.[*].id",
+                  "field_expr_str": "1",
+                  "metrics": {
+                    "DEFAULT": "tiers"
+                  },
+                  "tags_expr_str": {
+                    "tier_name": "$.tiers.[*].name",
+                    "tier_id": "$.tiers.[*].id",
+                    "tier_status": "$.tiers.[*].status",
+                    "tier_auto_approve": "$.tiers.[*].autoApprove",
+                    "instance_id": "{environmentApiId}"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_root": "$.assets.[0].apis.[*]",
+              "parent_data": {
+                "environmentApiId": "$.id"
+              },
+              "url": "/{environmentApiId}/contracts",
+              "ep_name": "apis",
+              "uri_params": {
+                "environmentApiId": "{environmentApiId}"
+              },
+              "selectors": [
+                {
+                  "type": "count",
+                  "expr_str": "$.contracts.[*].id",
+                  "field_expr_str": "1",
+                  "metrics": {
+                    "DEFAULT": "contracts"
+                  },
+                  "tags_expr_str": {
+                    "contract_id": "$.contracts.[*].id",
+                    "app_name": "$.contracts.[*].application.name",
+                    "contract_status": "$.contracts.[*].status",
+                    "tier_id": "$.contracts.[*].tierId",
+                    "app_id": "$.contracts.[*].applicationId",
+                    "instance_id": "{environmentApiId}"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_root": "$.assets.[0].apis.[*]",
+              "parent_data": {
+                "environmentApiId": "$.id"
+              },
+              "url": "/{environmentApiId}/alerts",
+              "ep_name": "apis",
+              "uri_params": {
+                "environmentApiId": "{environmentApiId}"
+              },
+              "selectors": [
+                {
+                  "type": "count",
+                  "expr_str": "$[*].id",
+                  "field_expr_str": "1",
+                  "metrics": {
+                    "DEFAULT": "alerts"
+                  },
+                  "tags_expr_str": {
+                    "alert_name": "$[*].name",
+                    "alert_severity": "$[*].severity",
+                    "enabled": "$[*].enabled",
+                    "alert_type": "$[*].type",
+                    "instance_id": "{environmentApiId}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "/environments/{envId}/groupInstances",
+      "uri_params": {
+        "envId": "env_id"
+      },
+      "endpoints": [
+        {
+          "parent_root": "$.instances.[*]",
+          "parent_data": {
+            "instanceId": "$.id"
+          },
+          "url": "",
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$.instances.[*].status",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "group_instances"
+              },
+              "tags_expr_str": {
+                "group_name": "$.instances.[*].groupName",
+                "group_label": "$.instances.[*].groupInstanceLabel",
+                "status": "$.instances.[*].status",
+                "deprecated": "$.instances.[*].deprecated",
+                "group_id": "$.instances.[*].groupId",
+                "group_version_id": "$.instances.[*].groupVersionId",
+                "group_instance_id": "$.instances.[*].id",
+                "group_version": "$.instances.[*].groupVersionName"
+              }
+            }
+          ],
+          "endpoints": [
+            {
+              "parent_root": "$.instances.[*]",
+              "parent_data": {
+                "groupInstanceId": "$.id"
+              },
+              "url": "/{groupInstanceId}/contracts",
+              "ep_name": "group_instances",
+              "uri_params": {
+                "groupInstanceId": "{groupInstanceId}"
+              },
+              "selectors": [
+                {
+                  "type": "count",
+                  "expr_str": "$.contracts.[*].id",
+                  "field_expr_str": "1",
+                  "metrics": {
+                    "DEFAULT": "contracts"
+                  },
+                  "tags_expr_str": {
+                    "contract_id": "$.contracts.[*].id",
+                    "status": "$.contracts.[*].status",
+                    "app_id": "$.contracts.[*].applicationId",
+                    "group_instance_id": "{groupInstanceId}"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_root": "$.instances.[*]",
+              "parent_data": {
+                "groupInstanceId": "$.id"
+              },
+              "url": "/{groupInstanceId}/tiers",
+              "ep_name": "group_instances",
+              "uri_params": {
+                "groupInstanceId": "{groupInstanceId}"
+              },
+              "selectors": [
+                {
+                  "type": "count",
+                  "expr_str": "$.tiers.[*].id",
+                  "field_expr_str": "1",
+                  "metrics": {
+                    "DEFAULT": "tiers"
+                  },
+                  "tags_expr_str": {
+                    "tier_name": "$.tiers.[*].name",
+                    "tier_id": "$.tiers.[*].id",
+                    "status": "$.tiers.[*].status",
+                    "auto_approve": "$.tiers.[*].autoApprove",
+                    "group_instance_id": "{groupInstanceId}"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_root": "$.instances.[*]",
+              "parent_data": {
+                "groupInstanceId": "$.id"
+              },
+              "url": "/{groupInstanceId}/apiInstances",
+              "ep_name": "group_instances",
+              "uri_params": {
+                "groupInstanceId": "{groupInstanceId}"
+              },
+              "selectors": [
+                {
+                  "type": "count",
+                  "expr_str": "$.instances.[*].id",
+                  "field_expr_str": "1",
+                  "metrics": {
+                    "DEFAULT": "api_instances"
+                  },
+                  "tags_expr_str": {
+                    "asset_name": "$.instances.[*].assetId",
+                    "instance_id": "$.instances.[*].id",
+                    "asset_version": "$.instances.[*].assetVersion",
+                    "is_public": "$.instances.[*].isPublic",
+                    "mule_version_4": "$.instances.[*].muleVersion4OrAbove",
+                    "group_instance_id": "{groupInstanceId}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "/groups",
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.groups.[*].id",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "groups"
+          },
+          "tags_expr_str": {
+            "group_name": "$.groups.[*].name",
+            "group_id": "$.groups.[*].id"
+          }
+        }
+      ]
+    },
+    {
+      "url": "/policy-templates",
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$[*].id",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "policy_templates"
+          },
+          "tags_expr_str": {
+            "policy_template_id": "$[*].id",
+            "policy_template_name": "$[*].name",
+            "policy_template_category": "$[*].category",
+            "gateway_compatibility": "$[*].gatewayCompatibility",
+            "supported_policies_versions": "$[*].supportedPoliciesVersions",
+            "policy_type": "$[*].type"
+          }
+        }
+      ]
+    },
+    {
+      "url": "/custom-policy-templates",
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$.customPolicyTemplates.[*].id",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "custom_policy_templates"
+          },
+          "tags_expr_str": {
+            "policy_template_id": "$.customPolicyTemplates.[*].id",
+            "policy_template_name": "$.customPolicyTemplates.[*].name"
+          }
+        }
+      ]
+    },
+    {
+      "url": "/automated-policies",
+      "query_params": {
+        "environmentId": "env_id"
+      },
+      "endpoints": [
+        {
+          "parent_root": "$.automatedPolicies.[*]",
+          "parent_data": {
+            "automatedPolicyId": "$.id",
+            "automatedPolicyAssetId": "$.assetId",
+            "automatedPolicyGroupId": "$.groupId",
+            "automatedPolicyAssetVersion": "$.assetVersion"
+          },
+          "uri_params": {
+            "automatedPolicyId": "{automatedPolicyId}"
+          },
+          "url": "/{automatedPolicyId}/apis",
+          "ep_name": "apis",
+          "selectors": [
+            {
+              "type": "count",
+              "expr_str": "$.apis.[*].id",
+              "field_expr_str": "1",
+              "metrics": {
+                "DEFAULT": "policies"
+              },
+              "tags_expr_str": {
+                "policy_id": "{automatedPolicyId}",
+                "instance_id": "$.apis.[*].id",
+                "asset_name": "{automatedPolicyAssetId}",
+                "asset_version": "{automatedPolicyAssetVersion}",
+                "policy_group_id": "{automatedPolicyGroupId}",
+                "policy_template_id": "{automatedPolicyAssetId}",
+                "is_public": "$.apis.[*].isPublic",
+                "product_version": "$.apis.[*].productVersion"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

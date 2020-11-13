@@ -68,7 +68,7 @@ class ReaderMulesoftAnypoint(IReader):
         reader_path = get_abs_path(os.path.join("readers", "mulesoft_anypoint"))
         apis_path = os.path.join(reader_path, "apis")
         reader_jar = os.path.join(
-            reader_path, "remote-metric-reader-1.1.0-jar-with-dependencies.jar"
+            reader_path, "remote-metric-reader-1.2.0-jar-with-dependencies.jar"
         )
         reader_main = "com.ioconnect.datadog.DatadogApp"
         jmx_options = []

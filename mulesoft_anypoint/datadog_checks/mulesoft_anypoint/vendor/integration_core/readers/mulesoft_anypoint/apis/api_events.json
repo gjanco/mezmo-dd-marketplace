@@ -1,0 +1,125 @@
+{
+  "api_name": "api_events",
+  "url": "/analytics/1.0/{orgId}/environments/{envId}",
+  "uri_params": {
+    "orgId": "org_id",
+    "envId": "env_id"
+  },
+  "endpoints": [
+    {
+      "url": "/events",
+      "ep_name": "events",
+      "query_params": {
+        "format": "&json",
+        "duration": "&1m",
+        "fields": "&Application Name,Request Size,Response Size,Request Outcome,Verb,Resource Path,Status Code,Violated Policy Name,Response Time,Timestamp,Country"
+      },
+      "selectors": [
+        {
+          "type": "count",
+          "expr_str": "$[*].['API ID']",
+          "field_expr_str": "1",
+          "metrics": {
+            "DEFAULT": "hits"
+          },
+          "tags_expr_str": {
+            "api_id": "$[*].['API ID']",
+            "asset_display_name": "$[*].['API Name']",
+            "instance_id": "$[*].['API Version ID']",
+            "product_version": "$[*].['API Version Name']",
+            "application_name": "$[*].['Application Name']",
+            "request_outcome": "$[*].['Request Outcome']",
+            "verb": "$[*].Verb",
+            "resource_path": "$[*].['Resource Path']",
+            "policy_template_name": "$[*].['Violated Policy Name']",
+            "status_code":  "$[*].['Status Code']",
+            "country":  "$[*].['Country']"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "$[*].['Response Time']",
+          "field_expr_str": "$[*].['Response Time']",
+          "metrics": {
+            "DEFAULT": "response.time"
+          },
+          "tags_expr_str": {
+            "api_id": "$[*].['API ID']",
+            "asset_display_name": "$[*].['API Name']",
+            "instance_id": "$[*].['API Version ID']",
+            "product_version": "$[*].['API Version Name']",
+            "application_name": "$[*].['Application Name']",
+            "request_outcome": "$[*].['Request Outcome']",
+            "verb": "$[*].Verb",
+            "resource_path": "$[*].['Resource Path']",
+            "policy_template_name": "$[*].['Violated Policy Name']",
+            "status_code":  "$[*].['Status Code']",
+            "country":  "$[*].['Country']"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "$[*].['Response Size']",
+          "field_expr_str": "$[*].['Response Size']",
+          "metrics": {
+            "DEFAULT": "response.size"
+          },
+          "tags_expr_str": {
+            "api_id": "$[*].['API ID']",
+            "asset_display_name": "$[*].['API Name']",
+            "instance_id": "$[*].['API Version ID']",
+            "product_version": "$[*].['API Version Name']",
+            "application_name": "$[*].['Application Name']",
+            "request_outcome": "$[*].['Request Outcome']",
+            "verb": "$[*].Verb",
+            "resource_path": "$[*].['Resource Path']",
+            "policy_template_name": "$[*].['Violated Policy Name']",
+            "status_code":  "$[*].['Status Code']",
+            "country":  "$[*].['Country']"
+          }
+        },
+        {
+          "type": "gauge",
+          "expr_str": "$[*].['Request Size']",
+          "field_expr_str": "$[*].['Request Size']",
+          "metrics": {
+            "DEFAULT": "request.size"
+          },
+          "tags_expr_str": {
+            "api_id": "$[*].['API ID']",
+            "asset_display_name": "$[*].['API Name']",
+            "instance_id": "$[*].['API Version ID']",
+            "product_version": "$[*].['API Version Name']",
+            "application_name": "$[*].['Application Name']",
+            "request_outcome": "$[*].['Request Outcome']",
+            "verb": "$[*].Verb",
+            "resource_path": "$[*].['Resource Path']",
+            "policy_template_name": "$[*].['Violated Policy Name']",
+            "status_code":  "$[*].['Status Code']",
+            "country":  "$[*].['Country']"
+          }
+        },
+        {
+          "type": "count",
+          "expr_str": "$[*].['Status Code']",
+          "field_expr_str": "$[*].['Status Code']",
+          "metrics": {
+            "DEFAULT": "status.code"
+          },
+          "tags_expr_str": {
+            "api_id": "$[*].['API ID']",
+            "asset_display_name": "$[*].['API Name']",
+            "instance_id": "$[*].['API Version ID']",
+            "product_version": "$[*].['API Version Name']",
+            "application_name": "$[*].['Application Name']",
+            "request_outcome": "$[*].['Request Outcome']",
+            "verb": "$[*].Verb",
+            "resource_path": "$[*].['Resource Path']",
+            "policy_template_name": "$[*].['Violated Policy Name']",
+            "country":  "$[*].['Country']"
+          }
+        }
+      ]
+    }
+  ]
+}

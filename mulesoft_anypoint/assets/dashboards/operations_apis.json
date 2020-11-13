@@ -1,0 +1,900 @@
+{
+  "author_name": "IO Connect Services",
+  "description": "## Screenboard for API metrics\n\nThis dashboard shows insights in to the API requests served by the APIs deployed in Anypoint Platform. These metrics are collected from API Manager and API Analytics.\n\n- [https://docs.mulesoft.com/api-manager/2.x/latest-overview-concept](API Manager)\n- [https://docs.mulesoft.com/api-manager/2.x/analytics-landing-page](API Analytics)",
+  "layout_type": "free",
+  "template_variables": [
+    {
+      "default": "*",
+      "name": "apiId",
+      "prefix": "instance_id"
+    },
+    {
+      "default": "*",
+      "name": "environmentId",
+      "prefix": "env_id"
+    },
+    {
+      "default": "*",
+      "name": "clientId",
+      "prefix": "app_id"
+    }
+  ],
+  "title": "Mule® Operations: APIs",
+  "widgets": [
+    {
+      "definition": {
+        "check": "ioconnect.mulesoft.anypoint.can_connect",
+        "group_by": [],
+        "grouping": "cluster",
+        "tags": [
+          "*"
+        ],
+        "title": "Mule Integration Agent Up",
+        "title_align": "center",
+        "title_size": "16",
+        "type": "check_status"
+      },
+      "id": 2002627975988208,
+      "layout": {
+        "height": 11,
+        "width": 34,
+        "x": 57,
+        "y": 0
+      }
+    },
+    {
+      "definition": {
+        "check": "ioconnect.mulesoft.anypoint.license_valid",
+        "group_by": [
+          "host"
+        ],
+        "grouping": "cluster",
+        "tags": [
+          "*"
+        ],
+        "title": "Mule Integration License",
+        "title_align": "center",
+        "title_size": "16",
+        "type": "check_status"
+      },
+      "id": 1050362793364410,
+      "layout": {
+        "height": 11,
+        "width": 23,
+        "x": 97,
+        "y": 0
+      }
+    },
+    {
+      "definition": {
+        "autoscale": true,
+        "precision": 1,
+        "requests": [
+          {
+            "aggregator": "sum",
+            "q": "sum:ioconnect.mulesoft.anypoint.api_events.events.hits{$environmentId}.as_count()"
+          }
+        ],
+        "title": "Number of requests",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "query_value"
+      },
+      "id": 5344138281551874,
+      "layout": {
+        "height": 10,
+        "width": 28,
+        "x": 140,
+        "y": 0
+      }
+    },
+    {
+      "definition": {
+        "autoscale": true,
+        "custom_unit": "ms",
+        "precision": 2,
+        "requests": [
+          {
+            "aggregator": "avg",
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.response.time{$environmentId}"
+          }
+        ],
+        "time": {},
+        "title": "Average response time",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "query_value"
+      },
+      "id": 5654135686297336,
+      "layout": {
+        "height": 10,
+        "width": 28,
+        "x": 171,
+        "y": 0
+      }
+    },
+    {
+      "definition": {
+        "margin": "small",
+        "sizing": "fit",
+        "type": "image",
+        "url": "https://docs.ioconnectservices.com/Datadog%20MuleSoft%20Integration.fld/image001.png"
+      },
+      "id": 5425166193956950,
+      "layout": {
+        "height": 11,
+        "width": 23,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "definition": {
+        "sizing": "zoom",
+        "type": "image",
+        "url": "https://iocswebsite-assets-prod.s3.amazonaws.com/cdn/Logo+IO+Sin+Fondo.png"
+      },
+      "id": 5787762253311040,
+      "layout": {
+        "height": 11,
+        "width": 25,
+        "x": 27,
+        "y": 0
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "sum:ioconnect.mulesoft.anypoint.api_events.events.hits{$apiId,$environmentId,$clientId} by {asset_display_name}.as_count()",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "dog_classic"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Total requests",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 8788915044333436,
+      "layout": {
+        "height": 12,
+        "width": 105,
+        "x": 15,
+        "y": 14
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.response.time{$apiId,$environmentId,$clientId} by {asset_display_name}",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "dog_classic"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Average response",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 5293909274071692,
+      "layout": {
+        "height": 12,
+        "width": 105,
+        "x": 15,
+        "y": 28
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "sum:ioconnect.mulesoft.anypoint.api_events.events.hits{$apiId AND $environmentId AND $clientId AND status_code NOT IN (200)} by {asset_display_name}.as_count()",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "warm"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Total failed requests",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 7527419209803322,
+      "layout": {
+        "height": 12,
+        "width": 105,
+        "x": 15,
+        "y": 42
+      }
+    },
+    {
+      "definition": {
+        "requests": [
+          {
+            "q": "top(avg:ioconnect.mulesoft.anypoint.api_events.events.hits{$environmentId} by {asset_display_name}.as_count(), 10, 'mean', 'desc')"
+          }
+        ],
+        "title": "Most used APIs",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "toplist"
+      },
+      "id": 2908228900688080,
+      "layout": {
+        "height": 20,
+        "width": 28,
+        "x": 140,
+        "y": 11
+      }
+    },
+    {
+      "definition": {
+        "requests": [
+          {
+            "q": "top(avg:ioconnect.mulesoft.anypoint.api_events.events.hits{$environmentId} by {application_name}.as_count(), 10, 'mean', 'desc')"
+          }
+        ],
+        "title": "Most active clients",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "toplist"
+      },
+      "id": 2043838412662454,
+      "layout": {
+        "height": 24,
+        "width": 28,
+        "x": 140,
+        "y": 33
+      }
+    },
+    {
+      "definition": {
+        "requests": [
+          {
+            "q": "top(avg:ioconnect.mulesoft.anypoint.api_events.events.hits{$environmentId AND status_code NOT IN (200)} by {asset_display_name}.as_count(), 10, 'mean', 'desc')"
+          }
+        ],
+        "title": "Most failed APIs",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "toplist"
+      },
+      "id": 5279469972190478,
+      "layout": {
+        "height": 20,
+        "width": 28,
+        "x": 171,
+        "y": 11
+      }
+    },
+    {
+      "definition": {
+        "requests": [
+          {
+            "q": "top(avg:ioconnect.mulesoft.anypoint.api_events.events.hits{status_code NOT IN (200)} by {application_name}.as_count(), 10, 'mean', 'desc')"
+          }
+        ],
+        "title": "Most failed clients",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "toplist"
+      },
+      "id": 2795147152908442,
+      "layout": {
+        "height": 24,
+        "width": 28,
+        "x": 171,
+        "y": 33
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "sum:ioconnect.mulesoft.anypoint.api_events.events.hits{$apiId,$environmentId,$clientId} by {instance_id}.as_count()",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "dog_classic"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Requests by API Instance...",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 6430283415113736,
+      "layout": {
+        "height": 12,
+        "width": 60,
+        "x": 15,
+        "y": 73
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "sum:ioconnect.mulesoft.anypoint.api_events.events.hits{$apiId,$environmentId,$clientId} by {verb}.as_count()",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "dog_classic"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Requests by HTTP Verb",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 1857432294529880,
+      "layout": {
+        "height": 12,
+        "width": 60,
+        "x": 15,
+        "y": 86
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.request.size{$apiId,$environmentId,$clientId} by {instance_id}",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "dog_classic"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Requests by Request Size",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 1165363734265302,
+      "layout": {
+        "height": 12,
+        "width": 60,
+        "x": 78,
+        "y": 73
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.response.size{$apiId,$environmentId,$clientId} by {instance_id}",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "dog_classic"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Resquests by Response Size",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 6273145320916018,
+      "layout": {
+        "height": 12,
+        "width": 60,
+        "x": 78,
+        "y": 86
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "sum:ioconnect.mulesoft.anypoint.api_events.events.hits{$apiId,$environmentId,$clientId} by {instance_id,status_code}.as_count()",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "dog_classic"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Request by Response Code",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 5256884747834382,
+      "layout": {
+        "height": 12,
+        "width": 58,
+        "x": 141,
+        "y": 73
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.response.time{$apiId,$environmentId,$clientId} by {instance_id}",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "dog_classic"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Request by Response Time",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 1681734541568996,
+      "layout": {
+        "height": 12,
+        "width": 58,
+        "x": 141,
+        "y": 86
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "sum:ioconnect.mulesoft.anypoint.api_events.events.hits{$apiId AND $environmentId AND $clientId AND status_code NOT IN (200)} by {instance_id}.as_count()",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "warm"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Requests by API Instance id",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 7069163521643078,
+      "layout": {
+        "height": 12,
+        "width": 60,
+        "x": 15,
+        "y": 100
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "sum:ioconnect.mulesoft.anypoint.api_events.events.hits{$apiId AND $environmentId AND $clientId AND status_code NOT IN (200)} by {verb}.as_count()",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "warm"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Requests by HTTP Verb",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 4160154893483298,
+      "layout": {
+        "height": 12,
+        "width": 60,
+        "x": 15,
+        "y": 113
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.request.size{$apiId AND $environmentId AND $clientId AND status_code NOT IN (200)} by {instance_id}",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "warm"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Requests by Request Size",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 2652908913719290,
+      "layout": {
+        "height": 12,
+        "width": 60,
+        "x": 78,
+        "y": 100
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.response.size{$apiId AND $environmentId AND $clientId AND status_code NOT IN (200)} by {instance_id}",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "warm"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Requests by Response Size",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 607353657760086,
+      "layout": {
+        "height": 12,
+        "width": 60,
+        "x": 78,
+        "y": 113
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "sum:ioconnect.mulesoft.anypoint.api_events.events.hits{$apiId AND $environmentId AND $clientId AND status_code NOT IN (200)} by {instance_id}.as_count()",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "warm"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Requests bye Response Code",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 5749550284475476,
+      "layout": {
+        "height": 12,
+        "width": 58,
+        "x": 141,
+        "y": 100
+      }
+    },
+    {
+      "definition": {
+        "legend_size": "0",
+        "requests": [
+          {
+            "display_type": "area",
+            "on_right_yaxis": false,
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.response.time{$apiId AND $environmentId AND $clientId AND status_code NOT IN (200)} by {instance_id}",
+            "style": {
+              "line_type": "solid",
+              "line_width": "normal",
+              "palette": "warm"
+            }
+          }
+        ],
+        "show_legend": false,
+        "title": "Request by Response Time",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "timeseries",
+        "yaxis": {
+          "include_zero": true,
+          "label": "",
+          "max": "auto",
+          "min": "auto",
+          "scale": "linear"
+        }
+      },
+      "id": 6071146854864810,
+      "layout": {
+        "height": 12,
+        "width": 58,
+        "x": 141,
+        "y": 113
+      }
+    },
+    {
+      "definition": {
+        "background_color": "blue",
+        "content": "# Overview\n\nOverview of all API requests. This can be filtered by _apiId_, _environmentId_, and _clientId_ variables.",
+        "font_size": "16",
+        "show_tick": true,
+        "text_align": "center",
+        "tick_edge": "right",
+        "tick_pos": "50%",
+        "type": "note"
+      },
+      "id": 3888188649667314,
+      "layout": {
+        "height": 40,
+        "width": 12,
+        "x": 0,
+        "y": 14
+      }
+    },
+    {
+      "definition": {
+        "background_color": "blue",
+        "content": "# Requests\n\nDetailed view of all API requests. This can be filtered by _apiId_, _environmentId_, and _clientId_ variables.",
+        "font_size": "14",
+        "show_tick": true,
+        "text_align": "center",
+        "tick_edge": "right",
+        "tick_pos": "50%",
+        "type": "note"
+      },
+      "id": 2540505957624602,
+      "layout": {
+        "height": 39,
+        "width": 12,
+        "x": 0,
+        "y": 59
+      }
+    },
+    {
+      "definition": {
+        "background_color": "blue",
+        "content": "# Failed Requests\n\n  All failed API requests. This can be filtered by _apiId_, _environmentId_, and _clientId_ variables.",
+        "font_size": "14",
+        "show_tick": true,
+        "text_align": "center",
+        "tick_edge": "right",
+        "tick_pos": "50%",
+        "type": "note"
+      },
+      "id": 3621148496018404,
+      "layout": {
+        "height": 25,
+        "width": 12,
+        "x": 0,
+        "y": 100
+      }
+    },
+    {
+      "definition": {
+        "background_color": "blue",
+        "content": "# APIs\nGroups the top ten APIs. This can be filtered by the environment using the _environmentId_ variable.\n",
+        "font_size": "14",
+        "show_tick": true,
+        "text_align": "center",
+        "tick_edge": "right",
+        "tick_pos": "50%",
+        "type": "note"
+      },
+      "id": 7837425059549794,
+      "layout": {
+        "height": 20,
+        "width": 14,
+        "x": 124,
+        "y": 11
+      }
+    },
+    {
+      "definition": {
+        "background_color": "blue",
+        "content": "# Client applications\nGroups the top ten Client applications. This can be filtered by the environment using the _environmentId_ variable.",
+        "font_size": "14",
+        "show_tick": true,
+        "text_align": "center",
+        "tick_edge": "right",
+        "tick_pos": "50%",
+        "type": "note"
+      },
+      "id": 438285453282672,
+      "layout": {
+        "height": 24,
+        "width": 14,
+        "x": 124,
+        "y": 33
+      }
+    },
+    {
+      "definition": {
+        "has_search_bar": "auto",
+        "requests": [
+          {
+            "aggregator": "avg",
+            "alias": "Hit counter",
+            "cell_display_mode": [
+              "bar"
+            ],
+            "limit": 50,
+            "order": "desc",
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.hits{$apiId,$environmentId,$clientId} by {instance_id,asset_display_name,resource_path,verb,status_code,application_name}.as_count()"
+          },
+          {
+            "aggregator": "avg",
+            "alias": "Response time",
+            "cell_display_mode": [
+              "bar"
+            ],
+            "q": "avg:ioconnect.mulesoft.anypoint.api_events.events.response.time{$apiId,$environmentId,$clientId} by {instance_id,asset_display_name,resource_path,verb,status_code,application_name}"
+          }
+        ],
+        "time": {
+          "live_span": "15m"
+        },
+        "title": "*",
+        "title_align": "left",
+        "title_size": "16",
+        "type": "query_table"
+      },
+      "id": 8895335136888314,
+      "layout": {
+        "height": 13,
+        "width": 184,
+        "x": 15,
+        "y": 59
+      }
+    }
+  ]
+}

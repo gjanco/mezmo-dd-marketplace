@@ -10,13 +10,15 @@ You can use these metrics to take advantage of the out-of-the-box dashboards and
 
 ### **The observability you need for your Mule applications**
 
-#### Operations (_Infrastructure, Alerts and Resource Allocation Dashboards_) 
+#### Operations (_Infrastructure, APIs, Alerts and Resource Allocation Dashboards_) 
 
-- Monitor the health of your Mule servers, applications, and other IT infrastructure 
+- Monitor the health of your Mule servers, applications, APIs, and other IT infrastructure 
 - Receive and visualize alerts about your Mule infrastructure 
 - Gain insights about your Anypoint Platform resources allocation of your organization 
 
 ![Operations: Infrastructure dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_ops_infra.png)
+
+![Operations: Infrastructure dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_ops_apis.png)
 
 ![Operations: Resources allocation and usage dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_ops_allocation.png)
 
@@ -38,6 +40,7 @@ You can use these metrics to take advantage of the out-of-the-box dashboards and
 #### Metrics are collected from the following MuleSoft products: 
 
 - Mule runtime for both CloudHub and on-premise standalone servers 
+- Anypoint API Manager and API Analytics
 - Anypoint Exchange 
 - Anypoint Access Management 
 - Object Store v2 
@@ -68,7 +71,7 @@ Follow the instructions below to install and configure this check for an Agent r
 
 ### Prerequisites
 
-1. Python 2.7+
+1. Python 2.7+ (preferably Python 3.8)
 2. pip package installer
 3. Java 8+
 
@@ -77,7 +80,7 @@ Follow the instructions below to install and configure this check for an Agent r
 To install the mulesoft_anypoint check on your host:
 
 1. [Download and install the Datadog Agent](https://app.datadoghq.com/account/settings#agent/overview).
-2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-mulesoft-anypoint==1.1.0`
+2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-mulesoft-anypoint==1.2.0`
   
 ### Configuration
 
@@ -259,6 +262,34 @@ instances:
     #
     #api_filter:
     # - object_store_v2_stats
+    
+  - min_collection_interval: 60
+
+    ## @param threads - integer - required
+    ## The number of allowed parallel threads running the instance
+    #
+    threads: 32
+
+    ## @param api_filter - string - optional
+    ## List of APIs to execute within the instance following the YAML list item notation -
+    ## If not specified, all the APIs are executed
+    #
+    api_filter:
+      - api_manager
+      
+  - min_collection_interval: 60
+
+    ## @param threads - integer - required
+    ## The number of allowed parallel threads running the instance
+    #
+    threads: 32
+
+    ## @param api_filter - string - optional
+    ## List of APIs to execute within the instance following the YAML list item notation -
+    ## If not specified, all the APIs are executed
+    #
+    api_filter:
+      - api_events
 ```
 
 ### Validation

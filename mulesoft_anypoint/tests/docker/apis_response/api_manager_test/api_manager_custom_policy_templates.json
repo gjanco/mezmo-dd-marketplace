@@ -1,0 +1,22 @@
+{
+  "total": 1,
+  "customPolicyTemplates": [
+    {
+      "audit": {
+        "created": {
+          "date": "2017-11-16T18:45:16.877Z"
+        },
+        "updated": {}
+      },
+      "masterOrganizationId": "791be26c-6882-46f0-8c1d-5dc8d39a04be",
+      "organizationId": "791be26c-6882-46f0-8c1d-5dc8d39a04be",
+      "id": 4799,
+      "name": "New custom policy",
+      "gatewayVersion": "*",
+      "definition": "id: query-param-filter\nname: Query Param Filter\ndescription: Filters query parameters\ncategory: Security\ntype: custom\nstandalone: true\nrequiresConnectivity: false\nresourceLevelSupported: true\nprovidedCharacteristics: []\nrequiredCharacteristics: []\nconfiguration:\n  - propertyName: regexFilter\n    name: Regex Filter\n    description: >\n      A regular expression to \n      filter a query parameter. \n      Rejects unmatched requests.\n    type: string\n    defaultValue:\n    optional: true\n    sensitive: false\n    allowMultiple: false\n  - propertyName: queryParam\n    name: Query Parameter\n    description: >\n      Name of a query parameter \n      to filter by a regular expression.\n    type: string\n    defaultValue:\n    optional: false\n    sensitive: false\n    allowMultiple: false",
+      "configuration": "<policy xmlns=\"http://www.mulesoft.org/schema/mule/policy\"\n        id=\"{{policyId}}\"\n        policyName=\"Regex Filter\"    \n        xmlns:mule=\"http://www.mulesoft.org/schema/mule/core\"\n        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n        xmlns:api-platform-gw=\"http://www.mulesoft.org/schema/mule/api-platform-gw\"\n        xsi:schemaLocation=\"http://www.mulesoft.org/schema/mule/policy http://www.mulesoft.org/schema/mule/policy/current/mule-policy.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/schema/mule/api-platform-gw/current/mule-api-platform-gw.xsd\">\n \n  <!-- This element defines the details of the filter -->\n  <!--   implemented in the \"before\" section. -->\n  <mule:expression-filter xmlns:mule=\"http://www.mulesoft.org/schema/mule/core\" expression=\"#[regex('{{regexFilter}}',message.inboundProperties['http.query.params']['{{queryParam}}'] )]\" name=\"Expression\"/>\n  <!-- This section builds response messages when the policy fails. -->\n  <mule:processor-chain xmlns:mule=\"http://www.mulesoft.org/schema/mule/core\" name=\"policyViolation\">\n    <!-- Set the HTTP status code to 403: -->\n    <mule:set-property propertyName=\"http.status\" value=\"403\"/>   \n    <mule:set-property propertyName=\"Content-Type\" value=\"application/json\"/>\n    <!-- Set the payload to the description of the violation: -->\n    <mule:set-payload value=\"You shall not pass!\"/>\n  </mule:processor-chain>\n \n   <!-- This executes right after the inbound endpoint of the application -->\n  <before>\n    <mule:message-filter xmlns:mule=\"http://www.mulesoft.org/schema/mule/core\"\n      onUnaccepted=\"policyViolation\">\n      <mule:filter ref=\"Expression\"/>\n    </mule:message-filter>\n  </before>\n \n  <!-- Pointcut defines where a policy implements. -->\n    {{#pointcutData.length}}\n      {{#pointcutData}}\n        <pointcut>\n          <api-platform-gw:api-pointcut apiName=\"{{apiName}}\" apiVersion=\"{{apiVersionName}}\"/>\n          <resource methodRegex=\"{{methodRegex}}\" uriTemplateRegex=\"{{uriTemplateRegex}}\"/>\n        </pointcut>\n      {{/pointcutData}}\n    {{/pointcutData.length}}\n    {{^pointcutData.length}}\n      <pointcut>\n        <api-platform-gw:api-pointcut apiName=\"{{apiName}}\" apiVersion=\"{{apiVersionName}}\"/>\n      </pointcut>\n    {{/pointcutData.length}}\n</policy>",
+      "providedCharacteristics": [],
+      "requiredCharacteristics": []
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+[
+  {
+    "configuration": [
+      {
+        "propertyName": "credentialsOrigin",
+        "name": "Credentials origin",
+        "description": "Origin of the Client ID and Client Secret credentials.",
+        "options": [
+          {
+            "name": "HTTP Basic Authentication Header",
+            "value": "httpBasicAuthenticationHeader"
+          },
+          {
+            "name": "Custom Expression",
+            "value": "customExpression"
+          }
+        ],
+        "type": "radio",
+        "defaultValue": "customExpression",
+        "optional": true,
+        "sensitive": false,
+        "allowMultiple": false
+      },
+      {
+        "propertyName": "clientIdExpression",
+        "name": "Client ID Expression",
+        "description": "Mule Expression to be used to extract the Client ID from API requests",
+        "type": "expression",
+        "defaultValue": "#[message.inboundProperties['http.query.params']['client_id']]",
+        "optional": false,
+        "sensitive": false,
+        "allowMultiple": false,
+        "dependsOnKey": "credentialsOrigin",
+        "dependsOnValue": "customExpression",
+        "dependsOnUnfulfilledDefaultValue": "#[authorization = message.inboundProperties['authorization']; if (authorization == null) return ''; base64token = authorization.substring(6); token = new String(org.apache.commons.codec.binary.Base64.decodeBase64(base64token.getBytes())); delim = token.indexOf(':'); clientId = delim == -1 ? '' : token.substring(0, delim); return clientId ]"
+      },
+      {
+        "propertyName": "clientSecretExpression",
+        "name": "Client Secret Expression",
+        "description": "Mule Expression to be used to extract the Client Secret from API requests",
+        "type": "expression",
+        "defaultValue": "#[message.inboundProperties['http.query.params']['client_secret']]",
+        "optional": true,
+        "sensitive": false,
+        "allowMultiple": false,
+        "dependsOnKey": "credentialsOrigin",
+        "dependsOnValue": "customExpression",
+        "dependsOnUnfulfilledDefaultValue": "#[authorization = message.inboundProperties['authorization']; if (authorization == null) return ''; base64token = authorization.substring(6); token = new String(org.apache.commons.codec.binary.Base64.decodeBase64(base64token.getBytes())); delim = token.indexOf(':'); clientSecret = delim == -1 ? '' : token.substring(delim+1); return clientSecret ]"
+      }
+    ],
+    "gatewayCompatibility": ">1.0.0",
+    "id": "client-id-enforcement",
+    "name": "Client ID enforcement",
+    "supportedPoliciesVersions": ">=v1",
+    "description": "All calls to the API must include a client ID and client secret for an application that is registered to use the API.\n\nThis policy will require updates to the RAML definition in order to function. You can obtain the RAML snippet and learn more [here](https://docs.mulesoft.com/anypoint-platform-for-apis/client-id-based-policies).\n\nBy default this policy is configured to use query parameters. For a more secure configuration check [this section of documentation](https://docs.mulesoft.com/api-manager/2.x/client-id-based-policies#obtaining-credentials-using-http-query-parameters).\n\nBy default this policy is configured to use query parameters. For a more secure configuration check [this section of documentation](https://docs.mulesoft.com/api-manager/2.x/client-id-based-policies#obtaining-credentials-using-http-query-parameters).\n",
+    "category": "Compliance",
+    "type": "system",
+    "standalone": true,
+    "violationCategory": "authentication",
+    "resourceLevelSupported": true,
+    "requiresConnectivity": false,
+    "providedCharacteristics": [
+      "Client ID required"
+    ],
+    "requiredCharacteristics": [],
+    "ramlSnippet": "Client ID based policies by default expect to obtain the client ID and secret as query parameters. To enforce this in the API definition a trait can be defined in RAML as shown below.\n\n```\ntraits:\n  - client-id-required:\n      queryParameters:\n        client_id:\n          type: string\n        client_secret:\n          type: string\n```\n\nThis trait must then be applied to the resource or methods using the `is` RAML attribute.\n\n```\n/products:\n  get:\n    is: [client-id-required]\n    description: Gets a list of all the inventory products.\n```\n\nPlease read [Applying Resource Types and Traits](https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-08.md#resource-types-and-traits) section on RAML documention for more information.\n",
+    "ramlV1Snippet": "Client ID based policies by default expect to obtain the client ID and secret as query parameters. To enforce this in the API definition a trait can be defined in RAML as shown below.\n\n```\ntraits:\n  client-id-required:\n    queryParameters:\n      client_id:\n        type: string\n      client_secret:\n        type: string\n```\n\nThis trait must then be applied to the resource or methods using the `is` RAML attribute.\n\n```\n/products:\n  get:\n    is: [client-id-required]\n    description: Gets a list of all the inventory products.\n```\n\nPlease read [Applying Resource Types and Traits](https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md#applying-resource-types-and-traits) section on RAML documention for more information.\n"
+  }
+]
