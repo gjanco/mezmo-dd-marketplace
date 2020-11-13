@@ -24,20 +24,13 @@ Below are some screenshots of the dashboard that is included with the integratio
 ![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/o365/images/5.png)
 
 ### Tiered Pricing
-Tiered pricing for Office 365 active users counts over 1,000 are available. Contact [integrations@rapdev.io](mailto:integrations@rapdev.io) to activate the tiered pricing.
-
-| Office 365 Users | $ / User / Month |
-| ---------------- | ---------------- |
-| 1 - 999          | $0.50            |
-| 1000 - 4,999     | $0.35            |
-| 5000 - 9,999     | $0.25            |
-| 10,000+          | $0.10            |
+Tiered pricing for Office 365 active users counts over 1,000 are available. Contact [integrations@rapdev.io](mailto:integrations@rapdev.io) to learn more about the tiered pricing.
 
 ## Setup
 
 ### Datadog Integration Install
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==1.0.0`
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.0.0`
 
 ### Microsoft Office 365 Configuration
 
@@ -89,12 +82,21 @@ The Microsoft Office 365 integration requires permissions managed through your o
 
 	4.2. Add the integration user created in step 1 to the Microsoft Teams `dd-agent-synthetic`. The synthetic check will use the default `General` channel to send and reply to messages.
 
-
 5. [Configure the integration user account mailbox to auto-forward emails](https://docs.microsoft.com/en-us/exchange/recipients-in-exchange-online/manage-user-mailboxes/configure-email-forwarding) to `probe@synth-rapdev.io`. Optionally set your email forwarding configuration to disable copies of forwarded email.
 
 6. The agent's synthetic email check is disabled by default, set `enable_email_synthetics: true` and set the target email address configured in step 3.6 by adding `email_address: {integration_user@email.address}` in the `o365.d/o365.yaml`.
 
-7. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7).
+7. Add SharePoint sites to the `o365.d/o365.yaml` file to enable collection of SharePoint performance metrics. Ten (10) sites can be added under the configuration section `sharepoint_sites`. See the configuration example for syntax. The configured username and password for the performance synthetic user is used for the sharepoint login and the SharePoint site(s) must be readable by the configured user.
+
+8. The integration configuration defaults to `probe_mode: true`, which will operate with application performance synthetics only. For your primary integration location, change `probe_mode: false` in the configuration yaml to enable report metrics and your tenant's Office 365 incident events.
+
+9. Add the `office` tag to the integration configuration in `o365.d/o365.yaml` file to correspond to each office location from which the integration will be running synthetic checks, e.g.:
+```
+tags:
+  - "office:boston"
+```
+
+10. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7).
 
 ### Validation
 

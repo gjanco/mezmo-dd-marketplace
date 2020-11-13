@@ -2,26 +2,25 @@
 # All rights reserved
 # Licensed under a 3-clause BSD style license (see LICENSE)
 
-import os
-import csv
-import json
-import requests
-import traceback
-from datetime import date, datetime, timedelta, timezone
+import os, io, csv, json, requests, traceback
 
-# from typing import Any
+from .sharepy import SharePointSession
+from urllib.parse import urlparse
+from collections import deque
+from datetime import date, datetime, timedelta, timezone
 from random import choice
 from string import ascii_letters
-
 from datadog_checks.base import AgentCheck
 from dateutil.parser import parse
-
 from datadog_checks.base import AgentCheck
+
 try:
     from datadog_agent import get_config
 except ImportError:
     def get_config(key):
         return ""
+
+MAX_FILE_SIZE = 4000000
 
 REQUIRED_TAGS = [
     "vendor:rapdev",
@@ -33,341 +32,185 @@ REQUIRED_SETTINGS = [
     "client_secret",
 ]
 
+REPORTS = {
+    "Activations": {
+        "Reports.Activations.ActivationCounts": "ActivationsActivationCounts",
+        "Reports.Activations.UserCounts": "ActivationsUserCounts",
+    },
+    "GroupsActivity": {
+        "Reports.GroupsActivity.ActivityCounts": "GroupsActivityActivityCounts",
+        "Reports.GroupsActivity.GroupCounts": "GroupsActivityGroupCounts",
+        "Reports.GroupsActivity.Storage": "GroupsActivityStorage",
+        "Reports.GroupsActivity.FileCounts": "GroupsActivityFileCounts",
+    },
+    "Outlook": {
+        "Reports.OutlookActivity.ActivityCounts": "OutlookActivityActivityCounts",
+        "Reports.OutlookActivity.UserCounts": "OutlookActivityUserCounts",
+        "Reports.OutlookAppUsage.UserCounts": "OutlookAppUsageAppsUserCounts",
+        "Reports.OutlookAppUsage.VersionsUserCounts": "OutlookAppUsageVersionsUserCounts",
+        "Reports.OutlookMailboxUsage.MailboxCounts": "OutlookMailboxUsageMailboxCounts",
+        "Reports.OutlookMailboxUsage.QuotaStatusMailboxCounts": "OutlookMailboxUsageQuotaStatusMailboxCounts",
+        "Reports.OutlookMailboxUsage.Storage": "OutlookMailboxUsageStorage",        
+    },
+    "Teams": {
+        "Reports.TeamsDeviceUsage.UserCounts": "TeamsDeviceUsageUserCounts",
+        "Reports.TeamsUserActivity.UserCounts": "TeamsUserActivityUserCounts",
+    },
+    "OneDrive": {
+        "Reports.OneDriveActivity.UserCounts": "OneDriveActivityUserCounts",
+        "Reports.OneDriveActivity.FileCounts": "OneDriveActivityFileCounts",
+        "Reports.OneDriveUsage.AccountCounts": "OneDriveUsageAccountCounts",
+        "Reports.OneDriveUsage.FileCounts": "OneDriveUsageFileCounts",
+        "Reports.OneDriveUsage.Storage": "OneDriveUsageStorage",
+    },
+    "SharePoint": {
+        "Reports.SharePointActivity.FileCounts": "SharePointActivityFileCounts",
+        "Reports.SharePointActivity.UserCounts": "SharePointActivityUserCounts",
+        "Reports.SharePointActivity.Pages": "SharePointActivityPages",
+        "Reports.SharePointUsageFileCounts": "SharePointUsageFileCounts",
+        "Reports.SharePointUsageSiteCounts": "SharePointUsageSiteCounts",
+        "Reports.SharePointUsageStorage": "SharePointUsageStorage",
+        "Reports.SharePointUsagePages": "SharePointUsagePages",
+    },
+    "Yammer": {
+        "Reports.YammerActivity.ActivityCounts": "YammerActivityActivityCounts",
+        "Reports.YammerActivity.UserCounts": "YammerActivityUserCounts",
+        "Reports.YammerDeviceUsage.UserCounts": "YammerDeviceUsageUserCounts",
+        "Reports.YammerGroupsActivity.GroupCounts": "YammerGroupsActivityGroupCounts",
+        "Reports.YammerGroupsACtivity.ActivityCounts": "YammerGroupsActivityActivityCounts",
+    },
+    "Skype": {
+        "Reports.SkypeActivity.ActivityCounts": "SkypeActivityActivityCounts",
+        "Reports.SkypeActivity.UserCounts": "SkypeActivityUserCounts",
+        "Reports.SkypeDeviceUsage.UserCounts": "SkypeDeviceUsageUserCounts",
+        "Reports.SkypeOrganizerActivity.ActivityCounts": "SkypeOrganizerActivityActivityCounts",
+        "Reports.SkypeOrganizerActivity.UserCounts": "SkypeOrganizerActivityUserCounts",
+        "Reports.SkypeOrganizerActivity.MinuteCounts": "SkypeOrganizerActivityMinuteCounts",
+        "Reports.SkypeParticipantActivity.ActivityCounts": "SkypeParticipantActivityActivityCounts",
+        "Reports.SkypeParticipantActivity.UserCounts": "SkypeParticipantActivityUserCounts",
+        "Reports.SkypeParticipantActivity.MinuteCounts": "SkypeParticipantActivityMinuteCounts",
+        "Reports.SkypePeerToPeerActivity.ActivityCounts": "SkypePeerToPeerActivityActivityCounts",
+        "Reports.SkypePeerToPeerActivity.UserCounts": "SkypePeerToPeerActivityUserCounts",
+        "Reports.SkypePeerToPeerActivity.MinuteCounts": "SkypePeerToPeerActivityMinuteCounts",        
+    },
+}
+
+SHAREPOINT_PERF_METRICS = [
+    "IisLatency",
+    "spRequestDuration",
+    "QueryCount",
+    "QueryDuration",
+    "CPUDuration",
+    # "ClaimsAuthenticationTime",
+    # "ClaimsAuthenticationTimeType",
+    "Network-WindowScaleOption",
+    "Network-PacketRetransmitCount",
+    "Network-SmoothedRoundTripTime",
+]
+
 class O365Check(AgentCheck):
     def check(self, instance):
         self.metric_prefix = "rapdev.o365"
         self.billing_metric = "{}.{}".format("datadog.marketplace", self.metric_prefix)
         self.service_check_name = "{}.status".format(self.metric_prefix)
-
-        # patch in proxy configuration for requests
-        proxyConfig = get_config("proxy")
-        if proxyConfig:
-            httpProxy = proxyConfig.get("http", None)
-            httpsProxy = proxyConfig.get("https", None)
-
-            if httpProxy:
-                os.environ["http_proxy"] = httpProxy
-            if httpsProxy:
-                os.environ["https_proxy"] = httpsProxy
-
-        self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
         self.today = datetime.now(tz=timezone.utc).date()
-        self.events_token = {}
         self.reports_token = {}
         self.synthetics_token = {}
+        self.management_token = {}
+        self.report_refresh_column = "\ufeffReport Refresh Date"
         self.synthetic_email_api_key = "KIcolOzDSn2tdHppEnCmF5bVbAGSHDiN43eWkcWR"
-        self.tags.append("{}:{}".format("tenant_id", self.instance.get("tenant_id", None)))
+        self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
+        self.tags.append("{}:{}".format("tenant_id", self.instance.get("tenant_id")))
 
-        ###########################################################################################
-        ## Microsoft 365 Synthetics
-        ###########################################################################################
-        if self.instance.get("enable_synthetics", True):
-            self.do_check("Synthetics.Authorization", "set_synthetics_token", instance)
-            self.do_check(
-                "Synthetics.Outlook.Calendar",
-                "get_calendar_synthetic_metrics",
-                instance,
-            )
-            self.do_check(
-                "Synthetics.OneDrive.File", "get_onedrive_synthetic_metrics", instance
-            )
-            self.do_check(
-                "Synthetics.Teams.Chat", "get_teams_synthetic_metrics", instance
-            )
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.Authorization")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.Outlook.Calendar")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.OneDrive.File")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.Teams.Chat")],
-            )
+        self.set_proxies()
 
-        ###########################################################################################
-        ## Email Synthetics
-        ###########################################################################################
-        if self.instance.get("enable_synthetic_email", True):
-            self.do_check("Synthetics.Email", "get_email_synthetic_metrics", instance)
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Synthetics.Email")],
-            )
+        enabled = self.instance.get("enable_synthetics", True)
+        self.do_check("Synthetics.Authorization", "set_synthetics_token", enabled)
+        self.do_check("Synthetics.Outlook.Calendar", "get_calendar_synthetic_metrics", enabled)
+        self.do_check("Synthetics.OneDrive.File", "get_onedrive_synthetic_metrics", enabled)
+        self.do_check("Synthetics.Teams.Chat", "get_teams_synthetic_metrics", enabled)
+        self.do_check("Synthetics.SharePoint.Site", "get_sharepoint_synthetic_metrics", enabled)
 
-        if self.instance.get("probe_mode", False):
-            self.log.info("probe mode detected, skipping reports")
+        self.do_check("Reports.Authorization", "set_reports_token")
+        self.do_check("Reports.ActiveUsers.ServiceUserCounts", "ActiveUsersServiceUserCounts")
+
+        if self.instance.get("probe_mode", True):
+            self.log.info("instance configured in probe mode; reports skipped")
             return
 
-        ###########################################################################################
-        ## Microsoft 365 Graph Authorization
-        ###########################################################################################
-        self.do_check("Reports.Authorization", "set_reports_token", instance)
+        self.do_check("Reports.ActiveUsers.UserCounts", "ActiveUsersUserCounts")
 
-        ###########################################################################################
-        ## Microsoft 365 Active Users, Groups, & Activations
-        ###########################################################################################
-        self.do_check("Reports.ActiveUsers", "report_active_users", instance)
-        self.do_check("Reports.Activations", "report_activations", instance)
-        self.do_check("Reports.GroupsActivity", "report_groups_activity", instance)
+        enabled = self.instance.get("enable_activations", True)
+        for report_name, report_func in REPORTS["Activations"].items():
+            self.do_check(report_name, report_func, enabled)
 
-        ###########################################################################################
-        ## Microsoft 365 Outlook
-        ###########################################################################################
-        if self.instance.get("enable_outlook", True):
-            self.do_check(
-                "Reports.Outlook.Activity", "report_outlook_activity", instance
-            )
-            self.do_check("Reports.Outlook.Devices", "report_outlook_devices", instance)
-            self.do_check(
-                "Reports.Outlook.MailboxUsage", "report_outlook_usage", instance
-            )
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Outlook.Activity")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Outlook.Devices")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Outlook.Usage")],
-            )
+        enabled = self.instance.get("enable_groups", True)
+        for report_name, report_func in REPORTS["GroupsActivity"].items():
+            self.do_check(report_name, report_func, enabled)
 
-        ###########################################################################################
-        ## Microsoft 365 OneDrive
-        ###########################################################################################
-        if self.instance.get("enable_onedrive", True):
-            self.do_check(
-                "Reports.OneDrive.Activity", "report_onedrive_activity", instance
-            )
-            self.do_check("Reports.OneDrive.Usage", "report_onedrive_usage", instance)
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.OneDrive.Activity")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.OneDrive.Usage")],
-            )
+        enabled = self.instance.get("enable_outlook", True)
+        for report_name, report_func in REPORTS["Outlook"].items():
+            self.do_check(report_name, report_func, enabled)
 
-        ###########################################################################################
-        ## Microsoft 365 SharePoint
-        ###########################################################################################
-        if self.instance.get("enable_sharepoint", True):
-            self.do_check(
-                "Reports.SharePoint.Activity", "report_sharepoint_activity", instance
-            )
-            self.do_check(
-                "Reports.SharePoint.Usage", "report_sharepoint_usage", instance
-            )
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.SharePoint.Activity")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.SharePoint.Usage")],
-            )
+        enabled = self.instance.get("enable_teams", True)
+        for report_name, report_func in REPORTS["Teams"].items():
+            self.do_check(report_name, report_func, enabled)
 
-        ###########################################################################################
-        ## Microsoft 365 Skype For Business
-        ###########################################################################################
-        if self.instance.get("enable_skype", True):
-            self.do_check("Reports.Skype.Activity", "report_skype_activity", instance)
-            self.do_check("Reports.Skype.Devices", "report_skype_devices", instance)
-            self.do_check(
-                "Reports.Skype.Organizer.Sessions",
-                "report_skype_organizer_sessions",
-                instance,
-            )
-            self.do_check(
-                "Reports.Skype.Organizer.Users",
-                "report_skype_organizer_users",
-                instance,
-            )
-            self.do_check(
-                "Reports.Skype.Organizer.Minutes",
-                "report_skype_organizer_minutes",
-                instance,
-            )
-            self.do_check(
-                "Reports.Skype.Participant.Sessions",
-                "report_skype_participant_sessions",
-                instance,
-            )
-            self.do_check(
-                "Reports.Skype.Participant.Users",
-                "report_skype_participant_users",
-                instance,
-            )
-            self.do_check(
-                "Reports.Skype.Participant.Minutes",
-                "report_skype_participant_minutes",
-                instance,
-            )
-            self.do_check(
-                "Reports.Skype.PeerToPeer.Sessions",
-                "report_skype_p2p_sessions",
-                instance,
-            )
-            self.do_check(
-                "Reports.Skype.PeerToPeer.Users", "report_skype_p2p_users", instance
-            )
-            self.do_check(
-                "Reports.Skype.PeerToPeer.Minutes", "report_skype_p2p_minutes", instance
-            )
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Skype.Activity")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Skype.Devices")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags
-                + ["service:{}".format("Reports.Skype.Organizer.Sessions")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Skype.Organizer.Users")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags
-                + ["service:{}".format("Reports.Skype.Organizer.Minutes")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags
-                + ["service:{}".format("Reports.Skype.Participant.Sessions")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags
-                + ["service:{}".format("Reports.Skype.Participant.Users")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags
-                + ["service:{}".format("Reports.Skype.Participant.Minutes")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags
-                + ["service:{}".format("Reports.Skype.PeerToPeer.Sessions")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags
-                + ["service:{}".format("Reports.Skype.PeerToPeer.Users")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags
-                + ["service:{}".format("Reports.Skype.PeerToPeer.Minutes")],
-            )
+        enabled = self.instance.get("enable_onedrive", True)
+        for report_name, report_func in REPORTS["OneDrive"].items():
+            self.do_check(report_name, report_func, enabled)
 
-        ###########################################################################################
-        ## Microsoft 365 Teams
-        ###########################################################################################
-        if self.instance.get("enable_teams", True):
-            self.do_check("Reports.Teams.Activity", "report_teams_activity", instance)
-            self.do_check("Reports.Teams.Devices", "report_teams_devices", instance)
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Teams.Activity")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Teams.Devices")],
-            )
+        enabled = self.instance.get("enable_sharepoint", True)
+        for report_name, report_func in REPORTS["SharePoint"].items():
+            self.do_check(report_name, report_func, enabled)
 
-        ###########################################################################################
-        ## Microsoft 365 Yammer
-        ###########################################################################################
-        if self.instance.get("enable_yammer", True):
-            self.do_check("Reports.Yammer.Activity", "report_yammer_activity", instance)
-            self.do_check("Reports.Yammer.Devices", "report_yammer_devices", instance)
-            self.do_check("Reports.Yammer.Groups", "report_yammer_groups", instance)
-        else:
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Yammer.Activity")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Yammer.Devices")],
-            )
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.UNKNOWN,
-                tags=self.tags + ["service:{}".format("Reports.Yammer.Groups")],
-            )
+        enabled = self.instance.get("enable_yammer", True)
+        for report_name, report_func in REPORTS["Yammer"].items():
+            self.do_check(report_name, report_func, enabled)
+
+        enabled = self.instance.get("enable_skype", True)
+        for report_name, report_func in REPORTS["Skype"].items():
+            self.do_check(report_name, report_func, enabled)
+
+        enabled = self.instance.get("enable_synthetic_email", True)
+        self.do_check("Synthetics.Email", "get_email_synthetic_metrics", enabled)
+
+        enabled = self.instance.get("enable_incidents", True)
+        self.do_check("Messages.Authorization", "set_management_token", enabled)
+        self.do_check("Messages.Incidents", "get_servicecomms_incidents", enabled)
+
         return
 
-    def do_check(self, service, check, instance):
-        check_tags = ["{}:{}".format("service", service)]
-        check_func = getattr(self, check)
+    def set_proxies(self):
+        proxy_config = get_config("proxy")
+        if proxy_config:
+            http_proxy = proxy_config.get("http", None)
+            https_proxy = proxy_config.get("https", None)
+
+            if http_proxy:
+                os.environ["http_proxy"] = http_proxy
+            if https_proxy:
+                os.environ["https_proxy"] = https_proxy
+        return
+
+    def do_check(self, check, function, enabled=True):
+        check_tags = self.tags.copy()
+        check_tags.append("{}:{}".format("check", check))
+
+        if not enabled:
+            self.service_check(self.service_check_name, AgentCheck.UNKNOWN, tags=check_tags)
+            return
+
+        check_func = getattr(self, function)
         try:
-            check_func(instance)
+            check_func()
         except Exception as e:
-            m = "[{}]: {}".format(service, e)
+            m = "[{}]: {}".format(check, e)
             self.log.error(m)
             self.log.error(traceback.format_exc())
-            self.service_check(
-                self.service_check_name,
-                AgentCheck.CRITICAL,
-                message=m,
-                tags=self.tags + check_tags,
-            )
+            self.service_check(self.service_check_name, AgentCheck.CRITICAL, message=m, tags=check_tags)
         else:
-            self.service_check(
-                self.service_check_name, AgentCheck.OK, tags=self.tags + check_tags
-            )
+            self.service_check(self.service_check_name, AgentCheck.OK, tags=check_tags )
         return
 
     def parse_present(self, value):
@@ -377,6 +220,8 @@ class O365Check(AgentCheck):
             return float(1)
 
     def parse_float(self, value):
+        if not value:
+            return float(0)
         try:
             parsed_value = float(value)
         except ValueError:
@@ -401,7 +246,7 @@ class O365Check(AgentCheck):
     def parse_elapsed_days(self, value):
         if not self.today:
             self.today = datetime.now(tz=timezone.utc).date()
-
+        
         try:
             parsed_value = parse(value)
         except ValueError:
@@ -410,22 +255,15 @@ class O365Check(AgentCheck):
             return float(-1)
 
         dt = self.today - parsed_value.date()
-        return float(dt.days)
+        return float(dt.days)   
 
     def csv_row_to_metrics(self, row=None, tag_fields={}, row_fields=[], tags={}):
-        """ csvRowToMetrics:
-
-            Convert Microsoft Graph API Reports (csv) to datadog metrics.
-        """
-
         metric_tags = tags.copy()
 
-        # Extract row columns as metric tags
         for column, tag_key in tag_fields.items():
             tag_val = row.get(column, None)
             metric_tags.append("{}:{}".format(tag_key, tag_val))
 
-        # Extract row colums as metrics
         for definition in row_fields:
             column_name = definition.get("column_name")
             metric_name = definition.get("metric_name")
@@ -438,14 +276,83 @@ class O365Check(AgentCheck):
             parse_method = getattr(self, parser_func)
             metric_value = parse_method(column_value)
 
-            # Send Metric
             send_metric = getattr(self, metric_type)
             send_metric(metric_name, metric_value, tags=metric_tags + append_tags)
         return
 
-    def get_synthetic_http_metric(
-        self, metric_pre, verb, url, headers, data, tags
-    ):
+    def daily_report_to_metrics(self, url, headers, row_fields, tag_fields, tags):
+        with requests.get(url, headers=headers, stream=True) as r:
+            r.raise_for_status()
+            lines = (line.decode("utf-8") for line in r.iter_lines())
+
+            # latest daily report date
+            latest_date = "1900-01-01"
+            rows = []
+            for row in csv.DictReader(lines):
+                rows.append(row)
+                report_date = row.get("Report Date")
+                if  report_date > latest_date:
+                    latest_date = report_date
+
+            for row in rows:
+                if row.get("Report Date") < latest_date:
+                    continue
+
+                metric_tags = tags.copy()
+                for column, tag_key in tag_fields.items():
+                    tag_val = row.get(column, None)
+                    metric_tags.append("{}:{}".format(tag_key, tag_val))
+
+                for definition in row_fields:
+                    column_name = definition.get("column_name")
+                    metric_name = definition.get("metric_name")
+                    metric_type = definition.get("metric_type")
+                    default_val = definition.get("default_val", None)
+                    parser_func = definition.get("parser_func")
+                    append_tags = definition.get("append_tags", [])
+
+                    column_value = row.get(column_name, default_val)
+                    parse_method = getattr(self, parser_func)
+                    metric_value = parse_method(column_value)
+
+                    # Ignore column tags on refresh metrics
+                    if metric_name.endswith('.refresh'):
+                        metric_tags = tags.copy()
+
+                    send_metric = getattr(self, metric_type)
+                    send_metric(metric_name, metric_value, tags=metric_tags + append_tags)
+            return
+
+    def period_report_to_metrics(self, url, headers, row_fields, tag_fields, tags):
+        with requests.get(url, headers=headers, stream=True) as r:
+            r.raise_for_status()
+            lines = (line.decode("utf-8") for line in r.iter_lines())
+
+            for row in csv.DictReader(lines):
+                for definition in row_fields:
+                    column_name = definition.get("column_name")
+                    metric_name = definition.get("metric_name")
+                    metric_type = definition.get("metric_type")
+                    default_val = definition.get("default_val", None)
+                    parser_func = definition.get("parser_func")
+                    append_tags = definition.get("append_tags", [])
+
+                    column_value = row.get(column_name, default_val)
+                    parse_method = getattr(self, parser_func)
+                    metric_value = parse_method(column_value)
+
+                    metric_tags = tags.copy()
+                    # ignore column tags on refresh metrics
+                    if not metric_name.endswith('.refresh'):
+                        for column, tag_key in tag_fields.items():
+                            tag_val = row.get(column, None)
+                            metric_tags.append("{}:{}".format(tag_key, tag_val))
+                    
+                    send_metric = getattr(self, metric_type)
+                    send_metric(metric_name, metric_value, tags=metric_tags + append_tags)
+            return
+
+    def get_synthetic_http_metric(self, metric_pre, verb, url, headers, data, tags):
         metric_tags = tags.copy()
 
         try:
@@ -477,7 +384,7 @@ class O365Check(AgentCheck):
         else:
             return {}
 
-    def set_reports_token(self, instance):
+    def set_reports_token(self):
         tenant_id = self.instance.get("tenant_id", None)
         client_id = self.instance.get("client_id", None)
         client_secret = self.instance.get("client_secret", None)
@@ -491,12 +398,10 @@ class O365Check(AgentCheck):
         }
         r = requests.post(url, data=data)
         r.raise_for_status()
-
-
         self.reports_token = r.json()
         return
 
-    def set_synthetics_token(self, instance):
+    def set_synthetics_token(self):
         tenant_id = self.instance.get("tenant_id")
         client_id = self.instance.get("client_id")
         client_secret = self.instance.get("client_secret")
@@ -512,6 +417,8 @@ class O365Check(AgentCheck):
             "Channel.Delete",
             "Team.ReadBasic.All",
             "Directory.ReadWrite.All",
+            "Web.Read",
+            "AllSites.Read",
         ]
         form_data = {
             "resource": "https://graph.microsoft.com",
@@ -529,460 +436,449 @@ class O365Check(AgentCheck):
         self.synthetics_token = r.json()
         return
 
-    ###############################################################################################
-    ## Microsoft 365 Active Users, Groups & Activations
-    ###############################################################################################
-    def report_active_users(self, instance, period="d7"):
-        """ Office 365 Active Users report
-            https://docs.microsoft.com/en-us/graph/api/resources/office-365-active-users-reports?view=graph-rest-1.0
-        """
+    def set_management_token(self):
+        tenant_id = self.instance.get("tenant_id", None)
+        client_id = self.instance.get("client_id", None)
+        client_secret = self.instance.get("client_secret", None)
+        
+        url = "https://login.microsoftonline.com/{}/oauth2/v2.0/token".format(tenant_id)
+        data = {
+            "scope": "https://manage.office.com/.default",
+            "grant_type": "client_credentials",
+            "client_id": client_id,
+            "client_secret": client_secret,
+        }
 
-        url = "https://graph.microsoft.com/v1.0/reports/getOffice365ActiveUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
+        r = requests.post(url, data=data)
+        r.raise_for_status()
+        self.management_token = r.json()
+        return
 
-        app_fields = [
+    ##########################################################################################
+    ## Reports.ActiveUsers
+    ##########################################################################################
+    def ActiveUsersUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "activeusers.users")
+        report_path     = "v1.0/reports/getOffice365ActiveUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Office 365",
             "Exchange",
             "OneDrive",
             "SharePoint",
-            "Skype for Business",
+            "Skype For Businesss",
             "Yammer",
             "Teams",
         ]
-        tag_fields = {
-            "User Principal Name": "upn",
-            "Display Name": "display_name",
-        }
-        row_fields = []
-
-        for name in app_fields:
-            prefix = self.metric_prefix
-            formatted_name = name.lower().replace(" ", "_")
-
-            row_fields.append(
-                {
-                    "column_name": "Has {} License".format(name),
-                    "metric_name": "{}.activeuser.{}.license".format(
-                        prefix, formatted_name
-                    ),
-                    "metric_type": "gauge",
-                    "parser_func": "parse_boolean",
-                    "append_tags": ["o365_app:{}".format(name)],
-                }
-            )
-
-            row_fields.append(
-                {
-                    "column_name": "{} License Assign Date".format(name),
-                    "metric_name": "{}.activeuser.{}.license_assign.time".format(
-                        prefix, formatted_name
-                    ),
-                    "metric_type": "gauge",
-                    "parser_func": "parse_elapsed_days",
-                    "append_tags": ["o365_app:{}".format(name)],
-                }
-            )
-
-            row_fields.append(
-                {
-                    "column_name": "{} Last Activity Date".format(name),
-                    "metric_name": "{}.activeuser.{}.last_active.time".format(
-                        prefix, formatted_name
-                    ),
-                    "metric_type": "gauge",
-                    "parser_func": "parse_elapsed_days",
-                    "append_tags": ["o365_app:{}".format(name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Billing Metric """
-                billing_tags = [
-                    "{}:{}".format("user", row.get("User Principal Name", None))
-                ]
-                self.gauge(self.billing_metric, 1.0, tags=self.tags + billing_tags)
-
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags,
-                )
-        return
-
-    def report_activations(self, instance):
-        """ Office 365 activation report
-            https://docs.microsoft.com/en-us/graph/api/resources/office-365-activations-reports?view=graph-rest-1.0
-        """
-
-        url = (
-            "https://graph.microsoft.com/v1.0/reports/getOffice365ActivationsUserDetail"
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        app_fields = ["Windows", "Mac", "Windows 10 Mobile", "iOS", "Android"]
-        tag_fields = {
-            "User Principal Name": "upn",
-            "Display Name": "display_name",
-            "Product Type": "product_type",
-            "Activated On Shared Computer": "activated_on_shared_computer",
-        }
         row_fields = [
             {
-                "column_name": "Last Activated Date",
-                "metric_name": "{}.activations.last_activated.time".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["product:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def ActiveUsersServiceUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "activeusers.serviceusers")
+        report_path     = "v1.0/reports/getOffice365ServicesUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+        probe_mode      = self.instance.get("probe_mode", True)
+
+        tag_fields = {}
+        col_fields = [
+            "Office 365",
+            "Exchange",
+            "OneDrive",
+            "SharePoint",
+            "Skype For Businesss",
+            "Yammer",
+            "Teams",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{} Active".format(name),
+                "metric_name": "{}.active".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["product:{}".format(name)]
+            })
+
+            row_fields.append({
+                "column_name": "{} Inactive".format(name),
+                "metric_name": "{}.inactive".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["product:{}".format(name)]
+            })
+
+        highmark = 0.0
+        with requests.get(report_url, headers=report_headers, stream=True) as r:
+            r.raise_for_status()
+            lines = (line.decode("utf-8") for line in r.iter_lines())
+
+            for row in csv.DictReader(lines):
+                for name in col_fields:
+                    usercount = self.parse_float(row.get("{} Active".format(name), 0.0))
+                    if usercount > highmark:
+                        highmark = usercount
+
+                if not probe_mode:
+                    self.csv_row_to_metrics(
+                        row=row,
+                        tag_fields=tag_fields,
+                        row_fields=row_fields,
+                        tags=self.tags,
+                    )
+
+        # tag_metric is single unit count
+        for i in range(1, int(highmark) + 1):
+            user_tags = self.tags.copy()
+            user_tags.append("user:user{}".format(i))
+            self.gauge(self.billing_metric, 1.0, tags=user_tags)
+        return
+
+
+    ##########################################################################################
+    ## Reports.Activations
+    ##########################################################################################
+    def ActivationsActivationCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "activations.devices")
+        report_path     = "v1.0/reports/getOffice365ActivationCounts"
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {
+            "Product Type": "product",
+        }
+        col_fields = [
+            "Windows",
+            "Mac",
+            "Android",
+            "iOS",
+            "Windows 10 Mobile",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["device:{}".format(name)]
+            })
+
+        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def ActivationsUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "activations.users")
+        report_path     = "v1.0/reports/getOffice365ActivationsUserCounts"
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {
+            "Product Type": "product",
+        }
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "Assigned",
+                "metric_name": "{}.assigned".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "Activated",
+                "metric_name": "{}.activated".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "Shared Computer Activation",
+                "metric_name": "{}.shared".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+        ]
+
+        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.GroupsActivity
+    ##########################################################################################
+    def GroupsActivityActivityCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "groups.activity")
+        report_path     = "v1.0/reports/getOffice365GroupsActivityCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Exchange Emails Received",
+            "Yammer Messages Posted",
+            "Yammer Messages Read",
+            "Yammer Messages Liked",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return  
+
+    def GroupsActivityGroupCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "groups")
+        report_path     = "v1.0/reports/getOffice365GroupsActivityGroupCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "Total",
+                "metric_name": "{}.total".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "Active",
+                "metric_name": "{}.active".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
             }
         ]
 
-        for name in app_fields:
-            row_fields.append(
-                {
-                    "column_name": "{}".format(name),
-                    "metric_name": "{}.activations".format(prefix),
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["o365_client:{}".format(name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags,
-                )
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    def report_groups_activity(self, instance, period="d7"):
-        """ Office 365 Groups activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/office-365-groups-activity-reports?view=graph-rest-1.0
-        """
+    def GroupsActivityStorage(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "groups.storage")
+        report_path     = "v1.0/reports/getOffice365GroupsActivityStorage(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getOffice365GroupsActivityDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {
-            "Group Display Name": "group_display_name",
-            "Owner Principal Name": "owner",
-            "Owner Principal Name": "upn",
-            "Group Type": "type",
-            "Group Id": "group_id",
-        }
+        tag_fields = {}
+        col_fields = []
         row_fields = [
             {
-                "column_name": "Member Count",
-                "metric_name": "{}.group.members".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "External Member Count",
-                "metric_name": "{}.group.external_members".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Exchange Received Email Count",
-                "metric_name": "{}.group.{}.received_emails".format(prefix, "exchange"),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-                "append_tags": ["{}:{}".format("o365_app", "exchange")],
-            },
-            {
-                "column_name": "Exchange Mailbox Total Item Count",
-                "metric_name": "{}.group.{}.mailbox_total_items".format(
-                    prefix, "exchange"
-                ),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-                "append_tags": ["{}:{}".format("o365_app", "exchange")],
-            },
-            {
-                "column_name": "Exchange Mailbox Storage Used (Byte)",
-                "metric_name": "{}.group.{}.mailbox_storage".format(prefix, "exchange"),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-                "append_tags": ["{}:{}".format("o365_app", "exchange")],
-            },
-            {
-                "column_name": "SharePoint Active File Count",
-                "metric_name": "{}.group.{}.active_files".format(prefix, "sharepoint"),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-                "append_tags": ["{}:{}".format("o365_app", "sharepoint")],
-            },
-            {
-                "column_name": "SharePoint Total File Count",
-                "metric_name": "{}.group.{}.total_files".format(prefix, "sharepoint"),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-                "append_tags": ["{}:{}".format("o365_app", "sharepoint")],
-            },
-            {
-                "column_name": "SharePoint Site Storage Used (Byte)",
-                "metric_name": "{}.group.{}.site_storage".format(prefix, "sharepoint"),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-                "append_tags": ["{}:{}".format("o365_app", "sharepoint")],
-            },
-            {
-                "column_name": "Yammer Posted Message Count",
-                "metric_name": "{}.group.{}.posted_messages".format(prefix, "yammer"),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-                "append_tags": ["{}:{}".format("o365_app", "yammer")],
-            },
-            {
-                "column_name": "Yammer Read Message Count",
-                "metric_name": "{}.group.{}.read_messages".format(prefix, "yammer"),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-                "append_tags": ["{}:{}".format("o365_app", "yammer")],
-            },
-            {
-                "column_name": "Yammer Liked Message Count",
-                "metric_name": "{}.group.{}.liked_messages".format(prefix, "yammer"),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-                "append_tags": ["{}:{}".format("o365_app", "yammer")],
-            },
-        ]
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags,
-                )
-        return
-
-    ###############################################################################################
-    ## Microsoft 365 Teams
-    ###############################################################################################
-    def report_teams_devices(self, instance, period="d7"):
-        """ Teams device usage report
-            https://docs.microsoft.com/en-us/graph/api/resources/microsoft-teams-device-usage-reports?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getTeamsDeviceUsageUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        app_fields = ["Web", "Windows Phone", "Android Phone", "iOS", "Mac", "Windows"]
-        tag_fields = {
-            "User Principal Name": "upn",
-        }
-        row_fields = [
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.teams.device.last_activity".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "Mailbox Storage Used (Byte)",
+                "metric_name": "{}.mailbox.used".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "Site Storage Used (Byte)",
+                "metric_name": "{}.site.used".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
             }
         ]
 
-        for name in app_fields:
-            row_fields.append(
-                {
-                    "column_name": "Used {}".format(name),
-                    "metric_name": "{}.teams.device".format(prefix),
-                    "metric_type": "gauge",
-                    "parser_func": "parse_boolean",
-                    "append_tags": ["device:{}".format(name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:teams"],
-                )
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    def report_teams_activity(self, instance, period="d7"):
-        """ Teams user activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/microsoft-teams-user-activity-reports?view=graph-rest-1.0
-        """
+    def GroupsActivityFileCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "groups.files")
+        report_path     = "v1.0/reports/getOffice365GroupsActivityFileCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getTeamsUserActivityUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {
-            "User Principal Name": "upn",
-        }
+        tag_fields = {}
+        col_fields = []
         row_fields = [
             {
-                "column_name": "Team Chat Message Count",
-                "metric_name": "{}.teams.activity.team_chat_messages".format(prefix),
-                "default_val": 0.0,
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "Total",
+                "metric_name": "{}.total".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
             },
             {
-                "column_name": "Private Chat Message Count",
-                "metric_name": "{}.teams.activity.private_chat_messages".format(prefix),
-                "default_val": 0.0,
+                "column_name": "Active",
+                "metric_name": "{}.active".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
-            },
+            }
+        ]
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.OutlookActivity
+    ##########################################################################################
+    def OutlookActivityActivityCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "outlook.activity")
+        report_path     = "v1.0/reports/getEmailActivityCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Send",
+            "Receive",
+            "Read",
+        ]
+        row_fields = [
             {
-                "column_name": "Call Count",
-                "metric_name": "{}.teams.activity.calls".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Meeting Count",
-                "metric_name": "{}.teams.activity.meetings".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.teams.activity.last_activity".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
             },
         ]
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:teams"],
-                )
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    ###############################################################################################
-    ## Microsoft 365 Outlook
-    ###############################################################################################
-    def report_outlook_activity(self, instance, period="d7"):
-        """ Email activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/email-activity-reports?view=graph-rest-1.0
-        """
+    def OutlookActivityUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "outlook.activity.users")
+        report_path     = "v1.0/reports/getEmailActivityUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getEmailActivityUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {
-            "User Principal Name": "upn",
-            "Display Name": "display_name",
-        }
+        tag_fields = {}
+        col_fields = [
+            "Send",
+            "Receive",
+            "Read",
+        ]
         row_fields = [
             {
-                "column_name": "Read Count",
-                "metric_name": "{}.outlook.activity.reads".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Send Count",
-                "metric_name": "{}.outlook.activity.sends".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Receive Count",
-                "metric_name": "{}.outlook.activity.receives".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.outlook.activity.last_activity".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
             },
         ]
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:outlook"],
-                )
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    def report_outlook_devices(self, instance, period="d7"):
-        """ Email app usage report
-            https://docs.microsoft.com/en-us/graph/api/resources/email-app-usage-reports?view=graph-rest-1.0
-        """
+    ##########################################################################################
+    ## Reports.OutlookAppUsage
+    ##########################################################################################
+    def OutlookAppUsageAppsUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "outlook.app.users")
+        report_path     = "v1.0/reports/getEmailAppUsageUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getEmailAppUsageUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        app_fields = [
+        tag_fields = {}
+        col_fields = [
             "Mail For Mac",
             "Outlook For Mac",
             "Outlook For Windows",
@@ -993,1184 +889,1307 @@ class O365Check(AgentCheck):
             "IMAP4 App",
             "SMTP App",
         ]
-        tag_fields = {
-            "User Principal Name": "upn",
-            "Display Name": "display_name",
-        }
         row_fields = [
             {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.outlook.device.last_activity".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["email_app:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def OutlookAppUsageVersionsUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "outlook.version.users")
+        report_path     = "v1.0/reports/getEmailAppUsageVersionsUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Outlook 2016",
+            "Outlook 2013",
+            "Outlook 2010",
+            "Outlook 2007",
+            "Undetermined",
+            "Outlook M365",
+            "Outlook 2019",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["version:{}".format(name)]
+            })
+
+        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.OutlookMailboxUsage
+    ##########################################################################################
+    def OutlookMailboxUsageMailboxCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "outlook.mailbox")
+        report_path     = "v1.0/reports/getMailboxUsageMailboxCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "Total",
+                "metric_name": "{}.total".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "Active",
+                "metric_name": "{}.active".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
             }
         ]
 
-        for name in app_fields:
-            row_fields.append(
-                {
-                    "column_name": "{}".format(name),
-                    "metric_name": "{}.outlook.device".format(prefix),
-                    "metric_type": "gauge",
-                    "parser_func": "parse_present",
-                    "append_tags": ["device:{}".format(name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:outlook"],
-                )
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    def report_outlook_usage(self, instance, period="d7"):
-        """ Mailbox usage report
-            https://docs.microsoft.com/en-us/graph/api/resources/mailbox-usage-reports?view=graph-rest-1.0
-        """
+    def OutlookMailboxUsageQuotaStatusMailboxCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "outlook.mailbox.quota")
+        report_path     = "v1.0/reports/getMailboxUsageQuotaStatusMailboxCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getMailboxUsageDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {
-            "User Principal Name": "upn",
-            "Display Name": "display_name",
-        }
+        tag_fields = {}
+        col_fields = [
+            "Under Limit",
+            "Warning Issued",
+            "Send Prohibited",
+            "Send/Receive Prohibited",
+            "Indeterminate",
+        ]
         row_fields = [
             {
-                "column_name": "Item Count",
-                "metric_name": "{}.outlook.usage.items".format(prefix),
-                "default_val": 0.0,
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
+                "append_tags": ["category:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def OutlookMailboxUsageStorage(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "outlook.mailbox.storage")
+        report_path     = "v1.0/reports/getMailboxUsageStorage(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
             },
             {
                 "column_name": "Storage Used (Byte)",
-                "metric_name": "{}.outlook.usage.storage_used".format(prefix),
-                "default_val": 0.0,
+                "metric_name": "{}.used".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Deleted Item Count",
-                "metric_name": "{}.outlook.usage.deleted_items".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Deleted Item Size (Byte)",
-                "metric_name": "{}.outlook.usage.deleted_size".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Issue Warning Quota (Byte)",
-                "metric_name": "{}.outlook.usage.issue_warning_quota".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Prohibit Send Quota (Byte)",
-                "metric_name": "{}.outlook.usage.prohibit_send_quota".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Prohibit Send/Receive Quota (Byte)",
-                "metric_name": "{}.outlook.usage.prohibit_send_receive_quota".format(
-                    prefix
-                ),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.outlook.usage.last_activity".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_elapsed_days",
             },
         ]
-        ## Need computed metrics for overages on quotas ?? ##
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:outlook"],
-                )
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    ###############################################################################################
-    ## Microsoft 365 OneDrive
-    ###############################################################################################
-    def report_onedrive_activity(self, instance, period="d7"):
-        """ OneDrive activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/onedrive-activity-reports?view=graph-rest-1.0
-        """
+    ##########################################################################################
+    ## Reports.TeamsDeviceUsage
+    ##########################################################################################
+    def TeamsDeviceUsageUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "teams.device.users")
+        report_path     = "v1.0/reports/getTeamsDeviceUsageUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getOneDriveActivityUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {
-            "User Principal Name": "upn",
-        }
+        tag_fields = {}
+        col_fields = [
+            "Web",
+            "Windows Phone",
+            "Android Phone",
+            "iOS",
+            "Mac",
+            "Windows",
+        ]
         row_fields = [
             {
-                "column_name": "Viewed Or Edited File Count",
-                "metric_name": "{}.onedrive.activity.viewed_or_edited_files".format(
-                    prefix
-                ),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Synced File Count",
-                "metric_name": "{}.onedrive.activity.synced_files".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Shared Internally File Count",
-                "metric_name": "{}.onedrive.activity.internal_shared_files".format(
-                    prefix
-                ),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Shared Externally File Count",
-                "metric_name": "{}.onedrive.activity.external_shared_files".format(
-                    prefix
-                ),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.onedrive.activity.last_activity".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
             },
         ]
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:onedrive"],
-                )
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["device:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    def report_onedrive_usage(self, instance, period="d7"):
-        """ OneDrive usage report
-            https://docs.microsoft.com/en-us/graph/api/resources/onedrive-usage-reports?view=graph-rest-1.0
-        """
+    ##########################################################################################
+    ## Reports.TeamsUserActivity
+    ##########################################################################################
+    def TeamsUserActivityUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "teams.activity.users")
+        report_path     = "v1.0/reports/getTeamsUserActivityUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getOneDriveUsageAccountDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {
-            "User Principal Name": "upn",
-            "Display Name": "display_name",
-            "Owner Display Name": "owner_display_name",
-            "Owner Principal Name": "owner_principal_name",
-            "Site URL": "onedrive",
-        }
+        tag_fields = {}
+        col_fields = [
+            "Team Chat Messages",
+            "Private Chat Messages",
+            "Calls",
+            "Meetings",
+        ]
         row_fields = [
             {
-                "column_name": "File Count",
-                "metric_name": "{}.onedrive.usage.files".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.OneDriveActivity
+    ##########################################################################################
+    def OneDriveActivityUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "onedrive.activity.users")
+        report_path     = "v1.0/reports/getOneDriveActivityUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Viewed Or Edited",
+            "Synced",
+            "Shared Internally",
+            "Shared Externally",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def OneDriveActivityFileCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "onedrive.activity.files")
+        report_path     = "v1.0/reports/getOneDriveActivityFileCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Viewed Or Edited",
+            "Synced",
+            "Shared Internally",
+            "Shared Externally",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.OneDriveUsage
+    ##########################################################################################
+    def OneDriveUsageAccountCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "onedrive.sites")
+        report_path     = "v1.0/reports/getOneDriveUsageAccountCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {
+            "Site Type": "site_type",
+        }
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "Total",
+                "metric_name": "{}.total".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
             },
             {
-                "column_name": "Active File Count",
-                "metric_name": "{}.onedrive.usage.active_files".format(prefix),
+                "column_name": "Active",
+                "metric_name": "{}.active".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
+            }
+        ]
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return   
+
+    def OneDriveUsageFileCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "onedrive.files")
+        report_path     = "v1.0/reports/getOneDriveUsageFileCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {
+            "Site Type": "site_type",
+        }
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "Total",
+                "metric_name": "{}.total".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "Active",
+                "metric_name": "{}.active".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            }
+        ]
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return  
+
+    def OneDriveUsageStorage(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "onedrive.storage")
+        report_path     = "v1.0/reports/getOneDriveUsageStorage(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {
+            "Site Type": "site_type",
+        }
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
             },
             {
                 "column_name": "Storage Used (Byte)",
-                "metric_name": "{}.onedrive.usage.storage_used".format(prefix),
+                "metric_name": "{}.used".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
             },
+        ]
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.SharePointActivity
+    ##########################################################################################
+    def SharePointActivityFileCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint.activity.files")
+        report_path     = "v1.0/reports/getSharePointActivityFileCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Viewed Or Edited",
+            "Synced",
+            "Shared Internally",
+            "Shared Externally",
+        ]
+        row_fields = [
             {
-                "column_name": "Storage Allocated (Byte)",
-                "metric_name": "{}.onedrive.usage.storage_allocated".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.onedrive.usage.last_activity".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
             },
         ]
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:onedrive"],
-                )
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    ###############################################################################################
-    ## Microsoft 365 SharePoint
-    ###############################################################################################
-    def report_sharepoint_activity(self, instance, period="d7"):
-        """ SharePoint activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/sharepoint-activity-reports?view=graph-rest-1.0
-        """
+    def SharePointActivityUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint.activity.users")
+        report_path     = "v1.0/reports/getSharePointActivityUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getSharePointActivityUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {
-            "User Principal Name": "upn",
-        }
+        tag_fields = {}
+        col_fields = [
+            "Visited Page",
+            "Viewed Or Edited",
+            "Synced",
+            "Shared Internally",
+            "Shared Externally",
+        ]
         row_fields = [
             {
-                "column_name": "Viewed Or Edited File Count",
-                "metric_name": "{}.sharepoint.activity.viewed`_or_edited_files".format(
-                    prefix
-                ),
-                "default_val": 0.0,
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
-                "parser_func": "parse_float",
+                "parser_func": "parse_elapsed_days",
             },
-            {
-                "column_name": "Synced File Count",
-                "metric_name": "{}.sharepoint.activity.synced_files".format(prefix),
-                "default_val": 0.0,
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
-            },
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SharePointActivityPages(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint.activity.pages")
+        report_path     = "v1.0/reports/getSharePointActivityPages(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = []
+        row_fields = [
             {
-                "column_name": "Shared Internally File Count",
-                "metric_name": "{}.sharepoint.activity.internal_shared_files".format(
-                    prefix
-                ),
-                "default_val": 0.0,
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Shared Externally File Count",
-                "metric_name": "{}.sharepoint.activity.external_shared_files".format(
-                    prefix
-                ),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
+                "parser_func": "parse_elapsed_days",
             },
             {
                 "column_name": "Visited Page Count",
-                "metric_name": "{}.sharepoint.activity.visited_pages".format(prefix),
-                "default_val": 0.0,
+                "metric_name": "{}.visits".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
             },
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.sharepoint.activity.last_activity".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_elapsed_days",
-            },
         ]
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:sharepoint"],
-                )
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    def report_sharepoint_usage(self, instance, period="d7"):
-        """ SharePoint site usage report
-            https://docs.microsoft.com/en-us/graph/api/resources/sharepoint-site-usage-reports?view=graph-rest-1.0
-        """
+    ##########################################################################################
+    ## Reports.SharePointUsage
+    ##########################################################################################
+    def SharePointUsageFileCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint.files")
+        report_path     = "v1.0/reports/getSharePointSiteUsageFileCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getSharePointSiteUsageDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
         tag_fields = {
-            "User Principal Name": "upn",
-            "Display Name": "display_name",
-            "Owner Display Name": "owner_display_name",
-            "Owner Principal Name": "owner_principal_name",
-            "Site Id": "site_id",
-            "Site URL": "site_url",
-            "Root Web Template": "root_web_template",
+            "Site Type": "site_type",
         }
+        col_fields = []
         row_fields = [
             {
-                "column_name": "File Count",
-                "metric_name": "{}.sharepoint.usage.files".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Active File Count",
-                "metric_name": "{}.sharepoint.usage.active_files".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Storage Used (Byte)",
-                "metric_name": "{}.sharepoint.usage.storage_used".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Storage Allocated (Byte)",
-                "metric_name": "{}.sharepoint.usage.storage_allocated".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Page View Count",
-                "metric_name": "{}.sharepoint.usage.page_views".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Visited Page Count",
-                "metric_name": "{}.sharepoint.usage.visited_pages".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.sharepoint.usage.last_activity".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
             },
+            {
+                "column_name": "{}".format("Total"),
+                "metric_name": "{}.total".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "{}".format("Active"),
+                "metric_name": "{}.active".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
         ]
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:sharepoint"],
-                )
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    ###############################################################################################
-    ## Microsoft 365 Skype For Business
-    ###############################################################################################
-    def report_skype_activity(self, instance, period="d7"):
-        """ Skype For Business activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-activity-reports?view=graph-rest-1.0
-        """
+    def SharePointUsageSiteCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint.sites")
+        report_path     = "v1.0/reports/getSharePointSiteUsageSiteCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessActivityUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
         tag_fields = {
-            "User Principal Name": "upn",
+            "Site Type": "site_type",
         }
-        met_fields = [
-            "Total Peer-to-peer Session Count",
-            "Total Participated Conference Count",
-            "Total Organized Conference Count",
-            "Peer-to-peer IM Count",
-            "Peer-to-peer Audio Count",
-            "Peer-to-peer Audio Minutes",
-            "Peer-to-peer Video Count",
-            "Peer-to-peer Video Minutes",
-            "Peer-to-peer App Sharing Count",
-            "Peer-to-peer File Transfer Count",
-            "Organized Conference IM Count",
-            "Organized Conference Audio/Video Count",
-            "Organized Conference Audio/Video Minutes",
-            "Organized Conference App Sharing Count",
-            "Organized Conference Web Count",
-            "Organized Conference Dial-in/out 3rd Party Count",
-            "Organized Conference Dial-in/out Microsoft Count",
-            "Organized Conference Dial-in Microsoft Minutes",
-            "Organized Conference Dial-out Microsoft Minutes",
-            "Participated Conference IM Count",
-            "Participated Conference Audio/Video Count",
-            "Participated Conference Audio/Video Minutes",
-            "Participated Conference App Sharing Count",
-            "Participated Conference Web Count",
-            "Participated Conference Dial-in/out 3rd Party Count",
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "{}".format("Total"),
+                "metric_name": "{}.total".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "{}".format("Active"),
+                "metric_name": "{}.active".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+        ]
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SharePointUsageStorage(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint.storage")
+        report_path     = "v1.0/reports/getSharePointSiteUsageStorage(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {
+            "Site Type": "site_type",
+        }
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "{}".format("Storage Used (Byte)"),
+                "metric_name": "{}.used".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+        ]
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SharePointUsagePages(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint.pages")
+        report_path     = "v1.0/reports/getSharePointSiteUsagePages(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {
+            "Site Type": "site_type",
+        }
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "{}".format("Page View Count"),
+                "metric_name": "{}.views".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+        ]
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.YammerActivity
+    ##########################################################################################
+    def YammerActivityActivityCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "yammer.activity")
+        report_path     = "v1.0/reports/getYammerActivityCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Liked",
+            "Posted",
+            "Read",
         ]
         row_fields = [
             {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.skype.activity.last_activity".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
-            }
+            },
         ]
 
-        for name in met_fields:
-            terminus = name.split(" ")[-1]
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.activity.{}".format(
-                        prefix, terminus.lower()
-                    ),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    def report_skype_devices(self, instance, period="d7"):
-        """ Skype For Business device usage report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-device-usage-reports?view=graph-rest-1.0
-        """
+    def YammerActivityUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "yammer.activity.users")
+        report_path     = "v1.0/reports/getYammerActivityUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessDeviceUsageUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        app_fields = ["Windows", "Windows Phone", "Android Phone", "iPhone", "iPad"]
-        tag_fields = {
-            "User Principal Name": "upn",
-        }
+        tag_fields = {}
+        col_fields = [
+            "Liked",
+            "Posted",
+            "Read",
+        ]
         row_fields = [
             {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.skype.device.last_activity".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_elapsed_days",
-            }
-        ]
-
-        for name in app_fields:
-            row_fields.append(
-                {
-                    "column_name": "{}".format(name),
-                    "metric_name": "{}.skype.device".format(prefix),
-                    "metric_type": "gauge",
-                    "parser_func": "parse_boolean",
-                    "append_tags": ["device:{}".format(name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    def report_skype_organizer_sessions(self, instance, period="d7"):
-        """ Skype For Business organizer activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-organizer-activity-reports?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessOrganizerActivityCounts(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {}
-        met_fields = [
-            "IM",
-            "Audio/Video",
-            "App Sharing",
-            "Web",
-            "Dial-in/out 3rd Party",
-            "Dian-in/out Microsoft",
-        ]
-        row_fields = []
-
-        for name in met_fields:
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.organizer.sessions".format(prefix),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    def report_skype_organizer_users(self, instance, period="d7"):
-        """ Skype For Business organizer activity user report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-organizer-activity-reports?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessOrganizerActivityUserCounts(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {}
-        met_fields = [
-            "IM",
-            "Audio/Video",
-            "App Sharing",
-            "Web",
-            "Dial-in/out 3rd Party",
-            "Dian-in/out Microsoft",
-        ]
-        row_fields = []
-
-        for name in met_fields:
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.organizer.users".format(prefix),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    def report_skype_organizer_minutes(self, instance, period="d7"):
-        """ Skype For Business organizer activity minutes report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-organizer-activity-reports?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessOrganizerActivityMinuteCounts(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {}
-        met_fields = [
-            "Audio/Video",
-            "Dial-in Microsoft",
-            "Dian-out Microsoft",
-        ]
-        row_fields = []
-
-        for name in met_fields:
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.organizer.minutes".format(prefix),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    def report_skype_participant_sessions(self, instance, period="d7"):
-        """ Skype For Business participant activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-participant-activity-reports?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessParticipantActivityCounts(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {}
-        met_fields = [
-            "IM",
-            "Audio/Video",
-            "App Sharing",
-            "Web",
-            "Dial-in/out 3rd Party",
-        ]
-        row_fields = []
-
-        for name in met_fields:
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.participant.sessions".format(prefix),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    def report_skype_participant_users(self, instance, period="d7"):
-        """ Skype For Business Participant activity user report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-participant-activity-reports?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessParticipantActivityUserCounts(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {}
-        met_fields = [
-            "IM",
-            "Audio/Video",
-            "App Sharing",
-            "Web",
-            "Dial-in/out 3rd Party",
-        ]
-        row_fields = []
-
-        for name in met_fields:
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.participant.users".format(prefix),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    def report_skype_participant_minutes(self, instance, period="d7"):
-        """ Skype For Business participant activity minutes report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-participant-activity-reports?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessParticipantActivityMinuteCounts(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {}
-        met_fields = ["Audio/Video"]
-        row_fields = []
-
-        for name in met_fields:
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.participant.minutes".format(prefix),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    def report_skype_p2p_sessions(self, instance, period="d7"):
-        """ Skype For Business peer-to-peer activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-peer-to-peer-activity?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessPeerToPeerActivityCounts(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {}
-        met_fields = [
-            "IM",
-            "Audio",
-            "Video",
-            "App Sharing",
-            "File Transfer",
-        ]
-        row_fields = []
-
-        for name in met_fields:
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.p2p.sessions".format(prefix),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    def report_skype_p2p_users(self, instance, period="d7"):
-        """ Skype For Business peer-to-peer activity user report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-peer-to-peer-activity?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessPeerToPeerActivityUserCounts(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {}
-        met_fields = [
-            "IM",
-            "Audio",
-            "Video",
-            "App Sharing",
-            "File Transfer",
-        ]
-        row_fields = []
-
-        for name in met_fields:
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.p2p.users".format(prefix),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    def report_skype_p2p_minutes(self, instance, period="d7"):
-        """ Skype For Business peer-to-peer activity minutes report
-            https://docs.microsoft.com/en-us/graph/api/resources/skype-for-business-peer-to-peer-activity?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getSkypeForBusinessPeerToPeerActivityMinuteCounts(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {}
-        met_fields = [
-            "Audio",
-            "Video",
-        ]
-        row_fields = []
-
-        for name in met_fields:
-            row_fields.append(
-                {
-                    "column_name": name,
-                    "metric_name": "{}.skype.p2p.minutes".format(prefix),
-                    "default_val": 0.0,
-                    "metric_type": "gauge",
-                    "parser_func": "parse_float",
-                    "append_tags": ["{}:{}".format("skype_type", name)],
-                }
-            )
-
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:skype"],
-                )
-        return
-
-    ###############################################################################################
-    ## Microsoft 365 Yammer
-    ###############################################################################################
-    def report_yammer_activity(self, instance, period="d7"):
-        """ Yammer activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/yammer-activity-reports?view=graph-rest-1.0
-        """
-
-        url = "https://graph.microsoft.com/v1.0/reports/getYammerActivityUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {
-            "User Principal Name": "upn",
-            "Display Name": "display_name",
-            "User State": "user_state",
-        }
-        row_fields = [
-            {
-                "column_name": "Posted Count",
-                "metric_name": "{}.yammer.activity.posted".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Read Count",
-                "metric_name": "{}.yammer.activity.reads".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Liked Count",
-                "metric_name": "{}.yammer.activity.likes".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.yammer.activity.last_activity".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_elapsed_days",
-            },
-            {
-                "column_name": "State Change Date",
-                "metric_name": "{}.yammer.activity.state_changed".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
             },
         ]
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:yammer"],
-                )
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    def report_yammer_devices(self, instance, period="d7"):
-        """ Yammer device usage report
-            https://docs.microsoft.com/en-us/graph/api/resources/yammer-device-usage-reports?view=graph-rest-1.0
-        """
+    ##########################################################################################
+    ## Reports.YammerDeviceUsage
+    ##########################################################################################
+    def YammerDeviceUsageUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "yammer.device.users")
+        report_path     = "v1.0/reports/getYammerDeviceUsageUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getYammerDeviceUsageUserDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        app_fields = [
+        tag_fields = {}
+        col_fields = [
             "Web",
             "Windows Phone",
             "Android Phone",
             "iPhone",
             "iPad",
-            "Others",
+            "Other",
         ]
-        tag_fields = {
-            "User Principal Name": "upn",
-            "Display Name": "display_name",
-            "User State": "user_state",
-        }
         row_fields = [
             {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.yammer.device.last_activity".format(prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_elapsed_days",
-            },
-            {
-                "column_name": "State Change Date",
-                "metric_name": "{}.yammer.device.state_changed".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
             },
         ]
 
-        for name in app_fields:
-            row_fields.append(
-                {
-                    "column_name": "{}".format(name),
-                    "metric_name": "{}.yammer.device".format(prefix),
-                    "metric_type": "gauge",
-                    "parser_func": "parse_present",
-                    "append_tags": ["device:{}".format(name)],
-                }
-            )
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["device:{}".format(name)]
+            })
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:yammer"],
-                )
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
-    def report_yammer_groups(self, instance, period="d7"):
-        """ Yammer groups activity report
-            https://docs.microsoft.com/en-us/graph/api/resources/yammer-groups-activity-reports?view=graph-rest-1.0
-        """
+    ##########################################################################################
+    ## Reports.YammerGroupsActivity
+    ##########################################################################################
+    def YammerGroupsActivityGroupCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "yammer.groups")
+        report_path     = "v1.0/reports/getYammerDeviceUsageUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
 
-        url = "https://graph.microsoft.com/v1.0/reports/getYammerGroupsActivityDetail(period='{}')".format(
-            period
-        )
-        token = self.reports_token.get("access_token", None)
-        headers = {"Authorization": "Bearer {}".format(token)}
-
-        prefix = self.metric_prefix
-        tag_fields = {
-            "Owner Principal Name": "owner_principal_name",
-            "Owner Principal Name": "upn",
-            "Group Display Name": "group_display_name",
-            "Group Display Name": "display_name",
-            "Group Type": "group_type",
-            "Office 365 Connected": "office_365_connected",
-        }
+        tag_fields = {}
+        col_fields = []
         row_fields = [
             {
-                "column_name": "Member Count",
-                "metric_name": "{}.yammer.group.members".format(prefix),
-                "default_val": 0.0,
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": "{}".format("Total"),
+                "metric_name": "{}".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
             },
             {
-                "column_name": "Posted Count",
-                "metric_name": "{}.yammer.group.posts".format(prefix),
-                "default_val": 0.0,
+                "column_name": "{}".format("Active"),
+                "metric_name": "{}".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
-            },
+            }
+        ]
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def YammerGroupsActivityActivityCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "yammer.activity.groups")
+        report_path     = "v1.0/reports/getYammerGroupsActivityCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Liked",
+            "Posted",
+            "Read",
+        ]
+        row_fields = [
             {
-                "column_name": "Read Count",
-                "metric_name": "{}.yammer.group.reads".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Liked Count",
-                "metric_name": "{}.yammer.group.likes".format(prefix),
-                "default_val": 0.0,
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-            {
-                "column_name": "Last Activity Date",
-                "metric_name": "{}.yammer.group.last_activity".format(prefix),
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_elapsed_days",
             },
         ]
 
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            lines = (line.decode("utf-8") for line in r.iter_lines())
-            for row in csv.DictReader(lines):
-                """ Metrics """
-                self.csv_row_to_metrics(
-                    row=row,
-                    tag_fields=tag_fields,
-                    row_fields=row_fields,
-                    tags=self.tags + ["o365_app:yammer"],
-                )
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.SkypeActivity
+    ##########################################################################################
+    def SkypeActivityActivityCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity")
+        report_path     = "v1.0/reports/getSkypeForBusinessActivityCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Peer-to-peer",
+            "Organized",
+            "Participated",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SkypeActivityUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.users")
+        report_path     = "v1.0/reports/getSkypeForBusinessActivityUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Peer-to-peer",
+            "Organized",
+            "Participated",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.SkypeDeviceUsage
+    ##########################################################################################
+    def SkypeDeviceUsageUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.device.users")
+        report_path     = "v1.0/reports/getSkypeForBusinessDeviceUsageUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Windows",
+            "Windows Phone",
+            "Android Phone",
+            "iPhone",
+            "iPad",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["device:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.SkypeOrganizerActivity
+    ##########################################################################################
+    def SkypeOrganizerActivityActivityCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.organizer")
+        report_path     = "v1.0/reports/getSkypeForBusinessOrganizerActivityCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "IM",
+            "Audio/Video",
+            "App Sharing",
+            "Web",
+            "Dial-in/out 3rd Party",
+            "Dial-in/out Microsoft",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SkypeOrganizerActivityUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.organizer.users")
+        report_path     = "v1.0/reports/getSkypeForBusinessOrganizerActivityUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "IM",
+            "Audio/Video",
+            "App Sharing",
+            "Web",
+            "Dial-in/out 3rd Party",
+            "Dial-in/out Microsoft",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SkypeOrganizerActivityMinuteCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.organizer.minutes")
+        report_path     = "v1.0/reports/getSkypeForBusinessOrganizerActivityMinuteCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Audio/Video",
+            "Dial-in Microsoft",
+            "Dial-out Microsoft",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.SkypeParticipantActivity
+    ##########################################################################################
+    def SkypeParticipantActivityActivityCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.participant")
+        report_path     = "v1.0/reports/getSkypeForBusinessParticipantActivityCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "IM",
+            "Audio/Video",
+            "App Sharing",
+            "Web",
+            "Dial-in/out 3rd Party",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SkypeParticipantActivityUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.participant.users")
+        report_path     = "v1.0/reports/getSkypeForBusinessParticipantActivityUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "IM",
+            "Audio/Video",
+            "App Sharing",
+            "Web",
+            "Dial-in/out 3rd Party",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SkypeParticipantActivityMinuteCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.participant.minutes")
+        report_path     = "v1.0/reports/getSkypeForBusinessParticipantActivityMinuteCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Audio/Video",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.SkypePeerToPeerActivity
+    ##########################################################################################
+    def SkypePeerToPeerActivityActivityCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.p2p")
+        report_path     = "v1.0/reports/getSkypeForBusinessPeerToPeerActivityCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "IM",
+            "Audio",
+            "Video",
+            "App Sharing",
+            "File Transfer",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SkypePeerToPeerActivityUserCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.p2p.users")
+        report_path     = "v1.0/reports/getSkypeForBusinessPeerToPeerActivityUserCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "IM",
+            "Audio",
+            "Video",
+            "App Sharing",
+            "File Transfer",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    def SkypePeerToPeerActivityMinuteCounts(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "skype.activity.p2p.minutes")
+        report_path     = "v1.0/reports/getSkypeForBusinessPeerToPeerActivityMinuteCounts(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = [
+            "Audio",
+            "Video",
+        ]
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+
+        for name in col_fields:
+            row_fields.append({
+                "column_name": "{}".format(name),
+                "metric_name": "{}".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+                "append_tags": ["activity:{}".format(name)]
+            })
+
+        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
         return
 
     ###############################################################################################
     ## Synthetics :: Email
     ###############################################################################################
-    def get_email_synthetic_metrics(self, instance):
+    def get_email_synthetic_metrics(self):
         checkin_url = "https://email.synth-rapdev.io/checkin"
         metrics_url = "https://email.synth-rapdev.io/metrics"
         headers = {
@@ -2208,6 +2227,7 @@ class O365Check(AgentCheck):
             metric_tags.append("{}:{}".format("mailbox", metric.get("emailAddress")))
             metric_tags.append("{}:{}".format("cloud", "aws"))
             metric_tags.append("{}:{}".format("region", metric.get("sourceRegion")))
+            metric_tags.append("{}:{}".format("o365_app", "outlook"))
 
             bounce_type = metric.get("bounceType", None)
             bounce_sub_type = metric.get("bounceSubType", None)
@@ -2255,10 +2275,12 @@ class O365Check(AgentCheck):
     ###############################################################################################
     ## Synthetics :: Calendar
     ###############################################################################################
-    def get_calendar_synthetic_metrics(self, instance):
+    def get_calendar_synthetic_metrics(self):
         metric_prefix = "{}.synthetic".format(self.metric_prefix)
         token = self.synthetics_token.get("access_token", None)
-        graph_url = "https://graph.microsoft.com/v1.0"
+        graph_host = self.instance.get("graph_url", "https://graph.microsoft.com")
+        graph_path = "v1.0"
+        graph_url  = "{}/{}".format(graph_host, graph_path)
 
         username = self.instance.get("username")
 
@@ -2369,15 +2391,21 @@ class O365Check(AgentCheck):
     ###############################################################################################
     ## Synthetics :: OneDrive
     ###############################################################################################
-    def get_onedrive_synthetic_metrics(self, instance):
+    def get_onedrive_synthetic_metrics(self):
         metric_prefix = "{}.synthetic".format(self.metric_prefix)
         token = self.synthetics_token.get("access_token", None)
-        graph_url = "https://graph.microsoft.com/v1.0"
         username = self.instance.get("username")
+        graph_host = self.instance.get("graph_url", "https://graph.microsoft.com")
+        graph_path = "v1.0"
+        graph_url  = "{}/{}".format(graph_host, graph_path)
 
         metric_tags = self.tags.copy()
         metric_tags.append("upn:{}".format(username))
         metric_tags.append("o365_app:{}".format("OneDrive"))
+
+        file_size = self.instance.get("onedrive_file_size", MAX_FILE_SIZE)
+        if file_size > MAX_FILE_SIZE:
+            file_size = MAX_FILE_SIZE
 
         headers = {
             "Content-Type": "application/json",
@@ -2401,7 +2429,7 @@ class O365Check(AgentCheck):
             drive_ts = int(drive_dt.replace(tzinfo=timezone.utc).timestamp())
 
             """ Random 4MB file content (supported Graph API non-stream max) """
-            content = "".join([choice(ascii_letters) for i in range(4000000)])
+            content = "".join([choice(ascii_letters) for i in range(file_size)])
             metric_tags.append("file_size:{}".format(len(content)))
 
             """ [Create] OneDrive item (upload) """
@@ -2452,11 +2480,13 @@ class O365Check(AgentCheck):
     ###############################################################################################
     ## Synthetics :: Teams
     ###############################################################################################
-    def get_teams_synthetic_metrics(self, instance):
+    def get_teams_synthetic_metrics(self):
         metric_prefix = "{}.synthetic".format(self.metric_prefix)
         token = self.synthetics_token.get("access_token", None)
-        graph_url = "https://graph.microsoft.com/v1.0"
         username = self.instance.get("username")
+        graph_host = self.instance.get("graph_url", "https://graph.microsoft.com")
+        graph_path = "v1.0"
+        graph_url  = "{}/{}".format(graph_host, graph_path)
 
         metric_tags = self.tags.copy()
         metric_tags.append("upn:{}".format(username))
@@ -2545,4 +2575,110 @@ class O365Check(AgentCheck):
                 raise Exception("Unable to find channel: 'General'")
         else:
             raise Exception("Unable to find team: 'dd-agent-synthetic'")
+        return
+
+    ###############################################################################################
+    ## Synthetics :: SharePoint
+    ###############################################################################################
+    def get_sharepoint_synthetic_metrics(self):
+        metric_prefix = "{}.synthetic".format(self.metric_prefix)
+        username = self.instance.get("username")
+        password = self.instance.get("password")
+
+        sites = self.instance.get("sharepoint_sites", [])
+        for site in sites:
+            parsed_url  = urlparse(site)
+            parsed_host = parsed_url.hostname
+            s = SharePointSession(parsed_host, username, password, None)
+            r = s.get(site)
+
+            metric_tags = self.tags.copy()
+            metric_tags.append("o365_app:{}".format("sharepoint"))
+            metric_tags.append("operation:read")
+            metric_tags.append("site:{}".format(site))
+
+            elapsed_dt = r.elapsed
+            elapsed_ms = int(elapsed_dt.microseconds / 1000) + int(elapsed_dt.seconds * 1000)
+            metric_tags.append("{}:{}".format("status_code", r.status_code))
+            self.gauge("{}.response.time".format(metric_prefix), float(elapsed_ms), 
+                tags=metric_tags)
+
+            try:
+                r.raise_for_status()
+            except Exception as e:
+                raise e
+            finally:
+                self.gauge("{}.response".format(metric_prefix), float(1), tags=metric_tags)
+
+            perf = r.json().get("perf", None)
+            if not perf:
+                self.log.warn("missing expected 'perf' property on SharePoint site response")
+                continue
+
+            perf_tags = self.tags.copy()
+            perf_tags.append("o365_app:{}".format("sharepoint"))
+            perf_tags.append("site:{}".format(site))
+
+            # SharePoint Site performance metrics
+            for metric in SHAREPOINT_PERF_METRICS:
+                value = perf.get(metric, None)
+
+                if value:
+                    self.gauge(
+                        "{}.{}".format(metric_prefix, metric.replace("-", "_")),
+                        float(value), 
+                        tags=perf_tags,
+                    )
+            ## ClaimsAuthenticationTime
+            vtime = perf.get("ClaimsAuthenticationTime", None)
+            vtype = perf.get("ClaimsAuthenticationTimeType", None)
+            if vtime:
+                self.gauge(
+                    "{}.{}".format(metric_prefix, "ClaimsAuthenticationTime"),
+                    float(vtime), 
+                    tags=perf_tags+["type:{}".format(vtype)],
+                )
+        return
+
+    ###############################################################################################
+    ## Office 365 Service Communications - Incident Messages
+    ###############################################################################################
+    def get_servicecomms_incidents(self):
+        token = self.management_token.get("access_token", None)
+        manage_host     = self.instance.get("manage_url", "https://manage.office.com")
+        manage_path     = "api/v1.0/contoso.com/ServiceComms/Messages"
+        manage_headers  = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer {}".format(token),
+        }
+        url = "{}/{}".format(manage_host, manage_path)
+        res = requests.get(url, headers=manage_headers)
+        res.raise_for_status()
+        values = res.json().get("value")
+
+        now = datetime.now(tz=timezone.utc)
+        interval = float(self.instance.get("min_collection_interval", 300.0))
+        for incident in [v for v in values if v.get("MessageType") == "Incident"]:
+            incidentId = incident.get("Id")
+            impactDescription = incident.get("ImpactDescription")
+
+            tags = self.tags.copy()
+            tags.append("{}:{}".format("Workload", incident.get("Workload")))
+            tags.append("{}:{}".format("Feature", incident.get("Feature")))
+            tags.append("{}:{}".format("Status", incident.get("Status")))
+            tags.append("{}:{}".format("Classification", incident.get("Classification")))
+
+            for message in incident.get("Messages", []):
+                messageDT = parse(message.get("PublishedTime"))
+                elapsed = now - messageDT
+
+                if elapsed.total_seconds() < (interval + 60.0):
+                    self.event({
+                        "timestamp": messageDT.timestamp(),
+                        "msg_title": "[{}] {}".format(incidentId, impactDescription),
+                        "msg_text": message.get("MessageText"), 
+                        "aggregation_key": incidentId,
+                        "source_type_name": "o365",
+                        "tags": tags,
+                    })
         return

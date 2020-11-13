@@ -1,7 +1,7 @@
 {
-  "name": "[Office 365] - {{o365_app.name}} check failed for {{office.name}}",
+  "name": "[Office365] - {{o365_app.name}} check failed for {{office.name}}",
   "type": "metric alert",
-  "query": "avg(last_5m):avg:rapdev.o365.synthetic.response{*} by {o365_app,office,operation} < 1",
+  "query": "avg(last_5m):avg:rapdev.o365.synthetic.response.time{*} by {o365_app,office,operation} < 1",
   "message": "{{#is_alert}}\nALERT - Synthetic check for {{o365_app.name}} failed from {{office.name}} \n{{/is_alert}} \n\n{{#is_alert_recovery}}\nRECOVERED - Synthetic check for {{o365_app.name}} recovered from {{office.name}} \n{{/is_alert_recovery}}",
   "tags": [
     "env:office365",
@@ -11,12 +11,11 @@
     "notify_audit": false,
     "locked": false,
     "timeout_h": 0,
-    "silenced": {},
     "include_tags": true,
-    "no_data_timeframe": null,
+    "no_data_timeframe": 5,
     "require_full_window": true,
     "new_host_delay": 300,
-    "notify_no_data": false,
+    "notify_no_data": true,
     "renotify_interval": 0,
     "escalation_message": "",
     "thresholds": {

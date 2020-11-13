@@ -1,762 +1,1078 @@
 {
-    "title": "Office365 Synthetics Dashboard",
-    "description": "",
     "author_name": "RapDev",
-    "widgets": [
-      {
-        "id": 0,
-        "definition": {
-          "type": "image",
-          "url": "https://files.rapdev.io/images/rapdev-dash-logo.png",
-          "sizing": "fit"
-        },
-        "layout": {
-          "x": 0,
-          "y": 0,
-          "width": 24,
-          "height": 15
-        }
-      },
-      {
-        "id": 1,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{$Office} by {office}",
-              "display_type": "bars",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              },
-              "on_right_yaxis": false
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "Synthetic Response Time by Location",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 25,
-          "y": 0,
-          "width": 32,
-          "height": 15
-        }
-      },
-      {
-        "id": 2,
-        "definition": {
-          "type": "toplist",
-          "requests": [
-            {
-              "q": "top(avg:rapdev.o365.synthetic.response.time{$Office} by {o365_app,office}, 10, 'mean', 'desc')"
-            }
-          ],
-          "custom_links": [],
-          "title": "Synthetic's Response Time (s)",
-          "title_size": "16",
-          "title_align": "left"
-        },
-        "layout": {
-          "x": 58,
-          "y": 0,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 3,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:read,o365_app:teams,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "Teams - Receive IM - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 0,
-          "y": 57,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 4,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:read,o365_app:calendar,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "Calendar - Read Item - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 48,
-          "y": 57,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 5,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:read,o365_app:onedrive,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "OneDrive - Download - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 96,
-          "y": 57,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 6,
-        "definition": {
-          "type": "note",
-          "content": "Teams",
-          "background_color": "white",
-          "font_size": "24",
-          "text_align": "center",
-          "show_tick": true,
-          "tick_pos": "50%",
-          "tick_edge": "bottom"
-        },
-        "layout": {
-          "x": 10,
-          "y": 16,
-          "width": 37,
-          "height": 7
-        }
-      },
-      {
-        "id": 7,
-        "definition": {
-          "type": "note",
-          "content": "OneDrive",
-          "background_color": "white",
-          "font_size": "24",
-          "text_align": "center",
-          "show_tick": true,
-          "tick_pos": "50%",
-          "tick_edge": "bottom"
-        },
-        "layout": {
-          "x": 106,
-          "y": 16,
-          "width": 37,
-          "height": 7
-        }
-      },
-      {
-        "id": 8,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:create,o365_app:teams,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "Teams - Send IM - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 0,
-          "y": 41,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 9,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:create,o365_app:calendar,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "Calendar - Create Item - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 48,
-          "y": 41,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 10,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:create,o365_app:onedrive,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "OneDrive - Upload - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 96,
-          "y": 41,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 11,
-        "definition": {
-          "type": "note",
-          "content": "Calendar",
-          "background_color": "white",
-          "font_size": "24",
-          "text_align": "center",
-          "show_tick": true,
-          "tick_pos": "50%",
-          "tick_edge": "bottom"
-        },
-        "layout": {
-          "x": 58,
-          "y": 16,
-          "width": 37,
-          "height": 7
-        }
-      },
-      {
-        "id": 12,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:delete,o365_app:calendar,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "Calendar - Delete Item - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 48,
-          "y": 89,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 13,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:delete,o365_app:onedrive,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "OneDrive - Delete - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 96,
-          "y": 89,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 14,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:update,o365_app:teams,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "Teams - Update IM - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 0,
-          "y": 73,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 15,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:update,o365_app:calendar,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "Calendar - Update Item - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 48,
-          "y": 73,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 16,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{operation:update,o365_app:onedrive,$Office} by {office}",
-              "display_type": "line",
-              "style": {
-                "palette": "dog_classic",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "OneDrive - Update - Response Time",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 96,
-          "y": 73,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 17,
-        "definition": {
-          "type": "image",
-          "url": "https://www.marshall.edu/it/files/microsoft-team-2019.png",
-          "sizing": "zoom"
-        },
-        "layout": {
-          "x": 0,
-          "y": 16,
-          "width": 9,
-          "height": 8
-        }
-      },
-      {
-        "id": 18,
-        "definition": {
-          "type": "image",
-          "url": "https://www.blackwiredesigns.com/wp-content/uploads/Outlook-Calendar-Logo.png",
-          "sizing": "zoom"
-        },
-        "layout": {
-          "x": 48,
-          "y": 16,
-          "width": 9,
-          "height": 8
-        }
-      },
-      {
-        "id": 19,
-        "definition": {
-          "type": "image",
-          "url": "https://p.sfx.ms/OneDriveLogoTile.png",
-          "sizing": "zoom"
-        },
-        "layout": {
-          "x": 96,
-          "y": 16,
-          "width": 9,
-          "height": 8
-        }
-      },
-      {
-        "id": 20,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{o365_app:calendar,$Office}",
-              "aggregator": "avg",
-              "conditional_formats": [
-                {
-                  "comparator": ">",
-                  "value": 5000,
-                  "palette": "white_on_red"
-                },
-                {
-                  "comparator": ">=",
-                  "value": 2000,
-                  "palette": "white_on_yellow"
-                },
-                {
-                  "comparator": "<",
-                  "value": 2000,
-                  "palette": "white_on_green"
-                }
-              ]
-            }
-          ],
-          "custom_links": [],
-          "title": "Calendar Load Times",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "ms",
-          "precision": 0
-        },
-        "layout": {
-          "x": 89,
-          "y": 0,
-          "width": 17,
-          "height": 15
-        }
-      },
-      {
-        "id": 21,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{$Office,o365_app:teams}",
-              "aggregator": "avg",
-              "conditional_formats": [
-                {
-                  "comparator": ">",
-                  "value": 5000,
-                  "palette": "white_on_red"
-                },
-                {
-                  "comparator": ">=",
-                  "value": 2000,
-                  "palette": "white_on_yellow"
-                },
-                {
-                  "comparator": "<",
-                  "value": 2000,
-                  "palette": "white_on_green"
-                }
-              ]
-            }
-          ],
-          "custom_links": [],
-          "title": "Teams Load Times",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": false,
-          "custom_unit": "ms",
-          "precision": 0
-        },
-        "layout": {
-          "x": 107,
-          "y": 0,
-          "width": 18,
-          "height": 15
-        }
-      },
-      {
-        "id": 22,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.o365.synthetic.response.time{$Office,o365_app:onedrive}",
-              "aggregator": "avg",
-              "conditional_formats": [
-                {
-                  "comparator": ">",
-                  "value": 5000,
-                  "palette": "white_on_red"
-                },
-                {
-                  "comparator": ">=",
-                  "value": 2000,
-                  "palette": "white_on_yellow"
-                },
-                {
-                  "comparator": "<",
-                  "value": 2000,
-                  "palette": "white_on_green"
-                }
-              ]
-            }
-          ],
-          "custom_links": [],
-          "title": "OneDrive Load Times",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": false,
-          "custom_unit": "ms",
-          "precision": 0
-        },
-        "layout": {
-          "x": 126,
-          "y": 0,
-          "width": 17,
-          "height": 15
-        }
-      },
-      {
-        "id": 23,
-        "definition": {
-          "type": "toplist",
-          "requests": [
-            {
-              "q": "top(avg:rapdev.o365.synthetic.response.time{$Office,o365_app:teams} by {operation,office}, 10, 'mean', 'desc')"
-            }
-          ],
-          "custom_links": [],
-          "title": "Teams Load Times",
-          "title_size": "16",
-          "title_align": "left"
-        },
-        "layout": {
-          "x": 0,
-          "y": 25,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 24,
-        "definition": {
-          "type": "toplist",
-          "requests": [
-            {
-              "q": "top(avg:rapdev.o365.synthetic.response.time{$Office,o365_app:calendar} by {operation,office}, 10, 'mean', 'desc')"
-            }
-          ],
-          "custom_links": [],
-          "title": "Calendar Load Times",
-          "title_size": "16",
-          "title_align": "left"
-        },
-        "layout": {
-          "x": 48,
-          "y": 25,
-          "width": 47,
-          "height": 15
-        }
-      },
-      {
-        "id": 25,
-        "definition": {
-          "type": "toplist",
-          "requests": [
-            {
-              "q": "top(avg:rapdev.o365.synthetic.response.time{$Office,o365_app:onedrive} by {operation,office}, 10, 'mean', 'desc')"
-            }
-          ],
-          "custom_links": [],
-          "title": "OneDrive Load Times",
-          "title_size": "16",
-          "title_align": "left"
-        },
-        "layout": {
-          "x": 96,
-          "y": 25,
-          "width": 47,
-          "height": 15
-        }
-      }
-    ],
-    "template_variables": [
-      {
-        "name": "Office",
-        "default": "*",
-        "prefix": "office"
-      }
-    ],
+    "description": "",
     "layout_type": "free",
-    "is_read_only": true,
-    "notify_list": [],
-    "id": 30341
-  }
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "Office",
+            "prefix": "office"
+        },
+        {
+            "default": "*",
+            "name": "Sharepoint_Site",
+            "prefix": "site"
+        }
+    ],
+    "title": "Office365 Synthetics Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-dash-logo.png"
+            },
+            "id": 2044895786275224,
+            "layout": {
+                "height": 15,
+                "width": 24,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.synthetic.response.time{$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Synthetic Response Time by Location",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8397482688836082,
+            "layout": {
+                "height": 15,
+                "width": 32,
+                "x": 25,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.synthetic.response.time{$Office} by {o365_app,office}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Synthetic's Response Time (s)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 516042493393960,
+            "layout": {
+                "height": 15,
+                "width": 30,
+                "x": 58,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:read,o365_app:teams,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Teams - Receive IM - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2404110691425822,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 0,
+                "y": 57
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:read,o365_app:calendar,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Calendar - Read Item - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4874746872227814,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 36,
+                "y": 57
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:read,o365_app:onedrive,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "OneDrive - Download - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6572601694755300,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 72,
+                "y": 57
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Teams",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 7261654859270542,
+            "layout": {
+                "height": 7,
+                "width": 25,
+                "x": 10,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "OneDrive",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 1204477300398322,
+            "layout": {
+                "height": 7,
+                "width": 25,
+                "x": 82,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:create,o365_app:teams,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Teams - Send IM - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5090275153338920,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 0,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:create,o365_app:calendar,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Calendar - Create Item - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5966101854947384,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 36,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:create,o365_app:onedrive,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "OneDrive - Upload - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6382580979134486,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 72,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Calendar",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3435847563727410,
+            "layout": {
+                "height": 7,
+                "width": 25,
+                "x": 46,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:delete,o365_app:calendar,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Calendar - Delete Item - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 730552275533504,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 36,
+                "y": 89
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:delete,o365_app:onedrive,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "OneDrive - Delete - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7279565500915952,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 72,
+                "y": 89
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:update,o365_app:teams,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Teams - Update IM - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4914837144334352,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 0,
+                "y": 73
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:update,o365_app:calendar,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Calendar - Update Item - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4206720500019596,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 36,
+                "y": 73
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.response.time{operation:update,o365_app:onedrive,$Office} by {office}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "OneDrive - Update - Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5201875430496368,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 72,
+                "y": 73
+            }
+        },
+        {
+            "definition": {
+                "sizing": "zoom",
+                "type": "image",
+                "url": "https://www.marshall.edu/it/files/microsoft-team-2019.png"
+            },
+            "id": 2947962477500248,
+            "layout": {
+                "height": 8,
+                "width": 9,
+                "x": 0,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "sizing": "zoom",
+                "type": "image",
+                "url": "https://www.blackwiredesigns.com/wp-content/uploads/Outlook-Calendar-Logo.png"
+            },
+            "id": 2537617508104140,
+            "layout": {
+                "height": 8,
+                "width": 9,
+                "x": 36,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "sizing": "zoom",
+                "type": "image",
+                "url": "https://p.sfx.ms/OneDriveLogoTile.png"
+            },
+            "id": 2498214289565344,
+            "layout": {
+                "height": 8,
+                "width": 9,
+                "x": 72,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "ms",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 5000
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 2000
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 2000
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.response.time{o365_app:calendar,$Office}"
+                    }
+                ],
+                "title": "Calendar Load Times",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1959746714109544,
+            "layout": {
+                "height": 15,
+                "width": 17,
+                "x": 89,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_links": [],
+                "custom_unit": "ms",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 5000
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 2000
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 2000
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.response.time{$Office,o365_app:teams}"
+                    }
+                ],
+                "title": "Teams Load Times",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7888619557224214,
+            "layout": {
+                "height": 15,
+                "width": 18,
+                "x": 107,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_links": [],
+                "custom_unit": "ms",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 5000
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 2000
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 2000
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.response.time{$Office,o365_app:onedrive}"
+                    }
+                ],
+                "title": "OneDrive Load Times",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 118775098608200,
+            "layout": {
+                "height": 15,
+                "width": 17,
+                "x": 126,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.synthetic.response.time{$Office,o365_app:teams} by {operation,office}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Teams Load Times",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 5345884349768856,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 0,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.synthetic.response.time{$Office,o365_app:calendar} by {operation,office}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Calendar Load Times",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 5233697143056424,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 36,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.synthetic.response.time{$Office,o365_app:onedrive} by {operation,office}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "OneDrive Load Times",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 1902568208257444,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 72,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Sharepoint",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 4621318300446932,
+            "layout": {
+                "height": 7,
+                "width": 25,
+                "x": 118,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.synthetic.response.time{$Office,o365_app:sharepoint,$Sharepoint_Site} by {operation,office}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "time": {},
+                "title": "Sharepoint Load Times",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 1662821508296268,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 108,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "IIS Latency",
+                                "expression": "avg:rapdev.o365.synthetic.IisLatency{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}"
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.IisLatency{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "time": {},
+                "title": "Sharepoint - IIS Latency",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2997771966240644,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 108,
+                "y": 41
+            }
+        },
+        {
+            "definition": {
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "SP Request Duration",
+                                "expression": "avg:rapdev.o365.synthetic.spRequestDuration{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}"
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.spRequestDuration{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "Query Duration",
+                                "expression": "avg:rapdev.o365.synthetic.QueryDuration{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.synthetic.QueryDuration{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "bars",
+                        "metadata": [
+                            {
+                                "alias_name": "Query Counts",
+                                "expression": "avg:rapdev.o365.synthetic.QueryCount{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.synthetic.QueryCount{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "time": {},
+                "title": "Sharepoint - Request/Query Duration & Query Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5172201946117142,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 108,
+                "y": 57
+            }
+        },
+        {
+            "definition": {
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "Window Scale Option",
+                                "expression": "avg:rapdev.o365.synthetic.Network_WindowScaleOption{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}"
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.Network_WindowScaleOption{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "bars",
+                        "metadata": [
+                            {
+                                "alias_name": "Packet Retransmit",
+                                "expression": "avg:rapdev.o365.synthetic.Network_PacketRetransmitCount{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.synthetic.Network_PacketRetransmitCount{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "Round-Trip-Time",
+                                "expression": "avg:rapdev.o365.synthetic.Network_SmoothedRoundTripTime{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.synthetic.Network_SmoothedRoundTripTime{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "time": {},
+                "title": "Sharepoint - Network Times (RTT, Retransmit, Scaled)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1188074075423312,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 108,
+                "y": 73
+            }
+        },
+        {
+            "definition": {
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "Claims Auth Duration",
+                                "expression": "avg:rapdev.o365.synthetic.ClaimsAuthenticationTime{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}"
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.ClaimsAuthenticationTime{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "CPU Duration",
+                                "expression": "avg:rapdev.o365.synthetic.CPUDuration{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.synthetic.CPUDuration{$Office,o365_app:sharepoint,$Sharepoint_Site} by {office,site}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "time": {},
+                "title": "Sharepoint - CPUDuration & Claims Authentication Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2959566443778530,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 108,
+                "y": 89
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Microsoft_Office_SharePoint_%282018%E2%80%93present%29.svg/131px-Microsoft_Office_SharePoint_%282018%E2%80%93present%29.svg.png"
+            },
+            "id": 5749983691895396,
+            "layout": {
+                "height": 8,
+                "width": 9,
+                "x": 108,
+                "y": 16
+            }
+        }
+    ]
+}

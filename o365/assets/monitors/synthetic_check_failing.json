@@ -1,0 +1,29 @@
+{
+  "name": "[Office365] - Synthetic checks are failing for {{o365_app.name}} at {{office}}",
+  "type": "query alert",
+  "query": "avg(last_5m):avg:rapdev.o365.synthetic.response.time{*} by {o365_app,office} <= 0",
+  "message": "{{#is_no_data}} \n@slack-workstream\nALERT - Office365 Synthetic checks failing for {{o365_app.name}} at {{office}}.  \n{{/is_no_data}} \n\n{{#is_alert}} \n@slack-workstream\nALERT - Office365 Synthetic checks failing for {{o365_app.name}} at {{office}}.  \n{{/is_alert}} \n\n{{#is_alert_recovery}} \n@slack-workstream\nRECOVERED - Office365 Synthetic checks passing for {{o365_app.name}}.  \n{{/is_alert_recovery}}\n\n{{#is_no_data_recovery}} \n@slack-workstream \nRECOVERED - Office365 Synthetic checks passing for {{o365_app.name}}.  \n{{/is_no_data_recovery}}",
+  "tags": [
+    "env:office365",
+    "integration:rapdev-o365"
+  ],
+  "options": {
+    "notify_audit": false,
+    "locked": false,
+    "timeout_h": 0,
+    "include_tags": true,
+    "no_data_timeframe": 5,
+    "require_full_window": true,
+    "new_host_delay": 300,
+    "notify_no_data": true,
+    "renotify_interval": 10,
+    "escalation_message": "",
+    "thresholds": {
+      "critical": 0,
+      "critical_recovery": 0.1
+    }
+  },
+  "recommended_monitor_metadata": {
+    "description": "Alert when synthetic application responses begin failing for your Office 365 integration."
+  }
+}

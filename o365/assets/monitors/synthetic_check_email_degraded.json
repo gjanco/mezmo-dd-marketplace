@@ -1,5 +1,5 @@
 {
-  "name": "[Office 365] Synthetic Email checks degraded to/from {{region.name}}",
+  "name": "[Office365] - {{o365_app.name}} email checks degraded to/from {{region.name}}",
   "type": "query alert",
   "query": "avg(last_4h):anomalies(avg:rapdev.o365.synthetic.email.rtt{*} by {region}, 'basic', 2, direction='above', alert_window='last_15m', interval=60, count_default_zero='true') >= 1",
   "message": "{{#is_alert}}\nALERT - Performance degradation has been detected for emails being sent to/from {{region.name}}   \n{{/is_alert}} \n\n{{#is_alert_recovery}} \nRESTORED - Performance degradation has been restored for emails being sent to/from {{region.name}}   \n{{/is_alert_recovery}}",
@@ -11,7 +11,6 @@
     "notify_audit": false,
     "locked": false,
     "timeout_h": 0,
-    "silenced": {},
     "include_tags": true,
     "no_data_timeframe": null,
     "require_full_window": true,
