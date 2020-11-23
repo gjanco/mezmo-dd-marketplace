@@ -1,0 +1,28 @@
+{
+	"name": "[RapDev MaxDB] Can't Connect to Database {{db.name}} on {{maxdb_host.name}}",
+	"type": "service check",
+	"query": "\"rapdev.maxdb.can_connect\".over(\"*\").by(\"db\",\"maxdb_host\").last(2).count_by_status()",
+	"message": "{{#is_alert}} Database connection is failing for {{db.name}} on {{maxdb_host.name}}. Please investigate the connection failure. {{/is_alert}}\n{{#is_recovery}} Database connection has been restored for {{db.name}} on {{maxdb_host.name}}. {{/is_recovery}}",
+	"tags": [
+		"integration:maxdb"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"thresholds": {
+			"warning": 1,
+			"ok": 1,
+			"critical": 1
+		},
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"no_data_timeframe": 2
+	},
+	"recommended_monitor_metadata": {
+		"description": "Alert when agent can't connect to the MaxDB."
+	  }
+}

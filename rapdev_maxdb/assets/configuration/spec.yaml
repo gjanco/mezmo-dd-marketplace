@@ -1,0 +1,75 @@
+name: RapDev MaxDB
+files:
+- name: rapdev_maxdb.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+    - name: min_collection_interval
+      required: true
+      value:
+        example: 300
+        type: number
+      description: |
+        This changes the collection interval of the check. For more information, see:
+        https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+  - template: instances
+    options:
+      - name: hostname
+        required: true
+        multiple: false
+        value:
+          type: string
+        description: |
+          Hostname of the system hosting the MaxDB instance.
+      - name: dbmcli
+        required: true
+        multiple: false
+        value:
+          example: /opt/sdb/globalprograms/bin/dbmcli
+          type: string
+        description: |
+          Filepath of the dbmcli used to run the database commands that produce the metrics for the integration.
+      - name: username
+        required: true
+        multiple: false
+        value:
+          example: datadog
+          type: string
+        description: |
+          User to be used to run the dbmcli commands on the database.
+      - name: password
+        required: true
+        multiple: false
+        value:
+          example: datadog
+          type: string
+          secret: true
+        description: |
+          Password for the user that runs the dbmcli commands on the database.
+      - name: uptime_enabled
+        required: false
+        multiple: false
+        value:
+          example: false
+          type: boolean
+          default: false
+        description: |
+          Flag for the uptime metric (confirmed on MaxDB v7.9.10_03+). Check dbmcli command 'show uptime' prior to enabling
+      - name: min_collection_interval
+        required: true
+        value:
+          example: 300
+          type: number
+        description: |
+          This changes the collection interval of the check. For more information, see:
+          https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+      - name: empty_default_hostname
+        required: false
+        value:
+          example: true
+          default: false
+          type: boolean
+        description: |
+          This changes the collection interval of the check. For more information, see:
+          https://docs.datadoghq.com/developers/write_agent_check/#collection-interval

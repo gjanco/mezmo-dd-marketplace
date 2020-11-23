@@ -1,0 +1,27 @@
+{
+	"name": "[RapDev MaxDB] Database {{db.name}} on {{maxdb_host.name}} is not ONLINE",
+	"type": "query alert",
+	"query": "min(last_1m):avg:rapdev.maxdb.db_state{*} by {db,maxdb_host} >= 3",
+	"message": "{{#is_alert}} The Database {{db.name}} on {{maxdb_host.name}} is not in an online state. Current state: {{value}}. {{/is_alert}} \n\n{{#is_recovery}} The Database {{db.name}} on {{maxdb_host.name}} is back ONLINE.{{/is_recovery}}\n\n1: ONLINE\n2: ADMIN\n3: OFFLINE\n4: STANDBY\n5: STOPPED INCORRECTLY\n6: UNKNOWN",
+	"tags": [
+		"integration:maxdb"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"new_host_delay": 300,
+		"require_full_window": true,
+		"notify_no_data": false,
+		"renotify_interval": "0",
+		"escalation_message": "",
+		"no_data_timeframe": null,
+		"include_tags": true,
+		"thresholds": {
+			"critical": 3
+		}
+	},
+	"recommended_monitor_metadata": {
+		"description": "Alert when the MaxDB state is not ONLINE."
+	  }
+}

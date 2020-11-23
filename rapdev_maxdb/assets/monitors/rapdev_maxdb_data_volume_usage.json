@@ -1,0 +1,30 @@
+{
+	"name": "[RapDev MaxDB] Data Volume Usage is Too High for {{volume.name}} on {{maxdb_host.name}}",
+	"type": "query alert",
+	"query": "max(last_5m):avg:rapdev.maxdb.data_volume.in_use{*} by {maxdb_host,volume,db} > 90",
+	"message": "{{#is_warning}} Space Usage for DB {{db.name}} in data volume {{volume.name}} on {{maxdb_host.name}} is over 80% utilized. Current Usage {{value}}%. Please free up some space or extend the volume. {{/is_warning}} \n{{#is_alert}} Space Usage for DB {{db.name}} in data volume {{volume.name}} on {{maxdb_host.name}} is over 90% utilized. Current Usage {{value}}%. Please free up some space or extend the volume. {{/is_alert}} \n{{#is_recovery}} Space usage for DB {{db.name}} in data volume {{volume.name}} on {{maxdb_host.name}} has recovered. Current Usage {{value}}% {{/is_recovery}}",
+	"tags": [
+		"integration:maxdb"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"new_host_delay": 300,
+		"require_full_window": true,
+		"notify_no_data": false,
+		"renotify_interval": "0",
+		"escalation_message": "",
+		"no_data_timeframe": null,
+		"include_tags": true,
+		"thresholds": {
+			"critical": 90,
+			"warning": 80,
+			"critical_recovery": 80,
+			"warning_recovery": 70
+		}
+	},
+	"recommended_monitor_metadata": {
+		"description": "Alert when MaxDB data volume usage is too high."
+	  }
+}

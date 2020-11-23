@@ -1,0 +1,1243 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "MaxDB_Host",
+            "prefix": "maxdb_host"
+        },
+        {
+            "default": "*",
+            "name": "Database",
+            "prefix": "db"
+        }
+    ],
+    "title": "MaxDB Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0ONLINE\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0ADMIN\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0OFFLINE\u00a0",
+                        "value": "y = 3"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0STANDBY\u00a0",
+                        "value": "y = 4"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0STOPPED INCORRECTLY\u00a0",
+                        "value": "y = 5"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0UNKNOWN\u00a0",
+                        "value": "y = 6"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.maxdb.db_state{$MaxDB_Host,$Database} by {db,maxdb_host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "DB State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6523381001331046,
+            "layout": {
+                "height": 15,
+                "width": 49,
+                "x": 25,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "check": "rapdev.maxdb.can_connect",
+                "group": "db:demodb,maxdb_host:localhost,vendor:rapdev,host:i-04535b2b91eada630",
+                "group_by": [],
+                "grouping": "cluster",
+                "tags": [
+                    "*"
+                ],
+                "title": "MaxDB Can Connect",
+                "title_align": "center",
+                "title_size": "16",
+                "type": "check_status"
+            },
+            "id": 440760905780598,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 75,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Cache Stats",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 2885125891983548,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 55
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.maxdb.cache.accesses{$MaxDB_Host,$Database} by {cache,maxdb_host}.as_count(), 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Top Accesses",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 7334104144952676,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 0,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.maxdb.cache.miss_rate{$MaxDB_Host,$Database} by {cache,maxdb_host}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Top Miss Rates",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 710299019947558,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 79,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.maxdb.cache.hit_rate{$MaxDB_Host,$Database} by {cache,maxdb_host}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Top Hit Rates",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 6364919930288366,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 40,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://aggregate.tibbo.com/v3_images/logos/misc_sap_maxdb.png"
+            },
+            "id": 6477050765421320,
+            "layout": {
+                "height": 15,
+                "width": 22,
+                "x": 95,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.maxdb.catalog_cache.entrycount{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "LRU Entries",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 906755105368052,
+            "layout": {
+                "height": 15,
+                "width": 12,
+                "x": 14,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.maxdb.catalog_cache.entrycount{$MaxDB_Host,$Database}.as_count()"
+                    }
+                ],
+                "title": "Catalog Cache Entries",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 87046151677502,
+            "layout": {
+                "height": 15,
+                "width": 13,
+                "x": 0,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.maxdb.catalog_cache.invalid_entrycount{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Invalid Entries",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1245386634263520,
+            "layout": {
+                "height": 15,
+                "width": 12,
+                "x": 27,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Data & Log Stats",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3096863105459410,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 90
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 75
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 75
+                            }
+                        ],
+                        "q": "avg:rapdev.maxdb.data.in_use{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Data Area in Use",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2396947064547924,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 0,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.maxdb.data_volume.in_use{$MaxDB_Host,$Database} by {volume,maxdb_host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Data Volume In Use (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1899655321459038,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 40,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 90
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 75
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 75
+                            }
+                        ],
+                        "q": "avg:rapdev.maxdb.log.in_use{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Log Area in Use",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2533687938602394,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 0,
+                "y": 39
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Schemas & Tables",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 919857661637462,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 149
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.maxdb.table.row_count{$MaxDB_Host,$Database} by {table}.as_count(), 100, 'last', 'desc')"
+                    }
+                ],
+                "title": "Table Row Counts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 4534884058872380,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 79,
+                "y": 156
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.maxdb.schema.used_size{$MaxDB_Host,$Database} by {schema}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Schema Used Sizes (KB)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6481534307832792,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 0,
+                "y": 156
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.maxdb.table.used_size{$MaxDB_Host,$Database} by {table}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Table Used Size (KB)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4182192776203598,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 40,
+                "y": 156
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Sessions & OMS",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 1932406381802524,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 110
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.session.count{$MaxDB_Host,$Database} by {db,maxdb_host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Session Counts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 873178583758626,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 40,
+                "y": 117
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.maxdb.session.oms_heap_used_size{$MaxDB_Host,$Database} by {applicationtype}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.maxdb.session.temp_used_size{$MaxDB_Host,$Database} by {applicationtype}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.maxdb.session.paging_file_used_size{$MaxDB_Host,$Database} by {applicationtype}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.maxdb.session.catalog_cache_used_size{$MaxDB_Host,$Database} by {applicationtype}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Session Resource Usage by App Type (KB)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6785252730111478,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 79,
+                "y": 117
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-dash-logo.png"
+            },
+            "id": 4705105112925866,
+            "layout": {
+                "height": 15,
+                "width": 24,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.maxdb.log.not_saved{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Log Area Not Saved",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 371726918671666,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 20,
+                "y": 39
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "KB",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.maxdb.log.queue_size{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Log Queue Size",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7569135676622588,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 40,
+                "y": 39
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data.permanent_converter_data_used{$MaxDB_Host,$Database} by {db,maxdb_host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data.temporary_data_used{$MaxDB_Host,$Database} by {db,maxdb_host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data.temporary_converter_data_used{$MaxDB_Host,$Database} by {db,maxdb_host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data.permanent_converter_data_used{$MaxDB_Host,$Database} by {db,maxdb_host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data.shadow_used_size{$MaxDB_Host,$Database} by {db,maxdb_host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data.permanent_data_used{$MaxDB_Host,$Database} by {db,maxdb_host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Data Area Usage (KB)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2714166463977536,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 79,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "KB",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.maxdb.data.pending_incremental_backup_size{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Pending Backup Size",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2127574083788608,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 20,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 90
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 75
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 75
+                            }
+                        ],
+                        "q": "avg:rapdev.maxdb.command_cache.in_use{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Command Cache In Use",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4622839764148314,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 40,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 90
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 75
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 75
+                            }
+                        ],
+                        "q": "avg:rapdev.maxdb.data_cache.in_use{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Data Cache In Use",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1293572872168204,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 40,
+                "y": 94
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.maxdb.command_cache.command_count{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Command Cache Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3168919674190076,
+            "layout": {
+                "height": 15,
+                "width": 18,
+                "x": 60,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 90
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 75
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 75
+                            }
+                        ],
+                        "q": "avg:rapdev.maxdb.data_cache.pinarea_in_use{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Data Cache Pin Area In Use",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5333385049831140,
+            "layout": {
+                "height": 15,
+                "width": 18,
+                "x": 60,
+                "y": 94
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data_cache.oms_size{$MaxDB_Host,$Database}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data_cache.history_size{$MaxDB_Host,$Database}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data_cache.sql_size{$MaxDB_Host,$Database}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.data_cache.pinarea_used_size{$MaxDB_Host,$Database}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Data Cache Usage (KB)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3975566936187494,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 0,
+                "y": 94
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.command_cache.delete_command{$MaxDB_Host,$Database}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.maxdb.command_cache.insert_command{$MaxDB_Host,$Database}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Command Cache Deletes & Inserts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 15269675866556,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 79,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 90
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 75
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 75
+                            }
+                        ],
+                        "q": "avg:rapdev.maxdb.session.utilization{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Session Utilization",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5743525799807744,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 0,
+                "y": 117
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.maxdb.session.count{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Total Session Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7645339738286984,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 20,
+                "y": 117
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.maxdb.oms_heap.utilization{$MaxDB_Host,$Database} by {allocator}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "OMS Utilization by Allocator (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 510653497748754,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 20,
+                "y": 133
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.maxdb.oms_heap.utilization{*} by {allocator,maxdb_host}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "OMS Utilization by Allocator (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 8010479112508914,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 59,
+                "y": 133
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 90
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 75
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 75
+                            }
+                        ],
+                        "q": "sum:rapdev.maxdb.oms_heap.utilization{$MaxDB_Host,$Database}"
+                    }
+                ],
+                "title": "Total OMS Utilized ",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7012623047035904,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 0,
+                "y": 133
+            }
+        }
+    ]
+}

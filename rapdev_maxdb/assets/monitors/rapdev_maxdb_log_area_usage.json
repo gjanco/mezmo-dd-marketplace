@@ -1,0 +1,31 @@
+{
+	"name": "[RapDev MaxDB] Log Area Usage is Too High for {{db.name}} on {{maxdb_host.name}}",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:rapdev.maxdb.log.in_use{*} by {db,maxdb_host} > 90",
+	"message": "{{#is_warning}} Log Area for DB {{db.name}} on {{maxdb_host.name}} is over 80% utilized. Current Usage {{value}}%. Please extend the log area or clean up some space. {{/is_warning}} \n{{#is_alert}} Log Area for DB {{db.name}} on {{maxdb_host.name}} is over 90% utilized. Current Usage {{value}}%. Please extend the log area or clean up some space. {{/is_alert}} \n{{#is_recovery}} Log Area for DB {{db.name}} on {{maxdb_host.name}} has returned to normal utilization. Current Usage {{value}}%. {{/is_recovery}}",
+	"tags": [
+		"integration:maxdb"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": null,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"thresholds": {
+			"critical": 90,
+			"warning": 80,
+			"critical_recovery": 80,
+			"warning_recovery": 70
+		}
+	},
+	"recommended_monitor_metadata": {
+		"description": "Alert when log area usage on the MaxDB is too high."
+	  }
+}
