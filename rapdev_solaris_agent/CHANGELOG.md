@@ -1,0 +1,2 @@
+# CHANGELOG - RapDev Solaris Agent
+
