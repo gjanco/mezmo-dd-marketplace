@@ -55,7 +55,7 @@ cat /etc/logadm.conf
 
 ## Pricing
 
-$10 per agent
+$40 per agent
 
 Contact sales@rapdev.io for volume pricing
 
