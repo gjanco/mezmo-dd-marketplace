@@ -26,7 +26,7 @@ The Marketplace ecosystem opens up new sales channels for Datadog partners.
 # Getting Started
 ### 1. Create your integration.
 - Clone the [marketplace repo](https://github.com/DataDog/marketplace)
-- pip install version 4.0.0 or higher of the [Deveoper Toolkit](https://github.com/DataDog/integrations-core/tree/master/datadog_checks_dev)
+- pip install version 4.0.0 or higher of the [Developer Toolkit](https://github.com/DataDog/integrations-core/tree/master/datadog_checks_dev)
 - Configure `ddev` to look at your cloned marketplace repo. From the marketplace repo, run:
   - `ddev config set repo marketplace`
   - `ddev config set repos.marketplace .`
