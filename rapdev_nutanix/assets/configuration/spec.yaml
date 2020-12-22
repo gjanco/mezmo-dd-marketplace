@@ -1,0 +1,42 @@
+name: RapDev Nutanix
+files:
+- name: rapdev_nutanix.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+    - template: init_config/http
+  - template: instances
+    options:
+      - name: cvm_host
+        required: true
+        multiple: false
+        value:
+          type: string
+        description: |
+          The IP Address and Port Number to the Nutanix CVM.
+      - name: verbose_collection
+        required: true
+        multiple: false
+        value:
+          example: true
+          default: false
+          type: boolean
+        description: |
+          This specifies how many metrics will be sent. For basic metrics set to false. 
+      - name: collect_events
+        required: true
+        multiple: false
+        value:
+          example: true
+          default: false
+          type: boolean
+        description: |
+          This collects events from Nutanix CVM when set to true.
+      - template: instances/default
+      - template: instances/http
+        overrides:
+          username.description: The username to use for authentication against the Nutanix API.
+          username.required: true
+          password.description: The password used together with the username for authentication against the Nutanix API.
+          password.required: true
