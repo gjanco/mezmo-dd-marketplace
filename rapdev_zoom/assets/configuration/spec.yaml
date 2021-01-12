@@ -1,0 +1,83 @@
+name: RapDev Zoom
+files:
+- name: rapdev_zoom.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+      - name: base_api_url
+        required: true
+        value:
+          type: string
+        description: |
+          The API url that the agent needs to target to pull data from.
+      - name: api_key
+        required: true
+        value:
+          type: string
+        description: |
+          The Zoom Account API Key that the agent can use to generate a JWT token.
+      - name: api_secret
+        required: true
+        secret: true
+        value:
+          type: string
+        description: |
+          The Zoom Account API Secret that the agent can use to encode a JWT token.
+      - name: account_name
+        required: true
+        value:
+          type: string
+        description: |
+          The name of the Zoom Account.
+      - name: collect_accounts
+        value:
+          example: false
+          default: false
+          type: boolean
+        description: |
+          This changes whether the agent should collect Account level information. In order for this to work, the zooom
+          authentication method must have Admin privleges.
+      - name: collect_plan_usage
+        value:
+          example: false
+          default: false
+          type: boolean
+        description: |
+          This changes whether the agent should collect plan usage information. To enable this, the user must
+          also enable collect_accounts and the JWT token must have admin permissions to the Zoom account.
+      - name: collect_meeting_host
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          This changes whether the agent should collect information on the meeting host (e.g. first name,
+          last name, etc..).
+      - name: collect_participant_details
+        value:
+          example: true
+          default: true
+          type: boolean
+        description: |
+          This changes whether the agent should collect information on each individual participants rather than
+          averaging the values from each user. Note: Setting to true collects a larger amount of metrics.
+      - name: collect_im_metrics
+        value:
+          example: false
+          default: false
+          type: boolean
+        description: |
+          This changes whether the agent should collect IM metrics for each user for each meeting.
+      - name: collect_top_25_issues
+        value:
+          example: false
+          default: false
+          type: boolean
+        description: |
+          This changes whether the agent should collect the top 25 issues across your account. Note: Issues for
+          each room are already being collected for each individual meeting. This is solely for an account view.
+      - template: instances/http
+      - template: instances/default

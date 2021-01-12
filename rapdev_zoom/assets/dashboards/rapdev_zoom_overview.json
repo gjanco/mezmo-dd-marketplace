@@ -1,0 +1,496 @@
+{
+    "author_name": "RapDev",
+    "description": "Zoom dashboard to show the overview of your Zoom account usage, and audio & video quality issues",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "meeting_id",
+            "prefix": "zoom_meeting_id"
+        },
+        {
+            "default": "*",
+            "name": "meeting_host",
+            "prefix": "zoom_meeting_host"
+        },
+        {
+            "default": "*",
+            "name": "room_name",
+            "prefix": "zoom_room_name"
+        },
+        {
+            "default": "*",
+            "name": "account_name",
+            "prefix": "zoom_account_name"
+        }
+    ],
+    "title": "RapDev Zoom Overview",
+    "widgets": [
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://cuit.columbia.edu/sites/default/files/styles/cu_crop/public/content/zoom-logo-transparent-6.png?itok=PJk3QEss"
+            },
+            "id": 0,
+            "layout": {
+                "height": 11,
+                "width": 18,
+                "x": 0,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "event_size": "l",
+                "query": "zoom",
+                "tags_execution": "and",
+                "time": {
+                    "live_span": "1d"
+                },
+                "title_align": "left",
+                "title_size": "16",
+                "type": "event_stream"
+            },
+            "id": 1,
+            "layout": {
+                "height": 20,
+                "width": 108,
+                "x": 22,
+                "y": 67
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "custom_bg_color": "#0179f9",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.zoom.meetings.participants{$meeting_host,$meeting_id,$account_name})"
+                    }
+                ],
+                "time": {},
+                "title": "Participants in Meetings",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5115189288791516,
+            "layout": {
+                "height": 11,
+                "width": 19,
+                "x": 19,
+                "y": 13
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "custom_bg_color": "#0179f9",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.zoom.meetings.count{$account_name})"
+                    }
+                ],
+                "time": {},
+                "title": "Ongoing Meetings",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 959881715554954,
+            "layout": {
+                "height": 11,
+                "width": 18,
+                "x": 39,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "custom_bg_color": "#0179f9",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "q": "default_zero(max:rapdev.zoom.users.registered.count{$account_name})"
+                    }
+                ],
+                "time": {},
+                "title": "Total Registered Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 480681569169360,
+            "layout": {
+                "height": 11,
+                "width": 19,
+                "x": 19,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "Current",
+                                "expression": "sum:rapdev.zoom.meetings.count{$account_name}"
+                            }
+                        ],
+                        "q": "sum:rapdev.zoom.meetings.count{$account_name}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "Prior Week",
+                                "expression": "week_before(sum:rapdev.zoom.meetings.count{$account_name})"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "q": "week_before(sum:rapdev.zoom.meetings.count{$account_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Ongoing Meetings",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2169341963784778,
+            "layout": {
+                "height": 20,
+                "width": 49,
+                "x": 50,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "Current",
+                                "expression": "sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name}"
+                            }
+                        ],
+                        "q": "sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "metadata": [
+                            {
+                                "alias_name": "Prior Week",
+                                "expression": "week_before(sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name})"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "q": "week_before(sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Participants in Meetings",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3247601149156674,
+            "layout": {
+                "height": 20,
+                "width": 49,
+                "x": 0,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name} by {zoom_meeting_id}, avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name} by {zoom_meeting_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Video Loss (%) per Meeting",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4291467267383256,
+            "layout": {
+                "height": 23,
+                "width": 46,
+                "x": 58,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name} by {zoom_meeting_id}, avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name} by {zoom_meeting_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Audio Loss (%) per Meeting",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7587522888499048,
+            "layout": {
+                "height": 23,
+                "width": 48,
+                "x": 105,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(max:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name} by {zoom_meeting_id,zoom_meeting_host}, 10, 'max', 'desc')"
+                    }
+                ],
+                "title": "Participant Count By Meeting Host,ID",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 4317146276854334,
+            "layout": {
+                "height": 20,
+                "width": 49,
+                "x": 0,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "custom_bg_color": "#0179f9",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "q": "default_zero(max:rapdev.zoom.room.status.count{zoom_room_status:available})"
+                    }
+                ],
+                "time": {},
+                "title": "Total Rooms Free",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 516387715364778,
+            "layout": {
+                "height": 11,
+                "width": 18,
+                "x": 39,
+                "y": 13
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name} by {zoom_user_network_type}, 10, 'last', 'desc')"
+                    }
+                ],
+                "title": "Meeting Audio/Video by Connection Type",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 6567166138067366,
+            "layout": {
+                "height": 20,
+                "width": 53,
+                "x": 100,
+                "y": 25
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "MBPS",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "custom_bg_color": "#0179f9",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "q": "sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name}/1000"
+                    }
+                ],
+                "title": "Total Meeting Bandwidth",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1276398211168236,
+            "layout": {
+                "height": 11,
+                "width": 18,
+                "x": 0,
+                "y": 13
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(max:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name} by {zoom_user_location}, 10, 'last', 'desc')"
+                    }
+                ],
+                "title": "User Bandwidth by Location",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 4404305584857090,
+            "layout": {
+                "height": 20,
+                "width": 49,
+                "x": 50,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.zoom.users.in_meetings.count{$account_name} by {zoom_user_location}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Active Participants by Location",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7851627955488178,
+            "layout": {
+                "height": 20,
+                "width": 53,
+                "x": 100,
+                "y": 46
+            }
+        }
+    ]
+}

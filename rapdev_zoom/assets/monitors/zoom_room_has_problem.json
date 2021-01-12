@@ -1,0 +1,29 @@
+{
+	"name": "[RapDev Zoom] Zoom Room's ({{zoom_room_name.name}}) Health is in Warning or Critical State",
+	"type": "query alert",
+	"query": "max(last_1m):min:rapdev.zoom.room.health{*} by {zoom_room_name} > 2.5",
+	"message": "{{#is_alert}}\n{{zoom_room_name.name}} is in Critical state. \n{{/is_alert}} \n\n{{#is_warning}}\n{{zoom_room_name.name}} is in warning state.  \n{{/is_warning}} \n\n{{#is_alert_recovery}}\n\n{{zoom_room_name.name}} is recovered \n{{/is_alert_recovery}}",
+	"tags": [
+		"integration:zoom"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": 10,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": true,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"thresholds": {
+			"critical": 2.5,
+			"warning": 1.5
+		}
+	},
+	"recommended_monitor_metadata": {
+		"description": "Alert when a Zoom room's health is either in a Critical (value=3) or Warning (value=2) state. Recovers when the room is healthy again (value=1)"
+	}
+}
