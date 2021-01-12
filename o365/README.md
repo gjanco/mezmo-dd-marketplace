@@ -30,7 +30,7 @@ Tiered pricing for Office 365 active users counts over 1,000 are available. Cont
 
 ### Datadog Integration Install
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.0.0`
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.0.1`
 
 ### Microsoft Office 365 Configuration
 
@@ -84,13 +84,15 @@ The Microsoft Office 365 integration requires permissions managed through your o
 
 5. [Configure the integration user account mailbox to auto-forward emails](https://docs.microsoft.com/en-us/exchange/recipients-in-exchange-online/manage-user-mailboxes/configure-email-forwarding) to `probe@synth-rapdev.io`. Optionally set your email forwarding configuration to disable copies of forwarded email.
 
-6. The agent's synthetic email check is disabled by default, set `enable_email_synthetics: true` and set the target email address configured in step 3.6 by adding `email_address: {integration_user@email.address}` in the `o365.d/o365.yaml`.
+6. [Modify the OneDrive storage configuration for the integration user account](https://docs.microsoft.com/en-us/onedrive/set-retention). Specify minimum of thirty (30) days and 1024 GB to prevent the integration user synthetic files from consuming all allocated storage. The default settings, unless modified by your organization, should be thirty (30) days and 1204 GB. 
 
-7. Add SharePoint sites to the `o365.d/o365.yaml` file to enable collection of SharePoint performance metrics. Ten (10) sites can be added under the configuration section `sharepoint_sites`. See the configuration example for syntax. The configured username and password for the performance synthetic user is used for the sharepoint login and the SharePoint site(s) must be readable by the configured user.
+7. The agent's synthetic email check is disabled by default, set `enable_email_synthetics: true` and set the target email address configured in step 3.6 by adding `email_address: {integration_user@email.address}` in the `o365.d/o365.yaml`.
 
-8. The integration configuration defaults to `probe_mode: true`, which will operate with application performance synthetics only. For your primary integration location, change `probe_mode: false` in the configuration yaml to enable report metrics and your tenant's Office 365 incident events.
+8. Add SharePoint sites to the `o365.d/o365.yaml` file to enable collection of SharePoint performance metrics. Ten (10) sites can be added under the configuration section `sharepoint_sites`. See the configuration example for syntax. The configured username and password for the performance synthetic user is used for the sharepoint login and the SharePoint site(s) must be readable by the configured user.
 
-9. Add the `office` tag to the integration configuration in `o365.d/o365.yaml` file to correspond to each office location from which the integration will be running synthetic checks, e.g.:
+9. The integration configuration defaults to `probe_mode: true`, which will operate with application performance synthetics only. For your primary integration location, change `probe_mode: false` in the configuration yaml to enable report metrics and your tenant's Office 365 incident events.
+
+10. Add the `office` tag to the integration configuration in `o365.d/o365.yaml` file to correspond to each office location from which the integration will be running synthetic checks, e.g.:
 ```
 tags:
   - "office:boston"

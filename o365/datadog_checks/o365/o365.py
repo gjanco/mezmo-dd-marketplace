@@ -20,6 +20,7 @@ except ImportError:
     def get_config(key):
         return ""
 
+REQ_TIMEOUT   = 30
 MAX_FILE_SIZE = 4000000
 
 REQUIRED_TAGS = [
@@ -281,7 +282,7 @@ class O365Check(AgentCheck):
         return
 
     def daily_report_to_metrics(self, url, headers, row_fields, tag_fields, tags):
-        with requests.get(url, headers=headers, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True, timeout=REQ_TIMEOUT) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
 
@@ -324,7 +325,7 @@ class O365Check(AgentCheck):
             return
 
     def period_report_to_metrics(self, url, headers, row_fields, tag_fields, tags):
-        with requests.get(url, headers=headers, stream=True) as r:
+        with requests.get(url, headers=headers, stream=True, timeout=REQ_TIMEOUT) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
 
@@ -357,7 +358,7 @@ class O365Check(AgentCheck):
 
         try:
             r = requests.request(
-                verb.upper(), url=url, headers=headers, data=data
+                verb.upper(), url=url, headers=headers, data=data, timeout=REQ_TIMEOUT
             )
         except Exception as e:
             self.gauge("{}.response".format(metric_pre), float(0), tags=metric_tags)
@@ -542,7 +543,7 @@ class O365Check(AgentCheck):
             })
 
         highmark = 0.0
-        with requests.get(report_url, headers=report_headers, stream=True) as r:
+        with requests.get(report_url, headers=report_headers, stream=True, timeout=REQ_TIMEOUT) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
 
@@ -2208,6 +2209,7 @@ class O365Check(AgentCheck):
                 "emailAddress": email_address,
                 "checkVersion": self.check_version,
             },
+            timeout=REQ_TIMEOUT,
         )
         res.raise_for_status()
 
@@ -2216,6 +2218,7 @@ class O365Check(AgentCheck):
             metrics_url,
             headers=headers,
             json={"emailAddress": email_address},
+            timeout=REQ_TIMEOUT,
         )
         res.raise_for_status()
 
@@ -2499,7 +2502,7 @@ class O365Check(AgentCheck):
 
         """ [Read] User's joined teams """
         url = "{}/me/joinedTeams".format(graph_url)
-        res = requests.get(url, headers=headers)
+        res = requests.get(url, headers=headers, timeout=REQ_TIMEOUT)
         res.raise_for_status()
 
         team_id = None
@@ -2652,7 +2655,7 @@ class O365Check(AgentCheck):
             "Authorization": "Bearer {}".format(token),
         }
         url = "{}/{}".format(manage_host, manage_path)
-        res = requests.get(url, headers=manage_headers)
+        res = requests.get(url, headers=manage_headers, timeout=REQ_TIMEOUT)
         res.raise_for_status()
         values = res.json().get("value")
 

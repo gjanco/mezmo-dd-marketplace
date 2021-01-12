@@ -1,5 +1,9 @@
 # CHANGELOG - o365
 
+## 2.0.1 / 2020-12-22
+
+* [Fixed] added requests timeout (30s)
+
 ## 2.0.0 / 2020-10-15
 
 * [Fixed] corrected missing Message Center incidents collection to Datadog events.
