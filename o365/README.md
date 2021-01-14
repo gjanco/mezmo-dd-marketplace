@@ -86,7 +86,7 @@ The Microsoft Office 365 integration requires permissions managed through your o
 
 6. [Modify the OneDrive storage configuration for the integration user account](https://docs.microsoft.com/en-us/onedrive/set-retention). Specify minimum of thirty (30) days and 1024 GB to prevent the integration user synthetic files from consuming all allocated storage. The default settings, unless modified by your organization, should be thirty (30) days and 1204 GB. 
 
-7. The agent's synthetic email check is disabled by default, set `enable_email_synthetics: true` and set the target email address configured in step 3.6 by adding `email_address: {integration_user@email.address}` in the `o365.d/o365.yaml`.
+7. The agent's synthetic email check is disabled by default, set `enable_email_synthetics: true` and set the target email address configured in step 5 by adding `email_address: {integration_user@email.address}` in the `o365.d/o365.yaml`.
 
 8. Add SharePoint sites to the `o365.d/o365.yaml` file to enable collection of SharePoint performance metrics. Ten (10) sites can be added under the configuration section `sharepoint_sites`. See the configuration example for syntax. The configured username and password for the performance synthetic user is used for the sharepoint login and the SharePoint site(s) must be readable by the configured user.
 
@@ -106,7 +106,7 @@ tags:
 
 ## Pricing 
 
-$0.50 / User / Month
+$1.00 / User / Month
 
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
