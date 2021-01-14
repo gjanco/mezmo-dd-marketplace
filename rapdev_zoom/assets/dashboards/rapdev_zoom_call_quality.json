@@ -27,6 +27,11 @@
             "default": "*",
             "name": "user_location",
             "prefix": "zoom_user_location"
+        },
+        {
+            "default": "*",
+            "name": "user_name",
+            "prefix": "zoom_user_name"
         }
     ],
     "title": "RapDev Zoom Call Quality",
@@ -63,7 +68,6 @@
                         "q": "default_zero(sum:rapdev.zoom.meetings.participants{$meeting_host,$meeting_id,$account_name,$user_location,$room_name})"
                     }
                 ],
-                "time": {},
                 "title": "Participants in Meetings",
                 "title_align": "left",
                 "title_size": "16",
@@ -95,7 +99,6 @@
                         "q": "default_zero(sum:rapdev.zoom.meetings.count{$account_name,$user_location,$room_name}.rollup(sum, 60))"
                     }
                 ],
-                "time": {},
                 "title": "Ongoing Meetings",
                 "title_align": "left",
                 "title_size": "16",
@@ -166,7 +169,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}",
+                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -175,7 +178,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -229,7 +232,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}",
+                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -238,7 +241,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -273,7 +276,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_host}",
+                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -282,7 +285,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -317,7 +320,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_host}",
+                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -326,7 +329,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -361,7 +364,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_host}",
+                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -370,7 +373,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -405,7 +408,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}",
+                        "q": "avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -414,7 +417,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -450,7 +453,7 @@
                     {
                         "display_type": "line",
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}",
+                        "q": "avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -459,7 +462,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -494,7 +497,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_host}",
+                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -503,7 +506,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -557,7 +560,6 @@
                     }
                 ],
                 "show_legend": false,
-                "time": {},
                 "title": "Ongoing Meetings",
                 "title_align": "left",
                 "title_size": "16",
@@ -590,16 +592,6 @@
                             "line_width": "normal",
                             "palette": "dog_classic"
                         }
-                    },
-                    {
-                        "display_type": "line",
-                        "on_right_yaxis": false,
-                        "q": "week_before(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id})/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "warm"
-                        }
                     }
                 ],
                 "show_legend": false,
@@ -631,13 +623,14 @@
                 "requests": {
                     "x": {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_qos_network_type}"
+                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id, zoom_meeting_qos_network_type}"
                     },
                     "y": {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_qos_network_type}"
+                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_meeting_id, zoom_meeting_qos_network_type}"
                     }
                 },
+                "time": {},
                 "title": "Audio Input Latency vs Jitter By Meeting",
                 "title_align": "left",
                 "title_size": "16",
@@ -663,7 +656,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'sum', 'desc')"
+                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'sum', 'desc')"
                     }
                 ],
                 "title": "Video Output Loss (%)",
@@ -683,7 +676,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
+                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
                     }
                 ],
                 "title": "Top Audio Input Loss (%)",
@@ -703,7 +696,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(sum:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
+                        "q": "top(sum:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
                     }
                 ],
                 "title": "Video Input Loss (%)",
@@ -725,7 +718,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_host}",
+                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -734,7 +727,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -769,7 +762,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}",
+                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -778,7 +771,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -813,7 +806,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_host}",
+                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -822,7 +815,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -857,7 +850,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}",
+                        "q": "avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -866,7 +859,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -899,7 +892,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
+                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
                     }
                 ],
                 "title": "Top Audio Output Loss (%)",
@@ -921,7 +914,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}",
+                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -930,7 +923,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -965,7 +958,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_host}",
+                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -974,7 +967,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -1009,7 +1002,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id,zoom_meeting_host}",
+                        "q": "avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -1018,7 +1011,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -1054,7 +1047,7 @@
                     {
                         "display_type": "line",
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}",
+                        "q": "avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -1063,7 +1056,7 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name} by {zoom_user_name}",
+                        "q": "avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name,$user_name} by {zoom_user_name}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -1103,16 +1096,6 @@
                             "line_type": "solid",
                             "line_width": "normal",
                             "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "on_right_yaxis": false,
-                        "q": "week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location})/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "warm"
                         }
                     }
                 ],
@@ -1183,12 +1166,6 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "metadata": [
-                            {
-                                "alias_name": "Current Bandwidth",
-                                "expression": "sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location}/1000"
-                            }
-                        ],
                         "q": "sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name}/1000",
                         "style": {
                             "line_type": "solid",
@@ -1198,12 +1175,6 @@
                     },
                     {
                         "display_type": "line",
-                        "metadata": [
-                            {
-                                "alias_name": "Last Week Bandwidth",
-                                "expression": "week_before(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location})/1000"
-                            }
-                        ],
                         "on_right_yaxis": false,
                         "q": "week_before(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name})/1000",
                         "style": {
@@ -1238,7 +1209,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_name}/1000,10,'mean','desc')"
+                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_user_name}/1000,10,'mean','desc')"
                     }
                 ],
                 "title": "Bandwidth per User (MBPS)",
@@ -1260,21 +1231,11 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_name}/1000",
+                        "q": "sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_user_name}/1000",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
                             "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "on_right_yaxis": false,
-                        "q": "week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_name})/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "warm"
                         }
                     }
                 ],
@@ -1312,6 +1273,7 @@
                         "q": "avg:rapdev.zoom.user.qos.latency{$user_location,$room_name} by {zoom_user_location}"
                     }
                 },
+                "time": {},
                 "title": "Bitrate vs Latency by Location",
                 "title_align": "left",
                 "title_size": "16",
