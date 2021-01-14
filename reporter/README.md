@@ -61,7 +61,7 @@ Your reports will be sent by email as an attachement as shown above.
 
 ## Pricing
 
-$250/month for unlimited reports
+$1,000/month for unlimited reports
 
 ## Support
 

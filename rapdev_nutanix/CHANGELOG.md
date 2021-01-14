@@ -1,2 +1,5 @@
 # CHANGELOG - Nutanix
 
+## 1.0.0 / 2021-01-12
+
+
