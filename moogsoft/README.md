@@ -13,23 +13,19 @@ Moogsoft delivers an enterprise-class, cloud-native platform that empowers custo
 
 ![Moogsoft Dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/moogsoft/images/moogsoft.dashboard.png)
 
-Observe
--------
+### Observe
 
 Improve service delivery quality. We only elevate critical situations, so you and your team can move swiftly, stay focused, and resolve incidents before they cause outages.
 
-Monitor
--------
+### Monitor
 
 Watch alert volumes go down and see productivity go up. We help eliminate event fatigue with a consolidated monitoring panel and by correlating similar events to significantly minimize actionable alerts.
 
-Collaborate
------------
+### Collaborate
 
 See everything in one view. We aggregate all of your apps, services, and infrastructure alerts to a single console for increased agility, fewer alerts, and faster resolution times.
 
-Moogsoft Observability Cloud Data Flow
---------------------------------------
+### Moogsoft Observability Cloud Data Flow
 
 ![Moogsoft Correlation](https://raw.githubusercontent.com/DataDog/marketplace/master/moogsoft/images/moogsoft.main.jpg)
 
