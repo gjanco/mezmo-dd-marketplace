@@ -1,1 +1,118 @@
-{"title":"Moogsoft Overview","description":"## Moogsoft Overview","widgets":[{"id":6380911572616399,"layout":{"x":0,"y":2,"width":40,"height":13},"definition":{"type":"image","url":"https://s3.moogsoft.com/images/moogsoft.logo.svg","sizing":"fit","margin":"small"}},{"id":4256194030332636,"layout":{"x":41,"y":2,"width":94,"height":27},"definition":{"type":"note","content":"Welcome to Moogsoft Observability Cloud, the most advanced self-servicing AI-driven observability platform that allows software engineers, developers and operations to instantly see everything, know what's wrong and fix things faster!\n\nMoogsoft integrates seamlessly with Datadog in minutes.\n\nTo get started, simply add your Datadog Api and App keys to your Moogsoft instance following [these simple steps](https://docs.moogsoft.com/en/datadog-integration-mcp.html).\n\nYou can then have Moogsoft update Datadog with live Incidents to allow teams to take advantage of the combined power of Moogsoft and Datadog to collaboratively resolve Incidents quickly!  Simply add an outbound webhook to Moog that points to the Datadog Incident API following [these simple steps](https://docs.moogsoft.com/en/set-up-outbound-notifications.html) and using the following values:\n\nType: Incident\nURL:  https://api.datadoghq.com/api/v2/incidents\nHeaders:  DD-API-KEY and DD-APPLICATION-KEY\nBody:  {\"data\":{\"attributes\":{\"customer_impacted\":true,\"customer_impact_scope\":\"$services\",\"title\":\"Moogsoft Incident $id detected with severity $severity and description $description\"},\"relationships\":{\"commander\":{\"data\":{\"id\":\"00000000-0000-0000-0000-000000000000\",\"type\":\"users\"}}},\"type\":\"incidents\"}}\n\n","background_color":"white","font_size":"14","text_align":"left","show_tick":false,"tick_pos":"50%","tick_edge":"left"}}],"template_variables":[],"layout_type":"free","is_read_only":false,"notify_list":[],"id":"9hv-rmb-79x"}
+{
+    "title": "Moogsoft Overview",
+    "description": "## Moogsoft Overview",
+    "widgets": [
+        {
+            "id": 6380911572616399,
+            "layout": {
+                "x": 9,
+                "y": 2,
+                "width": 31,
+                "height": 13
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://s3.moogsoft.com/images/moogsoft.logo.svg",
+                "sizing": "fit",
+                "margin": "small"
+            }
+        },
+        {
+            "id": 4256194030332636,
+            "layout": {
+                "x": 41,
+                "y": 2,
+                "width": 61,
+                "height": 13
+            },
+            "definition": {
+                "type": "note",
+                "content": "Welcome to Moogsoft Observability Cloud, an advanced self-servicing AI-driven observability platform that allows software engineers, developers and operations to instantly see everything, know what's wrong and fix things faster!",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left"
+            }
+        },
+        {
+            "id": 8863929237479587,
+            "layout": {
+                "x": 41,
+                "y": 16,
+                "width": 61,
+                "height": 17
+            },
+            "definition": {
+                "title": "Moogsoft Detected Incidents",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": false,
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "q": "avg:datadog.marketplace.moogsoft{*}",
+                        "on_right_yaxis": false,
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "scale": "linear",
+                    "label": "",
+                    "include_zero": true,
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 7561026799965515,
+            "layout": {
+                "x": 9,
+                "y": 16,
+                "width": 31,
+                "height": 17
+            },
+            "definition": {
+                "title": "Moogsoft Detected Incidents",
+                "title_size": "16",
+                "title_align": "right",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "q": "avg:datadog.marketplace.moogsoft{*}",
+                        "aggregator": "sum"
+                    }
+                ],
+                "autoscale": true,
+                "text_align": "right",
+                "precision": 2
+            }
+        },
+        {
+            "id": 4856103850340793,
+            "layout": {
+                "x": 9,
+                "y": 34,
+                "width": 93,
+                "height": 32
+            },
+            "definition": {
+                "type": "iframe",
+                "url": "https://app.datadoghq.com/incidents?query=detection_method%3Aother"
+            }
+        }
+    ],
+    "template_variables": [],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "9hv-rmb-79x"
+}
