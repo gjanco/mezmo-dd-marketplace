@@ -78,7 +78,6 @@
                         "q": "default_zero(sum:rapdev.zoom.meetings.participants{$meeting_host,$meeting_id,$account_name})"
                     }
                 ],
-                "time": {},
                 "title": "Participants in Meetings",
                 "title_align": "left",
                 "title_size": "16",
@@ -110,7 +109,6 @@
                         "q": "default_zero(sum:rapdev.zoom.meetings.count{$account_name})"
                     }
                 ],
-                "time": {},
                 "title": "Ongoing Meetings",
                 "title_align": "left",
                 "title_size": "16",
@@ -142,7 +140,6 @@
                         "q": "default_zero(max:rapdev.zoom.users.registered.count{$account_name})"
                     }
                 ],
-                "time": {},
                 "title": "Total Registered Users",
                 "title_align": "left",
                 "title_size": "16",
@@ -165,10 +162,10 @@
                         "metadata": [
                             {
                                 "alias_name": "Current",
-                                "expression": "sum:rapdev.zoom.meetings.count{$account_name}"
+                                "expression": "default_zero(sum:rapdev.zoom.meetings.count{$account_name})"
                             }
                         ],
-                        "q": "sum:rapdev.zoom.meetings.count{$account_name}",
+                        "q": "default_zero(sum:rapdev.zoom.meetings.count{$account_name})",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -180,11 +177,11 @@
                         "metadata": [
                             {
                                 "alias_name": "Prior Week",
-                                "expression": "week_before(sum:rapdev.zoom.meetings.count{$account_name})"
+                                "expression": "default_zero(week_before(sum:rapdev.zoom.meetings.count{$account_name}))"
                             }
                         ],
                         "on_right_yaxis": false,
-                        "q": "week_before(sum:rapdev.zoom.meetings.count{$account_name})",
+                        "q": "default_zero(week_before(sum:rapdev.zoom.meetings.count{$account_name}))",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -222,10 +219,10 @@
                         "metadata": [
                             {
                                 "alias_name": "Current",
-                                "expression": "sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name}"
+                                "expression": "default_zero(sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name})"
                             }
                         ],
-                        "q": "sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name}",
+                        "q": "default_zero(sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name})",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -237,11 +234,11 @@
                         "metadata": [
                             {
                                 "alias_name": "Prior Week",
-                                "expression": "week_before(sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name})"
+                                "expression": "default_zero(week_before(sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name}))"
                             }
                         ],
                         "on_right_yaxis": false,
-                        "q": "week_before(sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name})",
+                        "q": "default_zero(week_before(sum:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name}))",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -281,6 +278,7 @@
                     }
                 ],
                 "show_legend": false,
+                "time": {},
                 "title": "Average Video Loss (%) per Meeting",
                 "title_align": "left",
                 "title_size": "16",
@@ -312,6 +310,7 @@
                     }
                 ],
                 "show_legend": false,
+                "time": {},
                 "title": "Average Audio Loss (%) per Meeting",
                 "title_align": "left",
                 "title_size": "16",
@@ -336,9 +335,10 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(max:rapdev.zoom.meetings.participants{$meeting_id,$meeting_host,$account_name} by {zoom_meeting_id,zoom_meeting_host}, 10, 'max', 'desc')"
+                        "q": "top(max:rapdev.zoom.meetings.participants{$account_name,$meeting_id,$meeting_host} by {zoom_meeting_host,zoom_meeting_id}, 10, 'max', 'desc')"
                     }
                 ],
+                "time": {},
                 "title": "Participant Count By Meeting Host,ID",
                 "title_align": "left",
                 "title_size": "16",
@@ -370,7 +370,6 @@
                         "q": "default_zero(max:rapdev.zoom.room.status.count{zoom_room_status:available})"
                     }
                 ],
-                "time": {},
                 "title": "Total Rooms Free",
                 "title_align": "left",
                 "title_size": "16",
@@ -391,7 +390,8 @@
                         "q": "top(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name} by {zoom_user_network_type}, 10, 'last', 'desc')"
                     }
                 ],
-                "title": "Meeting Audio/Video by Connection Type",
+                "time": {},
+                "title": "User Counts by Network Type",
                 "title_align": "left",
                 "title_size": "16",
                 "type": "toplist"
@@ -443,6 +443,7 @@
                         "q": "top(max:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name} by {zoom_user_location}, 10, 'last', 'desc')"
                     }
                 ],
+                "time": {},
                 "title": "User Bandwidth by Location",
                 "title_align": "left",
                 "title_size": "16",
@@ -472,6 +473,7 @@
                     }
                 ],
                 "show_legend": false,
+                "time": {},
                 "title": "Active Participants by Location",
                 "title_align": "left",
                 "title_size": "16",

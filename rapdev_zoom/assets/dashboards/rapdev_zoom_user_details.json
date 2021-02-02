@@ -1,0 +1,1772 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "user_name",
+            "prefix": "zoom_user_name"
+        },
+        {
+            "default": "*",
+            "name": "email",
+            "prefix": "zoom_user_email"
+        }
+    ],
+    "title": "RapDev Zoom User Details",
+    "widgets": [
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://cuit.columbia.edu/sites/default/files/styles/cu_crop/public/content/zoom-logo-transparent-6.png?itok=PJk3QEss"
+            },
+            "id": 5199822847429160,
+            "layout": {
+                "height": 12,
+                "width": 16,
+                "x": 1,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "custom_bg_color": "#0179f9",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$email,$user_name})"
+                    }
+                ],
+                "title": "Tracked Users in Meetings",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1390308124107946,
+            "layout": {
+                "height": 12,
+                "width": 16,
+                "x": 18,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 35
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 20
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 20
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.cpu.avg_usage{$user_name,zoom_user_qos_cpu:usage,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "CPU Average Usage Per User (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7485000506131626,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 1,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "content": "# CPU Usage By User",
+                "font_size": "14",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 6016127478620038,
+            "layout": {
+                "height": 6,
+                "width": 33,
+                "x": 1,
+                "y": 14
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 75
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 45
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 45
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.cpu.system_max_usage{$user_name,zoom_user_qos_cpu:usage,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "CPU System Max Usage Per User (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1404864851281852,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 18,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 25
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 10
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 10
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.cpu.min_usage{$user_name,zoom_user_qos_cpu:usage,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "CPU Average Minimum Usage Per User (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3845214294137942,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 18,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 35
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 15
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 15
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.cpu.max_usage{$user_name,zoom_user_qos_cpu:usage,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "CPU Max Usage Per User (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 288221575857326,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 1,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "content": "# User Audio Quality Metrics",
+                "font_size": "14",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 7005642542522574,
+            "layout": {
+                "height": 6,
+                "width": 67,
+                "x": 103,
+                "y": 44
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "content": "# User Video Quality Metrics",
+                "font_size": "14",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 480663095304012,
+            "layout": {
+                "height": 6,
+                "width": 67,
+                "x": 35,
+                "y": 44
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{zoom_user_qos_audio:input,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Audio Input Latency (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 350355673254674,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 103,
+                "y": 52
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{zoom_user_qos_video:output,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Video Output Jitter (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3466171722205048,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 69,
+                "y": 70
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{zoom_user_qos_audio:input,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Audio Input Jitter (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8759250337747022,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 103,
+                "y": 70
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{zoom_user_qos_video:input,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Video Input Latency (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1284290586510982,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 35,
+                "y": 52
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{zoom_user_qos_audio:output,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Audio Output Latency (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6147570804842904,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 137,
+                "y": 52
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{zoom_user_qos_audio:output,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Audio Output Jitter (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2294154791305544,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 137,
+                "y": 70
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{zoom_user_qos_video:output,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Video Output Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5269013086572396,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 69,
+                "y": 88
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{zoom_user_qos_audio:input,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Audio Input Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2322760451629656,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 103,
+                "y": 88
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{zoom_user_qos_video:output,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Max Video Output Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6887897118559490,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 69,
+                "y": 106
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{zoom_user_qos_audio:input,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Max Audio Input Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1872828764694394,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 103,
+                "y": 106
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{zoom_user_qos_video:input,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Video Input Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5098555031522750,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 35,
+                "y": 88
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{zoom_user_qos_video:input,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Max Video Input Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3701639898315452,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 35,
+                "y": 106
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{zoom_user_qos_audio:output,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Audio Output Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4777610479762134,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 137,
+                "y": 88
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{zoom_user_qos_audio:output,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Max Audio Output Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4339020329643588,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 137,
+                "y": 106
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{zoom_user_qos_video:input,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Video Input Jitter (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8040921670495470,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 35,
+                "y": 70
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{zoom_user_qos_video:output,$user_name,$email} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Video Output Latency (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5608502530234812,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 69,
+                "y": 52
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(max:rapdev.zoom.user.qos.cpu.avg_usage{$user_name,$email,zoom_user_qos_cpu:usage} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Zoom CPU Usage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8499808893313156,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 1,
+                "y": 52
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 450
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 350
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 350
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{zoom_user_qos_audio:input,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "AI Latency (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 745542349990612,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 103,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 250
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 150
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 150
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{zoom_user_qos_video:output,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "VO Jitter (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1090945215312156,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 69,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 250
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 150
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 150
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{zoom_user_qos_audio:input,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "AI Jitter (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1462862789256982,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 103,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 450
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 350
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 350
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{zoom_user_qos_video:input,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "VI Latency (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3886610768279192,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 35,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 450
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 350
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 350
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{zoom_user_qos_audio:output,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "AO Latency (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1436900028901104,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 137,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 250
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 150
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 150
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{zoom_user_qos_audio:output,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "AO Jitter (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5170620750185894,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 137,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{zoom_user_qos_video:output,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "VO Average Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2059421251993296,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 86,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{zoom_user_qos_audio:input,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "AI Average Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 90488161685746,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 120,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 15
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 5
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 5
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{zoom_user_qos_video:output,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "VO Max Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2280919124834474,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 86,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 15
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 5
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 5
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{zoom_user_qos_audio:input,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "AI Max Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6883511344132068,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 120,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{zoom_user_qos_video:input,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "VI Average Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2177511637463488,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 52,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 15
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 5
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 5
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{zoom_user_qos_video:input,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "VI Max Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8171143162687710,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 52,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{zoom_user_qos_audio:output,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "AO Average Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8344062985649788,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 154,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 15
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 5
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 5
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{zoom_user_qos_audio:output,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "AO Max Loss (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4682241812859002,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 154,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 250
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 150
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 150
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{zoom_user_qos_video:input,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "VI Jitter (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1477606464748786,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 35,
+                "y": 33
+            }
+        },
+        {
+            "definition": {
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 450
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 350
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 350
+                            }
+                        ],
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{zoom_user_qos_video:output,$user_name,$email} by {zoom_user_name})"
+                    }
+                ],
+                "title": "VO Latency (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6638447549768566,
+            "layout": {
+                "height": 10,
+                "width": 16,
+                "x": 69,
+                "y": 22
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "content": "# User Video Input (VI) Quality",
+                "font_size": "14",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3168069739853020,
+            "layout": {
+                "height": 6,
+                "width": 33,
+                "x": 35,
+                "y": 14
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "content": "# User Video Output (VO) Quality",
+                "font_size": "14",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 7673521702973696,
+            "layout": {
+                "height": 6,
+                "width": 33,
+                "x": 69,
+                "y": 14
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "content": "# User Audio Input (AI) Quality",
+                "font_size": "14",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 2193026083302036,
+            "layout": {
+                "height": 6,
+                "width": 33,
+                "x": 103,
+                "y": 14
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "content": "# User Audio Output (AO) Quality",
+                "font_size": "14",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3929074406050978,
+            "layout": {
+                "height": 6,
+                "width": 33,
+                "x": 137,
+                "y": 14
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "content": "# User CPU Usage Metrics",
+                "font_size": "14",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 2787459437995908,
+            "layout": {
+                "height": 6,
+                "width": 33,
+                "x": 1,
+                "y": 44
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(max:rapdev.zoom.user.qos.cpu.max_usage{$user_name,$email,zoom_user_qos_cpu:usage} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Max Zoom CPU Usage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2341833222871116,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 1,
+                "y": 70
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(max:rapdev.zoom.user.qos.cpu.min_usage{$user_name,$email,zoom_user_qos_cpu:usage} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Min Zoom CPU Usage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5349391088067328,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 1,
+                "y": 88
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "default_zero(max:rapdev.zoom.user.qos.cpu.system_max_usage{$user_name,$email,zoom_user_qos_cpu:usage} by {zoom_user_name})",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "System Max CPU Usage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5181780645819682,
+            "layout": {
+                "height": 17,
+                "width": 33,
+                "x": 1,
+                "y": 106
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Zoom Users",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "limit": 10,
+                        "order": "desc",
+                        "q": "top(sum:rapdev.zoom.users.in_meetings.count{$user_name,$email} by {zoom_user_network_type}, 10, 'last', 'desc')"
+                    }
+                ],
+                "time": {},
+                "title": "User Count by Network Type",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 6353924886659964,
+            "layout": {
+                "height": 12,
+                "width": 30,
+                "x": 38,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Zoom Users",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "limit": 10,
+                        "order": "desc",
+                        "q": "top(sum:rapdev.zoom.users.in_meetings.count{$user_name,$email} by {zoom_user_connection_type}, 10, 'last', 'desc')"
+                    }
+                ],
+                "time": {},
+                "title": "User Count by Connection Type",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 5499980137091598,
+            "layout": {
+                "height": 12,
+                "width": 30,
+                "x": 69,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "content": "# User Counts",
+                "font_size": "14",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "left",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 7199135225726244,
+            "layout": {
+                "height": 6,
+                "width": 33,
+                "x": 101,
+                "y": 4
+            }
+        }
+    ]
+}

@@ -10,8 +10,11 @@ The Zoom Integration has the capability of monitoring Meetings, Rooms, Users, Ne
 ### Zoom Rooms Dashboard
 ![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_zoom/images/rooms.png)
 
-### Call Quality Overview
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_zoom/images/call_quality.png)
+### Meeting Quality Overview
+![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_zoom/images/meeting_quality.png)
+
+### User Details Dashboard
+![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_zoom/images/user_details.png)
 
 ### Geolocation Overview
 ![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_zoom/images/geo.png)
@@ -25,8 +28,9 @@ The Zoom Integration has the capability of monitoring Meetings, Rooms, Users, Ne
 
 1. RapDev Zoom Meetings Overview
 2. RapDev Zoom Rooms Dashboard
-3. RapDev Zoom Call Quality
-4. RapDev Zoom Geo Overview
+3. RapDev Zoom Meeting Quality
+4. RapDev Zoom User Details
+5. RapDev Zoom Geo Overview
 
 ## Setup
 
@@ -39,7 +43,7 @@ You must have the Datadog Agent installed and running. Additionally, you need to
 ### Installation
 
 ```
-sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_zoom==1.0.0
+sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_zoom==2.0.0
 ``` 
 
 ### Configuration
@@ -49,7 +53,7 @@ sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-r
 
 3. If you don't already have `JWT` enabled under the JWT section, click on `Create`. Otherwise, select `View Here`.
 
-4. You should see an `API Key` and an `API Secret` on the page. You will need to copy and paste both these values accordingly into your agent's zoom configuration file `conf.d/zoom.d/conf.yaml`. 
+4. You should see an `API Key` and an `API Secret` on the page. You will need to copy and paste both these values accordingly into your agent's zoom configuration file `conf.d/rapdev_zoom.d/conf.yaml`. 
 Finish the configuration by filling in your Zoom Account name. See below for an example:
    
    ```
@@ -67,6 +71,10 @@ Finish the configuration by filling in your Zoom Account name. See below for an 
        collect_top_25_issues: False
        collect_participant_details: True   # send metrics for every user rather than averaging them per meeting
        collect_usernames: True             # Collect user-level info, such as user's name, location, etc...
+       users_to_track:                     # Only pull in QOS metrics for these emails
+         - "bob_smith@myorg.com"
+         - "jane_doe@myorg.com"
+         - "my_user@myorg2.com"
    ```
    
 5. [Restart the Agent][2].

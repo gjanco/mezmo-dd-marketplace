@@ -20,6 +20,14 @@ def check_for_metrics(metrics):
     return False
 
 
+def check_for_cpu_metrics(metrics):
+    if metrics["system_max_cpu_usage"] or metrics["zoom_avg_cpu_usage"] or metrics["zoom_max_cpu_usage"] \
+            or metrics["zoom_min_cpu_usage"]:
+        return True
+
+    return False
+
+
 def get_and_except_string(value, key):
     try:
         return value[key]

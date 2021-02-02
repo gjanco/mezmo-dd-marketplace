@@ -60,10 +60,9 @@
                                 "value": 0
                             }
                         ],
-                        "q": "default_zero(sum:rapdev.zoom.meetings.count{$account_name})"
+                        "q": "default_zero(sum:rapdev.zoom.meetings.count{$account_name,$user_location,$room_name,$meeting_host,$meeting_id})"
                     }
                 ],
-                "time": {},
                 "title": "Ongoing Meetings",
                 "title_align": "left",
                 "title_size": "16",
@@ -93,7 +92,7 @@
                                 "value": 0
                             }
                         ],
-                        "q": "sum:rapdev.zoom.user.qos.bitrate{$user_location,$account_name,$meeting_host,$meeting_id}/1000"
+                        "q": "sum:rapdev.zoom.user.qos.bitrate{$user_location,$account_name,$meeting_host,$meeting_id,$room_name}/1000"
                     }
                 ],
                 "title": "Total Meeting Bandwidth",
@@ -113,7 +112,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_location}/1000,10,'mean','desc')"
+                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}/1000,10,'mean','desc')"
                     }
                 ],
                 "title": "Bandwidth per Location (MBPS)",
@@ -133,7 +132,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(max:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name} by {zoom_user_location}, 10, 'mean', 'desc')"
+                        "q": "top(max:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
                     }
                 ],
                 "title": "Bandwidth per User Location (MBPS)",
@@ -155,7 +154,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center}/1000",
+                        "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center})/1000",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -167,11 +166,11 @@
                         "metadata": [
                             {
                                 "alias_name": "Last Week Bandwidth",
-                                "expression": "week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center})/1000"
+                                "expression": "default_zero(week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center}))/1000"
                             }
                         ],
                         "on_right_yaxis": false,
-                        "q": "week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center})/1000",
+                        "q": "default_zero(week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center}))/1000",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -204,7 +203,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center}/1000,10,'mean','desc')"
+                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center}/1000,10,'mean','desc')"
                     }
                 ],
                 "title": "Bandwidth per Zoom Datacenter (MBPS)",
@@ -226,11 +225,11 @@
                 "requests": {
                     "x": {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_location}"
+                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}"
                     },
                     "y": {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_location}"
+                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}"
                     }
                 },
                 "title": "Jitter vs Latency by User Location",
@@ -258,7 +257,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_location}/1000",
+                        "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location})/1000",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -293,7 +292,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$room_name,$user_location} by {zoom_user_location}",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$room_name,$user_location,$account_name} by {zoom_user_location})",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -328,7 +327,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$room_name,$user_location} by {zoom_user_location}",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$room_name,$user_location,$account_name} by {zoom_user_location})",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -361,7 +360,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(max:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name} by {zoom_user_location}, 10, 'mean', 'desc')"
+                        "q": "top(max:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
                     }
                 ],
                 "title": "Jitter per User Location (MBPS)",
@@ -383,11 +382,11 @@
                 "requests": {
                     "x": {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center,zoom_meeting_id}"
+                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center,zoom_meeting_id}"
                     },
                     "y": {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center,zoom_meeting_id}"
+                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center,zoom_meeting_id}"
                     }
                 },
                 "title": "Jitter vs Latency by Zoom Datacenter",
@@ -415,7 +414,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$room_name,$user_location} by {zoom_user_location}",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$room_name,$user_location,$account_name} by {zoom_user_location})",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -450,7 +449,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$room_name,$user_location} by {zoom_user_location}",
+                        "q": "default_zero(avg:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$room_name,$user_location,$account_name} by {zoom_user_location})",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -483,7 +482,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(max:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name} by {zoom_user_location}, 10, 'mean', 'desc')"
+                        "q": "top(max:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
                     }
                 ],
                 "title": "Avg Loss per User Location (MBPS)",
@@ -503,7 +502,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(max:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name} by {zoom_user_location}, 10, 'mean', 'desc')"
+                        "q": "top(max:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
                     }
                 ],
                 "title": "Bitrate per User Location (MBPS)",
@@ -534,10 +533,9 @@
                                 "value": 0
                             }
                         ],
-                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location})"
+                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name})"
                     }
                 ],
-                "time": {},
                 "title": "Active Participants in Meetings",
                 "title_align": "left",
                 "title_size": "16",
@@ -557,7 +555,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_location}",
+                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location})",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -592,7 +590,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_country}",
+                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_country})",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -627,7 +625,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center}",
+                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center})",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -660,7 +658,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center}, 10, 'last', 'desc')"
+                        "q": "top(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center}, 10, 'last', 'desc')"
                     }
                 ],
                 "title": "Meeting Participants per Zoom Datacenter",
@@ -680,7 +678,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "sum:rapdev.zoom.users.in_meetings.count{*} by {zoom_user_country}.fill(last)"
+                        "q": "sum:rapdev.zoom.users.in_meetings.count{$user_location,$account_name,$room_name,$meeting_host,$meeting_id} by {zoom_user_country}.fill(last)"
                     }
                 ],
                 "style": {

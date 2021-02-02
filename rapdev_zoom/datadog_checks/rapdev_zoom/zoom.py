@@ -50,6 +50,7 @@ class ZoomCheck(AgentCheck):
         self.collect_usernames = is_affirmative(self.instance.get("collect_usernames", True))
         self.collect_top_25_issues = is_affirmative(self.instance.get("collect_top_25_issues", False))
         self.collect_im_metrics = is_affirmative(self.instance.get("collect_im_metrics", False))
+        self.users_to_track = self.instance.get("users_to_track", [])
 
     def check(self, instance):
         self.validate_config()
@@ -91,13 +92,17 @@ class ZoomCheck(AgentCheck):
             raise ConfigurationError("An account name is required.")
 
     def call_api(self, request_path, next_page_token="", from_date="", to_date="", page_size=300):
-        request_path = request_path + "?page_size={}".format(page_size)
+        if page_size:
+            request_path = request_path + "?page_size={}".format(page_size)
 
         if next_page_token:
             request_path = request_path + "&next_page_token={}".format(next_page_token)
 
-        if from_date and to_date:
+        if from_date and to_date and page_size:
             request_path = request_path + "&from={}".format(from_date)
+            request_path = request_path + "&to={}".format(to_date)
+        elif from_date and to_date and not page_size:
+            request_path = request_path + "?from={}".format(from_date)
             request_path = request_path + "&to={}".format(to_date)
 
         results = self.http.get(
@@ -129,9 +134,9 @@ class ZoomCheck(AgentCheck):
                 user_timezone = get_and_except_string(user, "timezone")
 
                 if user_email:
-                    metric_tags.append("zoom_user_email:{}".format(user_email))
+                    metric_tags.append("zoom_user_mp_email:{}".format(user_email))
                 if user_timezone:
-                    metric_tags.append("zoom_user_timezone:{}".format(user_timezone))
+                    metric_tags.append("zoom_user_mp_timezone:{}".format(user_timezone))
 
                 self.gauge("datadog.marketplace.{}".format(self.metric_prefix),
                            1,
@@ -539,6 +544,12 @@ class ZoomCheck(AgentCheck):
         valid_video_input_records = 0
         valid_video_output_records = 0
 
+        system_max_cpu_usage = 0.0
+        zoom_avg_cpu_usage = 0.0
+        zoom_max_cpu_usage = 0.0
+        zoom_min_cpu_usage = 0.0
+        valid_cpu_records = 0
+
         while True:
             participants = get_and_except_list(response, "participants")
 
@@ -555,6 +566,12 @@ class ZoomCheck(AgentCheck):
                     connection_type = get_and_except_string(participant, "connection_type")
                     data_center = get_and_except_string(participant, "data_center")
                     network_type = get_and_except_string(participant, "network_type")
+                    user_id = get_and_except_string(participant, "id")
+
+                    request_path = "users/{}".format(user_id)
+                    # noinspection PyTypeChecker
+                    response = self.call_api(request_path, "", "", "", None)
+                    user_email = get_and_except_string(response, "email")
 
                     if self.collect_participant_details:
                         if user_location:
@@ -571,19 +588,23 @@ class ZoomCheck(AgentCheck):
                             metric_tags.append("zoom_user_data_center:{}".format(data_center))
                         if network_type:
                             metric_tags.append("zoom_user_network_type:{}".format(network_type))
+                        if user_email:
+                            metric_tags.append("zoom_user_email:{}".format(user_email))
 
                         if self.collect_usernames:
                             metric_tags.append("zoom_user_name:{}".format(user_name))
 
-                    self.gauge("{}.users.in_meetings.count".format(self.metric_prefix),
-                               1,
-                               tags=metric_tags)
+                    if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                        self.gauge("{}.users.in_meetings.count".format(self.metric_prefix),
+                                   1,
+                                   tags=metric_tags)
 
                     recent_user_qos = get_and_except_list(participant, "user_qos", -1)
                     audio_input = get_and_except_dict(recent_user_qos, "audio_input")
                     audio_output = get_and_except_dict(recent_user_qos, "audio_output")
                     video_input = get_and_except_dict(recent_user_qos, "video_input")
                     video_output = get_and_except_dict(recent_user_qos, "video_output")
+                    cpu_usage = get_and_except_dict(recent_user_qos, "cpu_usage")
 
                     if check_for_metrics(audio_input):
                         valid_audio_input_records += 1
@@ -595,9 +616,10 @@ class ZoomCheck(AgentCheck):
                         audio_input_max_loss += percentage_to_float(audio_input["max_loss"])
 
                         if self.collect_participant_details:
-                            metric_tags.append("zoom_user_qos_audio:input")
-                            self.parse_and_submit_user_qos(audio_input, metric_tags)
-                            metric_tags.remove("zoom_user_qos_audio:input")
+                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                metric_tags.append("zoom_user_qos_audio:input")
+                                self.parse_and_submit_user_qos(audio_input, metric_tags)
+                                metric_tags.remove("zoom_user_qos_audio:input")
 
                     if check_for_metrics(audio_output):
                         valid_audio_output_records += 1
@@ -609,9 +631,10 @@ class ZoomCheck(AgentCheck):
                         audio_output_max_loss += percentage_to_float(audio_output["max_loss"])
 
                         if self.collect_participant_details:
-                            metric_tags.append("zoom_user_qos_audio:output")
-                            self.parse_and_submit_user_qos(audio_output, metric_tags)
-                            metric_tags.remove("zoom_user_qos_audio:output")
+                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                metric_tags.append("zoom_user_qos_audio:output")
+                                self.parse_and_submit_user_qos(audio_output, metric_tags)
+                                metric_tags.remove("zoom_user_qos_audio:output")
 
                     if check_for_metrics(video_input):
                         valid_video_input_records += 1
@@ -623,9 +646,10 @@ class ZoomCheck(AgentCheck):
                         video_input_max_loss += percentage_to_float(video_input["max_loss"])
 
                         if self.collect_participant_details:
-                            metric_tags.append("zoom_user_qos_video:input")
-                            self.parse_and_submit_user_qos(video_input, metric_tags)
-                            metric_tags.remove("zoom_user_qos_video:input")
+                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                metric_tags.append("zoom_user_qos_video:input")
+                                self.parse_and_submit_user_qos(video_input, metric_tags)
+                                metric_tags.remove("zoom_user_qos_video:input")
 
                     if check_for_metrics(video_output):
                         valid_video_output_records += 1
@@ -637,9 +661,46 @@ class ZoomCheck(AgentCheck):
                         video_output_max_loss += percentage_to_float(video_output["max_loss"])
 
                         if self.collect_participant_details:
-                            metric_tags.append("zoom_user_qos_video:output")
-                            self.parse_and_submit_user_qos(video_output, metric_tags)
-                            metric_tags.remove("zoom_user_qos_video:output")
+                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                metric_tags.append("zoom_user_qos_video:output")
+                                self.parse_and_submit_user_qos(video_output, metric_tags)
+                                metric_tags.remove("zoom_user_qos_video:output")
+
+                    if check_for_cpu_metrics(cpu_usage):
+                        valid_cpu_records += 1
+
+                        system_max_cpu_usage_value = percentage_to_float(
+                            get_and_except_string(cpu_usage, "system_max_cpu_usage"))
+                        zoom_avg_cpu_usage_value = percentage_to_float(
+                            get_and_except_string(cpu_usage, "zoom_avg_cpu_usage"))
+                        zoom_max_cpu_usage_value = percentage_to_float(
+                            get_and_except_string(cpu_usage, "zoom_max_cpu_usage"))
+                        zoom_min_cpu_usage_value = percentage_to_float(
+                            get_and_except_string(cpu_usage, "zoom_min_cpu_usage"))
+
+                        system_max_cpu_usage += system_max_cpu_usage_value
+                        zoom_avg_cpu_usage += zoom_avg_cpu_usage_value
+                        zoom_max_cpu_usage += zoom_max_cpu_usage_value
+                        zoom_min_cpu_usage += zoom_min_cpu_usage_value
+
+                        if self.collect_participant_details:
+                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                metric_tags.append("zoom_user_qos_cpu:usage")
+
+                                self.gauge("{}.user.qos.cpu.system_max_usage".format(self.metric_prefix),
+                                           system_max_cpu_usage_value,
+                                           tags=metric_tags)
+                                self.gauge("{}.user.qos.cpu.avg_usage".format(self.metric_prefix),
+                                           zoom_avg_cpu_usage_value,
+                                           tags=metric_tags)
+                                self.gauge("{}.user.qos.cpu.max_usage".format(self.metric_prefix),
+                                           zoom_max_cpu_usage_value,
+                                           tags=metric_tags)
+                                self.gauge("{}.user.qos.cpu.min_usage".format(self.metric_prefix),
+                                           zoom_min_cpu_usage_value,
+                                           tags=metric_tags)
+
+                                metric_tags.remove("zoom_user_qos_cpu:usage")
 
             page_token = get_and_except_string(response, "next_page_token")
 
@@ -739,6 +800,26 @@ class ZoomCheck(AgentCheck):
                        avg_video_output_max_loss,
                        tags=base_metric_tags)
             base_metric_tags.remove("zoom_meeting_qos_video:output")
+
+        if valid_cpu_records > 0:
+            avg_system_max_cpu_usage = calculate_average(system_max_cpu_usage, valid_cpu_records)
+            avg_zoom_avg_cpu_usage = calculate_average(zoom_avg_cpu_usage, valid_cpu_records)
+            avg_zoom_max_cpu_usage = calculate_average(zoom_max_cpu_usage, valid_cpu_records)
+            avg_zoom_min_cpu_usage = calculate_average(zoom_min_cpu_usage, valid_cpu_records)
+            base_metric_tags.append("zoom_meeting_qos_cpu:usage")
+            self.gauge("{}.meeting.qos.cpu.system_max_usage".format(self.metric_prefix),
+                       avg_system_max_cpu_usage,
+                       tags=base_metric_tags)
+            self.gauge("{}.meeting.qos.cpu.avg_usage".format(self.metric_prefix),
+                       avg_zoom_avg_cpu_usage,
+                       tags=base_metric_tags)
+            self.gauge("{}.meeting.qos.cpu.max_usage".format(self.metric_prefix),
+                       avg_zoom_max_cpu_usage,
+                       tags=base_metric_tags)
+            self.gauge("{}.meeting.qos.cpu.min_usage".format(self.metric_prefix),
+                       avg_zoom_min_cpu_usage,
+                       tags=base_metric_tags)
+            base_metric_tags.remove("zoom_meeting_qos_cpu:usage")
 
     def parse_and_submit_user_qos(self, qos_values, metric_tags):
         bitrate = parse_kbps(
@@ -937,4 +1018,5 @@ class ZoomCheck(AgentCheck):
                    emoji_receive,
                    tags=metric_tags)
         metric_tags.remove("zoom_user_im_metric:emojis_received")
+
 
