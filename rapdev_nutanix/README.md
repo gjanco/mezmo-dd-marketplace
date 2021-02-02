@@ -1,16 +1,19 @@
 # RapDev Nutanix
 
 ## Overview
-The Nutanix Integration monitors storage, CPU usage, read/write IOPS, and other metrics within Nutanix Clusters, to ensure that your environment is running at optimal performance at all times. The integration comes with a dashboard that can be filtered by Nutanix Cluster, CVM, and Nutanix Host to allow for more granular monitoring of your environment. The Nutanix Integration also comes with monitors for key metrics such as storage utilization and deduplication savings, which are integral to the overall performance of the Nutanix environment.
+The Nutanix Integration monitors storage, CPU usage, read/write IOPS, and other metrics within Nutanix Clusters, to ensure that your environment is running at optimal performance at all times. The integration comes with 4 Dashboards which allows you to view your Nutanix Clusters from an overview, as well as getting granular and pin-pointing potential performance degradations. The Nutanix Integration also comes with monitors for key metrics such as storage utilization and deduplication savings, which are integral to the overall performance of the Nutanix environment.
 
-### Metrics Overview 
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_nutanix/images/1.png)
+### Nutanix Overview Dashboard 
+![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_nutanix/images/4.png)
 
-### Hosts and VMs Metrics
-![Screenshot2](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_nutanix/images/2.png)
+### Nutanix VMs Dashboard
+![Screenshot2](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_nutanix/images/5.png)
 
-### Dashboard Metrics 
-![Screenshot3](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_nutanix/images/3.png)
+### Nutanix Clusters Dashboard 
+![Screenshot3](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_nutanix/images/6.png)
+
+### Nutanix Hosts and Disks Dashboard
+![Screenshot3](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_nutanix/images/7.png)
 
 ### Monitors
 
@@ -21,7 +24,10 @@ The Nutanix Integration monitors storage, CPU usage, read/write IOPS, and other 
 
 ### Dashboards
 
-RapDev Nutanix Cluster Overview
+RapDev Nutanix Overview
+RapDev Nutanix Clusters
+RapDev Nutanix Hosts and Disks
+RapDev Nutanix VMs
 ## Setup
 Find specific step-by-step configuration instructions for this integration.
 
@@ -31,7 +37,7 @@ Find specific step-by-step configuration instructions for this integration.
 ### Install the Nutanix Integration
 To install the Nutanix check on your host:
 
-`sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_nutanix==1.0.0`
+`sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_nutanix==1.1.0`
 
 ### Prepare the Nutanix CVM
 To make REST API calls to the Nutanix CVM, make sure your monitoring user account has the appropriate level of permissions. For more information, see [User Permissions](https://portal.nutanix.com/page/documents/details?targetId=Web-Console-Guide-Prism-v55:wc-user-create-wc-t.html)

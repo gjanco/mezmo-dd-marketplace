@@ -28,8 +28,17 @@ STANDARD_METRICS = [
     "storage.usage_bytes",
     "storage.capacity_bytes",
     "storage.free_bytes",
+    "storage.logical_usage_bytes",
     "content_cache_logical_memory_usage_bytes",
     "content_cache_physical_memory_usage_bytes",
+    "controller_num_iops",
+    "controller_num_write_io",
+    "controller_num_write_iops",
+    "controller_num_read_iops",
+    "controller_avg_io_latency_usecs",
+    "controller_avg_write_io_latency_usecs",
+    "controller_avg_read_io_latency_usecs",
+    "controller_io_bandwidth_kBps",
     "data_reduction.compression.saving_ratio_ppm",
     "data_reduction.dedup.saving_ratio_ppm",
     "hypervisor_cpu_usage_ppm",
@@ -39,15 +48,9 @@ STANDARD_METRICS = [
     "hypervisor_avg_read_io_latency_usecs",
     "hypervisor_avg_write_io_latency_usecs",
     "hypervisor.cpu_ready_time_ppm",
-    "memory_usage_ppm",
-    "controller_num_iops",
-    "controller_num_write_io",
-    "controller_num_write_iops",
-    "controller_num_read_iops",
-    "controller_avg_io_latency_usecs",
-    "controller_avg_write_io_latency_usecs",
-    "controller_avg_read_io_latency_usecs",
-    "controller_io_bandwidth_kBps"
+    "replication_transmitted_bandwidth_kBps",
+    "replication_received_bandwidth_kBps",
+    "memory_usage_ppm"
 ]
 
 
@@ -127,12 +130,14 @@ class NutanixCheck(AgentCheck):
 
             current_redundancy = cluster["clusterRedundancyState"]["currentRedundancyFactor"]
             desired_redundancy = cluster["clusterRedundancyState"]["desiredRedundancyFactor"]
-            self.gauge("{}.{}.currentRedundancyFactor".format(self.metric_prefix, entity), current_redundancy,
-                       tags=metric_tags)
-            self.gauge("{}.{}.desiredRedundancyFactor".format(self.metric_prefix, entity), desired_redundancy,
-                       tags=metric_tags)
-        total_clusters = cluster_metadata["totalEntities"]
-        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_clusters, tags=metric_tags)
+            node_count = cluster["numNodes"]
+            block_count = len(cluster["blockSerials"])
+            total_clusters = cluster_metadata["totalEntities"]
+            self.gauge("{}.{}.currentRedundancyFactor".format(self.metric_prefix, entity), current_redundancy, tags=metric_tags)
+            self.gauge("{}.{}.desiredRedundancyFactor".format(self.metric_prefix, entity), desired_redundancy, tags=metric_tags)
+            self.gauge("{}.{}.blockCount".format(self.metric_prefix, entity), block_count, tags=metric_tags)
+            self.gauge("{}.{}.nodeCount".format(self.metric_prefix, entity), node_count, tags=metric_tags)
+            self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_clusters, tags=metric_tags)
 
     def get_storage_containers(self):
         entity = "containers"
@@ -189,6 +194,7 @@ class NutanixCheck(AgentCheck):
             disk_status = disk["diskStatus"]
             metric_tags = self.tags.copy()
             metric_tags.append("disk_storage_type:{}".format(disk["storageTierName"]))
+            metric_tags.append("nutanix_disk_host:{}".format(disk["hostName"]))
             metric_tags.append("nutanix_type:disk")
             metric_tags.append("disk_serialnumber:{}".format(disk["diskHardwareConfig"]["serialNumber"]))
             if disk_status == "NORMAL":

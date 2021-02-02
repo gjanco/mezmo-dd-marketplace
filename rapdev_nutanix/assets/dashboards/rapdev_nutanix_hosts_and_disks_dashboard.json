@@ -1,0 +1,865 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "nutanix_host",
+            "prefix": "nutanix_host"
+        },
+        {
+            "default": "*",
+            "name": "nutanix_cluster",
+            "prefix": "nutanix_cluster"
+        },
+        {
+            "default": "*",
+            "name": "nutanix_cvm",
+            "prefix": "nutanix_cvm"
+        },
+        {
+            "default": "*",
+            "name": "host",
+            "prefix": "host"
+        },
+        {
+            "default": "*",
+            "name": "nutanix_disk_host",
+            "prefix": "nutanix_disk_host"
+        }
+   ],
+  "title": "RapDev Nutanix Hosts and Disks Dashboard",
+  "description": "",
+  "widgets": [
+    {
+      "id": 7480045821955258,
+      "layout": {
+        "x": 0,
+        "y": -2,
+        "width": 63,
+        "height": 6
+      },
+      "definition": {
+        "type": "image",
+        "url": "https://1000logos.net/wp-content/uploads/2019/07/Nutanix.jpg",
+        "sizing": "fit"
+      }
+    },
+    {
+      "id": 6037617244956386,
+      "layout": {
+        "x": 0,
+        "y": 7,
+        "width": 15,
+        "height": 8
+      },
+      "definition": {
+        "title": "Host Count",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.hosts.count{$nutanix_host,$nutanix_cluster,$nutanix_cvm,$host}",
+            "aggregator": "last"
+          }
+        ],
+        "autoscale": true,
+        "precision": 0
+      }
+    },
+    {
+      "id": 1592166001705942,
+      "layout": {
+        "x": 16,
+        "y": 7,
+        "width": 15,
+        "height": 8
+      },
+      "definition": {
+        "title": "CPU Utilization",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:host,$nutanix_host,$nutanix_cluster,$nutanix_cvm,$host}",
+            "aggregator": "avg"
+          }
+        ],
+        "autoscale": true,
+        "custom_unit": "%",
+        "precision": 2
+      }
+    },
+    {
+      "id": 2148195884649262,
+      "layout": {
+        "x": 32,
+        "y": 7,
+        "width": 15,
+        "height": 8
+      },
+      "definition": {
+        "title": "Memory Utilization ",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.hypervisor_memory_usage{nutanix_type:host,$nutanix_host,$nutanix_cluster,$nutanix_cvm,$host}",
+            "aggregator": "avg"
+          }
+        ],
+        "autoscale": true,
+        "custom_unit": "%",
+        "precision": 2
+      }
+    },
+    {
+      "id": 5021370931267012,
+      "layout": {
+        "x": 0,
+        "y": 16,
+        "width": 73,
+        "height": 5
+      },
+      "definition": {
+        "type": "note",
+        "content": "Host Table",
+        "background_color": "vivid_purple",
+        "font_size": "24",
+        "text_align": "center",
+        "show_tick": true,
+        "tick_pos": "50%",
+        "tick_edge": "bottom"
+      }
+    },
+    {
+      "id": 6733017968450936,
+      "layout": {
+        "x": 0,
+        "y": 22,
+        "width": 73,
+        "height": 31
+      },
+      "definition": {
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "aggregator": "last",
+            "cell_display_mode": [
+              "bar"
+            ],
+            "q": "avg:rapdev.nutanix.hypervisor_memory_usage{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_cluster}",
+            "alias": "Memory Usage (%)",
+            "limit": 50,
+            "order": "desc"
+          },
+          {
+            "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_cluster}",
+            "alias": "CPU Usage (%)",
+            "cell_display_mode": [
+              "bar"
+            ],
+            "aggregator": "last"
+          },
+          {
+            "q": "avg:rapdev.nutanix.storage.usage_bytes{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_cluster}",
+            "alias": "Storage Usage",
+            "cell_display_mode": [
+              "bar"
+            ],
+            "aggregator": "last"
+          },
+          {
+            "q": "avg:rapdev.nutanix.storage.capacity_bytes{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_cluster}",
+            "alias": "Storage Capacity",
+            "cell_display_mode": [
+              "bar"
+            ],
+            "aggregator": "last"
+          },
+          {
+            "q": "avg:rapdev.nutanix.avg_io_latency_usecs{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_cluster}",
+            "alias": "Average Latency",
+            "cell_display_mode": [
+              "bar"
+            ],
+            "aggregator": "last"
+          }
+        ],
+        "has_search_bar": "auto"
+      }
+    },
+    {
+      "id": 1994602504342840,
+      "layout": {
+        "x": 74,
+        "y": 0,
+        "width": 73,
+        "height": 5
+      },
+      "definition": {
+        "type": "note",
+        "content": "Host Metrics",
+        "background_color": "vivid_purple",
+        "font_size": "24",
+        "text_align": "center",
+        "show_tick": true,
+        "tick_pos": "50%",
+        "tick_edge": "bottom"
+      }
+    },
+    {
+      "id": 3653824447874080,
+      "layout": {
+        "x": 74,
+        "y": 6,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "CPU Utilization",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{$nutanix_host,nutanix_type:host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "area"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 5463823728163190,
+      "layout": {
+        "x": 74,
+        "y": 34,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Average I/O Latency",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{$nutanix_host,nutanix_type:host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 950083518457144,
+      "layout": {
+        "x": 111,
+        "y": 34,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Physical Storage Utilization (%)",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "(avg:rapdev.nutanix.storage.usage_bytes{$nutanix_host,nutanix_type:host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_host}/avg:rapdev.nutanix.storage.capacity_bytes{$nutanix_host,nutanix_type:host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_host})*100",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 3852589938539304,
+      "layout": {
+        "x": 111,
+        "y": 62,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Content Cache Hit (%)",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.content_cache_hit{$nutanix_host,nutanix_type:host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 3376623782034006,
+      "layout": {
+        "x": 111,
+        "y": 48,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Content Cache Logical Memory Usage",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.content_cache_logical_memory_usage_bytes{$nutanix_host,nutanix_type:host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 8368953616179196,
+      "layout": {
+        "x": 74,
+        "y": 62,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Content Cache Physical Memory Usage",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.content_cache_physical_memory_usage_bytes{$nutanix_host,nutanix_type:host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 3688345438731400,
+      "layout": {
+        "x": 111,
+        "y": 6,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Memory Utilization",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.hypervisor_memory_usage{$nutanix_host,nutanix_type:host,$nutanix_cvm,$nutanix_cluster,$host} by {host,nutanix_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "area"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 6357045289853588,
+      "layout": {
+        "x": 48,
+        "y": 7,
+        "width": 15,
+        "height": 8
+      },
+      "definition": {
+        "title": "Disk Status",
+        "title_size": "16",
+        "title_align": "center",
+        "type": "check_status",
+        "check": "rapdev.nutanix.disks.disk_status",
+        "grouping": "cluster",
+        "group_by": [],
+        "tags": [
+          "*"
+        ]
+      }
+    },
+    {
+      "id": 5566092233012460,
+      "layout": {
+        "x": 74,
+        "y": 20,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Read / Write IO Bandwidth",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.write_io_bandwidth_kBps{$nutanix_host,$nutanix_cluster,$host,nutanix_type:host} by {host}, avg:rapdev.nutanix.read_io_bandwidth_kBps{$nutanix_host,$nutanix_cluster,$host,nutanix_type:host} by {host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 1627451329704700,
+      "layout": {
+        "x": 74,
+        "y": 48,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Logical Storage Available",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.storage.capacity_bytes{$nutanix_host,$nutanix_cluster,$host,nutanix_type:host} by {host}-avg:rapdev.nutanix.storage.logical_usage_bytes{$nutanix_host,$nutanix_cluster,$host,nutanix_type:host} by {host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 8579260783166698,
+      "layout": {
+        "x": 111,
+        "y": 20,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Read / Write IOPS",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.num_read_iops{nutanix_type:host,$nutanix_host,$nutanix_cluster,$host}, avg:rapdev.nutanix.num_write_iops{nutanix_type:host,$nutanix_host,$nutanix_cluster,$host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 7482070644010464,
+      "layout": {
+        "x": 0,
+        "y": 52,
+        "width": 73,
+        "height": 5
+      },
+      "definition": {
+        "type": "note",
+        "content": "Disk Metrics",
+        "background_color": "vivid_purple",
+        "font_size": "24",
+        "text_align": "center",
+        "show_tick": true,
+        "tick_pos": "50%",
+        "tick_edge": "bottom"
+      }
+    },
+    {
+      "id": 5136228974506930,
+      "layout": {
+        "x": 0,
+        "y": 58,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Read / Write IOPS",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.disks.num_read_iops{$nutanix_host,$nutanix_cluster,$nutanix_disk_host}, avg:rapdev.nutanix.disks.num_write_iops{$nutanix_host,$nutanix_cluster,$nutanix_disk_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 2701558370132050,
+      "layout": {
+        "x": 37,
+        "y": 58,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Read / Write IO Bandwidth",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.disks.read_io_bandwidth_kBps{$nutanix_host,$nutanix_cluster,$nutanix_disk_host}, avg:rapdev.nutanix.disks.write_io_bandwidth_kBps{$nutanix_host,$nutanix_cluster,$nutanix_disk_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 776696107278398,
+      "layout": {
+        "x": 0,
+        "y": 72,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Average IO Latency",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.disks.avg_io_latency_usecs{$nutanix_host,$nutanix_cluster,$nutanix_disk_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 8489306713500202,
+      "layout": {
+        "x": -1,
+        "y": 86,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Storage Utilization (%)",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "(avg:rapdev.nutanix.disks.storage.usage_bytes{$nutanix_host,$nutanix_cluster,$nutanix_disk_host}/avg:rapdev.nutanix.disks.storage.capacity_bytes{$nutanix_host,$nutanix_cluster,$nutanix_disk_host})*100",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 935060685235686,
+      "layout": {
+        "x": 37,
+        "y": 72,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Logical Storage Usage",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.disks.storage.logical_usage_bytes{$nutanix_host,$nutanix_cluster,$nutanix_disk_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    },
+    {
+      "id": 2698600703261728,
+      "layout": {
+        "x": 37,
+        "y": 86,
+        "width": 36,
+        "height": 13
+      },
+      "definition": {
+        "title": "Disk Count",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:rapdev.nutanix.disks.count{$nutanix_host,$nutanix_cluster,$nutanix_disk_host}",
+            "on_right_yaxis": false,
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "label": "",
+          "include_zero": true,
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "nutanix_host",
+      "default": "*",
+      "prefix": "nutanix_host"
+    },
+    {
+      "name": "nutanix_cluster",
+      "default": "*",
+      "prefix": "nutanix_cluster"
+    },
+    {
+      "name": "nutanix_cvm",
+      "default": "*",
+      "prefix": "nutanix_cvm"
+    },
+    {
+      "name": "host",
+      "default": "*",
+      "prefix": "host"
+    },
+    {
+      "name": "nutanix_disk_host",
+      "default": "*",
+      "prefix": "nutanix_disk_host"
+    }
+  ],
+  "layout_type": "free",
+  "is_read_only": false,
+  "notify_list": [],
+  "id": "6qv-vjm-sjq"
+}
