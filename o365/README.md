@@ -23,9 +23,6 @@ Below are some screenshots of the dashboard that is included with the integratio
 ### Teams, Calendar and OneDrive synthetics
 ![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/o365/images/5.png)
 
-### Tiered Pricing
-Tiered pricing for Office 365 active users counts over 1,000 are available. Contact [integrations@rapdev.io](mailto:integrations@rapdev.io) to learn more about the tiered pricing.
-
 ## Setup
 
 ### Datadog Integration Install
@@ -104,10 +101,6 @@ tags:
 
 [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-status-and-information) and look for `o365` under the Checks section.
 
-## Pricing 
-
-$1.00 / User / Month
-
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
 
@@ -122,3 +115,6 @@ Tiered discounts for Office 365 users over 1,000 are available. Contact us at [i
 Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
+
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-o365/pricing) to purchase this application.

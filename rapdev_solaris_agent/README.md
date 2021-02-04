@@ -53,12 +53,6 @@ cat /etc/logadm.conf
 /var/log/datadog/agent.log -C 10 -c -s 100m
 ```
 
-## Pricing
-
-$40 per agent
-
-Contact sales@rapdev.io for volume pricing
-
 ## Support
 
 For support or feature requests, contact RapDev.io through the following channels: 
@@ -67,8 +61,10 @@ For support or feature requests, contact RapDev.io through the following channel
  - Chat: [RapDev.io/products](https://rapdev.io/products)
  - Phone: 855-857-0222 
  
- Made with ❤️ in Boston
-
- ---
+---
+Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
+
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-solaris-agent/pricing) to purchase this application.

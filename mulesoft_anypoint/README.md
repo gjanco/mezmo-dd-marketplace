@@ -313,15 +313,12 @@ The mulesoft_anypoint included the following service checks:
 
 The Datadog Mule® Integration does not include any events.
 
-## Pricing
-
-- $350 per production core billed monthly 
-
-For any inquiry, contact us at [dmi@ioconnectservices.com][12].
-
 ## Support
 
 For any support inquiry, contact us at [support_ddp@ioconnectservices.com][9].
+
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][13] to purchase this application.
 
 ##  End User License Agreement
 
@@ -345,3 +342,4 @@ Visit  [https://www.ioconnectservices.com][11]
 [10]: assets/EULA%20-%20IO%20Connect%20Services.pdf
 [11]: https://www.ioconnectservices.com
 [12]: mailto:dmi@ioconnectservices.com
+[13]: https://app.datadoghq.com/marketplace/app/ioconnect-mulesoft-anypoint/pricing

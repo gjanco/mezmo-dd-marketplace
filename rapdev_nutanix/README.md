@@ -71,8 +71,6 @@ Alternatively, you can get detailed information about the integration using the 
 ```
 sudo ‐u dd‐agent datadog‐agent check rapdev_nutanix
 ```
-## Pricing
-$5 per CPU core.
 
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
@@ -81,8 +79,10 @@ For support or feature requests, contact RapDev.io through the following channel
 - Chat: RapDev.io/products
 - Phone: 855-857-0222
 
+---
 Made with ❤️ in Boston
 
----
-
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io), and we'll build it!!*
+
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-nutanix/pricing) to purchase this application.

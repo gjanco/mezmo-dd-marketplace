@@ -90,11 +90,6 @@ Finish the configuration by filling in your Zoom Account name. See below for an 
     ```
 
 
-## Pricing
-
-$1.00 Per Register User. Volume pricing available for organizations with over 5000 users (contact sales@rapdev.io). 
-
-
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
 
@@ -103,12 +98,15 @@ For support or feature requests, contact RapDev.io through the following channel
 - Chat: RapDev.io/products
 - Phone: 855-857-0222
 
+---
 Made with ❤️ in Boston
 
----
-
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:integrations@rapdev.io), and we'll build it!!*
+
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][4] to purchase this application.
 
 [1]: https://marketplace.zoom.us/
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/#start-stop-and-restart-the-agent
 [3]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
+[4]: https://app.datadoghq.com/marketplace/app/rapdev-zoom/pricing

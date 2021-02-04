@@ -67,3 +67,6 @@ For support or requests, please contact NerdVision through the following channel
 Email: support@nerd.vision
 
 Documentation is available [here](https://docs.nerd.vision/).
+
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/nerdvision/pricing) to purchase this application.

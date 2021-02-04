@@ -8,7 +8,6 @@ Moogsoft provides an advanced self-servicing AI-driven observability platform th
 
 Moogsoft delivers an enterprise-class, cloud-native platform that empowers customers to drive adoption at their own pace at a much lower cost.
 
-
 ![Moogsoft Correlation](https://raw.githubusercontent.com/DataDog/marketplace/master/moogsoft/images/moogsoft.correlation.png)
 
 ![Moogsoft Dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/moogsoft/images/moogsoft.dashboard.png)
@@ -60,5 +59,9 @@ Last step is to create a second outbound webhook in Moogsoft with identical sett
 ## Support
 Contact Moogsoft Support at [https://support.moogsoft.com][1].
 
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][2] to purchase this application.
 
 [1]: https://support.moogsoft.com
+[2]: https://app.datadoghq.com/marketplace/app/moogsoft/pricing
+

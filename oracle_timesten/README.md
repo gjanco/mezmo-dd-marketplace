@@ -79,21 +79,18 @@ Alternatively, you can get detailed information about the integration using the 
 sudo ‐u dd‐agent datadog‐agent check oracle_timesten
 ```
 
-## Pricing
-
-$500 per Oracle TimesTen database
-
 ## Support
 
 For support or feature requests please contact RapDev.io through the following channels: 
 
  - Email: integrations@rapdev.io 
  - Chat: [RapDev.io/products](https://rapdev.io/products)
- - Phone: 855-857-0222 
-
-Made with ❤️  in Boston
+ - Phone: 855-857-0222
 
 ---
+Made with ❤️  in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
 
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-oracle-timesten/pricing) to purchase this application.

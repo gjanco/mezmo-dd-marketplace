@@ -65,6 +65,9 @@ Phone: +1 617-202-3659 Email: sales@fairwinds.com
 
 Documentation is available [here](https://insights.docs.fairwinds.com/). It covers setup and integration as well as ongoing usage to get the most out of Fairwinds Insights.
 
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/fairwinds-insights/pricing) to purchase this application.
+
 ### Frequently Asked Questions
 
 **How does Fairwinds Insights work?**

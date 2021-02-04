@@ -59,10 +59,6 @@ For **Private Dashboards** do the following:
 
 Your reports will be sent by email as an attachement as shown above.
 
-## Pricing
-
-$1,000/month for unlimited reports
-
 ## Support
 
 For support or feature requests please contact RapDev.io through the following channels: 
@@ -71,11 +67,10 @@ For support or feature requests please contact RapDev.io through the following c
  - Chat: [RapDev.io/products](https://rapdev.io/products)
  - Phone: 855-857-0222 
  
+---
  Made with ❤️ in Boston
-
- ---
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
 
-
-
+---
+ This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-reporter/pricing) to purchase this application.

@@ -27,10 +27,6 @@ Below are some screenshots of the dashboard that is included with the integratio
 
 [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-status-and-information) and look for `syntheticemail` under the Checks section.
 
-## Pricing
-
-$250 per mailbox
-
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
 
@@ -38,9 +34,10 @@ For support or feature requests please contact RapDev.io through the following c
  - Chat: [RapDev.io/products](https://rapdev.io/products)
  - Phone: 855-857-0222 
 
-Made with ❤️ in Boston
-
 ---
+Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
 
+---
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-syntheticemail/pricing) to purchase this application.
