@@ -544,12 +544,6 @@ class ZoomCheck(AgentCheck):
         valid_video_input_records = 0
         valid_video_output_records = 0
 
-        system_max_cpu_usage = 0.0
-        zoom_avg_cpu_usage = 0.0
-        zoom_max_cpu_usage = 0.0
-        zoom_min_cpu_usage = 0.0
-        valid_cpu_records = 0
-
         while True:
             participants = get_and_except_list(response, "participants")
 
@@ -667,8 +661,6 @@ class ZoomCheck(AgentCheck):
                                 metric_tags.remove("zoom_user_qos_video:output")
 
                     if check_for_cpu_metrics(cpu_usage):
-                        valid_cpu_records += 1
-
                         system_max_cpu_usage_value = percentage_to_float(
                             get_and_except_string(cpu_usage, "system_max_cpu_usage"))
                         zoom_avg_cpu_usage_value = percentage_to_float(
@@ -677,11 +669,6 @@ class ZoomCheck(AgentCheck):
                             get_and_except_string(cpu_usage, "zoom_max_cpu_usage"))
                         zoom_min_cpu_usage_value = percentage_to_float(
                             get_and_except_string(cpu_usage, "zoom_min_cpu_usage"))
-
-                        system_max_cpu_usage += system_max_cpu_usage_value
-                        zoom_avg_cpu_usage += zoom_avg_cpu_usage_value
-                        zoom_max_cpu_usage += zoom_max_cpu_usage_value
-                        zoom_min_cpu_usage += zoom_min_cpu_usage_value
 
                         if self.collect_participant_details:
                             if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
@@ -800,26 +787,6 @@ class ZoomCheck(AgentCheck):
                        avg_video_output_max_loss,
                        tags=base_metric_tags)
             base_metric_tags.remove("zoom_meeting_qos_video:output")
-
-        if valid_cpu_records > 0:
-            avg_system_max_cpu_usage = calculate_average(system_max_cpu_usage, valid_cpu_records)
-            avg_zoom_avg_cpu_usage = calculate_average(zoom_avg_cpu_usage, valid_cpu_records)
-            avg_zoom_max_cpu_usage = calculate_average(zoom_max_cpu_usage, valid_cpu_records)
-            avg_zoom_min_cpu_usage = calculate_average(zoom_min_cpu_usage, valid_cpu_records)
-            base_metric_tags.append("zoom_meeting_qos_cpu:usage")
-            self.gauge("{}.meeting.qos.cpu.system_max_usage".format(self.metric_prefix),
-                       avg_system_max_cpu_usage,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.cpu.avg_usage".format(self.metric_prefix),
-                       avg_zoom_avg_cpu_usage,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.cpu.max_usage".format(self.metric_prefix),
-                       avg_zoom_max_cpu_usage,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.cpu.min_usage".format(self.metric_prefix),
-                       avg_zoom_min_cpu_usage,
-                       tags=base_metric_tags)
-            base_metric_tags.remove("zoom_meeting_qos_cpu:usage")
 
     def parse_and_submit_user_qos(self, qos_values, metric_tags):
         bitrate = parse_kbps(
