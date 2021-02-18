@@ -202,28 +202,20 @@ files:
           type: boolean
         description: |
           Change to false to disable Office 365 incident events
-      - name: tags
-        required: false
-        multiple: false
-        value:
-          example: 
+      - template: instances/default
+        overrides:
+          tags.value.example:
             - office:boston
-          type: array
-          items:
-            type: string
-        description: |
-          Provide the 'office' tag to support per-location tags for the O365 integration
-          dashboards.
+          tags.description: |
+            Provide the 'office' tag to support per-location tags for the O365 integration
+            dashboards.
 
-          For more specific configuration options, see the official Datadog documentation:
-          https://docs.datadoghq.com/getting_started/tagging/assigning_tags
-      - name: min_collection_interval
-        required: true
-        value:
-          example: 300
-          type: number
-        description: |
-          This changes the collection interval of the check. For more information, see:
-          https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
-      
-          Office 365 metrics are recommended on 300s intervals to prevent API throttling.   
+            For more specific configuration options, see the official Datadog documentation:
+            https://docs.datadoghq.com/getting_started/tagging/assigning_tags
+          min_collection_interval.value.example: 300
+          min_collection_interval.required: true
+          min_collection_interval.description: |
+            This changes the collection interval of the check. For more information, see:
+            https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+
+            Office 365 metrics are recommended on 300s intervals to prevent API throttling.
