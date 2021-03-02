@@ -18,8 +18,8 @@ This proposal includes a fixed-cost (4) four-week Datadog advisory engagement st
   - Dashboards and monitors will be built using the existing data flowing into Datadog’s platform
   - The dashboards and monitors will be built based on discovery conversations and collaborative feedback gathered from customer’s teams
   - Terraform Template for 1 Dashboard
-- Advice on implementing Logging without Limits best practices
-  - Implementation of a Logging without limits filter example (showcasing cost control with existing configured/ingested logs)
+- Advice on implementing Logging without Limits&trade; best practices
+  - Implementation of a Logging without Limits&trade; filter example (showcasing cost control with existing configured/ingested logs)
 - Advice on the implementation of key management module to keystore (Azure Key Vault or Hashi Vault)
 
 Also includes:
