@@ -5,8 +5,27 @@ import requests
 import re
 
 
+REQUEST_LIBRARY_FUNCTIONS = {
+    'requests.get',
+    'requests.post',
+    'requests.head',
+    'requests.put',
+    'requests.patch',
+    'requests.delete',
+    'requests.options',
+}
+
+
 def file_use_requests(content):
-    return 'from requests import' in content or 'import requests' in content
+    for line in content.splitlines():
+        # HTTP Validation can be skipped for specific cases
+        # See https://github.com/DataDog/marketplace/pull/99#issuecomment-783457414
+        if not 'SKIP_HTTP_VALIDATION' in line:
+            for http_func in REQUEST_LIBRARY_FUNCTIONS:
+                if http_func in line:
+                    return True
+    return False
+
 
 def file_http_post_put(content):
     # Look for both [http|requests].[post|put]
@@ -35,5 +54,4 @@ with open(os.environ['GITHUB_EVENT_PATH']) as event_file:
         print("This pull request makes POST or PUT http requests.")
         pr.add_to_labels('review/http')
     if use_request:
-        print("This pull request is using requests, please use the RequestsWrapper instead: https://datadoghq.dev/integrations-core/base/http/.")
-        pr.add_to_labels('review/requests')
+        raise Exception("This pull request is using requests, please use the RequestsWrapper instead: https://datadoghq.dev/integrations-core/base/http/.")
