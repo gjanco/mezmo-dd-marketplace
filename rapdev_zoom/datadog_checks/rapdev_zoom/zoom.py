@@ -119,11 +119,6 @@ class ZoomCheck(AgentCheck):
         user_count = get_and_except_string(response, "total_records")
         metric_tags = self.tags.copy()
 
-        if user_count:
-            self.gauge("{}.{}.registered.count".format(self.metric_prefix, request_path),
-                       user_count,
-                       tags=metric_tags)
-
         while True:
             users = get_and_except_list(response, "users")
 
@@ -132,11 +127,23 @@ class ZoomCheck(AgentCheck):
 
                 user_email = get_and_except_string(user, "email")
                 user_timezone = get_and_except_string(user, "timezone")
+                user_type = user["type"]
 
                 if user_email:
                     metric_tags.append("zoom_user_mp_email:{}".format(user_email))
                 if user_timezone:
                     metric_tags.append("zoom_user_mp_timezone:{}".format(user_timezone))
+
+                if user_type == 1:
+                    metric_tags.append("zoom_user_account_type:basic")
+                elif user_type == 2:
+                    metric_tags.append("zoom_user_account_type:licensed")
+                elif user_type == 3:
+                    metric_tags.append("zoom_user_account_type:on-prem")
+
+                self.gauge("{}.users.active.count".format(self.metric_prefix),
+                    1,
+                    tags=metric_tags)
 
                 self.gauge("datadog.marketplace.{}".format(self.metric_prefix),
                            1,
@@ -557,7 +564,6 @@ class ZoomCheck(AgentCheck):
                     user_name = get_and_except_string(participant, "user_name")
                     domain = get_and_except_string(participant, "domain")
                     ip_address = get_and_except_string(participant, "ip_address")
-                    connection_type = get_and_except_string(participant, "connection_type")
                     data_center = get_and_except_string(participant, "data_center")
                     network_type = get_and_except_string(participant, "network_type")
                     user_id = get_and_except_string(participant, "id")
@@ -576,15 +582,12 @@ class ZoomCheck(AgentCheck):
                             metric_tags.append("zoom_user_domain:{}".format(domain))
                         if ip_address:
                             metric_tags.append("zoom_user_ip:{}".format(ip_address))
-                        if connection_type:
-                            metric_tags.append("zoom_user_connection_type:{}".format(connection_type))
                         if data_center:
                             metric_tags.append("zoom_user_data_center:{}".format(data_center))
                         if network_type:
                             metric_tags.append("zoom_user_network_type:{}".format(network_type))
                         if user_email:
                             metric_tags.append("zoom_user_email:{}".format(user_email))
-
                         if self.collect_usernames:
                             metric_tags.append("zoom_user_name:{}".format(user_name))
 

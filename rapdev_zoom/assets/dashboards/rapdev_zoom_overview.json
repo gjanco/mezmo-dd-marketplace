@@ -119,7 +119,7 @@
                 "height": 11,
                 "width": 18,
                 "x": 39,
-                "y": 1
+                "y": 13
             }
         },
         {
@@ -137,10 +137,11 @@
                                 "value": 0
                             }
                         ],
-                        "q": "default_zero(max:rapdev.zoom.users.registered.count{$account_name})"
+                        "q": "default_zero(sum:rapdev.zoom.users.active.count{$account_name, zoom_user_account_type:licensed})"
                     }
                 ],
-                "title": "Total Registered Users",
+                "time": {},
+                "title": "Active Licensed Users",
                 "title_align": "left",
                 "title_size": "16",
                 "type": "query_value"
@@ -278,7 +279,6 @@
                     }
                 ],
                 "show_legend": false,
-                "time": {},
                 "title": "Average Video Loss (%) per Meeting",
                 "title_align": "left",
                 "title_size": "16",
@@ -310,7 +310,6 @@
                     }
                 ],
                 "show_legend": false,
-                "time": {},
                 "title": "Average Audio Loss (%) per Meeting",
                 "title_align": "left",
                 "title_size": "16",
@@ -338,7 +337,6 @@
                         "q": "top(max:rapdev.zoom.meetings.participants{$account_name,$meeting_id,$meeting_host} by {zoom_meeting_host,zoom_meeting_id}, 10, 'max', 'desc')"
                     }
                 ],
-                "time": {},
                 "title": "Participant Count By Meeting Host,ID",
                 "title_align": "left",
                 "title_size": "16",
@@ -379,7 +377,7 @@
             "layout": {
                 "height": 11,
                 "width": 18,
-                "x": 39,
+                "x": 0,
                 "y": 13
             }
         },
@@ -390,7 +388,6 @@
                         "q": "top(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name} by {zoom_user_network_type}, 10, 'last', 'desc')"
                     }
                 ],
-                "time": {},
                 "title": "User Counts by Network Type",
                 "title_align": "left",
                 "title_size": "16",
@@ -406,8 +403,7 @@
         },
         {
             "definition": {
-                "autoscale": true,
-                "custom_unit": "MBPS",
+                "autoscale": false,
                 "precision": 0,
                 "requests": [
                     {
@@ -420,10 +416,11 @@
                                 "value": 0
                             }
                         ],
-                        "q": "sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name}/1000"
+                        "q": "sum:rapdev.zoom.users.active.count{$account_name,zoom_user_account_type:basic}"
                     }
                 ],
-                "title": "Total Meeting Bandwidth",
+                "time": {},
+                "title": "Active Basic Users",
                 "title_align": "left",
                 "title_size": "16",
                 "type": "query_value"
@@ -432,8 +429,8 @@
             "layout": {
                 "height": 11,
                 "width": 18,
-                "x": 0,
-                "y": 13
+                "x": 39,
+                "y": 1
             }
         },
         {
@@ -443,7 +440,6 @@
                         "q": "top(max:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name} by {zoom_user_location}, 10, 'last', 'desc')"
                     }
                 ],
-                "time": {},
                 "title": "User Bandwidth by Location",
                 "title_align": "left",
                 "title_size": "16",
@@ -473,7 +469,6 @@
                     }
                 ],
                 "show_legend": false,
-                "time": {},
                 "title": "Active Participants by Location",
                 "title_align": "left",
                 "title_size": "16",
