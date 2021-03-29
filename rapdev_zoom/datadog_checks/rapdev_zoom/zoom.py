@@ -52,11 +52,13 @@ class ZoomCheck(AgentCheck):
         self.collect_im_metrics = is_affirmative(self.instance.get("collect_im_metrics", False))
         self.users_to_track = self.instance.get("users_to_track", [])
 
+        # API rate limit hits tracker
+        self.api_rate_limits_hit = 0
+
     def check(self, instance):
         self.validate_config()
         self.test_api_connection()
         self.get_users()
-        self.get_rooms_status()
         self.get_rooms_metrics()
         self.get_meetings()
 
@@ -67,19 +69,24 @@ class ZoomCheck(AgentCheck):
         if self.collect_im_metrics:
             self.get_im_metrics()
 
+        # Send OK if the API daily limit wasn't encountered during this run 
+        if self.api_rate_limits_hit == 0:
+            self.service_check("{}.can_call_api".format(self.metric_prefix), AgentCheck.OK, tags=self.tags)
+
     def test_api_connection(self):
         self.log.debug("Attempting connection test to Zoom API URL %s.", self.base_api_url)
 
-        x = self.http.get(self.base_api_url + "rooms",
-                          auth=BearerAuth(generate_token(self.api_key, self.api_secret)))
-
-        response_code = x.status_code
-        if response_code == 200:
+        try:
+            x = self.http.get(self.base_api_url + "rooms",
+                            auth=BearerAuth(generate_token(self.api_key, self.api_secret)))
+            x.raise_for_status()
+        except Exception as e:
+            self.log.warning("Caught exception %s", e)
+            self.log.warning("Cannot authenticate to ZOOM API. The check will not run")
+            self.service_check("{}.can_connect".format(self.metric_prefix), AgentCheck.CRITICAL, tags=self.tags)
+        else:
             self.log.debug("Connection successful")
             self.service_check("{}.can_connect".format(self.metric_prefix), AgentCheck.OK, tags=self.tags)
-        else:
-            self.log.debug("Cannot authenticate to ZOOM API. The check will not run")
-            self.service_check("{}.can_connect".format(self.metric_prefix), AgentCheck.CRITICAL, tags=self.tags)
 
     def validate_config(self):
         if not self.base_api_url:
@@ -105,18 +112,40 @@ class ZoomCheck(AgentCheck):
             request_path = request_path + "?from={}".format(from_date)
             request_path = request_path + "&to={}".format(to_date)
 
-        results = self.http.get(
-            self.base_api_url + request_path,
-            auth=BearerAuth(generate_token(self.api_key, self.api_secret))
-        ).json()
+        while True:
+            # Make Zoom API request
+            results = self.http.get(
+                self.base_api_url + request_path,
+                auth=BearerAuth(generate_token(self.api_key, self.api_secret))
+            )
+            # Grab status code
+            response_code = results.status_code
 
-        return results
+            # If call is successful, return json result
+            if response_code == 200:
+                return results.json()
+            # If 429, that means we hit rate limit
+            elif response_code == 429:
+                headers = results.headers
+
+                limit_type = headers.get("X-RateLimit-Type")
+
+                # If we hit the queries per second limit, sleep for a sec and retry
+                if limit_type == "QPS":
+                    self.log.warning("Hit Queries per Second API rate limit. Sleeping for a second then retrying...")
+                    self.service_check("{}.can_call_api".format(self.metric_prefix), AgentCheck.WARNING, tags=self.tags)
+                    time.sleep(1)
+                # If we hit the daily limit, return None
+                elif limit_type == "Daily-limit":
+                    self.api_rate_limits_hit += 1
+                    self.service_check("{}.can_call_api".format(self.metric_prefix), AgentCheck.CRITICAL, tags=self.tags)
+                    self.log.warning("Hit Daily API rate limit. Exitting...")
+                    return
 
     def get_users(self):
         request_path = "users"
         response = self.call_api(request_path)
 
-        user_count = get_and_except_string(response, "total_records")
         metric_tags = self.tags.copy()
 
         while True:
@@ -130,9 +159,9 @@ class ZoomCheck(AgentCheck):
                 user_type = user["type"]
 
                 if user_email:
-                    metric_tags.append("zoom_user_mp_email:{}".format(user_email))
+                    metric_tags.append("zoom_user_email:{}".format(user_email))
                 if user_timezone:
-                    metric_tags.append("zoom_user_mp_timezone:{}".format(user_timezone))
+                    metric_tags.append("zoom_user_timezone:{}".format(user_timezone))
 
                 if user_type == 1:
                     metric_tags.append("zoom_user_account_type:basic")
@@ -216,7 +245,7 @@ class ZoomCheck(AgentCheck):
                     self.gauge("{}.plan.metrics".format(self.metric_prefix),
                                free_storage,
                                tags=metric_tags)
-                metric_tags.remove("zoom_plan_metric:free_storage")
+                    metric_tags.remove("zoom_plan_metric:free_storage")
 
                 if free_storage_usage:
                     metric_tags.append("zoom_plan_metric:free_storage_usage")
@@ -259,46 +288,86 @@ class ZoomCheck(AgentCheck):
                     self.gauge("{}.plan.usage".format(self.metric_prefix), usage, tags=metric_tags)
                     metric_tags.remove("zoom_plan_metric:usage")
 
-    def get_rooms_status(self):
-        request_path = "rooms"
+    def get_rooms_metrics(self):
+        request_path = "metrics/zoomrooms"
         response = self.call_api(request_path)
 
+        # Rooms Health counts
+        critical_rooms = 0
+        warning_rooms = 0
+        healthy_rooms = 0
+
+        # Rooms Status counts
         rooms_available = 0
         rooms_in_meetings = 0
         rooms_offline = 0
         rooms_under_construction = 0
 
         while True:
-            rooms = get_and_except_list(response, "rooms")
+            rooms = get_and_except_list(response, "zoom_rooms")
 
             for room in rooms:
-                room_name = get_and_except_string(room, "name")
+                room_name = get_and_except_string(room, "room_name")
                 room_id = get_and_except_string(room, "id")
-                status = get_and_except_string(room, "status")
+                room_status = get_and_except_string(room, "status")
+                room_health = get_and_except_string(room, "health")
+                device_ip = get_and_except_string(room, "device_ip")
+                camera = get_and_except_string(room, "camera")
+                microphone = get_and_except_string(room, "microphone")
+                speaker = get_and_except_string(room, "speaker")
 
                 metric_tags = self.tags.copy()
                 if room_name:
                     metric_tags.append("zoom_room_name:{}".format(room_name))
                 if room_id:
                     metric_tags.append("zoom_room_id:{}".format(room_id))
+                if device_ip:
+                    metric_tags.append("zoom_room_device_ip:{}".format(device_ip))
+                if camera:
+                    metric_tags.append("zoom_room_camera:{}".format(camera))
+                if microphone:
+                    metric_tags.append("zoom_room_microphone:{}".format(microphone))
+                if speaker:
+                    metric_tags.append("zoom_room_speaker:{}".format(speaker))
 
-                if status:
-                    if status == "Available":
-                        room_status = 1
+                # Increment counts and send in the current health for this room
+                if room_health:
+                    if room_health == "critical":
+                        health = 3
+                        critical_rooms += 1
+                    elif room_health == "warning":
+                        health = 2
+                        warning_rooms += 1
+                    else:
+                        health = 1
+                        healthy_rooms += 1
+
+                    self.gauge("{}.room.health".format(self.metric_prefix),
+                               health,
+                               tags=metric_tags)
+                
+                # Increment counts and send in the current status for this room
+                if room_status:
+                    if room_status == "Available":
+                        status = 1
                         rooms_available += 1
-                    elif status == "InMeeting":
-                        room_status = 2
+                    elif room_status == "In Meeting":
+                        status = 2
                         rooms_in_meetings += 1
-                    elif status == "Offline":
-                        room_status = 3
+                    elif room_status == "Offline":
+                        status = 3
                         rooms_offline += 1
                     else:
-                        room_status = 4
+                        status = 4
                         rooms_under_construction += 1
 
                     self.gauge("{}.room.status".format(self.metric_prefix),
-                               room_status,
+                               status,
                                tags=metric_tags)
+
+                room_issues = get_and_except_list(room, "issues")
+
+                self.parse_and_send_issues(room_issues, room_name, room_id)
 
             page_token = get_and_except_string(response, "next_page_token")
 
@@ -309,6 +378,26 @@ class ZoomCheck(AgentCheck):
 
         metric_tags = self.tags.copy()
 
+        # Send in the room health counts 
+        metric_tags.append("zoom_room_health:critical")
+        self.gauge("{}.room.health.count".format(self.metric_prefix),
+                   critical_rooms,
+                   tags=metric_tags)
+        metric_tags.remove("zoom_room_health:critical")
+
+        metric_tags.append("zoom_room_health:warning")
+        self.gauge("{}.room.health.count".format(self.metric_prefix),
+                   warning_rooms,
+                   tags=metric_tags)
+        metric_tags.remove("zoom_room_health:warning")
+
+        metric_tags.append("zoom_room_health:healthy")
+        self.gauge("{}.room.health.count".format(self.metric_prefix),
+                   healthy_rooms,
+                   tags=metric_tags)
+        metric_tags.remove("zoom_room_health:healthy")
+
+        # Send in the room status counts
         metric_tags.append("zoom_room_status:available")
         self.gauge("{}.room.status.count".format(self.metric_prefix),
                    rooms_available,
@@ -332,86 +421,6 @@ class ZoomCheck(AgentCheck):
                    rooms_under_construction,
                    tags=metric_tags)
         metric_tags.remove("zoom_room_status:under_construction")
-
-    def get_rooms_metrics(self):
-        request_path = "metrics/zoomrooms"
-        response = self.call_api(request_path)
-
-        critical_rooms = 0
-        warning_rooms = 0
-        healthy_rooms = 0
-
-        while True:
-            rooms = get_and_except_list(response, "zoom_rooms")
-
-            for room in rooms:
-                room_name = get_and_except_string(room, "room_name")
-                room_id = get_and_except_string(room, "id")
-                room_health = get_and_except_string(room, "health")
-                device_ip = get_and_except_string(room, "device_ip")
-                camera = get_and_except_string(room, "camera")
-                microphone = get_and_except_string(room, "microphone")
-                speaker = get_and_except_string(room, "speaker")
-
-                metric_tags = self.tags.copy()
-                if room_name:
-                    metric_tags.append("zoom_room_name:{}".format(room_name))
-                if room_id:
-                    metric_tags.append("zoom_room_id:{}".format(room_id))
-                if device_ip:
-                    metric_tags.append("zoom_room_device_ip:{}".format(device_ip))
-                if camera:
-                    metric_tags.append("zoom_room_camera:{}".format(camera))
-                if microphone:
-                    metric_tags.append("zoom_room_microphone:{}".format(microphone))
-                if speaker:
-                    metric_tags.append("zoom_room_speaker:{}".format(speaker))
-
-                if room_health:
-                    if room_health == "critical":
-                        health = 3
-                        critical_rooms += 1
-                    elif room_health == "warning":
-                        health = 2
-                        warning_rooms += 1
-                    else:
-                        health = 1
-                        healthy_rooms += 1
-
-                    self.gauge("{}.room.health".format(self.metric_prefix),
-                               health,
-                               tags=metric_tags)
-
-                room_issues = get_and_except_list(room, "issues")
-
-                self.parse_and_send_issues(room_issues, room_name, room_id)
-
-            page_token = get_and_except_string(response, "next_page_token")
-
-            if page_token == "":
-                break
-            else:
-                response = self.call_api(request_path, page_token)
-
-        metric_tags = self.tags.copy()
-
-        metric_tags.append("zoom_room_health:critical")
-        self.gauge("{}.room.health.count".format(self.metric_prefix),
-                   critical_rooms,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_room_health:critical")
-
-        metric_tags.append("zoom_room_health:warning")
-        self.gauge("{}.room.health.count".format(self.metric_prefix),
-                   warning_rooms,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_room_health:warning")
-
-        metric_tags.append("zoom_room_health:healthy")
-        self.gauge("{}.room.health.count".format(self.metric_prefix),
-                   healthy_rooms,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_room_health:healthy")
 
     def parse_and_send_issues(self, issues, room_name, room_id):
         room_controller_is_connected = 1
@@ -484,7 +493,6 @@ class ZoomCheck(AgentCheck):
             meetings = get_and_except_list(response, "meetings")
 
             for meeting in meetings:
-
                 host_name = get_and_except_string(meeting, "host")
                 meeting_id = get_and_except_string(meeting, "id")
 
@@ -494,15 +502,18 @@ class ZoomCheck(AgentCheck):
                 if self.collect_usernames:
                     metric_tags.append("zoom_meeting_host:{}".format(host_name))
 
+                # Get the QOS metrics for every particpant in the meeting
                 try:
                     self.get_meeting_qos(meeting_id, host_name)
                 except Exception:
                     self.log.info("Get Meeting QOS FAILED")
 
+                # Send in a count for this meeting 
                 self.gauge("{}.meetings.count".format(self.metric_prefix),
                            1,
                            tags=metric_tags)
 
+                # Send in the number of participants on this meeting
                 self.gauge("{}.meetings.participants".format(self.metric_prefix),
                            meeting["participants"],
                            tags=metric_tags)
@@ -524,6 +535,7 @@ class ZoomCheck(AgentCheck):
         if self.collect_usernames:
             base_metric_tags.append("zoom_meeting_host:{}".format(host_name))
 
+        # Audio input/output counts
         audio_input_bitrate = 0
         audio_input_avg_loss = 0.0
         audio_input_jitter = 0
@@ -535,6 +547,7 @@ class ZoomCheck(AgentCheck):
         audio_output_latency = 0
         audio_output_max_loss = 0.0
 
+        # Video input/output counts
         video_input_bitrate = 0
         video_input_avg_loss = 0.0
         video_input_jitter = 0
@@ -546,6 +559,7 @@ class ZoomCheck(AgentCheck):
         video_output_latency = 0
         video_output_max_loss = 0.0
 
+        # Record counts
         valid_audio_input_records = 0
         valid_audio_output_records = 0
         valid_video_input_records = 0
@@ -560,20 +574,26 @@ class ZoomCheck(AgentCheck):
                 leave_time = get_and_except_string(participant, "leave_time")
 
                 if participant and leave_time == "":
-                    user_location = get_and_except_string(participant, "location")
-                    user_name = get_and_except_string(participant, "user_name")
-                    domain = get_and_except_string(participant, "domain")
-                    ip_address = get_and_except_string(participant, "ip_address")
-                    data_center = get_and_except_string(participant, "data_center")
-                    network_type = get_and_except_string(participant, "network_type")
-                    user_id = get_and_except_string(participant, "id")
-
-                    request_path = "users/{}".format(user_id)
-                    # noinspection PyTypeChecker
-                    response = self.call_api(request_path, "", "", "", None)
-                    user_email = get_and_except_string(response, "email")
-
+                    # Check if we want to collect individual user metrics
                     if self.collect_participant_details:
+                        user_location = get_and_except_string(participant, "location")
+                        user_name = get_and_except_string(participant, "user_name")
+                        domain = get_and_except_string(participant, "domain")
+                        ip_address = get_and_except_string(participant, "ip_address")
+                        data_center = get_and_except_string(participant, "data_center")
+                        network_type = get_and_except_string(participant, "network_type")
+                        user_id = get_and_except_string(participant, "id")
+
+                        # Only need users email if the users_to_track list is set
+                        if (self.users_to_track and user_id):
+                            request_path = "users/{}".format(user_id)
+                            # noinspection PyTypeChecker
+                            response = self.call_api(request_path, "", "", "", None)
+                            user_email = get_and_except_string(response, "email")
+                            
+                            if user_email:
+                                metric_tags.append("zoom_user_email:{}".format(user_email))
+
                         if user_location:
                             country = get_country(user_location)
                             metric_tags.append("zoom_user_location:{}".format(user_location))
@@ -586,8 +606,6 @@ class ZoomCheck(AgentCheck):
                             metric_tags.append("zoom_user_data_center:{}".format(data_center))
                         if network_type:
                             metric_tags.append("zoom_user_network_type:{}".format(network_type))
-                        if user_email:
-                            metric_tags.append("zoom_user_email:{}".format(user_email))
                         if self.collect_usernames:
                             metric_tags.append("zoom_user_name:{}".format(user_name))
 
@@ -988,5 +1006,3 @@ class ZoomCheck(AgentCheck):
                    emoji_receive,
                    tags=metric_tags)
         metric_tags.remove("zoom_user_im_metric:emojis_received")
-
-

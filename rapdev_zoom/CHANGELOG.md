@@ -1,5 +1,12 @@
 # CHANGELOG - rapdev_zoom
 
+## 4.0.0 / 2021-03-19
+* [Removed] The get_room_status function. 
+* [Added] Improved API requests to lower chances of hitting API limits. 
+* [Added] Room status functionality to get_room_metrics call.
+* [Added] API Limit handling to sleep or exit accordingly.
+* [Added] API Limit service check.
+
 ## 3.0.0 / 2021-02-17
 
 * [Removed] The registered users count metric.

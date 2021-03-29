@@ -1,0 +1,26 @@
+{
+	"name": "[RapDev Zoom] API Limit Was Encountered",
+	"type": "service check",
+	"query": "\"rapdev.zoom.can_call_api\".over(\"*\").by(\"zoom_account_name\").last(6).count_by_status()",
+	"message": "Zoom API {{#is_warning}}Queries Per Second{{/is_warning}} {{#is_alert}}Daily Limit{{/is_alert}} on account {{zoom_account_name.name}} was reached. \n\n{{#is_warning}}Please keep an eye that this recovers within a short period of time.{{/is_warning}}  \n\n{{#is_alert}}QOS and Room data will stop for the rest of the day. Please consider changing settings to avoid hitting the daily limit.{{/is_alert}}",
+	"tags": ["integration:zoom"],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": false,
+		"thresholds": {
+			"warning": 5,
+			"ok": 1,
+			"critical": 1
+		},
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"no_data_timeframe": 2
+	},
+    "recommended_monitor_metadata": {
+    	"description": "Alerts when the agent encounters the daily api limit, warns when agent hits the query per second limit, recovers when request is successful."
+    }
+}

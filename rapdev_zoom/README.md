@@ -43,7 +43,7 @@ You must have the Datadog Agent installed and running. Additionally, you need to
 ### Installation
 
 ```
-sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_zoom==3.0.0
+sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_zoom==4.0.0
 ``` 
 
 ### Configuration
