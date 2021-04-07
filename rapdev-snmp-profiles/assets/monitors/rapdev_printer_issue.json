@@ -1,0 +1,28 @@
+{
+	"name": "[RapDev SNMP Profiles] Printer Alert for {{sysname.name}}",
+	"type": "query alert",
+	"query": "max(last_5m):avg:snmp.Alert.Code{snmp_profile:rd-printer} by {alert_description,sysname} > 0",
+	"message": "{{#is_alert}} Printer {{sysname.name}} is alerting for \"{{alert_description.name}}\".  {{/is_alert}}\n\n{{#is_recovery}} Alert {{alert_description.name}} on printer {{sysname.name}} has recovered. {{/is_recovery}} ",
+	"tags": [
+		"integration:rapdev-snmp",
+		"device:printer"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"new_host_delay": 300,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": "0",
+		"escalation_message": "",
+		"no_data_timeframe": null,
+		"include_tags": true,
+		"thresholds": {
+			"critical": 0
+		}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when Sharp Printer has an alert code active"
+    }
+}

@@ -19,7 +19,7 @@
             "prefix": "host"
         },
         {
-            "default": "rd-cisco-isr",
+            "default": "rd-cisco-ise",
             "name": "SNMP_Profile",
             "prefix": "snmp_profile"
         },
@@ -29,56 +29,8 @@
             "prefix": "snmp_device"
         }
     ],
-    "title": "RapDev Cisco ISR Dashboard",
+    "title": "RapDev Cisco ISE Dashboard",
     "widgets": [
-        {
-            "definition": {
-                "custom_links": [],
-                "custom_unit": "%",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:snmp.CPU.Utilization{$Host,$SNMP_Profile,$IP}"
-                    }
-                ],
-                "title": "CPU Usage (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 2365872623996575,
-            "layout": {
-                "height": 15,
-                "width": 39,
-                "x": 0,
-                "y": 0
-            }
-        },
-        {
-            "definition": {
-                "custom_links": [],
-                "custom_unit": "%",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "max",
-                        "q": "avg:snmp.Memory.Used{$Host,$IP,$SNMP_Profile}/(avg:snmp.Memory.Free{$Host,$SNMP_Profile,$IP}+avg:snmp.Memory.Used{$Host,$IP,$SNMP_Profile})*100"
-                    }
-                ],
-                "title": "Memory Usage (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 5277559815274107,
-            "layout": {
-                "height": 15,
-                "width": 36,
-                "x": 40,
-                "y": 0
-            }
-        },
         {
             "definition": {
                 "custom_links": [],
@@ -99,7 +51,7 @@
             "layout": {
                 "height": 15,
                 "width": 40,
-                "x": 77,
+                "x": 0,
                 "y": 0
             }
         },
@@ -124,7 +76,6 @@
                         "q": "max:snmp.Interface.AdminStatus{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface}"
                     }
                 ],
-                "time": {},
                 "title": "Admin Status",
                 "title_align": "left",
                 "title_size": "16",
@@ -161,7 +112,6 @@
                     }
                 ],
                 "show_legend": false,
-                "time": {},
                 "title": "Bytes In & Bytes Out",
                 "title_align": "left",
                 "title_size": "16",
@@ -205,7 +155,6 @@
                     }
                 ],
                 "show_legend": false,
-                "time": {},
                 "title": "In & Out Broadcasts",
                 "title_align": "left",
                 "title_size": "16",
@@ -249,7 +198,6 @@
                     }
                 ],
                 "show_legend": false,
-                "time": {},
                 "title": "In & Out Unicast Packets",
                 "title_align": "left",
                 "title_size": "16",
@@ -293,7 +241,6 @@
                     }
                 ],
                 "show_legend": false,
-                "time": {},
                 "title": "In & Out MultiCastPkts",
                 "title_align": "left",
                 "title_size": "16",
@@ -337,7 +284,6 @@
                     }
                 ],
                 "show_legend": false,
-                "time": {},
                 "title": "In & Out Errors",
                 "title_align": "left",
                 "title_size": "16",
@@ -379,7 +325,6 @@
                         "q": "max:snmp.Interface.OperStatus{$Host,$SNMP_Profile,$InterfaceDescription,$IP,$Interface}"
                     }
                 ],
-                "time": {},
                 "title": "Operation Status",
                 "title_align": "left",
                 "title_size": "16",
@@ -543,176 +488,6 @@
                 "width": 47,
                 "x": 0,
                 "y": 55
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.CPU.Utilization{$SNMP_Profile,$IP,$Host} by {snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "CPU Utilization",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 6476974662825040,
-            "layout": {
-                "height": 15,
-                "width": 32,
-                "x": 85,
-                "y": 78
-            }
-        },
-        {
-            "definition": {
-                "custom_links": [],
-                "custom_unit": "%",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "q": "avg:snmp.CPU.Utilization{$Host,$SNMP_Profile,$IP}"
-                    }
-                ],
-                "title": "CPU Utilization",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 1804609031220654,
-            "layout": {
-                "height": 15,
-                "width": 36,
-                "x": 48,
-                "y": 78
-            }
-        },
-        {
-            "definition": {
-                "custom_links": [],
-                "custom_unit": "%",
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "max",
-                        "q": "avg:snmp.Memory.Used{$Host,$IP,$SNMP_Profile}/(avg:snmp.Memory.Free{$Host,$SNMP_Profile,$IP}+avg:snmp.Memory.Used{$Host,$IP,$SNMP_Profile})*100"
-                    }
-                ],
-                "title": "Memory Usage (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 7895665637543133,
-            "layout": {
-                "height": 15,
-                "width": 47,
-                "x": 0,
-                "y": 78
-            }
-        },
-        {
-            "definition": {
-                "custom_links": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Memory.Used{$IP,$SNMP_Profile,$Host} by {memorypoolname}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Memory Used by Pool",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 5106830304343637,
-            "layout": {
-                "height": 15,
-                "width": 47,
-                "x": 0,
-                "y": 94
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Memory.Free{$IP,$SNMP_Profile,$Host} by {memorypoolname}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Memory Free by Pool",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 746562623350559,
-            "layout": {
-                "height": 15,
-                "width": 47,
-                "x": 48,
-                "y": 94
-            }
-        },
-        {
-            "definition": {
-                "background_color": "white",
-                "content": "System Resources",
-                "font_size": "24",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
-            },
-            "id": 3113414655759367,
-            "layout": {
-                "height": 6,
-                "width": 117,
-                "x": 0,
-                "y": 71
             }
         },
         {

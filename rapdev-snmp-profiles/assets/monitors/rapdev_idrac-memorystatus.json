@@ -1,11 +1,11 @@
 {
-	"name": "Dell iDRAC - Memory DIMM issue on {{snmp_device.name}}",
+	"name": "[RapDev SNMP Profiles] Dell iDRAC - Memory DIMM issue on {{snmp_device.name}}",
 	"type": "query alert",
 	"query": "avg(last_5m):avg:snmp.Memory.Status{snmp_profile:rd-dell-idrac} by {snmp_device,memoryslot} > 4.5",
 	"message": "{{#is_alert}}\n{{memoryslot.name}} is offline on {{snmp_device.name}}.\n\n1 = Other\n2 = Other\n3 = OK\n4 = Non-Critical\n5 = Critical\n6 = Non-Recoverable\n{{/is_alert}} \n\n{{#is_alert_recovery}}\n{{memoryslot.name}} is back online on {{snmp_device.name}}.\n\n1 = Other\n2 = Other\n3 = OK\n4 = Non-Critical\n5 = Critical\n6 = Non-Recoverable\n{{/is_alert_recovery}}",
 	"tags": [
-		"check_type:snmp",
-		"hardware:idrac"
+		"integration:rapdev-snmp",
+		"device:idrac"
 	],
 	"options": {
 		"notify_audit": false,
@@ -24,5 +24,8 @@
 			"warning": 3.5,
 			"critical_recovery": 3
 		}
-	}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when iDRAC Memory DIMM has issues"
+    }
 }

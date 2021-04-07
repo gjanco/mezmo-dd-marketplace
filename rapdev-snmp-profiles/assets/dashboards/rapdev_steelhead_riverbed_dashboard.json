@@ -1,0 +1,1270 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "InterfaceDescription",
+            "prefix": "interfacedescription"
+        },
+        {
+            "default": "*",
+            "name": "Host",
+            "prefix": "host"
+        },
+        {
+            "default": "rd-steelhead-riverbed",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "default": "*",
+            "name": "Interface",
+            "prefix": "interface"
+        },
+        {
+            "default": "*",
+            "name": "Port",
+            "prefix": "port"
+        }
+    ],
+   "title":"RapDev Steelhead Riverbed Dashboard",
+   "description":"",
+   "widgets":[
+      {
+         "id":1587407586667716,
+         "layout":{
+            "x":77,
+            "y":0,
+            "width":40,
+            "height":15
+         },
+         "definition":{
+            "title":"System Up Time",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP}/8640000",
+                  "aggregator":"avg"
+               }
+            ],
+            "custom_unit":"Days",
+            "custom_links":[
+               
+            ],
+            "precision":2
+         }
+      },
+      {
+         "id":8350229767775772,
+         "layout":{
+            "x":0,
+            "y":0,
+            "width":39,
+            "height":15
+         },
+         "definition":{
+            "title":"CPU Usage (%)",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"avg:snmp.CPU.Utilization{$Host,$SNMP_Profile,$IP}",
+                  "aggregator":"avg"
+               }
+            ],
+            "custom_unit":"%",
+            "custom_links":[
+               
+            ],
+            "precision":2
+         }
+      },
+      {
+         "id":7200003924750274,
+         "layout":{
+            "x":40,
+            "y":0,
+            "width":36,
+            "height":15
+         },
+         "definition":{
+            "title":"Current Active Connections",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"avg:snmp.Connections.Active{$Host,$SNMP_Profile,$IP}",
+                  "aggregator":"last"
+               }
+            ],
+            "autoscale":true,
+            "custom_unit":"Conn",
+            "precision":0
+         }
+      },
+      {
+         "id":1981507011071778,
+         "layout":{
+            "x":0,
+            "y":16,
+            "width":117,
+            "height":6
+         },
+         "definition":{
+            "type":"note",
+            "content":"Overall System Status",
+            "background_color":"white",
+            "font_size":"24",
+            "text_align":"center",
+            "show_tick":true,
+            "tick_pos":"50%",
+            "tick_edge":"bottom"
+         }
+      },
+      {
+         "id":6344235132304258,
+         "layout":{
+            "x":67,
+            "y":39,
+            "width":15,
+            "height":15
+         },
+         "definition":{
+            "title":"Health Status",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"max:snmp.HealthStatus{$SNMP_Profile,$IP,$Host}",
+                  "aggregator":"last",
+                  "conditional_formats":[
+                     {
+                        "comparator":">=",
+                        "palette":"white_on_red",
+                        "value":50000
+                     },
+                     {
+                        "comparator":">=",
+                        "palette":"white_on_yellow",
+                        "value":30000
+                     },
+                     {
+                        "comparator":">=",
+                        "palette":"white_on_green",
+                        "value":10000
+                     }
+                  ]
+               }
+            ],
+            "autoscale":true,
+            "custom_links":[
+               
+            ],
+            "precision":0
+         }
+      },
+      {
+         "id":6016901976327134,
+         "layout":{
+            "x":49,
+            "y":23,
+            "width":49,
+            "height":15
+         },
+         "definition":{
+            "title":"Optimization Service Status",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.OptimizationStatus{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "max":"9"
+            },
+            "markers":[
+               {
+                  "label":" None ",
+                  "value":"y = 0",
+                  "display_type":"info dashed"
+               },
+               {
+                  "label":" Unmanaged ",
+                  "value":"y = 1",
+                  "display_type":"info dashed"
+               },
+               {
+                  "label":" Running ",
+                  "value":"y = 2",
+                  "display_type":"ok dashed"
+               },
+               {
+                  "label":" SentCom1 ",
+                  "value":"y = 3",
+                  "display_type":"warning dashed"
+               },
+               {
+                  "label":" SentTerm1 ",
+                  "value":"y = 4",
+                  "display_type":"warning dashed"
+               },
+               {
+                  "label":" SentTerm2 ",
+                  "value":"y = 5",
+                  "display_type":"warning dashed"
+               },
+               {
+                  "label":" SentTerm3 ",
+                  "value":"y = 6",
+                  "display_type":"warning dashed"
+               },
+               {
+                  "label":" Pending ",
+                  "value":"y = 7",
+                  "display_type":"error dashed"
+               },
+               {
+                  "label":" Stopped ",
+                  "value":"y = 8",
+                  "display_type":"error dashed"
+               }
+            ],
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":6097866518699764,
+         "layout":{
+            "x":49,
+            "y":39,
+            "width":17,
+            "height":15
+         },
+         "definition":{
+            "type":"note",
+            "content":"Health Status:\n\n- 10000: Healthy\n- 30000: Degraded\n- 31000: AdmissionControl\n- 50000: Critical",
+            "background_color":"white",
+            "font_size":"14",
+            "text_align":"left",
+            "show_tick":true,
+            "tick_pos":"50%",
+            "tick_edge":"right"
+         }
+      },
+      {
+         "id":138925499304980,
+         "layout":{
+            "x":99,
+            "y":23,
+            "width":18,
+            "height":15
+         },
+         "definition":{
+            "title":"System Temperature",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"avg:snmp.Temperature{$Host,$SNMP_Profile,$IP}",
+                  "aggregator":"last"
+               }
+            ],
+            "autoscale":true,
+            "custom_unit":"C",
+            "precision":2
+         }
+      },
+      {
+         "id":7377226952854690,
+         "layout":{
+            "x":0,
+            "y":55,
+            "width":117,
+            "height":6
+         },
+         "definition":{
+            "type":"note",
+            "content":"Connections",
+            "background_color":"white",
+            "font_size":"24",
+            "text_align":"center",
+            "show_tick":true,
+            "tick_pos":"50%",
+            "tick_edge":"bottom"
+         }
+      },
+      {
+         "id":1746535267247462,
+         "layout":{
+            "x":40,
+            "y":62,
+            "width":36,
+            "height":15
+         },
+         "definition":{
+            "title":"Active Connections",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"avg:snmp.Connections.Active{$Host,$SNMP_Profile,$IP}",
+                  "aggregator":"last"
+               }
+            ],
+            "autoscale":true,
+            "precision":0
+         }
+      },
+      {
+         "id":5614884390213096,
+         "layout":{
+            "x":77,
+            "y":78,
+            "width":40,
+            "height":15
+         },
+         "definition":{
+            "title":"Half-Opened & Half-Closed Optimized Connections",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.Connections.HalfOpened{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.Connections.HalfClosed{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":528341681042544,
+         "layout":{
+            "x":40,
+            "y":78,
+            "width":36,
+            "height":15
+         },
+         "definition":{
+            "title":"Optimized Connections",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.Connections.Optimized{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":3022554406423116,
+         "layout":{
+            "x":0,
+            "y":78,
+            "width":39,
+            "height":15
+         },
+         "definition":{
+            "title":"Passthrough Connections",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.Connections.Passthrough{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":8677522841207268,
+         "layout":{
+            "x":0,
+            "y":62,
+            "width":39,
+            "height":15
+         },
+         "definition":{
+            "title":"Total Connections",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"avg:snmp.Connections.Total{$Host,$SNMP_Profile,$IP}",
+                  "aggregator":"last"
+               }
+            ],
+            "autoscale":true,
+            "precision":0
+         }
+      },
+      {
+         "id":4799861142882034,
+         "layout":{
+            "x":77,
+            "y":62,
+            "width":40,
+            "height":15
+         },
+         "definition":{
+            "title":"Established Connections",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"avg:snmp.Connections.Established{$Host,$SNMP_Profile,$IP}",
+                  "aggregator":"last"
+               }
+            ],
+            "autoscale":true,
+            "precision":0
+         }
+      },
+      {
+         "id":962844440023564,
+         "layout":{
+            "x":0,
+            "y":94,
+            "width":117,
+            "height":6
+         },
+         "definition":{
+            "type":"note",
+            "content":"Bandwidth",
+            "background_color":"white",
+            "font_size":"24",
+            "text_align":"center",
+            "show_tick":true,
+            "tick_pos":"50%",
+            "tick_edge":"bottom"
+         }
+      },
+      {
+         "id":2937187609489736,
+         "layout":{
+            "x":40,
+            "y":101,
+            "width":36,
+            "height":15
+         },
+         "definition":{
+            "title":"In & Out Optimized LAN Bandwidth (bytes)",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.BandwidthIn.Optimized.LAN.rate{$Host,$SNMP_Profile,$IP,$Port} by {port}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.BandwidthOut.Optimized.LAN.rate{$Host,$SNMP_Profile,$IP,$Port} by {port}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            }
+         }
+      },
+      {
+         "id":4402134334896356,
+         "layout":{
+            "x":77,
+            "y":101,
+            "width":40,
+            "height":15
+         },
+         "definition":{
+            "title":"In & Out Optimized WAN Bandwidth (bytes)",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.BandwidthIn.Optimized.WAN.rate{$Host,$SNMP_Profile,$IP,$Port} by {port}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.BandwidthOut.Optimized.WAN.rate{$Host,$SNMP_Profile,$IP,$Port} by {port}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            }
+         }
+      },
+      {
+         "id":8588543552992846,
+         "layout":{
+            "x":0,
+            "y":101,
+            "width":39,
+            "height":15
+         },
+         "definition":{
+            "title":"Total Optimized Bandwidth (bytes)",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.BandwidthIn.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}+avg:snmp.BandwidthIn.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "on_right_yaxis":false,
+                  "metadata":[
+                     {
+                        "expression":"avg:snmp.BandwidthIn.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}+avg:snmp.BandwidthIn.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                        "alias_name":"WAN2LAN"
+                     }
+                  ],
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.BandwidthOut.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}+avg:snmp.BandwidthOut.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "on_right_yaxis":false,
+                  "metadata":[
+                     {
+                        "expression":"avg:snmp.BandwidthOut.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}+avg:snmp.BandwidthOut.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                        "alias_name":"LAN2WAN"
+                     }
+                  ],
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":6654925164994898,
+         "layout":{
+            "x":0,
+            "y":117,
+            "width":39,
+            "height":15
+         },
+         "definition":{
+            "title":"Total Passthrough Bandwidth (bytes)",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.Bandwidth.Passthrough.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":4195874170333852,
+         "layout":{
+            "x":40,
+            "y":117,
+            "width":36,
+            "height":15
+         },
+         "definition":{
+            "title":"In & Out Passthrough Bandwidth (bytes)",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.BandwidthIn.Passthrough.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.BandwidthOut.Passthrough.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":8385774166513600,
+         "layout":{
+            "x":0,
+            "y":133,
+            "width":117,
+            "height":6
+         },
+         "definition":{
+            "type":"note",
+            "content":"Interfaces",
+            "background_color":"white",
+            "font_size":"24",
+            "text_align":"center",
+            "show_tick":true,
+            "tick_pos":"50%",
+            "tick_edge":"bottom"
+         }
+      },
+      {
+         "id":817080368360112,
+         "layout":{
+            "x":0,
+            "y":140,
+            "width":16,
+            "height":15
+         },
+         "definition":{
+            "title":"Admin Status",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"max:snmp.Interface.AdminStatus{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface}",
+                  "aggregator":"last",
+                  "conditional_formats":[
+                     {
+                        "comparator":">=",
+                        "palette":"white_on_red",
+                        "value":2
+                     },
+                     {
+                        "comparator":">=",
+                        "palette":"white_on_green",
+                        "value":1
+                     }
+                  ]
+               }
+            ],
+            "custom_links":[
+               
+            ],
+            "precision":0
+         }
+      },
+      {
+         "id":3367906494612792,
+         "layout":{
+            "x":17,
+            "y":140,
+            "width":15,
+            "height":15
+         },
+         "definition":{
+            "title":"Operation Status",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"max:snmp.Interface.OperStatus{$Host,$SNMP_Profile,$InterfaceDescription,$IP,$Interface}",
+                  "aggregator":"last",
+                  "conditional_formats":[
+                     {
+                        "comparator":">=",
+                        "palette":"white_on_red",
+                        "value":2
+                     },
+                     {
+                        "comparator":">=",
+                        "palette":"white_on_green",
+                        "value":1
+                     }
+                  ]
+               }
+            ],
+            "custom_links":[
+               
+            ],
+            "precision":0
+         }
+      },
+      {
+         "id":3224203008666534,
+         "layout":{
+            "x":33,
+            "y":140,
+            "width":14,
+            "height":15
+         },
+         "definition":{
+            "title":"Interface Speed",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_value",
+            "requests":[
+               {
+                  "q":"max:snmp.Interface.Speed{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP}",
+                  "aggregator":"last"
+               }
+            ],
+            "autoscale":true,
+            "custom_unit":"b/s",
+            "custom_links":[
+               
+            ],
+            "precision":0
+         }
+      },
+      {
+         "id":8108674365262050,
+         "layout":{
+            "x":48,
+            "y":140,
+            "width":36,
+            "height":15
+         },
+         "definition":{
+            "title":"Bytes In & Bytes Out",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.Interface.InOctets.rate{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.Interface.OutOctets.rate{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":8251644097900438,
+         "layout":{
+            "x":85,
+            "y":140,
+            "width":32,
+            "height":15
+         },
+         "definition":{
+            "title":"In & Out Broadcasts",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.Interface.InBroadcastPkts{$Host,$SNMP_Profile,$InterfaceDescription,$Interface,$IP} by {interface}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.Interface.OutBroadcastPkts{$Host,$SNMP_Profile,$InterfaceDescription,$Interface,$IP} by {interface}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":7245932798025836,
+         "layout":{
+            "x":48,
+            "y":156,
+            "width":36,
+            "height":15
+         },
+         "definition":{
+            "title":"In & Out MultiCastPkts",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.Interface.InMulticastPkts{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.Interface.OutMulticastPkts{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":3696984436294930,
+         "layout":{
+            "x":85,
+            "y":156,
+            "width":32,
+            "height":15
+         },
+         "definition":{
+            "title":"In & Out Unicast Packets",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.Interface.InUnicastPkts{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.Interface.OutUnicastPkts{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":5719272994454708,
+         "layout":{
+            "x":0,
+            "y":172,
+            "width":47,
+            "height":15
+         },
+         "definition":{
+            "title":"Local Interfaces",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_table",
+            "requests":[
+               {
+                  "q":"avg:snmp.Interface.AdminStatus{$SNMP_Profile,$Host,$IP} by {interface,interfacedescription}",
+                  "aggregator":"last",
+                  "alias":"Admin Status"
+               },
+               {
+                  "q":"avg:snmp.Interface.OperStatus{$SNMP_Profile,$Host,$IP} by {interface,interfacedescription}",
+                  "aggregator":"last",
+                  "limit":100,
+                  "order":"asc",
+                  "alias":"Oper Status"
+               },
+               {
+                  "q":"avg:snmp.Interface.Speed{$SNMP_Profile,$Host,$IP} by {interface,interfacedescription}",
+                  "aggregator":"last",
+                  "alias":"Speed"
+               }
+            ],
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":907577361694694,
+         "layout":{
+            "x":0,
+            "y":156,
+            "width":47,
+            "height":15
+         },
+         "definition":{
+            "title":"Interface Utilization (%)",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.Interface.InOctets.rate{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP} by {interface}/avg:snmp.Interface.Speed{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP} by {interface}/10000",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               },
+               {
+                  "q":"avg:snmp.Interface.OutOctets.rate{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP} by {interface}/avg:snmp.Interface.Speed{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP} by {interface}/10000",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "custom_links":[
+               
+            ]
+         }
+      },
+      {
+         "id":7896228403336972,
+         "layout":{
+            "x":83,
+            "y":39,
+            "width":34,
+            "height":15
+         },
+         "definition":{
+            "title":"System Health Status",
+            "title_size":"16",
+            "title_align":"left",
+            "show_legend":false,
+            "type":"timeseries",
+            "requests":[
+               {
+                  "q":"avg:snmp.HealthStatus{$SNMP_Profile,$IP,$Host} by {snmp_device}",
+                  "style":{
+                     "palette":"dog_classic",
+                     "line_type":"solid",
+                     "line_width":"normal"
+                  },
+                  "display_type":"line"
+               }
+            ],
+            "yaxis":{
+               "scale":"linear",
+               "label":"",
+               "include_zero":true,
+               "min":"auto",
+               "max":"auto"
+            },
+            "markers":[
+               {
+                  "label":" Healthy ",
+                  "value":"y = 10000",
+                  "display_type":"ok dashed"
+               },
+               {
+                  "label":" Degraded ",
+                  "value":"y = 30000",
+                  "display_type":"warning dashed"
+               },
+               {
+                  "label":" Critical ",
+                  "value":"y = 50000",
+                  "display_type":"error dashed"
+               }
+            ]
+         }
+      },
+      {
+         "id":842728731891582,
+         "layout":{
+            "x":0,
+            "y":23,
+            "width":48,
+            "height":31
+         },
+         "definition":{
+            "title":"System Status Overview",
+            "title_size":"16",
+            "title_align":"left",
+            "type":"query_table",
+            "requests":[
+               {
+                  "aggregator":"avg",
+                  "cell_display_mode":[
+                     "bar"
+                  ],
+                  "q":"avg:snmp.HealthStatus{$SNMP_Profile,$Host,$IP} by {snmp_device,sysname,location}",
+                  "alias":"Health Status",
+                  "limit":50,
+                  "order":"desc"
+               },
+               {
+                  "q":"avg:snmp.Temperature{$SNMP_Profile,$Host,$IP} by {snmp_device,sysname,location}",
+                  "alias":"Temperature",
+                  "cell_display_mode":[
+                     "bar"
+                  ],
+                  "aggregator":"avg"
+               }
+            ],
+            "has_search_bar":"auto"
+         }
+      }
+   ],
+   "template_variables":[
+      {
+         "name":"InterfaceDescription",
+         "default":"*",
+         "prefix":"interfacedescription"
+      },
+      {
+         "name":"Interface",
+         "default":"*",
+         "prefix":"interface"
+      },
+      {
+         "name":"Host",
+         "default":"*",
+         "prefix":"host"
+      },
+      {
+         "name":"SNMP_Profile",
+         "default":"rd-steelhead-riverbed",
+         "prefix":"snmp_profile"
+      },
+      {
+         "name":"IP",
+         "default":"*",
+         "prefix":"snmp_device"
+      },
+      {
+         "name":"Port",
+         "default":"*",
+         "prefix":"port"
+      }
+   ],
+   "layout_type":"free",
+   "is_read_only":false,
+   "notify_list":[
+      
+   ],
+   "id":"med-qr6-py5"
+}

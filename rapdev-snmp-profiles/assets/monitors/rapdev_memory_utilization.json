@@ -1,0 +1,30 @@
+{
+	"name": "[RapDev SNMP Profiles] - Memory Utilization on {{snmp_profile.name}} device {{sysname.name}} ({{snmp_device.name}}",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:snmp.Memory.Utilization{*} by {sysname,snmp_device,snmp_profile} > 90",
+	"message": "{{#is_warning}} Memory Utilization on {{snmp_profile.name}} device {{sysname.name}} is above 80%. Current Value: {{value}} {{/is_warning}} \n\n{{#is_alert}} Memory Utilization on {{snmp_profile.name}} device {{sysname.name}} is above 90%. Current Value: {{value}} {{/is_alert}} \n\n{{#is_recovery}} Memory Utilization on {{snmp_profile.name}} device {{sysname.name}} has recovered. Current Value: {{value}} {{/is_recovery}}",
+	"tags": [
+		"integration:rapdev-snmp",
+		"device:general"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": null,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"thresholds": {
+			"critical": 90,
+			"warning": 80
+		}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when memory utilization is getting too high"
+    }
+}

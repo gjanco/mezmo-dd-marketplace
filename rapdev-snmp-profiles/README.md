@@ -28,105 +28,72 @@ Below are some screenshots of the dashboards that come out of the box with this 
 ### Sample list of metrics collected for Dell iDRAC
 ![Screenshot4](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/4.png)
 
-Below is a list of the currently supported devices, please visit our website for a full updated list of all devices.
+Below is a list of the currently supported devices, please visit our [website](https://www.rapdev.io/products/datadog-snmp-profiles) for a full updated list of all devices.
 
 | Manufacturer | Model                 | Version       |
 | ------------ | --------------------- | ------------- |
-| Dell         | iDRAC                 | 7             |
-| Dell         | iDRAC                 | 8             |
-| Dell         | iDRAC                 | 9             |
-| HP           | ProLiant Gen8         | iLO 4         |
-| HP           | ProLiant Gen9         | iLO 4         |
-| HP           | ProLiant Gen10        | iLO 5         |
 | APC          | Smart UPS             | All           |
 | APC          | SmartCard             | All           |
-| F5           | Big-IP                | 9.4.x to 15.x |
-| Cisco        | ASA                   | 5505          |
-| Cisco        | ASA                   | 5510          |
-| Cisco        | ASA                   | 5525          |
-| Cisco        | ASA                   | 5540          |
-| Cisco        | UCS                   | M2            |
-| Cisco        | UCS                   | M3            |
-| Cisco        | UCS                   | M4            |
-| Cisco        | Catalyst              | 2960          |
-| Cisco        | Catalyst              | 3650          |
-| Cisco        | Catalyst              | 4500          |
-| Cisco        | Catalyst              | 3750          |
+| Arista       | Switch                | 7xxx          |
+| Aruba        | Switch                | All           |
+| AudioCodes   | Mediant SBC           | All           |
+| Barracuda    | CloudGen Firewall     | 6,7,8         |
+| Brocade      | VDX                   | All           |
+| Checkpoint   | Gaia/Cloud Firewall   | 77+           |
+| Cisco        | ASA                   | 5xxx          |
+| Cisco        | ASR                   | All           |
+| Cisco        | Catalyst              | All           |
+| Cisco        | CUBE                  | IOS           |
 | Cisco        | Nexus                 | 2k            |
 | Cisco        | Nexus                 | 3k            |
 | Cisco        | Nexus                 | 4k            |
 | Cisco        | Nexus                 | 5k            |
 | Cisco        | Nexus                 | 6k            |
 | Cisco        | Nexus                 | 7k            |
-| Cisco        | Nexus                 | 9k            |
-| Cisco        | ISR                   | 44XX          |
-| Cisco        | ISR                   | 38XX          |
-| Cisco        | CUBE                  | IOS           |
-| Cisco        | Unified Call Manager  | 8.x to 12.x   |
-| Cisco        | ASR                   | All           |
-| Checkpoint   | GAIA                  | 77 to 80.30   |
-| Checkpoint   | Cloud Firewall        | 77 to 80.30   |
-| Barracuda    | Next Gen Firewall     | 6, 7, 8       |
-| Barracuda    | SPAM Filter           | 6, 7, 8       |
-| Palo Alto    | Next Gen Firewall     | 9.x           |
-| Nutanix      | Cluster               | All           |
-| Nutanix      | Container Stats       | All           |
-| Nutanix      | Controllers           | All           |
-| Nutanix      | Disks                 | All           |
-| Nutanix      | Hypervisors           | All           |
-| Nutanix      | Storage Pools         | All           |
-| Nutanix      | Virtual Machine Stats | All           |
-| FortiNet     | FortiGate             | All           |
-| Cisco        | Meraki                | MR-Series     |
-| Cisco        | Meraki                | Z-Series      |
-| Cisco        | Meraki                | MX-Series     |
-| Cisco        | Meraki                | MS-Series     |
-| Dell         | Powerconnect          | 2000          |
-| Dell         | Powerconnect          | 3000          |
-| Dell         | Powerconnect          | 5000          |
-| Dell         | Powerconnect          | 6000          |
-| Dell         | Powerconnect          | 7000          |
-| Dell         | Powerconnect          | 8000          |
-| Dell         | PowerEdge Chassis     | M1000e        |
-| Dell         | PowerEdge Chassis     | MX7000        |
-| HP           | C7000                 | All           |
+| Cisco        | ISE                   | All           |
+| Cisco        | ISR                   | 38XX, 44xx    |
+| Cisco        | Nexus                 | All           |
+| Cisco        | UCM                   | All           |
+| Cisco        | UCS                   | M2, M3, M4    |
+| Cisco        | WLC                   | All           |
 | Citrix       | Netscaler             | All           |
+| Dell         | iDRAC                 | 7,8,9         |
+| Dell         | Powerconnect          | OS10          |
+| Dell         | Powerconnect          | 3000          |
+| F5           | Big-IP                | 9.4.x to 15.x |
+| FortiNet     | FortiGate             | All           |
+| HPE          | ProLiant Gen8-10      | iLO4,iLO5     |
+| HPE          | Switch                |               |
+| Ironport     | Mail                  | C3,C6,X1070   |
+| Juniper      | SSG                   | All           |
 | Kemp         | Loadmaster            | All           |
-| Arista       | Ethernet Switches     | 7500          |
-| Arista       | Ethernet Switches     | 7400          |
-| Arista       | Ethernet Switches     | 7300          |
-| Arista       | Ethernet Switches     | 7200          |
-| Arista       | Ethernet Switches     | 7100          |
+| Meraki       | CloudController       | CC            |
+| Meraki       | Switch                | MR, MS, MX, Z |
+| Nasuni       | Filer                 | All           |
+| Palo Alto    | NextGen Firewall      | 9.x           |
+| ServerTech   | PDU                   | Gen3, Gen4    |
+| Sharp        | Printer               | All           |
+| Steelhead    | Riverbed              | CX, EX        |
+| VMware       | ESXi                  | 6.x           |
 
 ## Setup
 
-1. Delete the default DataDog profiles in the following directories: 
+1. Download and install the SNMP Profiles.
 
-Linux\
-`/etc/datadog-agent/conf.d/snmp.d/profiles/*`\
-`/opt/datadog-agent/embedded/lib/python<VER>/site-packages/datadog_checks/snmp/data/profiles/*`
- 
- Windows\
- `%PROGRAMDATA%\Datadog\conf.d\snmp.d\profiles\*`\
- `%PROGRAMFILES%\Datadog\Datadog Agent\embedded\lib\site-packages\datadog_checks\snmp\data\profiles\*`
+#### Linux
+ Run the following command to download and install the latest RapDev profiles:
+ `curl https://files.rapdev.io/datadog/scripts/install_snmp_profiles.sh | sh`
 
-2. Download the [snmp-profiles.zip](https://files.rapdev.io/datadog/snmp-profiles.zip) file from RapDev's site.
+#### Windows
+ Download this [Powershell script](https://files.rapdev.io/datadog/scripts/install_snmp_profiles.ps1) and run it as an Administrator on the Windows Server acting as the SNMP poller to install the latest profiles.
 
-3. Unzip the snmp-profiles.zip file, and move the `snmp-profiles\profiles` into the Datadog SNMP profiles directory on the system that has the Datadog agent installed. This includes moving any of the cisco profiles out of the downloaded `snmp-profiles\profiles\cisco` directory into:
-
-Linux\
-`/etc/datadog-agent/conf.d/snmp.d/profiles/`
-
-Windows\
-`%PROGRAMDATA%\Datadog\conf.d\snmp.d\profiles\`
-
-4. Fill in your conf.yaml with the necessary IP or network addresses for discovery. See the file `snmp-profiles\conf.yaml.example_rapdev` for example configuration.
+2. Fill in your conf.yaml with the necessary IP or network addresses for discovery. See the file `snmp-profiles\conf.yaml.example_rapdev` for example configuration.
 
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
 
  - Email: integrations@rapdev.io 
- - Chat: [RapDev.io/products](https://rapdev.io/products)
+ - Chat: [RapDev.io](https://rapdev.io/)
  - Phone: 855-857-0222 
 
 ---

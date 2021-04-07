@@ -1,11 +1,11 @@
 {
-	"name": "Dell iDRAC - Power Supply State Settings issue on {{powersupply.name}} with {{snmp_device.name}}",
+	"name": "[RapDev SNMP Profiles] Dell iDRAC - Power Supply State Settings issue on {{powersupply.name}} with {{snmp_device.name}}",
 	"type": "query alert",
 	"query": "avg(last_5m):avg:snmp.PowerSupply.State.Settings{snmp_profile:rd-dell-idrac} by {snmp_device,powersupply} < 241",
 	"message": "{{#is_alert}}\n{{powersupply.name}} state settings on {{snmp_device.name}} has an issue.\n\n1 = Unknown\n2 = Online (state disabled)\n4 = not Ready\n8 = Fan Failure\n10 = Online and Fan Failure\n16 = On\n242 = Online and OK\n\n{{/is_alert}} \n\n{{#is_alert_recovery}}\n{{powersupply.name}} state settings issue resolved on {{snmp_device.name}}.\n\n1 = Unknown\n2 = Online (state disabled)\n4 = not Ready\n8 = Fan Failure\n10 = Online and Fan Failure\n16 = On\n242 = Online and OK\n{{/is_alert_recovery}}",
 	"tags": [
-		"check_type:snmp",
-		"hardware:idrac"
+		"integration:rapdev-snmp",
+		"device:idrac"
 	],
 	"options": {
 		"notify_audit": false,
@@ -23,5 +23,8 @@
 			"critical": 241,
 			"critical_recovery": 242
 		}
-	}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when iDRAC has power supply state settings issue"
+    }
 }

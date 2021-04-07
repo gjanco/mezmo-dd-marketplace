@@ -1,11 +1,11 @@
 {
-	"name": "Barracuda CGF - High CPU on {{snmp_device.name}}",
+	"name": "[RapDev SNMP Profiles] Barracuda CGF - High CPU on {{snmp_device.name}}",
 	"type": "query alert",
 	"query": "avg(last_1m):100 - avg:snmp.Cpu.Idle{snmp_profile:rd-barracuda-cgf} by {snmp_device} > 90",
 	"message": "{{#is_alert}}\nCPU is getting high on {{snmp_device.name}}.\n{{/is_alert}} \n\n{{#is_recovery}}\nCPU is back to normal on {{snmp_device.name}}\n{{/is_recovery}}",
 	"tags": [
-		"check_type:snmp",
-		"hardware:barracudacgf"
+		"integration:rapdev-snmp",
+		"device:barracudacgf"
 	],
 	"options": {
 		"notify_audit": false,
@@ -25,5 +25,8 @@
 			"warning_recovery": 69,
 			"critical_recovery": 89
 		}
-	}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when Barracuda CPU utilization is getting too high"
+    }
 }

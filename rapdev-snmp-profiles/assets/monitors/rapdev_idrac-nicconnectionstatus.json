@@ -1,11 +1,11 @@
 {
-	"name": "Dell iDRAC - Network port {{nicslot.name}} is down on {{snmp_device.name}}",
+	"name": "[RapDev SNMP Profiles] Dell iDRAC - Network port {{nicslot.name}} is down on {{snmp_device.name}}",
 	"type": "query alert",
 	"query": "avg(last_5m):avg:snmp.NIC.ConnectionStatus{snmp_profile:rd-dell-idrac} by {snmp_device,nicslot} < 1.9",
 	"message": "{{#is_alert}}\n{{nicslot.name}} is down on {{snmp_device.name}}.\n{{/is_alert}} \n\n{{#is_alert_recovery}}\n{{nicslot.name}} is back online on {{snmp_device.name}}.\n{{/is_alert_recovery}}",
 	"tags": [
-		"check_type:snmp",
-		"hardware:idrac"
+		"integration:rapdev-snmp",
+		"device:idrac"
 	],
 	"options": {
 		"notify_audit": false,
@@ -23,5 +23,8 @@
 			"critical": 1.9,
 			"critical_recovery": 2
 		}
-	}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when iDRAC Network port is down"
+    }
 }

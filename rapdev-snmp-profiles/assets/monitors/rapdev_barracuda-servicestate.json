@@ -1,11 +1,11 @@
 {
-	"name": "Barracuda CGF - Service {{service.name}}  State Change on {{snmp_device.name}}",
+	"name": "[RapDev SNMP Profiles] Barracuda CGF - Service {{service.name}}  State Change on {{snmp_device.name}}",
 	"type": "query alert",
 	"query": "avg(last_1h):anomalies(avg:snmp.Service.State{snmp_profile:rd-barracuda-cgf} by {snmp_device,service}, 'basic', 2, direction='both', alert_window='last_5m', interval=20, count_default_zero='true') >= 0.1",
 	"message": "{{#is_alert}}\nService {{service.name}}'s state changed, this is likely indicating a failover state or the services crashing.  Review the dashboard for more details\n{{/is_alert}} \n\n{{#is_recovery}}\nService {{service.name}}'s state is back to normal.\n{{/is_recovery}}",
 	"tags": [
-		"check_type:snmp",
-		"hardware:barracudacgf"
+		"integration:rapdev-snmp",
+		"device:barracudacgf"
 	],
 	"options": {
 		"notify_audit": false,
@@ -27,5 +27,8 @@
 			"critical": 0.1,
 			"critical_recovery": 0.09
 		}
-	}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when Barracuda CGF state has changed"
+    }
 }

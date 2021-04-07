@@ -1,0 +1,30 @@
+{
+	"name": "[RapDev SNMP Profiles] - Interface Operation Status for {{snmp_profile.name}} Device {{sysname.name}}",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:snmp.Interface.OperStatus{*} by {interface,sysname,snmp_profile} >= 2",
+	"message": "{{#is_alert}} \nOperation status for {{interface.name}} on {{snmp_profile.name}} device {{sysname.name}} is in a bad state. Current state: {{value}} \n{{/is_alert}} \n\n{{#is_recovery}}\nOperation status for {{interface.name}} on {{snmp_profile.name}} device {{sysname.name}} has recovered. Current state: {{value}}\n{{/is_recovery}} \n\n1: Up\n2: Down\n3: Testing\n4: Unknown\n5: Dormant\n6: NotPresent\n7: LowerLayerDown",
+	"tags": [
+		"integration:rapdev-snmp",
+		"device:idrac"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": null,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"thresholds": {
+			"critical": 2,
+			"critical_recovery": 1.5
+		}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when oper status is in a bad state"
+    }
+}

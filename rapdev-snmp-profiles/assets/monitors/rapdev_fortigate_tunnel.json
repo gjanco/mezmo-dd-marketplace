@@ -1,0 +1,30 @@
+{
+	"name": "[RapDev SNMP Profiles] - Fortigate Tunnel Issue on {{sysname.name}}",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:snmp.Tunnel.Status{snmp_profile:rd-fortinet-fortigate} by {sysname,local_gw_ip,remote_gw_ip,phase1_name,phase2_name} < 1.5",
+	"message": "{{#is_alert}} \nFortigate system {{sysname.name}} has a VPN Tunnel down. \n{{/is_alert}} \n{{#is_recovery}} Fortigate system {{sysname.name}} VPN Tunnel has recovered. {{/is_recovery}} \n\nLocal Gateway IP: {{local_gw_ip.name}} \nRemote Gateway IP: {{remote_gw_ip.name}} \nPhase 1 Name: {{phase1_name.name}} \nPhase 2 Name: {{phase2_name.name}}",
+	"tags": [
+		"integration:rapdev-snmp",
+		"device:fortigate"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": null,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"thresholds": {
+			"critical": 1.5,
+			"critical_recovery": 2
+		}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when a fortigate VPN tunnel is down"
+    }
+}

@@ -1,0 +1,1161 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "rd-printer",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "default": "*",
+            "name": "Host",
+            "prefix": "host"
+        },
+        {
+            "default": "*",
+            "name": "Sysname",
+            "prefix": "sysname"
+        }
+    ],
+   "title": "RapDev Printer Dashboard",
+   "description": "",
+   "widgets": [
+      {
+         "id": 7251075657890975,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "max:snmp.Interface.AdminStatus{$IP,$SNMP_Profile,$Sysname}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                     {
+                        "comparator": ">=",
+                        "value": 2,
+                        "palette": "white_on_red"
+                     },
+                     {
+                        "comparator": ">=",
+                        "value": 1,
+                        "palette": "white_on_green"
+                     }
+                  ]
+               }
+            ],
+            "custom_links": [],
+            "title": "Admin Status",
+            "title_size": "16",
+            "title_align": "left",
+            "precision": 0
+         },
+         "layout": {
+            "x": 0,
+            "y": 193,
+            "width": 16,
+            "height": 15
+         }
+      },
+      {
+         "id": 585682559634339,
+         "definition": {
+            "type": "timeseries",
+            "requests": [
+               {
+                  "q": "avg:snmp.Interface.InErrors{$IP,$SNMP_Profile,$Sysname} by {interface}.as_count()",
+                  "display_type": "area",
+                  "style": {
+                     "palette": "dog_classic",
+                     "line_type": "solid",
+                     "line_width": "normal"
+                  }
+               },
+               {
+                  "q": "avg:snmp.Interface.OutErrors{$IP,$SNMP_Profile,$Sysname} by {interface}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                     "palette": "dog_classic",
+                     "line_type": "solid",
+                     "line_width": "normal"
+                  }
+               }
+            ],
+            "custom_links": [],
+            "yaxis": {
+               "label": "",
+               "scale": "linear",
+               "min": "auto",
+               "max": "auto"
+            },
+            "title": "In & Out Errors",
+            "title_size": "16",
+            "title_align": "left",
+            "show_legend": false,
+            "legend_size": "0"
+         },
+         "layout": {
+            "x": 81,
+            "y": 193,
+            "width": 36,
+            "height": 15
+         }
+      },
+      {
+         "id": 5934328292737413,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "max:snmp.Interface.OperStatus{$SNMP_Profile,$IP,$Sysname}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                     {
+                        "comparator": ">=",
+                        "value": 2,
+                        "palette": "white_on_red"
+                     },
+                     {
+                        "comparator": ">=",
+                        "value": 1,
+                        "palette": "white_on_green"
+                     }
+                  ]
+               }
+            ],
+            "custom_links": [],
+            "title": "Operation Status",
+            "title_size": "16",
+            "title_align": "left",
+            "precision": 0
+         },
+         "layout": {
+            "x": 17,
+            "y": 193,
+            "width": 15,
+            "height": 15
+         }
+      },
+      {
+         "id": 7609282799359072,
+         "definition": {
+            "type": "query_table",
+            "requests": [
+               {
+                  "q": "avg:snmp.Interface.AdminStatus{$IP,$SNMP_Profile,$Sysname} by {sysname,snmp_device}",
+                  "aggregator": "last",
+                  "alias": "Admin Status"
+               },
+               {
+                  "q": "avg:snmp.Interface.OperStatus{$IP,$SNMP_Profile,$Sysname} by {sysname,snmp_device}",
+                  "aggregator": "last",
+                  "limit": 100,
+                  "order": "asc",
+                  "alias": "Oper Status"
+               }
+            ],
+            "title": "Local Interfaces",
+            "title_size": "16",
+            "title_align": "left"
+         },
+         "layout": {
+            "x": 33,
+            "y": 193,
+            "width": 47,
+            "height": 15
+         }
+      },
+      {
+         "id": 2001379436265232,
+         "definition": {
+            "type": "note",
+            "content": "Interfaces",
+            "background_color": "white",
+            "font_size": "24",
+            "text_align": "center",
+            "show_tick": true,
+            "tick_pos": "50%",
+            "tick_edge": "bottom"
+         },
+         "layout": {
+            "x": -1,
+            "y": 187,
+            "width": 117,
+            "height": 5
+         }
+      },
+      {
+         "id": 1982315555587460,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "avg:snmp.devices_monitored{$SNMP_Profile,$IP,$Sysname}",
+                  "aggregator": "last"
+               }
+            ],
+            "title": "Devices Monitored",
+            "title_size": "16",
+            "title_align": "left",
+            "autoscale": true,
+            "precision": 0
+         },
+         "layout": {
+            "x": 0,
+            "y": 0,
+            "width": 20,
+            "height": 15
+         }
+      },
+      {
+         "id": 7284532071013926,
+         "definition": {
+            "type": "timeseries",
+            "requests": [
+               {
+                  "q": "avg:snmp.Cover.Status{$SNMP_Profile,$IP,$Sysname} by {cover,snmp_device}",
+                  "display_type": "line",
+                  "style": {
+                     "palette": "dog_classic",
+                     "line_type": "solid",
+                     "line_width": "normal"
+                  }
+               }
+            ],
+            "yaxis": {
+               "label": "",
+               "scale": "linear",
+               "min": "auto",
+               "max": "auto",
+               "include_zero": true
+            },
+            "markers": [
+               {
+                  "value": "y = 1",
+                  "display_type": "info dashed",
+                  "label": " other "
+               },
+               {
+                  "value": "y = 3",
+                  "display_type": "warning dashed",
+                  "label": " doorOpen "
+               },
+               {
+                  "value": "y = 4",
+                  "display_type": "ok dashed",
+                  "label": " doorClosed "
+               },
+               {
+                  "value": "y = 5",
+                  "display_type": "error dashed",
+                  "label": " interlockOpen "
+               },
+               {
+                  "value": "y = 6",
+                  "display_type": "ok dashed",
+                  "label": " interlockClosed "
+               }
+            ],
+            "title": "Printer Cover Status",
+            "title_size": "16",
+            "title_align": "left",
+            "show_legend": false,
+            "legend_size": "0"
+         },
+         "layout": {
+            "x": 20,
+            "y": 94,
+            "width": 35,
+            "height": 15
+         }
+      },
+      {
+         "id": 1619638333996368,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "avg:snmp.Cover.Status{$SNMP_Profile,$IP,$Sysname}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                     {
+                        "comparator": "<",
+                        "value": 4,
+                        "palette": "white_on_red"
+                     },
+                     {
+                        "comparator": ">",
+                        "value": 4,
+                        "palette": "white_on_red"
+                     },
+                     {
+                        "comparator": ">=",
+                        "value": 4,
+                        "palette": "white_on_green"
+                     }
+                  ]
+               }
+            ],
+            "title": "Printer Cover Status",
+            "title_size": "16",
+            "title_align": "left",
+            "autoscale": true,
+            "precision": 0
+         },
+         "layout": {
+            "x": 0,
+            "y": 94,
+            "width": 19,
+            "height": 15
+         }
+      },
+      {
+         "id": 7756377855126202,
+         "definition": {
+            "type": "note",
+            "content": "Printer Input and Output ",
+            "background_color": "white",
+            "font_size": "24",
+            "text_align": "center",
+            "show_tick": false,
+            "tick_pos": "50%",
+            "tick_edge": "bottom"
+         },
+         "layout": {
+            "x": 0,
+            "y": 16,
+            "width": 117,
+            "height": 6
+         }
+      },
+      {
+         "id": 895601522197162,
+         "definition": {
+            "type": "query_table",
+            "requests": [
+               {
+                  "q": "avg:snmp.Input.MaxCapacity{$SNMP_Profile,$IP,$Sysname} by {input,input_medianame,input_type,input_model,input_description}",
+                  "aggregator": "avg",
+                  "limit": 50,
+                  "order": "desc",
+                  "alias": "Tray Max Capacity",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.Input.CurrentLevel{$SNMP_Profile,$IP,$Sysname} by {input,input_medianame,input_type,input_model,input_description}",
+                  "aggregator": "avg",
+                  "alias": "Tray Current Level",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.Input.Status{$SNMP_Profile,$IP,$Sysname} by {input,input_medianame,input_type,input_model,input_description}",
+                  "aggregator": "avg",
+                  "alias": "Input Status",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               }
+            ],
+            "title": "Printer Input Tray Statistics ",
+            "title_size": "16",
+            "title_align": "left",
+            "has_search_bar": "auto"
+         },
+         "layout": {
+            "x": 20,
+            "y": 23,
+            "width": 79,
+            "height": 16
+         }
+      },
+      {
+         "id": 1806643323210856,
+         "definition": {
+            "type": "note",
+            "content": "INPUT TYPE KEY\n\n1 = Other\n\n2 = Unknown\n\n3 = Auto Sheet Feed Removable Tray\n\n4 = Auto Sheet Feed Non-Removable Tray\n\n5 = Manual Sheet Feed Tray\n\n6 = Continuous Roll\n\n7 = Continuous Fan Fold",
+            "background_color": "white",
+            "font_size": "14",
+            "text_align": "left",
+            "show_tick": false,
+            "tick_pos": "50%",
+            "tick_edge": "left"
+         },
+         "layout": {
+            "x": 100,
+            "y": 23,
+            "width": 17,
+            "height": 16
+         }
+      },
+      {
+         "id": 3185720931305952,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "avg:snmp.Input.Status{$SNMP_Profile,$IP,$Sysname}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                     {
+                        "comparator": "<=",
+                        "value": 0,
+                        "palette": "white_on_green"
+                     },
+                     {
+                        "comparator": ">",
+                        "value": 0,
+                        "palette": "white_on_red"
+                     }
+                  ]
+               }
+            ],
+            "title": "Printer Input Status",
+            "title_size": "16",
+            "title_align": "left",
+            "autoscale": true,
+            "precision": 0
+         },
+         "layout": {
+            "x": 0,
+            "y": 23,
+            "width": 19,
+            "height": 16
+         }
+      },
+      {
+         "id": 1964158819424100,
+         "definition": {
+            "type": "query_table",
+            "requests": [
+               {
+                  "q": "avg:snmp.Output.MaxCapacity{$SNMP_Profile,$IP,$Sysname} by {output,output_description,output_model,output_type,snmp_device}",
+                  "aggregator": "avg",
+                  "limit": 50,
+                  "order": "desc",
+                  "alias": "Max Capacity",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.Output.RemainingCapacity{$SNMP_Profile,$IP,$Sysname} by {output,output_description,output_model,output_type,snmp_device}",
+                  "aggregator": "avg",
+                  "alias": "Remaining Capacity",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.Output.Status{$SNMP_Profile,$IP,$Sysname} by {output,output_description,output_model,output_type,snmp_device}",
+                  "aggregator": "avg",
+                  "alias": "Output Status",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               }
+            ],
+            "title": "Printer Output Tray Statistics",
+            "title_size": "16",
+            "title_align": "left",
+            "has_search_bar": "auto"
+         },
+         "layout": {
+            "x": 20,
+            "y": 40,
+            "width": 79,
+            "height": 16
+         }
+      },
+      {
+         "id": 5052603348111012,
+         "definition": {
+            "type": "note",
+            "content": "Printer Marker and Supplies",
+            "background_color": "white",
+            "font_size": "24",
+            "text_align": "center",
+            "show_tick": false,
+            "tick_pos": "50%",
+            "tick_edge": "bottom"
+         },
+         "layout": {
+            "x": 0,
+            "y": 87,
+            "width": 117,
+            "height": 6
+         }
+      },
+      {
+         "id": 131538561418104,
+         "definition": {
+            "type": "query_table",
+            "requests": [
+               {
+                  "q": "avg:snmp.MarkerSupplies.MaxCapacity{$SNMP_Profile,$IP,$Sysname} by {markersupplies_description,markersupplies_type,snmp_device}",
+                  "aggregator": "avg",
+                  "limit": 50,
+                  "order": "desc",
+                  "alias": "Max Capacity",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.MarkerSupplies.Level{$SNMP_Profile,$IP,$Sysname} by {markersupplies_description,markersupplies_type,snmp_device}",
+                  "aggregator": "avg",
+                  "alias": "Current Level (-3 = Replace)",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.MarkerSupplies.Class{$SNMP_Profile,$IP,$Sysname} by {markersupplies_description,markersupplies_type,snmp_device}",
+                  "aggregator": "avg",
+                  "alias": "Class (3 = Consumed, 4 = Filled)",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               }
+            ],
+            "title": "Printer Marker Supplies ",
+            "title_size": "16",
+            "title_align": "left",
+            "has_search_bar": "auto"
+         },
+         "layout": {
+            "x": 0,
+            "y": 123,
+            "width": 117,
+            "height": 24
+         }
+      },
+      {
+         "id": 1125506226888400,
+         "definition": {
+            "type": "timeseries",
+            "requests": [
+               {
+                  "q": "avg:snmp.MarkerSupplies.Level{$SNMP_Profile,$IP,$Sysname} by {markersupplies_description,snmp_device}",
+                  "display_type": "line",
+                  "style": {
+                     "palette": "dog_classic",
+                     "line_type": "solid",
+                     "line_width": "normal"
+                  }
+               }
+            ],
+            "yaxis": {
+               "label": "",
+               "scale": "linear",
+               "min": "auto",
+               "max": "auto",
+               "include_zero": true
+            },
+            "markers": [
+               {
+                  "value": "y = -3",
+                  "display_type": "error bold",
+                  "label": " Replace "
+               }
+            ],
+            "title": "Printer Marker Supplies Utilization",
+            "title_size": "16",
+            "title_align": "left",
+            "show_legend": false,
+            "legend_size": "0"
+         },
+         "layout": {
+            "x": 56,
+            "y": 94,
+            "width": 61,
+            "height": 28
+         }
+      },
+      {
+         "id": 6951427783195084,
+         "definition": {
+            "type": "query_table",
+            "requests": [
+               {
+                  "q": "avg:snmp.Marker.NorthMargin{$SNMP_Profile,$IP,$Sysname} by {snmp_device,marker_index}",
+                  "aggregator": "avg",
+                  "limit": 50,
+                  "order": "desc",
+                  "alias": "North Margin",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.Marker.SouthMargin{$SNMP_Profile,$IP,$Sysname} by {snmp_device,marker_index}",
+                  "aggregator": "avg",
+                  "alias": "South Margin",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.Marker.WestMargin{$SNMP_Profile,$IP,$Sysname} by {snmp_device,marker_index}",
+                  "aggregator": "avg",
+                  "alias": "West Margin",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.Marker.EastMargin{$SNMP_Profile,$IP,$Sysname} by {snmp_device,marker_index}",
+                  "aggregator": "avg",
+                  "alias": "East Margin",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               }
+            ],
+            "title": "Marker Page Margins ",
+            "title_size": "16",
+            "title_align": "left",
+            "has_search_bar": "auto"
+         },
+         "layout": {
+            "x": 0,
+            "y": 110,
+            "width": 55,
+            "height": 12
+         }
+      },
+      {
+         "id": 8514145518154732,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "avg:snmp.Output.Status{$SNMP_Profile,$IP,$Sysname}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                     {
+                        "comparator": "<=",
+                        "value": 0,
+                        "palette": "white_on_green"
+                     },
+                     {
+                        "comparator": ">",
+                        "value": 0,
+                        "palette": "white_on_red"
+                     }
+                  ]
+               }
+            ],
+            "title": "Printer Output Status",
+            "title_size": "16",
+            "title_align": "left",
+            "autoscale": true,
+            "precision": 0
+         },
+         "layout": {
+            "x": 0,
+            "y": 40,
+            "width": 19,
+            "height": 16
+         }
+      },
+      {
+         "id": 5683519944127806,
+         "definition": {
+            "type": "note",
+            "content": "Printer Channel Status",
+            "background_color": "white",
+            "font_size": "24",
+            "text_align": "center",
+            "show_tick": false,
+            "tick_pos": "50%",
+            "tick_edge": "bottom"
+         },
+         "layout": {
+            "x": 0,
+            "y": 148,
+            "width": 117,
+            "height": 6
+         }
+      },
+      {
+         "id": 7143877733250674,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "avg:snmp.Channel.State{$SNMP_Profile,$IP,$Sysname}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                     {
+                        "comparator": "<",
+                        "value": 4,
+                        "palette": "white_on_green"
+                     },
+                     {
+                        "comparator": ">=",
+                        "value": 4,
+                        "palette": "white_on_red"
+                     }
+                  ]
+               }
+            ],
+            "title": "Printer Channel Status",
+            "title_size": "16",
+            "title_align": "left",
+            "autoscale": true,
+            "precision": 0
+         },
+         "layout": {
+            "x": -1,
+            "y": 155,
+            "width": 19,
+            "height": 15
+         }
+      },
+      {
+         "id": 4740138589396996,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "avg:snmp.Channel.Status{$SNMP_Profile,$IP,$Sysname}",
+                  "aggregator": "last"
+               }
+            ],
+            "title": "Printer Channel Status",
+            "title_size": "16",
+            "title_align": "left",
+            "autoscale": true,
+            "precision": 0
+         },
+         "layout": {
+            "x": 0,
+            "y": 171,
+            "width": 19,
+            "height": 15
+         }
+      },
+      {
+         "id": 3368015072802086,
+         "definition": {
+            "type": "timeseries",
+            "requests": [
+               {
+                  "q": "avg:snmp.Channel.State{$SNMP_Profile,$IP,$Sysname} by {snmp_device,channel_type}",
+                  "display_type": "line",
+                  "style": {
+                     "palette": "dog_classic",
+                     "line_type": "solid",
+                     "line_width": "normal"
+                  }
+               }
+            ],
+            "yaxis": {
+               "label": "",
+               "scale": "linear",
+               "min": "auto",
+               "max": "auto",
+               "include_zero": true
+            },
+            "markers": [
+               {
+                  "value": "y = 3",
+                  "display_type": "ok dashed",
+                  "label": " printDataAccepted "
+               },
+               {
+                  "value": "y = 4",
+                  "display_type": "error dashed",
+                  "label": " noDataAccepted "
+               }
+            ],
+            "title": "Printer Channel State",
+            "title_size": "16",
+            "title_align": "left",
+            "show_legend": false,
+            "legend_size": "0"
+         },
+         "layout": {
+            "x": 20,
+            "y": 155,
+            "width": 47,
+            "height": 15
+         }
+      },
+      {
+         "id": 1475436226925108,
+         "definition": {
+            "type": "timeseries",
+            "requests": [
+               {
+                  "q": "avg:snmp.Channel.Status{$SNMP_Profile,$IP,$Sysname} by {channel_type}",
+                  "display_type": "line",
+                  "style": {
+                     "palette": "dog_classic",
+                     "line_type": "solid",
+                     "line_width": "normal"
+                  }
+               }
+            ],
+            "yaxis": {
+               "label": "",
+               "scale": "linear",
+               "min": "auto",
+               "max": "auto",
+               "include_zero": true
+            },
+            "title": "Printer Channel Status",
+            "title_size": "16",
+            "title_align": "left",
+            "show_legend": false,
+            "legend_size": "0"
+         },
+         "layout": {
+            "x": 20,
+            "y": 171,
+            "width": 47,
+            "height": 15
+         }
+      },
+      {
+         "id": 5979587149857584,
+         "definition": {
+            "type": "query_table",
+            "requests": [
+               {
+                  "q": "avg:snmp.Channel.State{$SNMP_Profile,$IP,$Sysname} by {channel_information,channel_type,snmp_device}",
+                  "aggregator": "avg",
+                  "limit": 50,
+                  "order": "desc",
+                  "alias": "Channel State",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               },
+               {
+                  "q": "avg:snmp.Channel.Status{$SNMP_Profile,$IP,$Sysname} by {channel_information,channel_type,snmp_device}",
+                  "aggregator": "avg",
+                  "alias": "Channel Status",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               }
+            ],
+            "title": "Printer Channel Information",
+            "title_size": "16",
+            "title_align": "left",
+            "has_search_bar": "auto"
+         },
+         "layout": {
+            "x": 68,
+            "y": 155,
+            "width": 49,
+            "height": 31
+         }
+      },
+      {
+         "id": 4606010362834246,
+         "definition": {
+            "type": "timeseries",
+            "requests": [
+               {
+                  "q": "avg:snmp.Input.CurrentLevel{$SNMP_Profile,$IP,$Sysname} by {snmp_device,input,input_description,input_mediatype,input_type}",
+                  "display_type": "line",
+                  "style": {
+                     "palette": "dog_classic",
+                     "line_type": "solid",
+                     "line_width": "normal"
+                  }
+               }
+            ],
+            "yaxis": {
+               "label": "",
+               "scale": "linear",
+               "min": "auto",
+               "max": "auto",
+               "include_zero": true
+            },
+            "markers": [
+               {
+                  "value": "y = -2",
+                  "display_type": "error dashed",
+                  "label": " Unknown "
+               },
+               {
+                  "value": "y = -3",
+                  "display_type": "warning dashed",
+                  "label": " At Least 1 Unit "
+               }
+            ],
+            "title": "Input Current Paper Level ",
+            "title_size": "16",
+            "title_align": "left",
+            "show_legend": false,
+            "legend_size": "0"
+         },
+         "layout": {
+            "x": 77,
+            "y": 57,
+            "width": 40,
+            "height": 14
+         }
+      },
+      {
+         "id": 2678062449824062,
+         "definition": {
+            "type": "timeseries",
+            "requests": [
+               {
+                  "q": "avg:snmp.Output.RemainingCapacity{$SNMP_Profile,$IP,$Sysname} by {output,output_description,output_type,snmp_device}",
+                  "display_type": "line",
+                  "style": {
+                     "palette": "dog_classic",
+                     "line_type": "solid",
+                     "line_width": "normal"
+                  }
+               }
+            ],
+            "yaxis": {
+               "label": "",
+               "scale": "linear",
+               "min": "auto",
+               "max": "auto",
+               "include_zero": true
+            },
+            "markers": [
+               {
+                  "value": "y = -3",
+                  "display_type": "warning dashed",
+                  "label": " Capacity for at least 1 Unit "
+               },
+               {
+                  "value": "y = -2",
+                  "display_type": "error dashed",
+                  "label": " Unknown "
+               }
+            ],
+            "title": "Output Remaining Capacity ",
+            "title_size": "16",
+            "title_align": "left",
+            "show_legend": false,
+            "legend_size": "0"
+         },
+         "layout": {
+            "x": 77,
+            "y": 72,
+            "width": 40,
+            "height": 14
+         }
+      },
+      {
+         "id": 6193414517224146,
+         "definition": {
+            "type": "note",
+            "content": "OUTPUT TYPE KEY\n\n1 = Other\n\n2 = Unknown\n\n3 = Removable Bin\n\n4 = Unremovable Bin\n\n5 = Continuous Roll Device\n\n6 = MailBox\n\n7 = Continuous Fan Fold",
+            "background_color": "white",
+            "font_size": "14",
+            "text_align": "left",
+            "show_tick": false,
+            "tick_pos": "50%",
+            "tick_edge": "left"
+         },
+         "layout": {
+            "x": 100,
+            "y": 40,
+            "width": 17,
+            "height": 16
+         }
+      },
+      {
+         "id": 955641323448928,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "avg:snmp.Channel.State{$SNMP_Profile,$IP,$Sysname}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                     {
+                        "comparator": "<",
+                        "value": 4,
+                        "palette": "white_on_green"
+                     },
+                     {
+                        "comparator": ">=",
+                        "value": 4,
+                        "palette": "white_on_red"
+                     }
+                  ]
+               }
+            ],
+            "title": "Printer Channel Status",
+            "title_size": "16",
+            "title_align": "left",
+            "autoscale": true,
+            "precision": 0
+         },
+         "layout": {
+            "x": 21,
+            "y": 0,
+            "width": 17,
+            "height": 15
+         }
+      },
+      {
+         "id": 7771430186649542,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "max:snmp.Interface.AdminStatus{$IP,$SNMP_Profile,$Sysname}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                     {
+                        "comparator": ">=",
+                        "value": 2,
+                        "palette": "white_on_red"
+                     },
+                     {
+                        "comparator": ">=",
+                        "value": 1,
+                        "palette": "white_on_green"
+                     }
+                  ]
+               }
+            ],
+            "title": "Admin Status",
+            "title_size": "16",
+            "title_align": "left",
+            "precision": 0
+         },
+         "layout": {
+            "x": 58,
+            "y": 0,
+            "width": 18,
+            "height": 15
+         }
+      },
+      {
+         "id": 4834123169702668,
+         "definition": {
+            "type": "query_table",
+            "requests": [
+               {
+                  "q": "avg:snmp.Alert.Code{$SNMP_Profile,$IP,$Sysname} by {sysname,sysdescription,snmp_device,alert_description}",
+                  "aggregator": "avg",
+                  "limit": 50,
+                  "order": "desc",
+                  "alias": "Alert Code",
+                  "cell_display_mode": [
+                     "bar"
+                  ]
+               }
+            ],
+            "title": "Printer Alerts",
+            "title_size": "16",
+            "title_align": "left",
+            "has_search_bar": "auto"
+         },
+         "layout": {
+            "x": 0,
+            "y": 57,
+            "width": 76,
+            "height": 29
+         }
+      },
+      {
+         "id": 5522959547173646,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "avg:snmp.sysUpTimeInstance{$Sysname,$SNMP_Profile,$IP}/8640000",
+                  "aggregator": "avg"
+               }
+            ],
+            "title": "System Up Time",
+            "title_size": "16",
+            "title_align": "left",
+            "autoscale": false,
+            "custom_unit": "Days",
+            "precision": 2
+         },
+         "layout": {
+            "x": 77,
+            "y": 0,
+            "width": 40,
+            "height": 15
+         }
+      },
+      {
+         "id": 3066420974628704,
+         "definition": {
+            "type": "query_value",
+            "requests": [
+               {
+                  "q": "avg:snmp.Cover.Status{$SNMP_Profile,$IP,$Sysname}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                     {
+                        "comparator": "<",
+                        "value": 4,
+                        "palette": "white_on_red"
+                     },
+                     {
+                        "comparator": ">",
+                        "value": 4,
+                        "palette": "white_on_red"
+                     },
+                     {
+                        "comparator": ">=",
+                        "value": 4,
+                        "palette": "white_on_green"
+                     }
+                  ]
+               }
+            ],
+            "title": "Printer Cover Status",
+            "title_size": "16",
+            "title_align": "left",
+            "autoscale": true,
+            "precision": 0
+         },
+         "layout": {
+            "x": 39,
+            "y": 0,
+            "width": 18,
+            "height": 15
+         }
+      }
+   ],
+   "template_variables": [
+      {
+         "name": "SNMP_Profile",
+         "default": "rd-printer",
+         "prefix": "snmp_profile"
+      },
+      {
+         "name": "IP",
+         "default": "*",
+         "prefix": "snmp_device"
+      },
+      {
+         "name": "Sysname",
+         "default": "*",
+         "prefix": "sysname"
+      }
+   ],
+   "layout_type": "free",
+   "is_read_only": false,
+   "notify_list": [],
+   "id": "27p-rwb-s6p"
+}

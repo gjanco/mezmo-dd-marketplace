@@ -1,0 +1,1189 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "default": "rd-sentrygen4-pdu",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "default": "*",
+            "name": "Host",
+            "prefix": "host"
+        },
+        {
+            "default": "*",
+            "name": "Phase",
+            "prefix": "phase"
+        },
+        {
+            "default": "*",
+            "name": "InputCord",
+            "prefix": "inputcord"
+        },
+        {
+            "default": "*",
+            "name": "Outlet",
+            "prefix": "outlet"
+        },
+        {
+            "default": "*",
+            "name": "Line",
+            "prefix": "line"
+        },
+        {
+            "default": "*",
+            "name": "TempSensor",
+            "prefix": "tempsensor"
+        },
+        {
+            "default": "*",
+            "name": "Sysname",
+            "prefix": "sysname"
+        }
+    ],
+    "title": "RapDev ServerTech PDU Gen4 Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "Days",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.sysUpTimeInstance{$IP,$SNMP_Profile,$Host,$Sysname}/8640000"
+                    }
+                ],
+                "title": "System Up Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6916255011485180,
+            "layout": {
+                "height": 15,
+                "width": 44,
+                "x": 73,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Phase",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 4094499453322462,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Phase.Current{$IP,$SNMP_Profile,$Host,$Phase,$Sysname} by {phase_id,snmp_device,phase,sysname}/100",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Phase Current(Amps)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8937361369406194,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 78,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Phase.Voltage{$IP,$SNMP_Profile,$Host,$Phase,$Sysname} by {snmp_device,phase_id,phase,sysname}/10",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "time": {},
+                "title": "Phase Voltage (volts)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8645470568583018,
+            "layout": {
+                "height": 15,
+                "width": 36,
+                "x": 0,
+                "y": 39
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "Amps",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:snmp.Phase.Current{$IP,$SNMP_Profile,$Host,$Phase,$Sysname}/100"
+                    }
+                ],
+                "time": {},
+                "title": "Phase Current",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8470230069456260,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 37,
+                "y": 39
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Input Cord",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3509069949949594,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 55
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0normal\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0disabled\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0alarm\u00a0",
+                        "value": "y = 18"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0lowAlarm\u00a0",
+                        "value": "y = 14"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0highAlarm\u00a0",
+                        "value": "y = 17"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Phase.Status{$Host,$SNMP_Profile,$IP,$Phase,$Sysname} by {phase_id,phase,snmp_device,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Phase Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "max": "20"
+                }
+            },
+            "id": 950331288705738,
+            "layout": {
+                "height": 15,
+                "width": 36,
+                "x": 0,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0on\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0off\u00a0",
+                        "value": "y = 2"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Phase.State{$SNMP_Profile,$IP,$Host,$Phase,$Sysname} by {phase_id,phase,snmp_device,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Phase State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5487751985130210,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 37,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Phase.ActivePower{$SNMP_Profile,$IP,$Host,$Phase,$Sysname} by {phase_id,snmp_device,phase,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Phase Active Power (Watts)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6477058826364784,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 78,
+                "y": 39
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0on\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0off\u00a0",
+                        "value": "y = 2"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.InputCord.State{$SNMP_Profile,$IP,$Host,$InputCord,$Sysname} by {snmp_device,inputcord,inputcord_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Input Cord State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4796019894995342,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 38,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0normal\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0disabled\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0lowAlarm\u00a0",
+                        "value": "y = 14"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0highAlarm\u00a0",
+                        "value": "y = 17"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0alarm\u00a0",
+                        "value": "y = 18"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.InputCord.Status{$SNMP_Profile,$IP,$Host,$InputCord,$Sysname} by {snmp_device,inputcord,inputcord_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Input Cord Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6925768672677360,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.InputCord.ActivePower{$SNMP_Profile,$Host,$IP,$InputCord,$Sysname} by {inputcord_id,snmp_device,inputcord,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Input Cord Active Power (Watts)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2740782358697302,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 38,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.InputCord.PowerUtilized{$SNMP_Profile,$IP,$Host,$InputCord,$Sysname}/10"
+                    }
+                ],
+                "title": "Input Cord Power Utilized",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 366589382441604,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 77,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Outlet",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3934027352592302,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 94
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0normal\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0disabled\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0lowAlarm\u00a0",
+                        "value": "y = 14"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0highAlarm\u00a0",
+                        "value": "y = 17"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0alarm\u00a0",
+                        "value": "y = 18"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Outlet.Status{$SNMP_Profile,$IP,$Host,$Outlet,$Sysname} by {snmp_device,outlet,sysname,outlet_id}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Outlet Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8702320218754816,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 101
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0on\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0off\u00a0",
+                        "value": "y = 2"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Outlet.State{$SNMP_Profile,$IP,$Host,$Outlet,$Sysname} by {snmp_device,outlet,outlet_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Outlet State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3246123709689032,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 38,
+                "y": 101
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Temperature Sensor",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 6361538502729970,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 117
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "C",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.TempSensor.Value{$SNMP_Profile,$Host,$IP,$TempSensor,$Sysname}/100"
+                    }
+                ],
+                "title": "Temperature Sensor Value",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3865402746778490,
+            "layout": {
+                "height": 15,
+                "width": 42,
+                "x": 0,
+                "y": 124
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.TempSensor.Status{$IP,$SNMP_Profile,$Host,$TempSensor,$Sysname} by {tempsensor,tempsensor_id,snmp_device,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Temperature Sensor Value",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 560727765425964,
+            "layout": {
+                "height": 15,
+                "width": 58,
+                "x": 59,
+                "y": 124
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.InputCord.EnergyConsumption{$IP,$SNMP_Profile,$Host,$InputCord,$Sysname} by {inputcord,inputcord_id,snmp_device,sysname}/10",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Input Cord Energy Consumption (kWh)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2508867800343698,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Lines",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 2890397626146840,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 140
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0normal\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0disabled\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0lowAlarm\u00a0",
+                        "value": "y = 14"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0highAlarm\u00a0",
+                        "value": "y = 17"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0alarm\u00a0",
+                        "value": "y = 18"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Line.Status{$SNMP_Profile,$IP,$Host,$Line,$Sysname} by {snmp_device,line,line_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Line Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5346938989082174,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 147
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0on\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0off\u00a0",
+                        "value": "y = 2"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Line.State{$SNMP_Profile,$IP,$Host,$Line,$Sysname} by {snmp_device,line,line_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Line State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 380478450161616,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 79,
+                "y": 147
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Line.Current{$IP,$SNMP_Profile,$Host,$Line,$Sysname} by {snmp_device,line,line_id,sysname}/100",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Line Load (Amps)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5858392365833970,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 163
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Line State",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:snmp.Line.State{$SNMP_Profile,$IP,$Host,$Line,$Sysname} by {sysname,line,line_id}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Line Status",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "q": "avg:snmp.Line.Status{$SNMP_Profile,$IP,$Host,$Line,$Sysname} by {sysname,line,line_id}"
+                    }
+                ],
+                "title": "Line Information",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 2886363413154904,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 38,
+                "y": 147
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Outlet State",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:snmp.Outlet.State{$IP,$SNMP_Profile,$Host,$Outlet,$Sysname} by {sysname,outlet,outlet_id}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Outlet Status",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "q": "avg:snmp.Outlet.Status{$IP,$SNMP_Profile,$Host,$Outlet,$Sysname} by {sysname,outlet,outlet_id}"
+                    }
+                ],
+                "title": "Outlet Information",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 7995509049640016,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 77,
+                "y": 101
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.Line.CurrentUtilized{$SNMP_Profile,$Host,$IP,$Line,$Sysname}/10"
+                    }
+                ],
+                "title": "Line Current Utilization",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5165345816269908,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 38,
+                "y": 163
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "  -4.1 = Invalid Reading",
+                "font_size": "18",
+                "show_tick": true,
+                "text_align": "left",
+                "tick_edge": "left",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 4000677807754046,
+            "layout": {
+                "height": 15,
+                "width": 15,
+                "x": 43,
+                "y": 124
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 1
+                            }
+                        ],
+                        "q": "avg:snmp.Phase.State{$SNMP_Profile,$IP,$Host,$Phase,$Sysname}"
+                    }
+                ],
+                "title": "Phase State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6833927334614010,
+            "layout": {
+                "height": 15,
+                "width": 17,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 1
+                            }
+                        ],
+                        "q": "avg:snmp.Outlet.State{$SNMP_Profile,$IP,$Host,$Outlet,$Sysname}"
+                    }
+                ],
+                "title": "Outlet State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7869947669198528,
+            "layout": {
+                "height": 15,
+                "width": 17,
+                "x": 18,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 1
+                            }
+                        ],
+                        "q": "avg:snmp.InputCord.State{$SNMP_Profile,$IP,$Host,$InputCord,$Sysname}"
+                    }
+                ],
+                "title": "Input Cord State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1061213087003244,
+            "layout": {
+                "height": 15,
+                "width": 17,
+                "x": 36,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 1
+                            }
+                        ],
+                        "q": "avg:snmp.Line.State{$IP,$SNMP_Profile,$Host,$Line,$Sysname}"
+                    }
+                ],
+                "title": "Line State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3544854321649988,
+            "layout": {
+                "height": 15,
+                "width": 18,
+                "x": 54,
+                "y": 0
+            }
+        }
+    ]
+}

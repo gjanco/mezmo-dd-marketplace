@@ -1,11 +1,11 @@
 {
-	"name": "Barracuda CGF - High Memory on {{snmp_device.name}}",
+	"name": "[RapDev SNMP Profiles] Barracuda CGF - High Memory on {{snmp_device.name}}",
 	"type": "query alert",
 	"query": "avg(last_1m):( avg:snmp.Memory.Used{snmp_profile:rd-barracuda-cgf} by {snmp_device} / avg:snmp.Memory.Total{snmp_profile:rd-barracuda-cgf} by {snmp_device} ) * 100 > 90",
 	"message": "{{#is_alert}}\nMemory consumption is getting high on {{snmp_device.name}}\n{{/is_alert}} \n\n{{#is_recovery}}\nMemory consumption is back to normal on {{snmp_device.name}}\n{{/is_recovery}}",
 	"tags": [
-		"check_type:snmp",
-		"hardware:barracudacgf"
+		"integration:rapdev-snmp",
+		"device:barracudacgf"
 	],
 	"options": {
 		"notify_audit": false,
@@ -25,5 +25,8 @@
 			"critical_recovery": 89,
 			"warning_recovery": 69
 		}
-	}
+	},
+    "recommended_monitor_metadata": {
+        "description": "Alert when Barracuda CGF memory utilization is too high"
+    }
 }

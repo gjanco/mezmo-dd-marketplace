@@ -1,0 +1,1110 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "default": "rd-sentrygen3-pdu",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "default": "*",
+            "name": "Host",
+            "prefix": "host"
+        },
+        {
+            "default": "*",
+            "name": "Infeed",
+            "prefix": "infeed"
+        },
+        {
+            "default": "*",
+            "name": "Outlet",
+            "prefix": "outlet"
+        },
+        {
+            "default": "*",
+            "name": "HumidSensor",
+            "prefix": "humidsensor"
+        },
+        {
+            "default": "*",
+            "name": "TempSensor",
+            "prefix": "tempsensor"
+        },
+        {
+            "default": "*",
+            "name": "Tower",
+            "prefix": "tower"
+        },
+        {
+            "default": "*",
+            "name": "Sysname",
+            "prefix": "sysname"
+        }
+    ],
+    "title": "RapDev ServerTech PDU Gen3 Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "Days",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.sysUpTimeInstance{$IP,$SNMP_Profile,$Host,$Sysname}/8640000"
+                    }
+                ],
+                "title": "System Up Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6916255011485180,
+            "layout": {
+                "height": 15,
+                "width": 45,
+                "x": 72,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Tower",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 4094499453322462,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Infeed",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3509069949949594,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 39
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0Normal\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0noComm\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0fanFail\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0overTemp\u00a0",
+                        "value": "y = 3"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Tower.Status{$Host,$SNMP_Profile,$IP,$Tower,$Sysname} by {snmp_device,tower,tower_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Tower Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 950331288705738,
+            "layout": {
+                "height": 15,
+                "width": 58,
+                "x": 0,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0normal\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0notOn\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0loadHigh\u00a0",
+                        "value": "y = 4"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0overLoad\u00a0",
+                        "value": "y = 5"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0readError\u00a0",
+                        "value": "y = 6"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0noComm\u00a0",
+                        "value": "y = 7"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0loadLow\u00a0",
+                        "value": "y = 3"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0reading\u00a0",
+                        "value": "y = 2"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Infeed.LoadStatus{$SNMP_Profile,$IP,$Host,$Infeed,$Sysname} by {snmp_device,infeed,infeed_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Infeed Load Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4796019894995342,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0off\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0on\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0offError\u00a0",
+                        "value": "y = 4"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0onError\u00a0",
+                        "value": "y = 5"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0onWait\u00a0",
+                        "value": "y = 3"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0offWait\u00a0",
+                        "value": "y = 2"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Infeed.Status{$SNMP_Profile,$IP,$Host,$Infeed,$Sysname} by {snmp_device,infeed,infeed_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Infeed Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6925768672677360,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 0,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "Amps",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.Infeed.LoadValue{$SNMP_Profile,$IP,$Host,$Infeed,$Sysname}/100"
+                    }
+                ],
+                "title": "Infeed Load Value",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 366589382441604,
+            "layout": {
+                "height": 15,
+                "width": 28,
+                "x": 38,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Outlet",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3934027352592302,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0off\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0on\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0offWait\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0onWait\u00a0",
+                        "value": "y = 3"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0offError\u00a0",
+                        "value": "y = 4"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0onError\u00a0",
+                        "value": "y = 5"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0noComm\u00a0",
+                        "value": "y = 6"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0reading\u00a0",
+                        "value": "y = 7"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0offFuse\u00a0",
+                        "value": "y = 8"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0onFuse\u00a0",
+                        "value": "y = 9"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Outlet.Status{$SNMP_Profile,$IP,$Host,$Outlet,$Sysname} by {outlet,outlet_id,snmp_device,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Outlet Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8702320218754816,
+            "layout": {
+                "height": 17,
+                "width": 40,
+                "x": 38,
+                "y": 101
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0idleOff\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0idleOn\u00a0",
+                        "value": "y = 1"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Outlet.ControlState{$SNMP_Profile,$IP,$Host,$Outlet,$Sysname} by {snmp_device,outlet,outlet_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Outlet Control State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3246123709689032,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 79,
+                "y": 85
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Environmental and Temperature Monitors",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 6361538502729970,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 0,
+                "y": 119
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Outlet Control State",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:snmp.Outlet.ControlState{$SNMP_Profile,$IP,$Host,$Outlet,$Sysname} by {sysname,outlet,outlet_id}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Outlet Status",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "q": "avg:snmp.Outlet.Status{$SNMP_Profile,$IP,$Host,$Outlet,$Sysname} by {sysname,outlet,outlet_id}"
+                    },
+                    {
+                        "aggregator": "avg",
+                        "alias": "Outlet Control Action",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "q": "avg:snmp.Outlet.ControlAction{$SNMP_Profile,$IP,$Host,$Outlet,$Sysname} by {sysname,outlet,outlet_id}"
+                    }
+                ],
+                "title": "Outlet Information",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 7995509049640016,
+            "layout": {
+                "height": 33,
+                "width": 37,
+                "x": 0,
+                "y": 85
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.Infeed.OutletCount{$IP,$SNMP_Profile,$Host,$Infeed,$Sysname}"
+                    }
+                ],
+                "title": "Infeed Outlet Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4223414659321210,
+            "layout": {
+                "height": 15,
+                "width": 28,
+                "x": 89,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "Amps",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.Infeed.Capacity{$IP,$SNMP_Profile,$Host,$Infeed,$Sysname}"
+                    }
+                ],
+                "title": "Infeed Capacity",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1626671992647498,
+            "layout": {
+                "height": 15,
+                "width": 21,
+                "x": 67,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Infeed.Voltage{$IP,$SNMP_Profile,$Host,$Infeed,$Sysname} by {infeed,infeed_id,sysname,snmp_device}/10",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "time": {},
+                "title": "Infeed Voltage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4050239050152036,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 38,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Infeed.Power{$IP,$SNMP_Profile,$Host,$Infeed,$Sysname} by {infeed,infeed_id,sysname,snmp_device}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Infeed Power (Watts)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5073955110135874,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 78,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0none\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0on\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0off\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0reboot\u00a0",
+                        "value": "y = 3"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Outlet.ControlAction{$IP,$SNMP_Profile,$Host,$Outlet,$Sysname} by {outlet,outlet_id,snmp_device,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Outlet Control Action",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4623361111182994,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 38,
+                "y": 85
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0found\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0notFound\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0lost\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0noComm\u00a0",
+                        "value": "y = 3"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.TempSensor.Status{$IP,$SNMP_Profile,$Host,$TempSensor,$Sysname} by {tempsensor,tempsensor_id,snmp_device,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Temperature Sensor Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2839546043050928,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 39,
+                "y": 126
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0tempNotMeasured\u00a0",
+                        "value": "y = -0.1"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.TempSensor.Value{$IP,$SNMP_Profile,$Host,$TempSensor,$Sysname} by {tempsensor,tempsensor_id,snmp_device,sysname}/10",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Temperature Value (Celsius) ",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6334545723819682,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 0,
+                "y": 142
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0normal\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0noComm\u00a0",
+                        "value": "y = 1"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.EnvMon.Status{$IP,$SNMP_Profile,$Host,$Sysname} by {envmon,envmon_id,snmp_device,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Environment Monitor Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4167911750104654,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 0,
+                "y": 126
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "ok dashed",
+                        "label": "\u00a0normal\u00a0",
+                        "value": "y = 0"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0notFound\u00a0",
+                        "value": "y = 1"
+                    },
+                    {
+                        "display_type": "info dashed",
+                        "label": "\u00a0reading\u00a0",
+                        "value": "y = 2"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0humidLow\u00a0",
+                        "value": "y = 3"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0humidHigh\u00a0",
+                        "value": "y = 4"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0readError\u00a0",
+                        "value": "y = 5"
+                    },
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0lost\u00a0",
+                        "value": "y = 6"
+                    },
+                    {
+                        "display_type": "warning dashed",
+                        "label": "\u00a0noComm\u00a0",
+                        "value": "y = 7"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.TempSensor.HumidStatus{$IP,$SNMP_Profile,$Host,$TempSensor,$Sysname} by {tempsensor,tempsensor_id,snmp_device,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Temp Sensor Humidity Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 996826393146940,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 77,
+                "y": 126
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "markers": [
+                    {
+                        "display_type": "error dashed",
+                        "label": "\u00a0humidNotMeasured\u00a0",
+                        "value": "y = -1"
+                    }
+                ],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.TempSensor.HumidValue{$IP,$SNMP_Profile,$Host,$TempSensor,$Sysname} by {tempsensor_id,tempsensor,snmp_device,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Humidity Value (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1255379353363986,
+            "layout": {
+                "height": 15,
+                "width": 37,
+                "x": 39,
+                "y": 142
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.Tower.InfeedCount{$IP,$SNMP_Profile,$Host,$Tower,$Sysname}"
+                    }
+                ],
+                "title": "Tower Infeed Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7608552649250482,
+            "layout": {
+                "height": 15,
+                "width": 19,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:snmp.Tower.InfeedCount{$IP,$SNMP_Profile,$Host,$Tower,$Sysname} by {snmp_device,tower,tower_id,sysname}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Tower Infeed Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2029460959890088,
+            "layout": {
+                "height": 15,
+                "width": 58,
+                "x": 59,
+                "y": 23
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "(avg:snmp.Infeed.LoadValue{$IP,$SNMP_Profile,$Host,$Infeed,$Sysname}/100)/avg:snmp.Infeed.Capacity{$IP,$SNMP_Profile,$Host,$Infeed,$Sysname}*100"
+                    }
+                ],
+                "title": "Infeed Utilization",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5915696597886934,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 42,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.Infeed.OutletCount{$IP,$SNMP_Profile,$Host,$Infeed,$Sysname}"
+                    }
+                ],
+                "title": "Infeed Outlets",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7798670022605682,
+            "layout": {
+                "height": 15,
+                "width": 21,
+                "x": 20,
+                "y": 0
+            }
+        }
+    ]
+}
