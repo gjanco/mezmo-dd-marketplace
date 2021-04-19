@@ -10,13 +10,8 @@
         },
         {
             "default": "*",
-            "name": "host",
-            "prefix": "host"
-        },
-        {
-            "default": "*",
-            "name": "nutanix_cvm",
-            "prefix": "nutanix_cvm"
+            "name": "nutanix_host",
+            "prefix": "nutanix_host"
         },
         {
             "default": "*",
@@ -27,453 +22,462 @@
             "default": "*",
             "name": "vm_description",
             "prefix": "vm_description"
+        },
+        {
+            "default": "*",
+            "name": "nutanix_cvm",
+            "prefix": "nutanix_cvm"
         }
-   ],
-  "title": "RapDev Nutanix VMs Dashboard",
-  "description": null,
-  "widgets": [
-    {
-      "id": 7480045821955258,
-      "layout": {
-        "x": 0,
-        "y": 0,
-        "width": 71,
-        "height": 7
-      },
-      "definition": {
-        "type": "image",
-        "url": "https://1000logos.net/wp-content/uploads/2019/07/Nutanix.jpg",
-        "sizing": "fit"
-      }
-    },
-    {
-      "id": 6037617244956386,
-      "layout": {
-        "x": 0,
-        "y": 8,
-        "width": 17,
-        "height": 8
-      },
-      "definition": {
-        "title": "VM Count",
-        "title_size": "16",
-        "title_align": "left",
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.nutanix.vms.count{$hypervisor,$vm_description,$nutanix_cvm}",
-            "aggregator": "last"
-          }
-        ],
-        "autoscale": true,
-        "precision": 0
-      }
-    },
-    {
-      "id": 5420071965137038,
-      "layout": {
-        "x": 18,
-        "y": 8,
-        "width": 17,
-        "height": 8
-      },
-      "definition": {
-        "title": "Virtual Disk Count",
-        "title_size": "16",
-        "title_align": "left",
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.nutanix.virtual_disks.count{$hypervisor,$vm_description,$nutanix_cvm}",
-            "aggregator": "last"
-          }
-        ],
-        "precision": 0
-      }
-    },
-    {
-      "id": 5021370931267012,
-      "layout": {
-        "x": 72,
-        "y": 0,
-        "width": 87,
-        "height": 5
-      },
-      "definition": {
-        "type": "note",
-        "content": "VM Table",
-        "background_color": "vivid_purple",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      }
-    },
-    {
-      "id": 6733017968450936,
-      "layout": {
-        "x": 72,
-        "y": 6,
-        "width": 87,
-        "height": 45
-      },
-      "definition": {
-        "title_size": "16",
-        "title_align": "left",
-        "type": "query_table",
-        "requests": [
-          {
-            "q": "avg:rapdev.nutanix.memory_usage{nutanix_type:vm,$nutanix_cluster,$host,$hypervisor,$vm_description,$nutanix_cvm} by {host, vm_description, nutanix_host, hypervisor}",
-            "alias": "Memory Usage (%)",
-            "cell_display_mode": [
-              "bar"
-            ],
-            "aggregator": "last"
-          },
-          {
-            "aggregator": "last",
-            "cell_display_mode": [
-              "bar"
-            ],
-            "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:vm,$nutanix_cluster,$host,$hypervisor,$vm_description,$nutanix_cvm} by {host, vm_description, nutanix_host, hypervisor}",
-            "alias": "CPU Usage (%)",
-            "limit": 50,
-            "order": "desc"
-          },
-          {
-            "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{nutanix_type:vm,$nutanix_cluster,$host,$hypervisor,$vm_description,$nutanix_cvm} by {host, vm_description, nutanix_host, hypervisor}",
-            "alias": "Average IO Latency",
-            "cell_display_mode": [
-              "bar"
-            ],
-            "aggregator": "last"
-          },
-          {
-            "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$host,$hypervisor,$vm_description,$nutanix_cvm} by {host, vm_description, nutanix_host, hypervisor}",
-            "alias": "IO Bandwidth",
-            "cell_display_mode": [
-              "bar"
-            ],
-            "aggregator": "last"
-          }
-        ],
-        "has_search_bar": "auto"
-      }
-    },
-    {
-      "id": 1994602504342840,
-      "layout": {
-        "x": 0,
-        "y": 17,
-        "width": 71,
-        "height": 5
-      },
-      "definition": {
-        "type": "note",
-        "content": "VM Metrics",
-        "background_color": "vivid_purple",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      }
-    },
-    {
-      "id": 5463823728163190,
-      "layout": {
-        "x": 0,
-        "y": 36,
-        "width": 35,
-        "height": 12
-      },
-      "definition": {
-        "title": "Read / Write IO Latency",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{$nutanix_cluster,nutanix_type:vm,$hypervisor,$vm_description,$nutanix_cvm} by {vm_description,guest_os,nutanix_cluster,host}",
-            "on_right_yaxis": false,
-            "style": {
-              "palette": "purple",
-              "line_type": "solid",
-              "line_width": "normal"
+    ],
+    "title": "RapDev Nutanix VMs Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "sizing": "zoom",
+                "type": "image",
+                "url": "https://1000logos.net/wp-content/uploads/2019/07/Nutanix.jpg"
             },
-            "display_type": "line"
-          }
-        ],
-        "yaxis": {
-          "scale": "linear",
-          "label": "",
-          "include_zero": true,
-          "min": "auto",
-          "max": "auto"
+            "id": 7480045821955258,
+            "layout": {
+                "height": 11,
+                "width": 41,
+                "x": 0,
+                "y": 0
+            }
         },
-        "markers": []
-      }
-    },
-    {
-      "id": 4395843151517558,
-      "layout": {
-        "x": 36,
-        "y": 23,
-        "width": 35,
-        "height": 12
-      },
-      "definition": {
-        "title": "Memory Usage (%)",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.nutanix.memory_usage{nutanix_type:vm,$nutanix_cluster,$host,$hypervisor,$vm_description,$nutanix_cvm} by {vm_description,nutanix_cluster,guest_os,host}",
-            "on_right_yaxis": false,
-            "style": {
-              "palette": "purple",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.nutanix.vms.count{$hypervisor,$vm_description,$nutanix_cvm}"
+                    }
+                ],
+                "title": "VM Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
             },
-            "display_type": "line"
-          }
-        ],
-        "yaxis": {
-          "scale": "linear",
-          "label": "",
-          "include_zero": true,
-          "min": "auto",
-          "max": "auto"
+            "id": 6037617244956386,
+            "layout": {
+                "height": 11,
+                "width": 17,
+                "x": 42,
+                "y": 0
+            }
         },
-        "markers": []
-      }
-    },
-    {
-      "id": 950083518457144,
-      "layout": {
-        "x": 0,
-        "y": 23,
-        "width": 35,
-        "height": 12
-      },
-      "definition": {
-        "title": "CPU Usage (%)",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:vm,$nutanix_cluster,$host,$hypervisor,$vm_description,$nutanix_cvm} by {nutanix_cluster,vm_description,host,guest_os}",
-            "on_right_yaxis": false,
-            "style": {
-              "palette": "purple",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.nutanix.virtual_disks.count{$hypervisor,$vm_description,$nutanix_cvm}"
+                    }
+                ],
+                "title": "Virtual Disk Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
             },
-            "display_type": "line"
-          }
-        ],
-        "yaxis": {
-          "scale": "linear",
-          "label": "",
-          "include_zero": true,
-          "min": "auto",
-          "max": "auto"
+            "id": 5420071965137038,
+            "layout": {
+                "height": 11,
+                "width": 17,
+                "x": 60,
+                "y": 0
+            }
         },
-        "markers": []
-      }
-    },
-    {
-      "id": 3376623782034006,
-      "layout": {
-        "x": 36,
-        "y": 36,
-        "width": 35,
-        "height": 12
-      },
-      "definition": {
-        "title": "Read / Write IOPS",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.nutanix.controller_num_iops{nutanix_type:vm,$nutanix_cluster,$host,$hypervisor,$vm_description,$nutanix_cvm} by {host,nutanix_cluster,vm_description,guest_os}",
-            "on_right_yaxis": false,
-            "style": {
-              "palette": "purple",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Memory Usage (%)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "q": "avg:rapdev.nutanix.memory_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "CPU Usage (%)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "Average IO Latency",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "IO Bandwidth",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
+                    }
+                ],
+                "time": {},
+                "title": "VM Summary",
+                "title_align": "left",
+                "title_size": "20",
+                "type": "query_table"
             },
-            "display_type": "line"
-          }
-        ],
-        "yaxis": {
-          "scale": "linear",
-          "label": "",
-          "include_zero": true,
-          "min": "auto",
-          "max": "auto"
+            "id": 6733017968450936,
+            "layout": {
+                "height": 45,
+                "width": 77,
+                "x": 0,
+                "y": 12
+            }
         },
-        "markers": []
-      }
-    },
-    {
-      "id": 8368953616179196,
-      "layout": {
-        "x": 0,
-        "y": 49,
-        "width": 35,
-        "height": 12
-      },
-      "definition": {
-        "title": "IO Bandwidth",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$host,$hypervisor,$vm_description,$nutanix_cvm} by {host,nutanix_cluster,vm_description,guest_os}",
-            "on_right_yaxis": false,
-            "style": {
-              "palette": "purple",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "background_color": "vivid_purple",
+                "content": "VM Metrics",
+                "font_size": "36",
+                "has_padding": true,
+                "show_tick": false,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
             },
-            "display_type": "line"
-          }
-        ],
-        "yaxis": {
-          "scale": "linear",
-          "label": "",
-          "include_zero": true,
-          "min": "auto",
-          "max": "auto"
+            "id": 1994602504342840,
+            "layout": {
+                "height": 6,
+                "width": 71,
+                "x": 78,
+                "y": 0
+            }
         },
-        "markers": []
-      }
-    },
-    {
-      "id": 8885154153568256,
-      "layout": {
-        "x": 36,
-        "y": 8,
-        "width": 17,
-        "height": 8
-      },
-      "definition": {
-        "title": "CPU Utilization",
-        "title_size": "16",
-        "title_align": "left",
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:vm,$nutanix_cluster,$hypervisor,$vm_description,$nutanix_cvm}",
-            "aggregator": "last"
-          }
-        ],
-        "autoscale": true,
-        "custom_unit": "%",
-        "precision": 2
-      }
-    },
-    {
-      "id": 2153738646720944,
-      "layout": {
-        "x": 54,
-        "y": 8,
-        "width": 17,
-        "height": 8
-      },
-      "definition": {
-        "title": "Memory Utilization",
-        "title_size": "16",
-        "title_align": "left",
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:rapdev.nutanix.hypervisor_memory_usage{$nutanix_cluster,$host,$hypervisor,$vm_description,$nutanix_cvm}",
-            "aggregator": "last"
-          }
-        ],
-        "autoscale": true,
-        "custom_unit": "%",
-        "precision": 2
-      }
-    },
-    {
-      "id": 4036332948804914,
-      "layout": {
-        "x": 36,
-        "y": 49,
-        "width": 35,
-        "height": 12
-      },
-      "definition": {
-        "title": "CPU Ready Time",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.nutanix.hypervisor.cpu_ready_time{nutanix_type:vm,$nutanix_cluster,$vm_description} by {vm_description,host,guest_os}",
-            "on_right_yaxis": false,
-            "style": {
-              "palette": "purple",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{$nutanix_cluster,nutanix_type:vm,$hypervisor,$vm_description,$nutanix_cvm} by {vm_description,guest_os,nutanix_cluster,host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "purple"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Read / Write IO Latency",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
             },
-            "display_type": "line"
-          }
-        ],
-        "yaxis": {
-          "scale": "linear",
-          "label": "",
-          "include_zero": true,
-          "min": "auto",
-          "max": "auto"
+            "id": 5463823728163190,
+            "layout": {
+                "height": 12,
+                "width": 35,
+                "x": 78,
+                "y": 32
+            }
         },
-        "markers": []
-      }
-    }
-  ],
-  "template_variables": [
-    {
-      "name": "nutanix_cluster",
-      "default": "*",
-      "prefix": "nutanix_cluster"
-    },
-    {
-      "name": "host",
-      "default": "*",
-      "prefix": "host"
-    },
-    {
-      "name": "hypervisor",
-      "default": "*",
-      "prefix": "hypervisor"
-    },
-    {
-      "name": "vm_description",
-      "default": "*",
-      "prefix": "vm_description"
-    },
-    {
-      "name": "nutanix_cvm",
-      "default": "*",
-      "prefix": "nutanix_cvm"
-    }
-  ],
-  "layout_type": "free",
-  "is_read_only": false,
-  "notify_list": [],
-  "id": "42v-zqa-gim"
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.nutanix.memory_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {vm_description,nutanix_cluster,guest_os,host}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "purple"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Memory Usage (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4395843151517558,
+            "layout": {
+                "height": 12,
+                "width": 35,
+                "x": 114,
+                "y": 19
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {nutanix_cluster,vm_description,host,guest_os}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "purple"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "CPU Usage (%)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 950083518457144,
+            "layout": {
+                "height": 12,
+                "width": 35,
+                "x": 78,
+                "y": 19
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.nutanix.controller_num_iops{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,nutanix_cluster,vm_description,guest_os}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "purple"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Read / Write IOPS",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3376623782034006,
+            "layout": {
+                "height": 12,
+                "width": 35,
+                "x": 114,
+                "y": 32
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,nutanix_cluster,vm_description,guest_os}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "purple"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "IO Bandwidth",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8368953616179196,
+            "layout": {
+                "height": 12,
+                "width": 35,
+                "x": 78,
+                "y": 45
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.nutanix.hypervisor.cpu_ready_time{nutanix_type:vm,$nutanix_cluster,$vm_description} by {vm_description,host,guest_os}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "purple"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "CPU Ready Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4036332948804914,
+            "layout": {
+                "height": 12,
+                "width": 35,
+                "x": 114,
+                "y": 45
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm,nutanix_type:vm}"
+                    }
+                ],
+                "time": {},
+                "title": "Avg CPU Utilization",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7112845140589716,
+            "layout": {
+                "height": 11,
+                "width": 17,
+                "x": 78,
+                "y": 7
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.nutanix.memory_usage{$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm,nutanix_type:vm}"
+                    }
+                ],
+                "time": {},
+                "title": "Avg Memory Utilization",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1366038664839752,
+            "layout": {
+                "height": 11,
+                "width": 17,
+                "x": 96,
+                "y": 7
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "Kbps",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm}"
+                    }
+                ],
+                "time": {},
+                "title": "Avg IO Bandwidth",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6719681829314192,
+            "layout": {
+                "height": 11,
+                "width": 17,
+                "x": 114,
+                "y": 7
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm}"
+                    }
+                ],
+                "time": {},
+                "title": "Avg IO Latency",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3265959887809328,
+            "layout": {
+                "height": 11,
+                "width": 17,
+                "x": 132,
+                "y": 7
+            }
+        }
+    ]
 }

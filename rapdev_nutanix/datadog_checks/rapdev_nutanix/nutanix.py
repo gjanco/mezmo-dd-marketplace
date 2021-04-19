@@ -69,6 +69,9 @@ class NutanixCheck(AgentCheck):
     def check(self, instance):
         self.test_cvm_connection()
         self.validate_config()
+        self.cluster_name = self.retrieve_cluster_name()
+        self.tags.append("nutanix_cluster:{}".format(self.cluster_name))
+        self.tags = list(set(self.tags))
         self.get_clusters()
         self.get_storage_containers()
         self.get_storage_pools()
@@ -77,8 +80,6 @@ class NutanixCheck(AgentCheck):
         self.get_vms()
         self.get_virtual_disks()
         self.get_license()
-        self.cluster_name = self.retrieve_cluster_name()
-        self.tags.append("nutanix_cluster:{}".format(self.cluster_name))
         if self.collect_events == True:
             self.get_events()
 
@@ -108,6 +109,8 @@ class NutanixCheck(AgentCheck):
         response = self.call_api(entity)
         clusters = response["entities"]
         cluster_metadata = response["metadata"]
+        total_clusters = cluster_metadata["totalEntities"]
+        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_clusters, tags=self.tags)
         for cluster in clusters:
             stats = cluster["stats"]
             usage_stats = cluster["usageStats"]
@@ -132,18 +135,18 @@ class NutanixCheck(AgentCheck):
             desired_redundancy = cluster["clusterRedundancyState"]["desiredRedundancyFactor"]
             node_count = cluster["numNodes"]
             block_count = len(cluster["blockSerials"])
-            total_clusters = cluster_metadata["totalEntities"]
             self.gauge("{}.{}.currentRedundancyFactor".format(self.metric_prefix, entity), current_redundancy, tags=metric_tags)
             self.gauge("{}.{}.desiredRedundancyFactor".format(self.metric_prefix, entity), desired_redundancy, tags=metric_tags)
             self.gauge("{}.{}.blockCount".format(self.metric_prefix, entity), block_count, tags=metric_tags)
             self.gauge("{}.{}.nodeCount".format(self.metric_prefix, entity), node_count, tags=metric_tags)
-            self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_clusters, tags=metric_tags)
 
     def get_storage_containers(self):
         entity = "containers"
         response = self.call_api(entity)
         containers = response["entities"]
         container_metadata = response["metadata"]
+        total_containers = container_metadata["totalEntities"]
+        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_containers, tags=self.tags)
         for container in containers:
             stats = container["stats"]
             usage_stats = container["usageStats"]
@@ -158,14 +161,13 @@ class NutanixCheck(AgentCheck):
                 self.submit_metrics(stats, entity, metric_tags)
                 self.submit_metrics(usage_stats, entity, metric_tags)
 
-        total_containers = container_metadata["totalEntities"]
-        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_containers, tags=metric_tags)
-
     def get_storage_pools(self):
         entity = "storage_pools"
         response = self.call_api(entity)
         storage_pools = response["entities"]
         storage_pools_metadata = response["metadata"]
+        total_storage_pools = storage_pools_metadata["totalEntities"]
+        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_storage_pools, tags=self.tags)
         for storage_pool in storage_pools:
             stats = storage_pool["stats"]
             usage_stats = storage_pool["usageStats"]
@@ -180,14 +182,13 @@ class NutanixCheck(AgentCheck):
                 self.submit_metrics(stats, entity, metric_tags)
                 self.submit_metrics(usage_stats, entity, metric_tags)
 
-        total_storage_pools = storage_pools_metadata["totalEntities"]
-        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_storage_pools, tags=metric_tags)
-
     def get_disks(self):
         entity = "disks"
         response = self.call_api(entity)
         disks = response["entities"]
         disk_metadata = response["metadata"]
+        total_disks = disk_metadata["totalEntities"]
+        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_disks, tags=self.tags)
         for disk in disks:
             stats = disk["stats"]
             usage_stats = disk["usageStats"]
@@ -214,14 +215,13 @@ class NutanixCheck(AgentCheck):
                 self.submit_metrics(stats, entity, metric_tags)
                 self.submit_metrics(usage_stats, entity, metric_tags)
 
-        total_disks = disk_metadata["totalEntities"]
-        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_disks, tags=metric_tags)
-
     def get_hosts(self):
         entity = "hosts"
         response = self.call_api(entity)
         hosts = response["entities"]
         host_metadata = response["metadata"]
+        total_hosts = host_metadata["totalEntities"]
+        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_hosts, tags=self.tags)
         for host in hosts:
             stats = host["stats"]
             usage_stats = host["usageStats"]
@@ -229,8 +229,6 @@ class NutanixCheck(AgentCheck):
             metric_tags = self.tags.copy()
             metric_tags.append("nutanix_type:host")
             metric_tags.append("nutanix_host:{}".format(host["name"]))
-            total_hosts = host_metadata["totalEntities"]
-            self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_hosts, tags=metric_tags)
             if self.verbose_collection == False:
                 self.submit_standard_metrics(stats, entity, metric_tags, nutanix_host)
                 self.submit_standard_metrics(usage_stats, entity, metric_tags, nutanix_host)
@@ -249,6 +247,8 @@ class NutanixCheck(AgentCheck):
         response = self.call_api(entity)
         vms = response["entities"]
         vm_metadata = response["metadata"]
+        total_vms = vm_metadata["totalEntities"]
+        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_vms, tags=self.tags)
         for vm in vms:
             if vm["powerState"] == "on":
                 stats = vm["stats"]
@@ -265,14 +265,13 @@ class NutanixCheck(AgentCheck):
                 else:
                     self.submit_metrics(stats, entity, metric_tags, vmname)
 
-        total_vms = vm_metadata["totalEntities"]
-        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_vms, tags=metric_tags)
-
     def get_virtual_disks(self):
         entity = "virtual_disks"
         response = self.call_api(entity)
         virtual_disks = response["entities"]
         virtual_disks_metadata = response["metadata"]
+        total_virtual_disks = virtual_disks_metadata["totalEntities"]
+        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_virtual_disks, tags=self.tags)
         for virtual_disk in virtual_disks:
             stats = virtual_disk["stats"]
             metric_tags = self.tags.copy()
@@ -282,8 +281,6 @@ class NutanixCheck(AgentCheck):
                 self.submit_standard_metrics(stats, entity, metric_tags)
             else:
                 self.submit_metrics(stats, entity, metric_tags)
-        total_virtual_disks = virtual_disks_metadata["totalEntities"]
-        self.gauge("{}.{}.count".format(self.metric_prefix, entity), total_virtual_disks, tags=metric_tags)
 
     def get_license(self):
         entity = "license"
@@ -306,12 +303,14 @@ class NutanixCheck(AgentCheck):
     def get_events(self):
         entity = "events"
         interval = int(self.instance.get("min_collection_interval", 15))
-        start_time = str(interval + 3000000)
+        current_time = round(time.time())
+        start_time = str((current_time - interval)*1000000)
         response = self.http.get("https://" + self.cvm_host + "/PrismGateway/services/rest/v1/" + entity + "/?startTimeInUsecs=" + start_time).json()
         events = response["entities"]
-        usecs = events[0]["createdTimeStampInUsecs"]
-        timestamp = (usecs / 1000000)
+        
         for event in events:
+            usecs = event["createdTimeStampInUsecs"]
+            timestamp = (usecs / 1000000)
             contextTypes = event["contextTypes"]
             contextValues = event["contextValues"]
             context_dict = {contextTypes[x]: contextValues[x] for x in range(len(contextTypes))}
