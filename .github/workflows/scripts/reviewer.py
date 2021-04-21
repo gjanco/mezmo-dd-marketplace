@@ -20,9 +20,10 @@ def file_use_requests(content):
     for line in content.splitlines():
         # HTTP Validation can be skipped for specific cases
         # See https://github.com/DataDog/marketplace/pull/99#issuecomment-783457414
-        if not 'SKIP_HTTP_VALIDATION' in line:
+        if line.startswith('+') and not 'SKIP_HTTP_VALIDATION' in line:
             for http_func in REQUEST_LIBRARY_FUNCTIONS:
                 if http_func in line:
+                    print(f'Using requests on line: {line}')
                     return True
     return False
 
