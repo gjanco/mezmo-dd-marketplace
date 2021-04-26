@@ -1,6 +1,6 @@
 ## Overview
 
-[![Microsoft Office 365 Introduction](https://raw.githubusercontent.com/DataDog/marketplace/master/o365/images/video.png)](https://www.youtube.com/watch?v=sBg8HI3Oz64)
+[![Microsoft Office 365 Introduction](images/video.png)](https://www.youtube.com/watch?v=sBg8HI3Oz64)
 
 The Microsoft Office 365 integration monitors product activity, usage and licensing of Exchange, Outlook, Sharepoint, OneDrive, Yammer, Teams, and Skype. The integration also runs synthetic operations in Outlook, Teams, and OneDrive to provide application performance monitoring from multiple locations worldwide. The Office 365 integration comes with a dashboard that allows you to filter based on User, OneDrive, Sharepoint URL, and more. It also uses Datadog Synthetic checks to validate that the Office 365 URLs are online and responding in an acceptable timeframe.
 
@@ -9,19 +9,19 @@ All integrations can be toggled on and off in the ```o365.yaml``` file as part o
 Below are some screenshots of the dashboard that is included with the integration.
 
 ### Synthetic Mail and response times
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/o365/images/1.png)
+![Screenshot1](images/1.png)
 
 ### Outlook Mailbox metrics per user and devices
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/o365/images/2.png)
+![Screenshot1](images/2.png)
 
 ### Sharepoint site usage per URL
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/o365/images/3.png)
+![Screenshot1](images/3.png)
 
 ### License usage per product and user
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/o365/images/4.png)
+![Screenshot1](images/4.png)
 
 ### Teams, Calendar and OneDrive synthetics
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/o365/images/5.png)
+![Screenshot1](images/5.png)
 
 ## Setup
 

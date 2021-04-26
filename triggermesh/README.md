@@ -4,7 +4,7 @@
 
 [TriggerMesh](https://www.triggermesh.com) provides a mechanism to get all [Oracle Cloud Metrics](https://docs.oracle.com/en-us/iaas/Content/Monitoring/Concepts/monitoringoverview.htm) into Datadog. This is done by building a TriggerMesh Bridge and configuring the OCI so-called source as well as the Datadog [target](https://docs.triggermesh.io/targets/datadog/).
 
-![OCI to datadog Bridge](https://raw.githubusercontent.com/DataDog/marketplace/master/triggermesh/images/ocidatadogtm.png)
+![OCI to datadog Bridge](images/ocidatadogtm.png)
 
 ## Setup
 

@@ -4,7 +4,7 @@
 
 The Datadog Mule® Integration is an Agent-based integration that collects metrics from MuleSoft products and uploads them into Datadog. 
 
-![Datadog Mule® Integration Bundle](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_bundle.png)
+![Datadog Mule® Integration Bundle](images/dmi_bundle.png)
 
 You can use these metrics to take advantage of the out-of-the-box dashboards and monitors or you can create your own visualizations.
 
@@ -16,11 +16,11 @@ You can use these metrics to take advantage of the out-of-the-box dashboards and
 - Receive and visualize alerts about your Mule infrastructure 
 - Gain insights about your Anypoint Platform resources allocation of your organization 
 
-![Operations: Infrastructure dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_ops_infra.png)
+![Operations: Infrastructure dashboard](images/dmi_ops_infra.png)
 
-![Operations: Infrastructure dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_ops_apis.png)
+![Operations: Infrastructure dashboard](images/dmi_ops_apis.png)
 
-![Operations: Resources allocation and usage dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_ops_allocation.png)
+![Operations: Resources allocation and usage dashboard](images/dmi_ops_allocation.png)
 
 #### Development (_Optimization Dashboard_) 
 
@@ -28,14 +28,14 @@ You can use these metrics to take advantage of the out-of-the-box dashboards and
 - Find bottlenecks in your Mule applications to optimize performance 
 - Instrument your Mule applications with our Datadog Connector for Mule 4 for troubleshooting purposes 
 
-![Development: Optimizations dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_dev_optimization.png)
+![Development: Optimizations dashboard](images/dmi_dev_optimization.png)
 
 #### Executive (_Cost-optimization and Downtime Dashboard_) 
 
 - Analyze and forecast your ROI based on used and unused resources 
 - Get visibility of the system uptime of your Mule investment 
 
-![Executives: Cost optimization dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_exec_cost_optimization.png)
+![Executives: Cost optimization dashboard](images/dmi_exec_cost_optimization.png)
 
 #### Metrics are collected from the following MuleSoft products: 
 
@@ -47,19 +47,19 @@ You can use these metrics to take advantage of the out-of-the-box dashboards and
 
 ### **Instrument your Mule applications with our Datadog Mule 4 Connector**
 
-![Datadog Connector for Mule 4](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_mule_connector.png)
+![Datadog Connector for Mule 4](images/dmi_mule_connector.png)
 
 Use the Datadog Connector for Mule 4 with Datadog APM tracing to gain visibility using the out-of-the-box performance dashboards.
 
-![Datadog APM](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_apm_traces.png)
+![Datadog APM](images/dmi_apm_traces.png)
 
 Measure the performance of the operations in your flows as granular as needed using spans.
 
-![Datadog APM](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_apm_trace.png)
+![Datadog APM](images/dmi_apm_trace.png)
 
 Also, correlate the logs generated within a transaction in a single trace to narrow down any performance optimization or troubleshooting scope.
 
-![Datadog APM](https://raw.githubusercontent.com/DataDog/marketplace/master/mulesoft_anypoint/images/dmi_apm_logs.png)
+![Datadog APM](images/dmi_apm_logs.png)
 
 ### **Troubleshooting**
 

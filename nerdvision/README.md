@@ -4,7 +4,7 @@
 
 ### What is NerdVision?
 
-![nerdvision](https://raw.githubusercontent.com/DataDog/marketplace/master/nerdvision/images/screenshot.png)
+![nerdvision](images/screenshot.png)
 
 NerdVision is a live debugging platform that allows you to gather deep insight into your application at any time. NerdVision
 allows you to install tracepoints into your application to collect data about the state of your applications without restarting or
@@ -23,7 +23,7 @@ context to include data that are most important to the issue or are not part of 
 The Datadog dashboard gives you the insight you need to see where in your code the tracepoints are being triggered. Allowing you to
 identify hotspots of debug activity.
 
-![datadog](https://raw.githubusercontent.com/DataDog/marketplace/master/nerdvision/images/screenshot_datadog.png)
+![datadog](images/screenshot_datadog.png)
 
 ### Events
 
@@ -31,14 +31,14 @@ Each tracepoint that is triggered will be sent to Datadog as an event, containin
 data in NerdVision. Tracepoints allow you to gather the full stack and variables that are active at the frame the tracepoint is
 triggered.
 
-![datadog](https://raw.githubusercontent.com/DataDog/marketplace/master/nerdvision/images/datadog_event.png)
+![datadog](images/datadog_event.png)
 
 ### Logs
 
 With dynamic logging you can inject new log messages at any point of you code to add that extra data you missed. Each log message
 that is triggered will be synced with Datadog as soon as it has been processed by NerdVision.
 
-![datadog](https://raw.githubusercontent.com/DataDog/marketplace/master/nerdvision/images/datadog_log.png)
+![datadog](images/datadog_log.png)
 
 ### Metrics
 

@@ -13,22 +13,22 @@ Through live debugging in staging and testing environments, or in canary deploym
 Ozcode proactively identifies errors and provides the relevant developers with all the data needed to understand and fix a bug thereby shortening MTTD, MTTD, and MTTR.
 
 ### Exceptions Overview
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/ozcode/images/exceptions-dashboard.png)
+![Screenshot1](images/exceptions-dashboard.png)
 
 Exceptions are captured by Ozcode and displayed in the Ozcode DataDog dashboard. Simply click an exception to debug it.
 
 ### Debug Exceptions 
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/ozcode/images/exception-debug.png)
+![Screenshot1](images/exception-debug.png)
 
 The debugging screen displays full-fidelity time-travel debug information, including local variables, method parameters and return values, color-coded conditional statements, network requests, and database queries across the whole call stack. This degree of code-level observability enables a quick root cause analysis and resolution of bugs. 
 
 ### Live Debugging with Dynamic Logs and Tracepoints 
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/ozcode/images/tracepoints.png)
+![Screenshot1](images/tracepoints.png)
 
 Add live logs, metrics, and traces without having to go through the time-consuming cycle of change code --> build --> test --> release --> deploy a new version. Get a full capture of variables for any tracepoint without requiring any changes to the code.
 
 ### Pipe Logs, Metrics, and Traces into DataDog
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/ozcode/images/dynamic-logs.png)
+![Screenshot1](images/dynamic-logs.png)
 
 Pipe logs, metrics, and traces directly into DataDog and correlate them through traceID and spanID. Common logging frameworks such as SeriLog, nLog and log4net are all supported. Through a point-in-time link provided by Ozcode, open up a new tab in the OzcodeUI to see a full time-travel debug information for an exception.
 

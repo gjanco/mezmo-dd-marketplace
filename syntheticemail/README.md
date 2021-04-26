@@ -1,6 +1,6 @@
 ## Overview
 
-[![Synthetic Email Introduction](https://raw.githubusercontent.com/DataDog/marketplace/master/syntheticemail/images/video.png)](https://www.youtube.com/watch?v=IUCkv93oLNA)
+[![Synthetic Email Introduction](images/video.png)](https://www.youtube.com/watch?v=IUCkv93oLNA)
 
 This integration monitors email mailboxes and measures full send-receive synthetic messages deliveries. The integration uses three geographical source locations for the synthetic email deliveries: Virginia (US), Frankfurt (EU) and Sydney (AP). The check works by sending a test email from the address `probe@synth-rapdev.io` and then waiting for a auto-reply from your mailbox back to us.  The integration measures the number of hops, round-trip-time, and the test results (pass/fail).
 
@@ -8,7 +8,7 @@ Below are some screenshots of the dashboard that is included with the integratio
 
 ### Synthetic Email and Response Times
 
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/syntheticemail/images/1.png)
+![Screenshot1](images/1.png)
 
 ## Setup
 

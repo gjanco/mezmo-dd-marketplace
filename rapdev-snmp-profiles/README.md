@@ -1,7 +1,7 @@
 # RapDev SNMP Profiles
 ## Overview
 
-[![RapDev SNMP Profiles Introduction](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/video.png)](https://www.youtube.com/watch?v=SVT9hqV7aD4&list=PLa2zzueYDhHrjODIXryBX_RakQIL6nmOh)
+[![RapDev SNMP Profiles Introduction](images/video.png)](https://www.youtube.com/watch?v=SVT9hqV7aD4&list=PLa2zzueYDhHrjODIXryBX_RakQIL6nmOh)
 
 The RapDev SNMP Profiles package supports over 150 device profiles natively, and has pre-built dashboards for all supported hardware devices to help you monitor them instantly. Several hundred hours have gone into tuning the profiles to ensure that they collect all relevant metrics with the necessary tags, including serial numbers, firmware versions, hardware versions, and more. This integration can be deployed in minutes and start monitoring, visualizing, and alerting immediately.
 
@@ -11,22 +11,22 @@ There is no need for you to manage, edit, modify, or update any SNMP profiles on
 Below are some screenshots of the dashboards that come out of the box with this integration.
 
 ### Dashboard for Cisco Meraki
-![Screenshot6](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/6.png)
+![Screenshot6](images/6.png)
 
 ### Dashboard for Palo Alto firewalls
-![Screenshot2](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/2.png)
+![Screenshot2](images/2.png)
 
 ### Dashboard for Dell iDRAC servers
-![Screenshot3](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/3.png)
+![Screenshot3](images/3.png)
 
 ### Sample of tags collected for server hardware
-![Screenshot5](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/5.png)
+![Screenshot5](images/5.png)
 
 ### Sample list of metrics collected for HP iLO3/4
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/1.png)
+![Screenshot1](images/1.png)
 
 ### Sample list of metrics collected for Dell iDRAC
-![Screenshot4](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev-snmp-profiles/images/4.png)
+![Screenshot4](images/4.png)
 
 Below is a list of the currently supported devices, please visit our [website](https://www.rapdev.io/products/datadog-snmp-profiles) for a full updated list of all devices.
 

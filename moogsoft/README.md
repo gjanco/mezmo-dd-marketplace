@@ -8,9 +8,9 @@ Moogsoft provides an advanced self-servicing AI-driven observability platform th
 
 Moogsoft delivers an enterprise-class, cloud-native platform that empowers customers to drive adoption at their own pace at a much lower cost.
 
-![Moogsoft Correlation](https://raw.githubusercontent.com/DataDog/marketplace/master/moogsoft/images/moogsoft.correlation.png)
+![Moogsoft Correlation](images/moogsoft.correlation.png)
 
-![Moogsoft Dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/moogsoft/images/moogsoft.dashboard.png)
+![Moogsoft Dashboard](images/moogsoft.dashboard.png)
 
 ### Observe
 
@@ -26,9 +26,9 @@ See everything in one view. We aggregate all of your apps, services, and infrast
 
 ### Moogsoft Observability Cloud Data Flow
 
-![Moogsoft Correlation](https://raw.githubusercontent.com/DataDog/marketplace/master/moogsoft/images/moogsoft.main.jpg)
+![Moogsoft Correlation](images/moogsoft.main.jpg)
 
-![Moogsoft Main](https://raw.githubusercontent.com/DataDog/marketplace/master/moogsoft/images/moogsoft.flow.png)
+![Moogsoft Main](images/moogsoft.flow.png)
 
 ## Setup
 

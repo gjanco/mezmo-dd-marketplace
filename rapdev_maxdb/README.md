@@ -3,13 +3,13 @@
 The MaxDB integration monitors data and log areas and volumes, caches, sessions, locks, and other metrics for MaxDB instances to ensure the databases are running as they should be. The integration comes with a dashboard which can be filtered by database, as well as database host. The MaxDB integration also comes with monitors for some common metrics that relate to the overall health of the database.
 
 ### Database Status & Data/Log Metrics
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_maxdb/images/1.png)
+![Screenshot1](images/1.png)
 
 ### Database Cache Metrics
-![Screenshot2](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_maxdb/images/2.png)
+![Screenshot2](images/2.png)
 
 ### Session, OMS, and Schema Metrics
-![Screenshot3](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_maxdb/images/3.png)
+![Screenshot3](images/3.png)
 
 ### Monitors
 1. MaxDB Connection Check

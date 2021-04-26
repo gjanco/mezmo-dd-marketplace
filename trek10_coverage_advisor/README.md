@@ -7,18 +7,18 @@ After signup, this integration copies a dashboard into your Datadog account and 
 
 The dashboard shows a view of your Datadog's account monitoring status and lets you generate a report for monitored and unmonitored metrics. The first event monitor alerts you when Trek10 discovers new important AWS CloudWatch metrics without corresponding monitors. The second event monitor informs you of new CloudWatch metrics added to our recommendations list that matches AWS services you use.
 
-![](https://raw.githubusercontent.com/DataDog/marketplace/master/trek10_coverage_advisor/images/maindashview.png)
+![](images/maindashview.png)
 
 
 *Have a specific request for this Datadog tool, looking for 24/7 managed services for AWS with a platform built on Datadog, or need expertise on AWS or Datadog? Reach out to our sales team [sales team](trek10.com/contact) and let us explore how we can help you*
 
 ### Metrics
 * Trek10 will push a metric nightly, trek10.coverage.aws_metric_count, that can be used to see how many metrics are currently being ingested into your Datadog account that don't have monitors for them. The metric will have the tag `metric_type` that can be filtered down to the values `all_metrics`, `metrics_monitored`, and `monitoring_recommendations`. 
-![](https://raw.githubusercontent.com/DataDog/marketplace/master/trek10_coverage_advisor/images/metric_image.png)
+![](images/metric_image.png)
    
 ### Events
 * Trek10 also pushes events when we find unmonitored services. The event will link you back to the primary dashboard so you can see recent recommendations as well generate a report.
-![](https://raw.githubusercontent.com/DataDog/marketplace/master/trek10_coverage_advisor/images/event_image.png)
+![](images/event_image.png)
    
 ### Monitors
 * Trek10 provides two monitors to alert you when you have unmonitored services.

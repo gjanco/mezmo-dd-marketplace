@@ -2,7 +2,7 @@
 
 ## Overview
 
-![Dashboard](https://raw.githubusercontent.com/DataDog/marketplace/master/fairwinds_insights/images/dashboard.png)
+![Dashboard](images/dashboard.png)
 
 ### Software to protect and optimize your mission-critical Kubernetes applications
 

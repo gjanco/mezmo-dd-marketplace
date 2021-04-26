@@ -9,9 +9,9 @@ The Solaris Agent uses the same URLs and ports as the native agents. The Solaris
 
 ### Solaris agent in infrastructure list
 
-![Screenshot1](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_solaris_agent/images/1.png)
+![Screenshot1](images/1.png)
 
-![Screenshot3](https://raw.githubusercontent.com/DataDog/marketplace/master/rapdev_solaris_agent/images/3.png)
+![Screenshot3](images/3.png)
 
 ## Setup
 
