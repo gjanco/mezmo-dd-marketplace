@@ -27,7 +27,7 @@ Below are some screenshots of the dashboard that is included with the integratio
 
 ### Datadog Integration Install
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.0.1`
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.0.2`
 
 ### Microsoft Office 365 Configuration
 
@@ -55,10 +55,8 @@ The Microsoft Office 365 integration requires permissions managed through your o
 		- Calendars.ReadWrite
 		- Channel.Create
 		- ChannelMessage.Send
-		- Directory.ReadWrite.All
 		- email
 		- Files.ReadWrite
-		- Group.ReadWrite.All
 		- offline_access
 		- openid
 		- profile

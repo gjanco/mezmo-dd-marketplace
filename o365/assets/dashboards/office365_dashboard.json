@@ -1,2194 +1,2528 @@
 {
-  "title": "Office365 Dashboard",
-  "author_name": "RapDev",
-  "description": "",
-  "widgets": [
-    {
-      "id": 0,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.outlook.mailbox.storage.used{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "title": "Office 365 Outlook Storage Used",
-        "title_size": "16",
-        "title_align": "left",
-        "time": {},
-        "autoscale": true,
-        "custom_unit": "B",
-        "precision": 2,
-        "text_align": "center"
-      },
-      "layout": {
-        "x": 24,
-        "y": 122,
-        "width": 22,
-        "height": 15
-      }
-    },
-    {
-      "id": 7,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:synthetics.http.dns.time{url:https://office.com/login,location:aws:ap-south-1}",
-            "aggregator": "avg",
-            "conditional_formats": [
-              {
-                "comparator": "<",
-                "value": 200,
-                "palette": "white_on_green"
-              },
-              {
-                "comparator": ">",
-                "value": 200,
-                "palette": "white_on_yellow"
-              },
-              {
-                "comparator": ">",
-                "value": 1000,
-                "palette": "white_on_red"
-              }
-            ]
-          }
-        ],
-        "custom_links": [],
-        "title": "O365 Response Time (AP)",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 48,
-        "y": 13,
-        "width": 24,
-        "height": 10
-      }
-    },
-    {
-      "id": 8,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:synthetics.http.response.time{url:https://office.com/login,location:aws:eu-central-1}",
-            "aggregator": "avg",
-            "conditional_formats": [
-              {
-                "comparator": "<",
-                "value": 200,
-                "palette": "white_on_green"
-              },
-              {
-                "comparator": ">",
-                "value": 200,
-                "palette": "white_on_yellow"
-              },
-              {
-                "comparator": ">",
-                "value": 1000,
-                "palette": "white_on_red"
-              }
-            ]
-          }
-        ],
-        "custom_links": [],
-        "title": "O365 Response Time (EU)",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 23,
-        "y": 13,
-        "width": 24,
-        "height": 10
-      }
-    },
-    {
-      "id": 9,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:synthetics.http.response.time{url:https://office.com/login,location:aws:us-west-1}",
-            "aggregator": "avg",
-            "conditional_formats": [
-              {
-                "comparator": "<",
-                "value": 200,
-                "palette": "white_on_green"
-              },
-              {
-                "comparator": ">",
-                "value": 200,
-                "palette": "white_on_yellow"
-              },
-              {
-                "comparator": ">",
-                "value": 1000,
-                "palette": "white_on_red"
-              }
-            ]
-          }
-        ],
-        "custom_links": [],
-        "title": "O365 Response Time (US)",
-        "title_size": "16",
-        "title_align": "left",
-        "precision": 2
-      },
-      "layout": {
-        "x": 1,
-        "y": 13,
-        "width": 21,
-        "height": 10
-      }
-    },
-    {
-      "id": 10,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:synthetics.http.dns.time{url:https://office.com/login}",
-            "aggregator": "avg",
-            "conditional_formats": [
-              {
-                "comparator": "<",
-                "value": 30,
-                "palette": "white_on_green"
-              },
-              {
-                "comparator": ">",
-                "value": 30,
-                "palette": "white_on_yellow"
-              },
-              {
-                "comparator": ">",
-                "value": 100,
-                "palette": "white_on_red"
-              }
-            ]
-          }
-        ],
-        "custom_links": [],
-        "title": "O365 DNS Response",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 73,
-        "y": 13,
-        "width": 20,
-        "height": 10
-      }
-    },
-    {
-      "id": 11,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:synthetics.http.response.time{url:https://office.com/login} by {location}",
-            "display_type": "line",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
-            }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
-        },
-        "title": "O365 Response Time",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 1,
-        "y": 24,
-        "width": 57,
-        "height": 15
-      }
-    },
-    {
-      "id": 12,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:synthetics.http.dns.time{url:https://office.com/login} by {location}",
-            "display_type": "line",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
-            }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
-        },
-        "title": "O365 DNS Response Time",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 59,
-        "y": 24,
-        "width": 56,
-        "height": 15
-      }
-    },
-    {
-      "id": 13,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:synthetics.ssl.time_to_expiry{env:office365}",
-            "aggregator": "avg",
-            "conditional_formats": [
-              {
-                "comparator": "<",
-                "value": 30,
-                "palette": "white_on_red"
-              },
-              {
-                "comparator": ">",
-                "value": 90,
-                "palette": "white_on_green"
-              },
-              {
-                "comparator": ">",
-                "value": 30,
-                "palette": "white_on_yellow"
-              }
-            ]
-          }
-        ],
-        "custom_links": [],
-        "title": "O365 SSL Cert Expiration",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 94,
-        "y": 13,
-        "width": 21,
-        "height": 10
-      }
-    },
-    {
-      "id": 14,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "(avg:rapdev.o365.outlook.mailbox.storage.used{$Organization_ID}/avg:rapdev.o365.outlook.mailbox.total{$Organization_ID})",
-            "aggregator": "last"
-          }
-        ],
-        "title": "Average Mailbox Storage Usage",
-        "title_size": "16",
-        "title_align": "left",
-        "time": {},
-        "autoscale": true,
-        "custom_unit": "B",
-        "precision": 2
-      },
-      "layout": {
-        "x": 1,
-        "y": 122,
-        "width": 22,
-        "height": 15
-      }
-    },
-    {
-      "id": 15,
-      "definition": {
-        "type": "note",
-        "content": "Outlook Mailbox Usage",
-        "background_color": "white",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      },
-      "layout": {
-        "x": 38,
-        "y": 116,
-        "width": 42,
-        "height": 5
-      }
-    },
-    {
-      "id": 16,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.outlook.activity{$Organization_ID,activity:read}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Outlook Read Count",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 47,
-        "y": 138,
-        "width": 24,
-        "height": 15
-      }
-    },
-    {
-      "id": 17,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.outlook.activity{$Organization_ID,activity:send}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Outlook Send Count",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 72,
-        "y": 138,
-        "width": 22,
-        "height": 15
-      }
-    },
-    {
-      "id": 18,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.outlook.activity{$Organization_ID,activity:receive}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Outlook Receive Count",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 95,
-        "y": 138,
-        "width": 20,
-        "height": 15
-      }
-    },
-    {
-      "id": 19,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.outlook.activity{$Organization_ID} by {activity}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+    "author_name": "RapDev.IO",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "Organization_ID",
+            "prefix": "tenant_id"
+        }
+    ],
+    "title": "Office365 Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "B",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.o365.outlook.mailbox.storage.used{$Organization_ID}"
+                    }
+                ],
+                "text_align": "center",
+                "title": "Office 365 Outlook Storage Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
             },
-            "on_right_yaxis": false
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
-        },
-        "title": "Read, Receive, Send Counts",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 1,
-        "y": 138,
-        "width": 45,
-        "height": 15
-      }
-    },
-    {
-      "id": 20,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID} by {region}/1000",
-            "display_type": "line",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+            "id": 0,
+            "layout": {
+                "height": 15,
+                "width": 22,
+                "x": 24,
+                "y": 133
             }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
         },
-        "title": "Synthetic Email RTT (s)",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 1,
-        "y": 46,
-        "width": 37,
-        "height": 15
-      }
-    },
-    {
-      "id": 21,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID,region:eu-central-1}/1000",
-            "aggregator": "avg",
-            "conditional_formats": [
-              {
-                "comparator": "<",
-                "value": 30,
-                "palette": "white_on_green"
-              },
-              {
-                "comparator": ">=",
-                "value": 31,
-                "palette": "white_on_yellow"
-              },
-              {
-                "comparator": ">=",
-                "value": 60,
-                "palette": "white_on_red"
-              }
-            ]
-          }
-        ],
-        "custom_links": [],
-        "title": "Synthetic Mail RTT (EU)",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "custom_unit": "s",
-        "precision": 2
-      },
-      "layout": {
-        "x": 60,
-        "y": 46,
-        "width": 20,
-        "height": 15
-      }
-    },
-    {
-      "id": 22,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID,region:ap-southeast-2}/1000",
-            "aggregator": "avg",
-            "conditional_formats": [
-              {
-                "comparator": "<",
-                "value": 30,
-                "palette": "white_on_green"
-              },
-              {
-                "comparator": ">",
-                "value": 30,
-                "palette": "white_on_yellow"
-              },
-              {
-                "comparator": ">=",
-                "value": 60,
-                "palette": "white_on_red"
-              }
-            ]
-          }
-        ],
-        "custom_links": [],
-        "title": "Synthetic Mail RTT (AP)",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "custom_unit": "s",
-        "precision": 2
-      },
-      "layout": {
-        "x": 39,
-        "y": 46,
-        "width": 20,
-        "height": 15
-      }
-    },
-    {
-      "id": 24,
-      "definition": {
-        "type": "image",
-        "url": "https://axecreatives.com/wp-content/uploads/2018/07/o365-logo-300x300.png",
-        "sizing": "fit"
-      },
-      "layout": {
-        "x": 103,
-        "y": 1,
-        "width": 12,
-        "height": 11
-      }
-    },
-    {
-      "id": 25,
-      "definition": {
-        "type": "image",
-        "url": "https://office365.delaware.gov/wp-content/uploads/sites/135/2019/06/Outlook_256x256-1.png",
-        "sizing": "zoom"
-      },
-      "layout": {
-        "x": 102,
-        "y": 122,
-        "width": 13,
-        "height": 15
-      }
-    },
-    {
-      "id": 33,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID,region:us-east-1}/1000",
-            "aggregator": "avg",
-            "conditional_formats": [
-              {
-                "comparator": "<",
-                "value": 30,
-                "palette": "white_on_green"
-              },
-              {
-                "comparator": ">=",
-                "value": 31,
-                "palette": "white_on_yellow"
-              },
-              {
-                "comparator": ">=",
-                "value": 60,
-                "palette": "white_on_red"
-              }
-            ]
-          }
-        ],
-        "custom_links": [],
-        "title": "Synthetic Mail RTT (US)",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "custom_unit": "s",
-        "precision": 2
-      },
-      "layout": {
-        "x": 81,
-        "y": 46,
-        "width": 20,
-        "height": 15
-      }
-    },
-    {
-      "id": 34,
-      "definition": {
-        "type": "note",
-        "content": "Synthetic Exchange Mail Checks",
-        "background_color": "white",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      },
-      "layout": {
-        "x": 38,
-        "y": 40,
-        "width": 41,
-        "height": 5
-      }
-    },
-    {
-      "id": 35,
-      "definition": {
-        "type": "image",
-        "url": "http://www.thatlazyadmin.com/wp-content/uploads/2019/07/exchange-online-logo.png",
-        "sizing": "fit"
-      },
-      "layout": {
-        "x": 102,
-        "y": 46,
-        "width": 13,
-        "height": 15
-      }
-    },
-    {
-      "id": 36,
-      "definition": {
-        "type": "toplist",
-        "requests": [
-          {
-            "q": "top(avg:rapdev.o365.outlook.app.users{$Organization_ID} by {email_app}.as_count(), 10, \"mean\", \"desc\")"
-          }
-        ],
-        "title": "Top Applications Used",
-        "title_size": "16",
-        "title_align": "left"
-      },
-      "layout": {
-        "x": 1,
-        "y": 154,
-        "width": 56,
-        "height": 21
-      }
-    },
-    {
-      "id": 46,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.sharepoint.pages.views{$Organization_ID}",
-            "aggregator": "avg"
-          }
-        ],
-        "custom_links": [],
-        "title": "Pages Viewed",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 20,
-        "y": 208,
-        "width": 18,
-        "height": 10
-      }
-    },
-    {
-      "id": 47,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.sharepoint.storage.used{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "title": "Total Site Storage Used",
-        "title_size": "16",
-        "title_align": "left",
-        "time": {},
-        "autoscale": true,
-        "custom_unit": "B",
-        "precision": 2
-      },
-      "layout": {
-        "x": 26,
-        "y": 182,
-        "width": 24,
-        "height": 15
-      }
-    },
-    {
-      "id": 49,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.sharepoint.files.total{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Total Files",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 1,
-        "y": 208,
-        "width": 18,
-        "height": 10
-      }
-    },
-    {
-      "id": 50,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "(avg:rapdev.o365.sharepoint.storage.used{$Organization_ID}/avg:rapdev.o365.sharepoint.sites.total{$Organization_ID})",
-            "aggregator": "last"
-          }
-        ],
-        "title": "Average Site Storage Used",
-        "title_size": "16",
-        "title_align": "left",
-        "time": {},
-        "autoscale": true,
-        "custom_unit": "B",
-        "precision": 2
-      },
-      "layout": {
-        "x": 1,
-        "y": 182,
-        "width": 24,
-        "height": 15
-      }
-    },
-    {
-      "id": 53,
-      "definition": {
-        "type": "note",
-        "content": "Sharepoint Site Usage",
-        "background_color": "white",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      },
-      "layout": {
-        "x": 39,
-        "y": 176,
-        "width": 41,
-        "height": 5
-      }
-    },
-    {
-      "id": 54,
-      "definition": {
-        "type": "image",
-        "url": "https://www.jasperoosterveld.com/wp-content/uploads/2018/05/SharePoint-Logo-1080x608.png",
-        "sizing": "fit"
-      },
-      "layout": {
-        "x": 101,
-        "y": 182,
-        "width": 14,
-        "height": 15
-      }
-    },
-    {
-      "id": 55,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.onedrive.sites.total{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Total OneDrive Sites",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 76,
-        "y": 225,
-        "width": 24,
-        "height": 15
-      }
-    },
-    {
-      "id": 65,
-      "definition": {
-        "type": "note",
-        "content": "OneDrive Usage",
-        "background_color": "white",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      },
-      "layout": {
-        "x": 39,
-        "y": 219,
-        "width": 41,
-        "height": 5
-      }
-    },
-    {
-      "id": 66,
-      "definition": {
-        "type": "image",
-        "url": "https://p.sfx.ms/OneDriveLogoTile.png",
-        "sizing": "zoom"
-      },
-      "layout": {
-        "x": 101,
-        "y": 225,
-        "width": 14,
-        "height": 15
-      }
-    },
-    {
-      "id": 67,
-      "definition": {
-        "type": "toplist",
-        "requests": [
-          {
-            "q": "top(avg:rapdev.o365.skype.device.users{$Organization_ID} by {device}, 10, \"mean\", \"desc\")"
-          }
-        ],
-        "title": "Skype Top Devices",
-        "title_size": "16",
-        "title_align": "left"
-      },
-      "layout": {
-        "x": 86,
-        "y": 303,
-        "width": 28,
-        "height": 15
-      }
-    },
-    {
-      "id": 68,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.skype.activity{$Organization_ID} by {activity}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
-            }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
-        },
-        "title": "Skype Sessions",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 1,
-        "y": 287,
-        "width": 50,
-        "height": 15
-      }
-    },
-    {
-      "id": 69,
-      "definition": {
-        "type": "note",
-        "content": "Skype for Business Usage",
-        "background_color": "white",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      },
-      "layout": {
-        "x": 39,
-        "y": 281,
-        "width": 41,
-        "height": 5
-      }
-    },
-    {
-      "id": 75,
-      "definition": {
-        "type": "image",
-        "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Microsoft_Skype_for_Business_logo.png",
-        "sizing": "zoom"
-      },
-      "layout": {
-        "x": 101,
-        "y": 287,
-        "width": 13,
-        "height": 15
-      }
-    },
-    {
-      "id": 78,
-      "definition": {
-        "type": "note",
-        "content": "Yammer Usage",
-        "background_color": "white",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      },
-      "layout": {
-        "x": 40,
-        "y": 319,
-        "width": 38,
-        "height": 5
-      }
-    },
-    {
-      "id": 79,
-      "definition": {
-        "type": "image",
-        "url": "data:image/jpeg;base64,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",
-        "sizing": "fit"
-      },
-      "layout": {
-        "x": 101,
-        "y": 325,
-        "width": 13,
-        "height": 15
-      }
-    },
-    {
-      "id": 4164645636007356,
-      "definition": {
-        "type": "note",
-        "content": "Teams Usage",
-        "background_color": "white",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      },
-      "layout": {
-        "x": 39,
-        "y": 259,
-        "width": 41,
-        "height": 5
-      }
-    },
-    {
-      "id": 2526571306744308,
-      "definition": {
-        "type": "toplist",
-        "requests": [
-          {
-            "q": "top(avg:rapdev.o365.teams.device.users{$Organization_ID} by {device}, 10, \"mean\", \"desc\")"
-          }
-        ],
-        "title": "Teams Top Devices",
-        "title_size": "16",
-        "title_align": "left"
-      },
-      "layout": {
-        "x": 1,
-        "y": 265,
-        "width": 40,
-        "height": 15
-      }
-    },
-    {
-      "id": 7514262645931222,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.teams.activity.users{$Organization_ID,activity:meetings}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Meeting Count",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 57,
-        "y": 265,
-        "width": 14,
-        "height": 15
-      }
-    },
-    {
-      "id": 6664426643764608,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.teams.activity.users{$Organization_ID,activity:calls}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Call Count",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 42,
-        "y": 265,
-        "width": 14,
-        "height": 15
-      }
-    },
-    {
-      "id": 7996308913073702,
-      "definition": {
-        "type": "image",
-        "url": "https://www.marshall.edu/it/files/microsoft-team-2019.png",
-        "sizing": "zoom"
-      },
-      "layout": {
-        "x": 102,
-        "y": 265,
-        "width": 13,
-        "height": 15
-      }
-    },
-    {
-      "id": 1984030834273614,
-      "definition": {
-        "type": "image",
-        "url": "https://files.rapdev.io/images/rapdev-dash-logo.png",
-        "sizing": "fit"
-      },
-      "layout": {
-        "x": 1,
-        "y": 1,
-        "width": 21,
-        "height": 11
-      }
-    },
-    {
-      "id": 1934338553757520,
-      "layout": {
-        "x": 23,
-        "y": 1,
-        "width": 79,
-        "height": 9
-      },
-      "definition": {
-        "title": "Office 365 Incidents",
-        "title_size": "16",
-        "title_align": "left",
-        "type": "event_timeline",
-        "query": "sources:o365 vendor:rapdev",
-        "tags_execution": "and"
-      }
-    },
-    {
-      "id": 6618188298570096,
-      "definition": {
-        "type": "query_table",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.outlook.mailbox.quota{*} by {category}",
-            "aggregator": "avg",
-            "limit": 50,
-            "order": "desc",
-            "alias": "Number of Mailboxes",
-            "cell_display_mode": [
-              "bar"
-            ]
-          }
-        ],
-        "custom_links": [],
-        "title": "Outlook Mailbox Quota Counts",
-        "title_size": "16",
-        "title_align": "left",
-        "has_search_bar": "auto"
-      },
-      "layout": {
-        "x": 58,
-        "y": 154,
-        "width": 57,
-        "height": 21
-      }
-    },
-    {
-      "id": 2424976341833972,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.outlook.mailbox.active{*}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Active Mailboxes",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 47,
-        "y": 122,
-        "width": 18,
-        "height": 15
-      }
-    },
-    {
-      "id": 6162233565893132,
-      "definition": {
-        "type": "toplist",
-        "requests": [
-          {
-            "q": "top(avg:rapdev.o365.outlook.versions.users{*} by {version}, 10, \"mean\", \"desc\")"
-          }
-        ],
-        "title": "Outlook Users by Version",
-        "title_size": "16",
-        "title_align": "left"
-      },
-      "layout": {
-        "x": 66,
-        "y": 122,
-        "width": 35,
-        "height": 15
-      }
-    },
-    {
-      "id": 8276863981521490,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.sharepoint.files.active{*}",
-            "aggregator": "avg"
-          }
-        ],
-        "custom_links": [],
-        "title": "Active Files",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 1,
-        "y": 198,
-        "width": 18,
-        "height": 9
-      }
-    },
-    {
-      "id": 2957097399130906,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.sharepoint.activity.files{$Organization_ID} by {activity}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 200
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 200
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 1000
+                            }
+                        ],
+                        "q": "avg:synthetics.http.dns.time{url:https://office.com/login,location:aws:ap-south-1}"
+                    }
+                ],
+                "title": "O365 Response Time (AP)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
             },
-            "on_right_yaxis": false
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
-        },
-        "title": "Sharepoint Files by Activity",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "8"
-      },
-      "layout": {
-        "x": 39,
-        "y": 198,
-        "width": 76,
-        "height": 20
-      }
-    },
-    {
-      "id": 4668447640127304,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.sharepoint.activity.pages.visits{*}",
-            "aggregator": "avg"
-          }
-        ],
-        "custom_links": [],
-        "title": "Unique Page Visits",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 20,
-        "y": 198,
-        "width": 18,
-        "height": 9
-      }
-    },
-    {
-      "id": 5386616208115736,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.sharepoint.sites.total{$Organization_ID} by {site_type}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Total Sites",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": false,
-        "precision": 0
-      },
-      "layout": {
-        "x": 76,
-        "y": 182,
-        "width": 24,
-        "height": 15
-      }
-    },
-    {
-      "id": 47018579741975,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.sharepoint.sites.active{$Organization_ID} by {site_type}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Active Sites",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": false,
-        "precision": 0
-      },
-      "layout": {
-        "x": 51,
-        "y": 182,
-        "width": 24,
-        "height": 15
-      }
-    },
-    {
-      "id": 6240572620015266,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.onedrive.storage.used{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "title": "Total Site Storage Used",
-        "title_size": "16",
-        "title_align": "left",
-        "time": {},
-        "autoscale": true,
-        "custom_unit": "B",
-        "precision": 2
-      },
-      "layout": {
-        "x": 26,
-        "y": 225,
-        "width": 24,
-        "height": 15
-      }
-    },
-    {
-      "id": 158786460810544,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "(avg:rapdev.o365.onedrive.storage.used{$Organization_ID}/avg:rapdev.o365.onedrive.sites.total{$Organization_ID})",
-            "aggregator": "last"
-          }
-        ],
-        "title": "Average Site Storage Used",
-        "title_size": "16",
-        "title_align": "left",
-        "time": {},
-        "autoscale": true,
-        "custom_unit": "B",
-        "precision": 2
-      },
-      "layout": {
-        "x": 1,
-        "y": 225,
-        "width": 24,
-        "height": 15
-      }
-    },
-    {
-      "id": 4168065351286440,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.onedrive.sites.active{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Active OneDrive Sites",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 51,
-        "y": 225,
-        "width": 24,
-        "height": 15
-      }
-    },
-    {
-      "id": 8858013634861995,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.onedrive.files.total{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "title": "Total OneDrive Files",
-        "title_size": "16",
-        "title_align": "left",
-        "time": {},
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 1,
-        "y": 241,
-        "width": 24,
-        "height": 17
-      }
-    },
-    {
-      "id": 3750573523047720,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.onedrive.activity.files{$Organization_ID} by {activity}",
-            "display_type": "line",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+            "id": 1,
+            "layout": {
+                "height": 10,
+                "width": 24,
+                "x": 48,
+                "y": 13
             }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
         },
-        "title": "OneDrive File Activity Counts",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 26,
-        "y": 241,
-        "width": 44,
-        "height": 17
-      }
-    },
-    {
-      "id": 18824795386957,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.onedrive.activity.users{$Organization_ID} by {activity}",
-            "display_type": "line",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
-            }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
-        },
-        "title": "OneDrive User Activity Counts",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 71,
-        "y": 241,
-        "width": 44,
-        "height": 17
-      }
-    },
-    {
-      "id": 8894739116423409,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:exchange}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Outlook Users",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 1,
-        "y": 68,
-        "width": 18,
-        "height": 10
-      }
-    },
-    {
-      "id": 2015013119507712,
-      "definition": {
-        "type": "note",
-        "content": "Active Users",
-        "background_color": "white",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      },
-      "layout": {
-        "x": 38,
-        "y": 62,
-        "width": 42,
-        "height": 5
-      }
-    },
-    {
-      "id": 6920843233669671,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:onedrive}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "OneDrive Users",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 20,
-        "y": 68,
-        "width": 18,
-        "height": 10
-      }
-    },
-    {
-      "id": 5308996045787568,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:sharepoint}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "SharePoint Users",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 39,
-        "y": 68,
-        "width": 18,
-        "height": 10
-      }
-    },
-    {
-      "id": 4478297838040203,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:teams}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Teams Users",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 1,
-        "y": 79,
-        "width": 18,
-        "height": 10
-      }
-    },
-    {
-      "id": 4680231328791941,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:skype_for_businesss}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Skype Users",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 20,
-        "y": 79,
-        "width": 18,
-        "height": 10
-      }
-    },
-    {
-      "id": 7503356782235519,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:yammer}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Yammer Users",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 39,
-        "y": 79,
-        "width": 18,
-        "height": 10
-      }
-    },
-    {
-      "id": 8429175049770264,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID} by {product}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 200
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 200
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 1000
+                            }
+                        ],
+                        "q": "avg:synthetics.http.response.time{url:https://office.com/login,location:aws:eu-central-1}"
+                    }
+                ],
+                "title": "O365 Response Time (EU)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
             },
-            "on_right_yaxis": false
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
+            "id": 2,
+            "layout": {
+                "height": 10,
+                "width": 24,
+                "x": 23,
+                "y": 13
+            }
         },
-        "title": "Active Users by Product",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 58,
-        "y": 68,
-        "width": 57,
-        "height": 21
-      }
-    },
-    {
-      "id": 6835275554131115,
-      "definition": {
-        "type": "note",
-        "content": "Activations",
-        "background_color": "white",
-        "font_size": "24",
-        "text_align": "center",
-        "show_tick": true,
-        "tick_pos": "50%",
-        "tick_edge": "bottom"
-      },
-      "layout": {
-        "x": 38,
-        "y": 90,
-        "width": 42,
-        "height": 5
-      }
-    },
-    {
-      "id": 460808704508611,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activations.devices{$Organization_ID} by {device}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 200
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 200
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 1000
+                            }
+                        ],
+                        "q": "avg:synthetics.http.response.time{url:https://office.com/login,location:aws:us-west-1}"
+                    }
+                ],
+                "title": "O365 Response Time (US)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
             },
-            "on_right_yaxis": false
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
-        },
-        "title": "Activations By Device",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 58,
-        "y": 96,
-        "width": 57,
-        "height": 19
-      }
-    },
-    {
-      "id": 4830069460271779,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activations.users.assigned{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Users Assigned",
-        "title_size": "13",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 2
-      },
-      "layout": {
-        "x": 1,
-        "y": 96,
-        "width": 18,
-        "height": 19
-      }
-    },
-    {
-      "id": 8526533476631365,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activations.users.activated{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Users Activated",
-        "title_size": "13",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 20,
-        "y": 96,
-        "width": 18,
-        "height": 19
-      }
-    },
-    {
-      "id": 785830791702697,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.activations.users.activated{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Users Shared Computers",
-        "title_size": "13",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 39,
-        "y": 96,
-        "width": 18,
-        "height": 19
-      }
-    },
-    {
-      "id": 8262754114558216,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.teams.activity.users{$Organization_ID,activity:team_chat_messages}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Team Message Count",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 72,
-        "y": 265,
-        "width": 14,
-        "height": 15
-      }
-    },
-    {
-      "id": 1457363555986599,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "max:rapdev.o365.teams.activity.users{$Organization_ID,activity:private_chat_messages}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Private Messages Count",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 87,
-        "y": 265,
-        "width": 14,
-        "height": 15
-      }
-    },
-    {
-      "id": 4316620384647119,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.skype.activity.users{$Organization_ID} by {activity}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+            "id": 3,
+            "layout": {
+                "height": 10,
+                "width": 21,
+                "x": 1,
+                "y": 13
             }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
         },
-        "title": "Skype Session Users",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 52,
-        "y": 287,
-        "width": 48,
-        "height": 15
-      }
-    },
-    {
-      "id": 3614897493760683,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.skype.activity.organizer.minutes{$Organization_ID} by {activity}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 100
+                            }
+                        ],
+                        "q": "avg:synthetics.http.dns.time{url:https://office.com/login}"
+                    }
+                ],
+                "title": "O365 DNS Response",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4,
+            "layout": {
+                "height": 10,
+                "width": 20,
+                "x": 73,
+                "y": 13
             }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
         },
-        "title": "Organizer Minutes",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 1,
-        "y": 303,
-        "width": 42,
-        "height": 15
-      }
-    },
-    {
-      "id": 5273507554720345,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.skype.activity.participant.minutes{$Organization_ID} by {activity}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:synthetics.http.response.time{url:https://office.com/login} by {location}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "O365 Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5,
+            "layout": {
+                "height": 15,
+                "width": 57,
+                "x": 1,
+                "y": 24
             }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
         },
-        "title": "Organizer Minutes",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 44,
-        "y": 303,
-        "width": 41,
-        "height": 15
-      }
-    },
-    {
-      "id": 762703380825735,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.yammer.activity{$Organization_ID} by {activity}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:synthetics.http.dns.time{url:https://office.com/login} by {location}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "O365 DNS Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6,
+            "layout": {
+                "height": 15,
+                "width": 56,
+                "x": 59,
+                "y": 24
             }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
         },
-        "title": "Yammer Activity",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 1,
-        "y": 325,
-        "width": 50,
-        "height": 15
-      }
-    },
-    {
-      "id": 2965983546744218,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.yammer.activity.users{$Organization_ID} by {activity}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": 90
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 30
+                            }
+                        ],
+                        "q": "avg:synthetics.ssl.time_to_expiry{env:office365}"
+                    }
+                ],
+                "title": "O365 SSL Cert Expiration",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7,
+            "layout": {
+                "height": 10,
+                "width": 21,
+                "x": 94,
+                "y": 13
             }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
         },
-        "title": "Yammer Users",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 52,
-        "y": 325,
-        "width": 48,
-        "height": 15
-      }
-    },
-    {
-      "id": 5327251378714809,
-      "definition": {
-        "type": "toplist",
-        "requests": [
-          {
-            "q": "top(avg:rapdev.o365.yammer.device.users{$Organization_ID} by {device}, 10, \"mean\", \"desc\")"
-          }
-        ],
-        "title": "Yammer Top Devices",
-        "title_size": "16",
-        "title_align": "left"
-      },
-      "layout": {
-        "x": 86,
-        "y": 341,
-        "width": 28,
-        "height": 15
-      }
-    },
-    {
-      "id": 5435258640557597,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.yammer.groups.total{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Total Groups",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 1,
-        "y": 341,
-        "width": 18,
-        "height": 15
-      }
-    },
-    {
-      "id": 8702644574318940,
-      "definition": {
-        "type": "query_value",
-        "requests": [
-          {
-            "q": "sum:rapdev.o365.yammer.groups.active{$Organization_ID}",
-            "aggregator": "last"
-          }
-        ],
-        "custom_links": [],
-        "title": "Active Groups",
-        "title_size": "16",
-        "title_align": "left",
-        "autoscale": true,
-        "precision": 0
-      },
-      "layout": {
-        "x": 20,
-        "y": 341,
-        "width": 18,
-        "height": 15
-      }
-    },
-    {
-      "id": 5896645382176665,
-      "definition": {
-        "type": "timeseries",
-        "requests": [
-          {
-            "q": "avg:rapdev.o365.yammer.activity.groups{$Organization_ID} by {activity}",
-            "display_type": "bars",
-            "style": {
-              "palette": "dog_classic",
-              "line_type": "solid",
-              "line_width": "normal"
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "B",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "(avg:rapdev.o365.outlook.mailbox.storage.used{$Organization_ID}/avg:rapdev.o365.outlook.mailbox.total{$Organization_ID})"
+                    }
+                ],
+                "title": "Average Mailbox Storage Usage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8,
+            "layout": {
+                "height": 15,
+                "width": 22,
+                "x": 1,
+                "y": 133
             }
-          }
-        ],
-        "custom_links": [],
-        "yaxis": {
-          "label": "",
-          "scale": "linear",
-          "min": "auto",
-          "max": "auto",
-          "include_zero": true
         },
-        "title": "Yammer Groups Activity",
-        "title_size": "16",
-        "title_align": "left",
-        "show_legend": false,
-        "legend_size": "0"
-      },
-      "layout": {
-        "x": 39,
-        "y": 341,
-        "width": 46,
-        "height": 15
-      }
-    }
-  ],
-  "template_variables": [
-    {
-      "name": "Organization_ID",
-      "default": "*",
-      "prefix": "organization_id"
-    }
-  ],
-  "layout_type": "free",
-  "is_read_only": false,
-  "notify_list": [],
-  "id": "9ma-drb-pdx"
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Outlook Mailbox Usage",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 9,
+            "layout": {
+                "height": 5,
+                "width": 42,
+                "x": 38,
+                "y": 111
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "max:rapdev.o365.outlook.activity{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Read, Receive, Send Counts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 13,
+            "layout": {
+                "height": 15,
+                "width": 45,
+                "x": 20,
+                "y": 117
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "legend_size": "0",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID} by {region}/1000",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Synthetic Email RTT (s)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 14,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 1,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 31
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 60
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID,region:eu-central-1}/1000"
+                    }
+                ],
+                "title": "Email RTT (Frankfurt)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 15,
+            "layout": {
+                "height": 7,
+                "width": 19,
+                "x": 62,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 60
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID,region:ap-southeast-2}/1000"
+                    }
+                ],
+                "title": "Email RTT (Sydney)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 16,
+            "layout": {
+                "height": 7,
+                "width": 19,
+                "x": 82,
+                "y": 54
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://axecreatives.com/wp-content/uploads/2018/07/o365-logo-300x300.png"
+            },
+            "id": 17,
+            "layout": {
+                "height": 11,
+                "width": 12,
+                "x": 103,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "sizing": "zoom",
+                "type": "image",
+                "url": "https://office365.delaware.gov/wp-content/uploads/sites/135/2019/06/Outlook_256x256-1.png"
+            },
+            "id": 18,
+            "layout": {
+                "height": 15,
+                "width": 13,
+                "x": 102,
+                "y": 117
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 31
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 60
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID,region:us-east-1}/1000"
+                    }
+                ],
+                "title": "Email RTT (Virginia)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 19,
+            "layout": {
+                "height": 7,
+                "width": 19,
+                "x": 42,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Synthetic Exchange Email Checks",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 20,
+            "layout": {
+                "height": 5,
+                "width": 41,
+                "x": 38,
+                "y": 40
+            }
+        },
+        {
+            "definition": {
+                "margin": "small",
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Microsoft_Exchange_%282019-present%29.svg/200px-Microsoft_Exchange_%282019-present%29.svg.png"
+            },
+            "id": 21,
+            "layout": {
+                "height": 15,
+                "width": 13,
+                "x": 102,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.outlook.app.users{$Organization_ID} by {email_app}.as_count(), 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Top Applications Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 22,
+            "layout": {
+                "height": 21,
+                "width": 56,
+                "x": 1,
+                "y": 149
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "sum:rapdev.o365.sharepoint.pages.views{$Organization_ID}"
+                    }
+                ],
+                "title": "Pages Viewed",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 23,
+            "layout": {
+                "height": 10,
+                "width": 18,
+                "x": 20,
+                "y": 203
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "B",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.o365.sharepoint.storage.used{$Organization_ID}"
+                    }
+                ],
+                "title": "Total Site Storage Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 24,
+            "layout": {
+                "height": 7,
+                "width": 22,
+                "x": 1,
+                "y": 185
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.o365.sharepoint.files.total{$Organization_ID}"
+                    }
+                ],
+                "title": "Total Files",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 25,
+            "layout": {
+                "height": 10,
+                "width": 18,
+                "x": 1,
+                "y": 203
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "B",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "(avg:rapdev.o365.sharepoint.storage.used{$Organization_ID}/avg:rapdev.o365.sharepoint.sites.total{$Organization_ID})"
+                    }
+                ],
+                "title": "Average Site Storage Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 26,
+            "layout": {
+                "height": 7,
+                "width": 22,
+                "x": 1,
+                "y": 177
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Sharepoint Site Usage",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 27,
+            "layout": {
+                "height": 5,
+                "width": 41,
+                "x": 39,
+                "y": 171
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://icons.iconarchive.com/icons/dakirby309/simply-styled/256/Microsoft-SharePoint-2013-icon.png"
+            },
+            "id": 28,
+            "layout": {
+                "height": 15,
+                "width": 14,
+                "x": 101,
+                "y": 177
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "OneDrive Usage",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 30,
+            "layout": {
+                "height": 5,
+                "width": 41,
+                "x": 39,
+                "y": 214
+            }
+        },
+        {
+            "definition": {
+                "margin": "small",
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://icon-library.net/images/microsoft-onedrive-icon/microsoft-onedrive-icon-26.jpg"
+            },
+            "id": 31,
+            "layout": {
+                "height": 15,
+                "width": 14,
+                "x": 101,
+                "y": 220
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.skype.device.users{$Organization_ID} by {device}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Skype Top Devices",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 32,
+            "layout": {
+                "height": 15,
+                "width": 28,
+                "x": 86,
+                "y": 298
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "q": "avg:rapdev.o365.skype.activity{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Skype Sessions",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 33,
+            "layout": {
+                "height": 15,
+                "width": 50,
+                "x": 1,
+                "y": 282
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Skype for Business Usage",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 34,
+            "layout": {
+                "height": 5,
+                "width": 41,
+                "x": 39,
+                "y": 276
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Microsoft_Skype_for_Business_logo.png"
+            },
+            "id": 35,
+            "layout": {
+                "height": 15,
+                "width": 13,
+                "x": 101,
+                "y": 282
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Yammer Usage",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 36,
+            "layout": {
+                "height": 5,
+                "width": 38,
+                "x": 40,
+                "y": 314
+            }
+        },
+        {
+            "definition": {
+                "margin": "small",
+                "sizing": "fit",
+                "type": "image",
+                "url": "data:image/jpeg;base64,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"
+            },
+            "id": 37,
+            "layout": {
+                "height": 15,
+                "width": 13,
+                "x": 101,
+                "y": 320
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Teams Usage",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 38,
+            "layout": {
+                "height": 5,
+                "width": 41,
+                "x": 39,
+                "y": 254
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.teams.device.users{$Organization_ID} by {device}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Teams Top Devices",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 39,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 1,
+                "y": 260
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.teams.activity.users{$Organization_ID,activity:meetings}"
+                    }
+                ],
+                "title": "Meeting Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 40,
+            "layout": {
+                "height": 15,
+                "width": 14,
+                "x": 57,
+                "y": 260
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:rapdev.o365.teams.activity.users{$Organization_ID,activity:calls}"
+                    }
+                ],
+                "title": "Call Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 41,
+            "layout": {
+                "height": 15,
+                "width": 14,
+                "x": 42,
+                "y": 260
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://www.marshall.edu/it/files/microsoft-team-2019.png"
+            },
+            "id": 42,
+            "layout": {
+                "height": 15,
+                "width": 13,
+                "x": 102,
+                "y": 260
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-dash-logo.png"
+            },
+            "id": 43,
+            "layout": {
+                "height": 11,
+                "width": 21,
+                "x": 1,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "query": "tags:app:o365",
+                "tags_execution": "and",
+                "title": "Office 365 Incidents",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "event_timeline"
+            },
+            "id": 44,
+            "layout": {
+                "height": 9,
+                "width": 79,
+                "x": 23,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Number of Mailboxes",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:rapdev.o365.outlook.mailbox.quota{*} by {category}"
+                    }
+                ],
+                "title": "Outlook Mailbox Quota Counts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 45,
+            "layout": {
+                "height": 21,
+                "width": 57,
+                "x": 58,
+                "y": 149
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:rapdev.o365.outlook.mailbox.active{*}"
+                    }
+                ],
+                "title": "Active Mailboxes",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 46,
+            "layout": {
+                "height": 15,
+                "width": 18,
+                "x": 1,
+                "y": 117
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.outlook.versions.users{*} by {version}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Outlook Users by Version",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 47,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 66,
+                "y": 117
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.o365.sharepoint.files.active{*}"
+                    }
+                ],
+                "title": "Active Files",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 48,
+            "layout": {
+                "height": 9,
+                "width": 18,
+                "x": 1,
+                "y": 193
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "8",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "max:rapdev.o365.sharepoint.activity.files{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Sharepoint Files by Activity",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 49,
+            "layout": {
+                "height": 20,
+                "width": 76,
+                "x": 39,
+                "y": 193
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "q": "avg:rapdev.o365.sharepoint.activity.pages.visits{*}"
+                    }
+                ],
+                "title": "Unique Page Visits",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 50,
+            "layout": {
+                "height": 9,
+                "width": 18,
+                "x": 20,
+                "y": 193
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "B",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.o365.onedrive.storage.used{$Organization_ID}"
+                    }
+                ],
+                "title": "Total Site Storage Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 53,
+            "layout": {
+                "height": 7,
+                "width": 22,
+                "x": 1,
+                "y": 228
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "B",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "(avg:rapdev.o365.onedrive.storage.used{$Organization_ID}/avg:rapdev.o365.onedrive.sites.total{$Organization_ID})"
+                    }
+                ],
+                "title": "Average Site Storage Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 54,
+            "layout": {
+                "height": 7,
+                "width": 22,
+                "x": 1,
+                "y": 220
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.o365.onedrive.files.total{$Organization_ID}"
+                    }
+                ],
+                "title": "Total OneDrive Files",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 56,
+            "layout": {
+                "height": 17,
+                "width": 22,
+                "x": 1,
+                "y": 236
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "legend_size": "0",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "max:rapdev.o365.onedrive.activity.files{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "OneDrive File Activity Counts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 57,
+            "layout": {
+                "height": 17,
+                "width": 45,
+                "x": 24,
+                "y": 236
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "max:rapdev.o365.onedrive.activity.users{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "OneDrive User Activity Counts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 58,
+            "layout": {
+                "height": 17,
+                "width": 45,
+                "x": 70,
+                "y": 236
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:exchange}"
+                    }
+                ],
+                "title": "Outlook Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 59,
+            "layout": {
+                "height": 10,
+                "width": 18,
+                "x": 1,
+                "y": 68
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Active Users",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 60,
+            "layout": {
+                "height": 5,
+                "width": 42,
+                "x": 38,
+                "y": 62
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:onedrive}"
+                    }
+                ],
+                "title": "OneDrive Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 61,
+            "layout": {
+                "height": 10,
+                "width": 18,
+                "x": 20,
+                "y": 68
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:sharepoint}"
+                    }
+                ],
+                "title": "SharePoint Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 62,
+            "layout": {
+                "height": 10,
+                "width": 18,
+                "x": 39,
+                "y": 68
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:teams}"
+                    }
+                ],
+                "title": "Teams Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 63,
+            "layout": {
+                "height": 10,
+                "width": 18,
+                "x": 1,
+                "y": 79
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:skype_for_businesss}"
+                    }
+                ],
+                "title": "Skype Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 64,
+            "layout": {
+                "height": 10,
+                "width": 18,
+                "x": 20,
+                "y": 79
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:yammer}"
+                    }
+                ],
+                "title": "Yammer Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 65,
+            "layout": {
+                "height": 10,
+                "width": 18,
+                "x": 39,
+                "y": 79
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "legend_size": "0",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:office_365} by {product}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:exchange} by {product}",
+                        "style": {
+                            "line_type": "dashed",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:onedrive} by {product}",
+                        "style": {
+                            "line_type": "dashed",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:sharepoint} by {product}",
+                        "style": {
+                            "line_type": "dashed",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "max:rapdev.o365.activeusers.serviceusers.active{$Organization_ID,product:teams} by {product}",
+                        "style": {
+                            "line_type": "dashed",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Active Users by Product",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 66,
+            "layout": {
+                "height": 21,
+                "width": 57,
+                "x": 58,
+                "y": 68
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Activations",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 67,
+            "layout": {
+                "height": 5,
+                "width": 42,
+                "x": 38,
+                "y": 90
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "max:rapdev.o365.activations.devices{$Organization_ID} by {device}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Activations By Device",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 68,
+            "layout": {
+                "height": 14,
+                "width": 57,
+                "x": 58,
+                "y": 96
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.activations.users.assigned{$Organization_ID}"
+                    }
+                ],
+                "title": "Users Assigned",
+                "title_align": "left",
+                "title_size": "13",
+                "type": "query_value"
+            },
+            "id": 69,
+            "layout": {
+                "height": 14,
+                "width": 18,
+                "x": 1,
+                "y": 96
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.activations.users.activated{$Organization_ID}"
+                    }
+                ],
+                "title": "Users Activated",
+                "title_align": "left",
+                "title_size": "13",
+                "type": "query_value"
+            },
+            "id": 70,
+            "layout": {
+                "height": 14,
+                "width": 18,
+                "x": 20,
+                "y": 96
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.activations.users.activated{$Organization_ID}"
+                    }
+                ],
+                "title": "Users Shared Computers",
+                "title_align": "left",
+                "title_size": "13",
+                "type": "query_value"
+            },
+            "id": 71,
+            "layout": {
+                "height": 14,
+                "width": 18,
+                "x": 39,
+                "y": 96
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.teams.activity.users{$Organization_ID,activity:team_chat_messages}"
+                    }
+                ],
+                "title": "Team Message Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 72,
+            "layout": {
+                "height": 15,
+                "width": 14,
+                "x": 72,
+                "y": 260
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "max:rapdev.o365.teams.activity.users{$Organization_ID,activity:private_chat_messages}"
+                    }
+                ],
+                "title": "Private Messages Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 73,
+            "layout": {
+                "height": 15,
+                "width": 14,
+                "x": 87,
+                "y": 260
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "q": "avg:rapdev.o365.skype.activity.users{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Skype Session Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 74,
+            "layout": {
+                "height": 15,
+                "width": 48,
+                "x": 52,
+                "y": 282
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "q": "avg:rapdev.o365.skype.activity.organizer.minutes{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Organizer Minutes",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 75,
+            "layout": {
+                "height": 15,
+                "width": 42,
+                "x": 1,
+                "y": 298
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "q": "avg:rapdev.o365.skype.activity.participant.minutes{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Organizer Minutes",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 76,
+            "layout": {
+                "height": 15,
+                "width": 41,
+                "x": 44,
+                "y": 298
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "q": "avg:rapdev.o365.yammer.activity{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Yammer Activity",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 77,
+            "layout": {
+                "height": 15,
+                "width": 50,
+                "x": 1,
+                "y": 320
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "q": "avg:rapdev.o365.yammer.activity.users{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Yammer Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 78,
+            "layout": {
+                "height": 15,
+                "width": 48,
+                "x": 52,
+                "y": 320
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(avg:rapdev.o365.yammer.device.users{$Organization_ID} by {device}, 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Yammer Top Devices",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 79,
+            "layout": {
+                "height": 15,
+                "width": 28,
+                "x": 86,
+                "y": 336
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.o365.yammer.groups.total{$Organization_ID}"
+                    }
+                ],
+                "title": "Total Groups",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 80,
+            "layout": {
+                "height": 15,
+                "width": 18,
+                "x": 1,
+                "y": 336
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [],
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.o365.yammer.groups.active{$Organization_ID}"
+                    }
+                ],
+                "title": "Active Groups",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 81,
+            "layout": {
+                "height": 15,
+                "width": 18,
+                "x": 20,
+                "y": 336
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [],
+                "legend_size": "0",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "q": "avg:rapdev.o365.yammer.activity.groups{$Organization_ID} by {activity}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Yammer Groups Activity",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 82,
+            "layout": {
+                "height": 15,
+                "width": 46,
+                "x": 39,
+                "y": 336
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 60
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID,region:ap-southeast-1}/1000"
+                    }
+                ],
+                "title": "Email RTT (Singapore)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2704218543575134,
+            "layout": {
+                "height": 7,
+                "width": 19,
+                "x": 62,
+                "y": 54
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 60
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID,region:ap-south-1}/1000"
+                    }
+                ],
+                "title": "Email RTT (Mumbai)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4657138846599639,
+            "layout": {
+                "height": 7,
+                "width": 19,
+                "x": 42,
+                "y": 54
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 60
+                            }
+                        ],
+                        "q": "avg:rapdev.o365.synthetic.email.rtt{$Organization_ID,region:ap-northeast-1}/1000"
+                    }
+                ],
+                "title": "Email RTT (Tokyo)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1475990019045128,
+            "layout": {
+                "height": 7,
+                "width": 19,
+                "x": 82,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.o365.outlook.mailbox.total{$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.o365.outlook.mailbox.quota{category:send_prohibited,$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.o365.outlook.mailbox.quota{category:send/receive_prohibited,$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "orange"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Mailbox Quota Limits",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3476422010523549,
+            "layout": {
+                "height": 15,
+                "width": 33,
+                "x": 82,
+                "y": 133
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.o365.outlook.mailbox.storage.used{$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "cool"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Mailbox Storage Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4082868982745907,
+            "layout": {
+                "height": 15,
+                "width": 34,
+                "x": 47,
+                "y": 133
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.sharepoint.sites.total{$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.sharepoint.sites.active{$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "purple"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Active SharePoint Sites",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3028995371924488,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 65,
+                "y": 177
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.sharepoint.storage.allocated{$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.sharepoint.storage.used{$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "purple"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "SharePoint Site Storage (Total)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7084293410021260,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 24,
+                "y": 177
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.onedrive.storage.allocated{$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.onedrive.storage.used{$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "purple"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "OneDrive Storage Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6817990889010230,
+            "layout": {
+                "height": 15,
+                "width": 40,
+                "x": 24,
+                "y": 220
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.onedrive.activity.files{activity:shared_externally,$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    },
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.o365.onedrive.activity.files{activity:shared_internally,$Organization_ID}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "cool"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "OneDrive Files Shared",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1289687024686734,
+            "layout": {
+                "height": 15,
+                "width": 35,
+                "x": 65,
+                "y": 220
+            }
+        }
+    ]
 }

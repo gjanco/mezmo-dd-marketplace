@@ -1,5 +1,11 @@
 # CHANGELOG - o365
 
+## 2.0.2 / 2021-03-22
+
+* [Added] added 'app:o365' tag to Microsoft 365 incident events to support filtering.
+* [Added] added SharePoint and OneDrive usage detail report aggregated metrics.
+* [Fixed] updated o365 dashboards.
+
 ## 2.0.1 / 2020-12-22
 
 * [Fixed] added requests timeout (30s)
@@ -20,4 +26,4 @@
 
 ## 1.0.0 / 2020-08-11
 
-[Added] initial marketplace release.
+* [Added] initial marketplace release.

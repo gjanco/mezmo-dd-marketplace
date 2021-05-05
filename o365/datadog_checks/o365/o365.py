@@ -2,7 +2,8 @@
 # All rights reserved
 # Licensed under a 3-clause BSD style license (see LICENSE)
 
-import os, io, csv, json, requests, traceback
+import os, io, csv, json, traceback
+import requests as rq # SKIP_HTTP_VALIDATION
 
 from .sharepy import SharePointSession
 from urllib.parse import urlparse
@@ -62,7 +63,7 @@ REPORTS = {
         "Reports.OneDriveActivity.FileCounts": "OneDriveActivityFileCounts",
         "Reports.OneDriveUsage.AccountCounts": "OneDriveUsageAccountCounts",
         "Reports.OneDriveUsage.FileCounts": "OneDriveUsageFileCounts",
-        "Reports.OneDriveUsage.Storage": "OneDriveUsageStorage",
+        "Reports.OneDriveUsageAccountDetail": "OneDriveUsageAccountDetail",
     },
     "SharePoint": {
         "Reports.SharePointActivity.FileCounts": "SharePointActivityFileCounts",
@@ -70,8 +71,8 @@ REPORTS = {
         "Reports.SharePointActivity.Pages": "SharePointActivityPages",
         "Reports.SharePointUsageFileCounts": "SharePointUsageFileCounts",
         "Reports.SharePointUsageSiteCounts": "SharePointUsageSiteCounts",
-        "Reports.SharePointUsageStorage": "SharePointUsageStorage",
         "Reports.SharePointUsagePages": "SharePointUsagePages",
+        "Reports.SharePointUsageDetail": "SharePointUsageDetail",
     },
     "Yammer": {
         "Reports.YammerActivity.ActivityCounts": "YammerActivityActivityCounts",
@@ -282,7 +283,7 @@ class O365Check(AgentCheck):
         return
 
     def daily_report_to_metrics(self, url, headers, row_fields, tag_fields, tags):
-        with requests.get(url, headers=headers, stream=True, timeout=REQ_TIMEOUT) as r:
+        with rq.get(url, headers=headers, stream=True, timeout=REQ_TIMEOUT) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
 
@@ -324,12 +325,30 @@ class O365Check(AgentCheck):
                     send_metric(metric_name, metric_value, tags=metric_tags + append_tags)
             return
 
-    def period_report_to_metrics(self, url, headers, row_fields, tag_fields, tags):
-        with requests.get(url, headers=headers, stream=True, timeout=REQ_TIMEOUT) as r:
+    def period_report_to_metrics(self, url, headers, row_fields, tag_fields, agg_fields, tags):
+        aggregates = {}
+
+        with rq.get(url, headers=headers, stream=True, timeout=REQ_TIMEOUT) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
 
             for row in csv.DictReader(lines):
+                for definition in agg_fields:
+                    column_name = definition.get("column_name")
+                    metric_name = definition.get("metric_name")
+                    metric_type = definition.get("metric_type")
+                    default_val = definition.get("default_val", None)
+                    parser_func = definition.get("parser_func")
+                    append_tags = definition.get("append_tags", [])
+
+                    column_value = row.get(column_name, default_val)
+                    parse_method = getattr(self, parser_func)
+                    metric_value = parse_method(column_value)
+
+                    if not column_name in aggregates:
+                        aggregates[column_name] = 0
+                    aggregates[column_name] = aggregates[column_name] + metric_value
+
                 for definition in row_fields:
                     column_name = definition.get("column_name")
                     metric_name = definition.get("metric_name")
@@ -351,13 +370,25 @@ class O365Check(AgentCheck):
                     
                     send_metric = getattr(self, metric_type)
                     send_metric(metric_name, metric_value, tags=metric_tags + append_tags)
-            return
+            
+            # Send aggregate metrics
+            for definition in agg_fields:
+                column_name = definition.get("column_name")
+                metric_name = definition.get("metric_name")
+                metric_type = definition.get("metric_type")
+                default_val = definition.get("default_val", None)
+                parser_func = definition.get("parser_func")
+                append_tags = definition.get("append_tags", [])
+
+                metric_tags = tags.copy()
+                send_metric = getattr(self, metric_type)
+                send_metric(metric_name, aggregates.setdefault(column_name, -1.0), tags=metric_tags + append_tags)
 
     def get_synthetic_http_metric(self, metric_pre, verb, url, headers, data, tags):
         metric_tags = tags.copy()
 
         try:
-            r = requests.request(
+            r = rq.request(
                 verb.upper(), url=url, headers=headers, data=data, timeout=REQ_TIMEOUT
             )
         except Exception as e:
@@ -397,7 +428,7 @@ class O365Check(AgentCheck):
             "client_id": client_id,
             "client_secret": client_secret,
         }
-        r = requests.post(url, data=data)
+        r = rq.post(url, data=data)
         r.raise_for_status()
         self.reports_token = r.json()
         return
@@ -431,7 +462,7 @@ class O365Check(AgentCheck):
             "scope": " ".join(scopes),
         }
 
-        r = requests.post(url, data=form_data)
+        r = rq.post(url, data=form_data)
         r.raise_for_status()
 
         self.synthetics_token = r.json()
@@ -450,7 +481,7 @@ class O365Check(AgentCheck):
             "client_secret": client_secret,
         }
 
-        r = requests.post(url, data=data)
+        r = rq.post(url, data=data)
         r.raise_for_status()
         self.management_token = r.json()
         return
@@ -543,7 +574,7 @@ class O365Check(AgentCheck):
             })
 
         highmark = 0.0
-        with requests.get(report_url, headers=report_headers, stream=True, timeout=REQ_TIMEOUT) as r:
+        with rq.get(report_url, headers=report_headers, stream=True, timeout=REQ_TIMEOUT) as r:
             r.raise_for_status()
             lines = (line.decode("utf-8") for line in r.iter_lines())
 
@@ -608,7 +639,7 @@ class O365Check(AgentCheck):
                 "append_tags": ["device:{}".format(name)]
             })
 
-        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, [], self.tags)
         return
 
     def ActivationsUserCounts(self, period="d7"):
@@ -650,7 +681,7 @@ class O365Check(AgentCheck):
             },
         ]
 
-        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, [], self.tags)
         return
 
     ##########################################################################################
@@ -947,7 +978,7 @@ class O365Check(AgentCheck):
                 "append_tags": ["version:{}".format(name)]
             })
 
-        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, [], self.tags)
         return
 
     ##########################################################################################
@@ -1313,6 +1344,52 @@ class O365Check(AgentCheck):
         return
 
     ##########################################################################################
+    ## Reports.OneDriveUsageAccountDetail
+    ##########################################################################################
+    # 2021-03-22 (reuben@rapdev.io) - Adding support for aggregated allocation from OneDriveUsageAccountDetail 
+    def OneDriveUsageAccountDetail(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "onedrive")
+        report_path     = "v1.0/reports/getOneDriveUsageAccountDetail(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {}
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.storage.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+        agg_fields = [
+            {
+                "column_name": "{}".format("Storage Used (Byte)"),
+                "metric_name": "{}.storage.used".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "{}".format("Storage Allocated (Byte)"),
+                "metric_name": "{}.storage.allocated".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+        ]
+
+        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, agg_fields, self.tags)
+        return
+
+    ##########################################################################################
     ## Reports.SharePointActivity
     ##########################################################################################
     def SharePointActivityFileCounts(self, period="d7"):
@@ -1419,6 +1496,51 @@ class O365Check(AgentCheck):
     ##########################################################################################
     ## Reports.SharePointUsage
     ##########################################################################################
+    # 2021-03-22 (reuben@rapdev.io) - Adding support for aggregated allocation from SiteUsageDetail 
+    def SharePointUsageDetail(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint")
+        report_path     = "v1.0/reports/getSharePointSiteUsageDetail(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {
+            "Site Type": "site_type",
+        }
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.storage.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",
+            },
+        ]
+        agg_fields = [
+            {
+                "column_name": "{}".format("Storage Used (Byte)"),
+                "metric_name": "{}.storage.used".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "{}".format("Storage Allocated (Byte)"),
+                "metric_name": "{}.storage.allocated".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+        ]
+
+        self.period_report_to_metrics(report_url, report_headers, row_fields, tag_fields, agg_fields, self.tags)
+        return
+
     def SharePointUsageFileCounts(self, period="d7"):
         report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint.files")
         report_path     = "v1.0/reports/getSharePointSiteUsageFileCounts(period='{}')".format(period)
@@ -1483,36 +1605,6 @@ class O365Check(AgentCheck):
             {
                 "column_name": "{}".format("Active"),
                 "metric_name": "{}.active".format(report_prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_float",
-            },
-        ]
-
-        self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
-        return
-
-    def SharePointUsageStorage(self, period="d7"):
-        report_prefix   = "{}.{}".format(self.metric_prefix, "sharepoint.storage")
-        report_path     = "v1.0/reports/getSharePointSiteUsageStorage(period='{}')".format(period)
-        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
-        report_url      = "{}/{}".format(report_host, report_path)
-        report_token    = self.reports_token.get("access_token", None)
-        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
-
-        tag_fields = {
-            "Site Type": "site_type",
-        }
-        col_fields = []
-        row_fields = [
-            {
-                "column_name": self.report_refresh_column,
-                "metric_name": "{}.refresh".format(report_prefix),
-                "metric_type": "gauge",
-                "parser_func": "parse_elapsed_days",
-            },
-            {
-                "column_name": "{}".format("Storage Used (Byte)"),
-                "metric_name": "{}.used".format(report_prefix),
                 "metric_type": "gauge",
                 "parser_func": "parse_float",
             },
@@ -2202,7 +2294,7 @@ class O365Check(AgentCheck):
         email_address = self.instance.get("email_address")
 
         """ /checkin """
-        res = requests.post(
+        res = rq.post(
             checkin_url,
             headers=headers,
             json={
@@ -2214,7 +2306,7 @@ class O365Check(AgentCheck):
         res.raise_for_status()
 
         """ /metrics """
-        res = requests.post(
+        res = rq.post(
             metrics_url,
             headers=headers,
             json={"emailAddress": email_address},
@@ -2502,7 +2594,7 @@ class O365Check(AgentCheck):
 
         """ [Read] User's joined teams """
         url = "{}/me/joinedTeams".format(graph_url)
-        res = requests.get(url, headers=headers, timeout=REQ_TIMEOUT)
+        res = rq.get(url, headers=headers, timeout=REQ_TIMEOUT)
         res.raise_for_status()
 
         team_id = None
@@ -2655,7 +2747,7 @@ class O365Check(AgentCheck):
             "Authorization": "Bearer {}".format(token),
         }
         url = "{}/{}".format(manage_host, manage_path)
-        res = requests.get(url, headers=manage_headers, timeout=REQ_TIMEOUT)
+        res = rq.get(url, headers=manage_headers, timeout=REQ_TIMEOUT)
         res.raise_for_status()
         values = res.json().get("value")
 
@@ -2666,6 +2758,7 @@ class O365Check(AgentCheck):
             impactDescription = incident.get("ImpactDescription")
 
             tags = self.tags.copy()
+            tags.append("{}:{}".format("App", "O365"))
             tags.append("{}:{}".format("Workload", incident.get("Workload")))
             tags.append("{}:{}".format("Feature", incident.get("Feature")))
             tags.append("{}:{}".format("Status", incident.get("Status")))
@@ -2675,7 +2768,7 @@ class O365Check(AgentCheck):
                 messageDT = parse(message.get("PublishedTime"))
                 elapsed = now - messageDT
 
-                if elapsed.total_seconds() < (interval + 60.0):
+                if elapsed.total_seconds() < (interval + 10.0):
                     self.event({
                         "timestamp": messageDT.timestamp(),
                         "msg_title": "[{}] {}".format(incidentId, impactDescription),
