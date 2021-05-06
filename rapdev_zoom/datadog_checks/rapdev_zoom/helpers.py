@@ -7,7 +7,10 @@ def generate_token(api_key, api_secret):
         {"iss": api_key, "exp": time.time() + 60},
         api_secret,
         algorithm='HS256'
-    ).decode('utf-8')
+    )
+    
+    if float(jwt.__version__.split('.')[0]) < 2:
+        token = token.decode('utf-8')
 
     return token
 

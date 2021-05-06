@@ -1,5 +1,5 @@
 {
-	"name": "[RapDev Zoom] Zoom Room's ({{zoom_room_name.name}}) component ({{zoom_room_component.name}}) is Offline or Not Working Properly",
+	"name": "[RapDev Zoom] Zoom Room's Component is Offline or Not Working Properly",
 	"type": "query alert",
 	"query": "max(last_1m):min:rapdev.zoom.room.component.status{*} by {zoom_room_name,zoom_room_component} < 0.5",
 	"message": "{{#is_alert}}\n{{zoom_room_name.name}} {{zoom_room_name.name}} has a problem.\n{{/is_alert}} \n\n{{#is_warning}}\n{{zoom_room_name.name}} is in warning state. \n{{/is_warning}} \n\n{{#is_alert_recovery}}\n{{zoom_room_name.name}} {{zoom_room_name.name}} issue is resolved. \n{{/is_alert_recovery}}",
@@ -10,19 +10,18 @@
 		"notify_audit": false,
 		"locked": false,
 		"timeout_h": 0,
-		"silenced": {},
-		"include_tags": true,
-		"no_data_timeframe": 10,
-		"require_full_window": true,
 		"new_host_delay": 300,
+		"require_full_window": true,
 		"notify_no_data": true,
-		"renotify_interval": 0,
+		"renotify_interval": "0",
 		"escalation_message": "",
+		"no_data_timeframe": 10,
+		"include_tags": true,
 		"thresholds": {
 			"critical": 0.5
 		}
 	},
-    "recommended_monitor_metadata": {
+	"recommended_monitor_metadata": {
 		"description": "Alert when a zoom room component, such as a microphone or camera, has an issue present (value=0) like poor quality or no longer connected. Recovers when the issue is fixed and can no longer be detected (value=1)."
 	}
 }

@@ -431,7 +431,7 @@ class ZoomCheck(AgentCheck):
         is_bandwidth_ok = 1
 
         for issue in issues:
-            if issue == "Room Controller Disconnected":
+            if issue == "Room Controller Disconnected" or issue == "Controller disconnected":
                 room_controller_is_connected = 0
             elif issue == "Selected camera has disconnected":
                 selected_camera_is_connected = 0
@@ -505,8 +505,8 @@ class ZoomCheck(AgentCheck):
                 # Get the QOS metrics for every particpant in the meeting
                 try:
                     self.get_meeting_qos(meeting_id, host_name)
-                except Exception:
-                    self.log.info("Get Meeting QOS FAILED")
+                except Exception as e:
+                    self.log.error("Get Meeting QOS FAILED. Caught exception %s", e)
 
                 # Send in a count for this meeting 
                 self.gauge("{}.meetings.count".format(self.metric_prefix),
@@ -615,100 +615,99 @@ class ZoomCheck(AgentCheck):
                                    tags=metric_tags)
 
                     recent_user_qos = get_and_except_list(participant, "user_qos", -1)
-                    audio_input = get_and_except_dict(recent_user_qos, "audio_input")
-                    audio_output = get_and_except_dict(recent_user_qos, "audio_output")
-                    video_input = get_and_except_dict(recent_user_qos, "video_input")
-                    video_output = get_and_except_dict(recent_user_qos, "video_output")
-                    cpu_usage = get_and_except_dict(recent_user_qos, "cpu_usage")
+                    if recent_user_qos:
+                        audio_input = get_and_except_dict(recent_user_qos, "audio_input")
+                        audio_output = get_and_except_dict(recent_user_qos, "audio_output")
+                        video_input = get_and_except_dict(recent_user_qos, "video_input")
+                        video_output = get_and_except_dict(recent_user_qos, "video_output")
+                        cpu_usage = get_and_except_dict(recent_user_qos, "cpu_usage")
 
-                    if check_for_metrics(audio_input):
-                        valid_audio_input_records += 1
+                        if check_for_metrics(audio_input):
+                            valid_audio_input_records += 1
 
-                        audio_input_bitrate += parse_kbps(audio_input["bitrate"])
-                        audio_input_avg_loss += percentage_to_float(audio_input["avg_loss"])
-                        audio_input_jitter += parse_milliseconds(audio_input["jitter"])
-                        audio_input_latency += parse_milliseconds(audio_input["latency"])
-                        audio_input_max_loss += percentage_to_float(audio_input["max_loss"])
+                            audio_input_bitrate += parse_kbps(audio_input["bitrate"])
+                            audio_input_avg_loss += percentage_to_float(audio_input["avg_loss"])
+                            audio_input_jitter += parse_milliseconds(audio_input["jitter"])
+                            audio_input_latency += parse_milliseconds(audio_input["latency"])
+                            audio_input_max_loss += percentage_to_float(audio_input["max_loss"])
 
-                        if self.collect_participant_details:
-                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
-                                metric_tags.append("zoom_user_qos_audio:input")
-                                self.parse_and_submit_user_qos(audio_input, metric_tags)
-                                metric_tags.remove("zoom_user_qos_audio:input")
+                            if self.collect_participant_details:
+                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                    metric_tags.append("zoom_user_qos_audio:input")
+                                    self.parse_and_submit_user_qos(audio_input, metric_tags)
+                                    metric_tags.remove("zoom_user_qos_audio:input")
 
-                    if check_for_metrics(audio_output):
-                        valid_audio_output_records += 1
+                        if check_for_metrics(audio_output):
+                            valid_audio_output_records += 1
 
-                        audio_output_bitrate += parse_kbps(audio_output["bitrate"])
-                        audio_output_avg_loss += percentage_to_float(audio_output["avg_loss"])
-                        audio_output_jitter += parse_milliseconds(audio_output["jitter"])
-                        audio_output_latency += parse_milliseconds(audio_output["latency"])
-                        audio_output_max_loss += percentage_to_float(audio_output["max_loss"])
+                            audio_output_bitrate += parse_kbps(audio_output["bitrate"])
+                            audio_output_avg_loss += percentage_to_float(audio_output["avg_loss"])
+                            audio_output_jitter += parse_milliseconds(audio_output["jitter"])
+                            audio_output_latency += parse_milliseconds(audio_output["latency"])
+                            audio_output_max_loss += percentage_to_float(audio_output["max_loss"])
 
-                        if self.collect_participant_details:
-                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
-                                metric_tags.append("zoom_user_qos_audio:output")
-                                self.parse_and_submit_user_qos(audio_output, metric_tags)
-                                metric_tags.remove("zoom_user_qos_audio:output")
+                            if self.collect_participant_details:
+                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                    metric_tags.append("zoom_user_qos_audio:output")
+                                    self.parse_and_submit_user_qos(audio_output, metric_tags)
+                                    metric_tags.remove("zoom_user_qos_audio:output")
 
-                    if check_for_metrics(video_input):
-                        valid_video_input_records += 1
+                        if check_for_metrics(video_input):
+                            valid_video_input_records += 1
 
-                        video_input_bitrate += parse_kbps(video_input["bitrate"])
-                        video_input_avg_loss += percentage_to_float(video_input["avg_loss"])
-                        video_input_jitter += parse_milliseconds(video_input["jitter"])
-                        video_input_latency += parse_milliseconds(video_input["latency"])
-                        video_input_max_loss += percentage_to_float(video_input["max_loss"])
+                            video_input_bitrate += parse_kbps(video_input["bitrate"])
+                            video_input_avg_loss += percentage_to_float(video_input["avg_loss"])
+                            video_input_jitter += parse_milliseconds(video_input["jitter"])
+                            video_input_latency += parse_milliseconds(video_input["latency"])
+                            video_input_max_loss += percentage_to_float(video_input["max_loss"])
 
-                        if self.collect_participant_details:
-                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
-                                metric_tags.append("zoom_user_qos_video:input")
-                                self.parse_and_submit_user_qos(video_input, metric_tags)
-                                metric_tags.remove("zoom_user_qos_video:input")
+                            if self.collect_participant_details:
+                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                    metric_tags.append("zoom_user_qos_video:input")
+                                    self.parse_and_submit_user_qos(video_input, metric_tags)
+                                    metric_tags.remove("zoom_user_qos_video:input")
 
-                    if check_for_metrics(video_output):
-                        valid_video_output_records += 1
+                        if check_for_metrics(video_output):
+                            valid_video_output_records += 1
 
-                        video_output_bitrate += parse_kbps(video_output["bitrate"])
-                        video_output_avg_loss += percentage_to_float(video_output["avg_loss"])
-                        video_output_jitter += parse_milliseconds(video_output["jitter"])
-                        video_output_latency += parse_milliseconds(video_output["latency"])
-                        video_output_max_loss += percentage_to_float(video_output["max_loss"])
+                            video_output_bitrate += parse_kbps(video_output["bitrate"])
+                            video_output_avg_loss += percentage_to_float(video_output["avg_loss"])
+                            video_output_jitter += parse_milliseconds(video_output["jitter"])
+                            video_output_latency += parse_milliseconds(video_output["latency"])
+                            video_output_max_loss += percentage_to_float(video_output["max_loss"])
 
-                        if self.collect_participant_details:
-                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
-                                metric_tags.append("zoom_user_qos_video:output")
-                                self.parse_and_submit_user_qos(video_output, metric_tags)
-                                metric_tags.remove("zoom_user_qos_video:output")
+                            if self.collect_participant_details:
+                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                    metric_tags.append("zoom_user_qos_video:output")
+                                    self.parse_and_submit_user_qos(video_output, metric_tags)
+                                    metric_tags.remove("zoom_user_qos_video:output")
 
-                    if check_for_cpu_metrics(cpu_usage):
-                        system_max_cpu_usage_value = percentage_to_float(
-                            get_and_except_string(cpu_usage, "system_max_cpu_usage"))
-                        zoom_avg_cpu_usage_value = percentage_to_float(
-                            get_and_except_string(cpu_usage, "zoom_avg_cpu_usage"))
-                        zoom_max_cpu_usage_value = percentage_to_float(
-                            get_and_except_string(cpu_usage, "zoom_max_cpu_usage"))
-                        zoom_min_cpu_usage_value = percentage_to_float(
-                            get_and_except_string(cpu_usage, "zoom_min_cpu_usage"))
+                        if check_for_cpu_metrics(cpu_usage):
+                            system_max_cpu_usage_value = percentage_to_float(
+                                get_and_except_string(cpu_usage, "system_max_cpu_usage"))
+                            zoom_avg_cpu_usage_value = percentage_to_float(
+                                get_and_except_string(cpu_usage, "zoom_avg_cpu_usage"))
+                            zoom_max_cpu_usage_value = percentage_to_float(
+                                get_and_except_string(cpu_usage, "zoom_max_cpu_usage"))
+                            zoom_min_cpu_usage_value = percentage_to_float(
+                                get_and_except_string(cpu_usage, "zoom_min_cpu_usage"))
 
-                        if self.collect_participant_details:
-                            if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
-                                metric_tags.append("zoom_user_qos_cpu:usage")
-
-                                self.gauge("{}.user.qos.cpu.system_max_usage".format(self.metric_prefix),
-                                           system_max_cpu_usage_value,
-                                           tags=metric_tags)
-                                self.gauge("{}.user.qos.cpu.avg_usage".format(self.metric_prefix),
-                                           zoom_avg_cpu_usage_value,
-                                           tags=metric_tags)
-                                self.gauge("{}.user.qos.cpu.max_usage".format(self.metric_prefix),
-                                           zoom_max_cpu_usage_value,
-                                           tags=metric_tags)
-                                self.gauge("{}.user.qos.cpu.min_usage".format(self.metric_prefix),
-                                           zoom_min_cpu_usage_value,
-                                           tags=metric_tags)
-
-                                metric_tags.remove("zoom_user_qos_cpu:usage")
+                            if self.collect_participant_details:
+                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                    metric_tags.append("zoom_user_qos_cpu:usage")
+                                    self.gauge("{}.user.qos.cpu.system_max_usage".format(self.metric_prefix),
+                                            system_max_cpu_usage_value,
+                                            tags=metric_tags)
+                                    self.gauge("{}.user.qos.cpu.avg_usage".format(self.metric_prefix),
+                                            zoom_avg_cpu_usage_value,
+                                            tags=metric_tags)
+                                    self.gauge("{}.user.qos.cpu.max_usage".format(self.metric_prefix),
+                                            zoom_max_cpu_usage_value,
+                                            tags=metric_tags)
+                                    self.gauge("{}.user.qos.cpu.min_usage".format(self.metric_prefix),
+                                            zoom_min_cpu_usage_value,
+                                            tags=metric_tags)
+                                    metric_tags.remove("zoom_user_qos_cpu:usage")
 
             page_token = get_and_except_string(response, "next_page_token")
 

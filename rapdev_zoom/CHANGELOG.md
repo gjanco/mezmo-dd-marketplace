@@ -1,5 +1,13 @@
 # CHANGELOG - rapdev_zoom
 
+## 4.1.0 / 2021-05-06
+* [Removed] SLO from the Room Status dashboard.
+* [Added] Table key to rooms dashboard.
+* [Added] Unhealthy rooms to the top of table list.
+* [Added] Table key to rooms dashboard
+* [Added] PyJWT version handling
+* [Added] New screenshot for Rooms dashboard.
+
 ## 4.0.0 / 2021-03-19
 * [Removed] The get_room_status function. 
 * [Added] Improved API requests to lower chances of hitting API limits. 
