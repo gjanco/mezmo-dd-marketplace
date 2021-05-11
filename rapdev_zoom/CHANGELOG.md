@@ -1,5 +1,10 @@
 # CHANGELOG - rapdev_zoom
 
+## 4.1.1 / 2021-05-11
+* [Added] TypeError handling
+* [Removed] JWT from requirements
+* [Added] PyJWT for requirements
+
 ## 4.1.0 / 2021-05-06
 * [Removed] SLO from the Room Status dashboard.
 * [Added] Table key to rooms dashboard.

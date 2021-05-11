@@ -34,7 +34,7 @@ def check_for_cpu_metrics(metrics):
 def get_and_except_string(value, key):
     try:
         return value[key]
-    except (KeyError, IndexError):
+    except (KeyError, IndexError, TypeError):
         return ""
 
 
@@ -44,14 +44,14 @@ def get_and_except_list(value, key, index=None):
             return value[key][index]
         else:
             return value[key]
-    except (KeyError, IndexError):
+    except (KeyError, IndexError, TypeError):
         return []
 
 
 def get_and_except_dict(value, key):
     try:
         return value[key]
-    except (KeyError, IndexError):
+    except (KeyError, IndexError, TypeError):
         return {}
 
 
