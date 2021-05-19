@@ -1,7 +1,6 @@
 from github import Github
 import os
 import json
-import requests
 import re
 
 
@@ -45,7 +44,7 @@ with open(os.environ['GITHUB_EVENT_PATH']) as event_file:
     http_post = False
 
     for file in pr.get_files():
-        if '/datadog_checks/' in file.filename:
+        if '/datadog_checks/' in file.filename and file.patch is not None:
             if file_use_requests(file.patch):
                 use_request = True
             if file_http_post_put(file.patch):
