@@ -1,5 +1,8 @@
 # CHANGELOG - rapdev_zoom
 
+## 4.2.0 / 2021-05-25
+* [Added] API Error handling
+
 ## 4.1.1 / 2021-05-11
 * [Added] TypeError handling
 * [Removed] JWT from requirements

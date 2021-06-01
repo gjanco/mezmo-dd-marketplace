@@ -78,7 +78,7 @@ class ZoomCheck(AgentCheck):
 
         try:
             x = self.http.get(self.base_api_url + "rooms",
-                            auth=BearerAuth(generate_token(self.api_key, self.api_secret)))
+                              auth=BearerAuth(generate_token(self.api_key, self.api_secret)))
             x.raise_for_status()
         except Exception as e:
             self.log.warning("Caught exception %s", e)
@@ -99,6 +99,16 @@ class ZoomCheck(AgentCheck):
             raise ConfigurationError("An account name is required.")
 
     def call_api(self, request_path, next_page_token="", from_date="", to_date="", page_size=300):
+        """Helper function to call the zoom api via desired query params
+
+        :param string request_path: the path for which to append to the base api url
+        :param string next_page_token: the token for the next page if pagination is required
+        :param string from_date: the start date from where to begin the query range
+        :param string to_date: the end date for where to end the query range
+        :param integer page_size: the number of records per page the api returns
+        :raises Exception: when a non-200 and non-429 (zoom rate limit code) is returned
+        :return: json of the API response
+        """
         if page_size:
             request_path = request_path + "?page_size={}".format(page_size)
 
@@ -133,20 +143,26 @@ class ZoomCheck(AgentCheck):
                 # If we hit the queries per second limit, sleep for a sec and retry
                 if limit_type == "QPS":
                     self.log.warning("Hit Queries per Second API rate limit. Sleeping for a second then retrying...")
-                    self.service_check("{}.can_call_api".format(self.metric_prefix), AgentCheck.WARNING, tags=self.tags)
+                    self.service_check("{}.can_call_api".format(self.metric_prefix),
+                                       AgentCheck.WARNING, tags=self.tags)
                     time.sleep(1)
                 # If we hit the daily limit, return None
                 elif limit_type == "Daily-limit":
                     self.api_rate_limits_hit += 1
-                    self.service_check("{}.can_call_api".format(self.metric_prefix), AgentCheck.CRITICAL, tags=self.tags)
-                    self.log.warning("Hit Daily API rate limit. Exitting...")
+                    self.service_check("{}.can_call_api".format(self.metric_prefix),
+                                       AgentCheck.CRITICAL, tags=self.tags)
+                    self.log.warning("Hit Daily API rate limit. Exiting...")
                     return
+            else:
+                try:
+                    results.raise_for_status()
+                except requests.exceptions.HTTPError as e:
+                    raise CheckException("Non-200 response code returned from Zoom API").with_traceback(e.__traceback__)
 
     def get_users(self):
+        """Gets the users from Zoom API and sends in the active count and billing metric for each"""
         request_path = "users"
         response = self.call_api(request_path)
-
-        metric_tags = self.tags.copy()
 
         while True:
             users = get_and_except_list(response, "users")
@@ -171,8 +187,8 @@ class ZoomCheck(AgentCheck):
                     metric_tags.append("zoom_user_account_type:on-prem")
 
                 self.gauge("{}.users.active.count".format(self.metric_prefix),
-                    1,
-                    tags=metric_tags)
+                           1,
+                           tags=metric_tags)
 
                 self.gauge("datadog.marketplace.{}".format(self.metric_prefix),
                            1,
@@ -186,6 +202,8 @@ class ZoomCheck(AgentCheck):
                 response = self.call_api(request_path, page_token)
 
     def get_accounts(self):
+        """Gets the account and the number of seats for the desired account
+        Note: this requires admin privileges on the credentials provided"""
         request_path = "accounts"
         response = self.call_api(request_path)
 
@@ -223,6 +241,8 @@ class ZoomCheck(AgentCheck):
                 response = self.call_api(request_path, page_token)
 
     def get_usage_for_account(self, account_id):
+        """Gets the usage for the account
+        Note: this requires admin privileges on the credentials provided"""
         request_path = "accounts/{}/plans/usage".format(account_id)
 
         response = self.call_api(request_path)
@@ -289,6 +309,7 @@ class ZoomCheck(AgentCheck):
                     metric_tags.remove("zoom_plan_metric:usage")
 
     def get_rooms_metrics(self):
+        """Gets the metrics for each room such as component status, names, participants, etc..."""
         request_path = "metrics/zoomrooms"
         response = self.call_api(request_path)
 
@@ -345,7 +366,7 @@ class ZoomCheck(AgentCheck):
                     self.gauge("{}.room.health".format(self.metric_prefix),
                                health,
                                tags=metric_tags)
-                
+
                 # Increment counts and send in the current status for this room
                 if room_status:
                     if room_status == "Available":
@@ -423,6 +444,7 @@ class ZoomCheck(AgentCheck):
         metric_tags.remove("zoom_room_status:under_construction")
 
     def parse_and_send_issues(self, issues, room_name, room_id):
+        """Helper function for parsing room issues"""
         room_controller_is_connected = 1
         selected_camera_is_connected = 1
         selected_mic_is_connected = 1
@@ -485,6 +507,7 @@ class ZoomCheck(AgentCheck):
         metric_tags.remove("zoom_room_component:bandwidth")
 
     def get_meetings(self):
+        """Gets all the current meetings with the participants and calls the QOS function on each"""
         request_path = "metrics/meetings"
         todays_date = str(datetime.date.today())
         response = self.call_api(request_path, "", todays_date, todays_date)
@@ -526,6 +549,7 @@ class ZoomCheck(AgentCheck):
                 response = self.call_api(request_path, page_token, todays_date, todays_date)
 
     def get_meeting_qos(self, meeting_id, host_name):
+        """Gets the QOS for each participant in the current meeting"""
         request_path = "metrics/meetings/{}/participants/qos".format(meeting_id)
         response = self.call_api(request_path, "", "", "", 10)
 
@@ -574,6 +598,7 @@ class ZoomCheck(AgentCheck):
                 leave_time = get_and_except_string(participant, "leave_time")
 
                 if participant and leave_time == "":
+                    user_email = None
                     # Check if we want to collect individual user metrics
                     if self.collect_participant_details:
                         user_location = get_and_except_string(participant, "location")
@@ -585,12 +610,12 @@ class ZoomCheck(AgentCheck):
                         user_id = get_and_except_string(participant, "id")
 
                         # Only need users email if the users_to_track list is set
-                        if (self.users_to_track and user_id):
+                        if self.users_to_track and user_id:
                             request_path = "users/{}".format(user_id)
                             # noinspection PyTypeChecker
                             response = self.call_api(request_path, "", "", "", None)
                             user_email = get_and_except_string(response, "email")
-                            
+
                             if user_email:
                                 metric_tags.append("zoom_user_email:{}".format(user_email))
 
@@ -632,7 +657,8 @@ class ZoomCheck(AgentCheck):
                             audio_input_max_loss += percentage_to_float(audio_input["max_loss"])
 
                             if self.collect_participant_details:
-                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                if (self.users_to_track and user_email in self.users_to_track) or \
+                                        (not self.users_to_track):
                                     metric_tags.append("zoom_user_qos_audio:input")
                                     self.parse_and_submit_user_qos(audio_input, metric_tags)
                                     metric_tags.remove("zoom_user_qos_audio:input")
@@ -647,7 +673,8 @@ class ZoomCheck(AgentCheck):
                             audio_output_max_loss += percentage_to_float(audio_output["max_loss"])
 
                             if self.collect_participant_details:
-                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                if (self.users_to_track and user_email in self.users_to_track) or\
+                                        (not self.users_to_track):
                                     metric_tags.append("zoom_user_qos_audio:output")
                                     self.parse_and_submit_user_qos(audio_output, metric_tags)
                                     metric_tags.remove("zoom_user_qos_audio:output")
@@ -662,7 +689,8 @@ class ZoomCheck(AgentCheck):
                             video_input_max_loss += percentage_to_float(video_input["max_loss"])
 
                             if self.collect_participant_details:
-                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                if (self.users_to_track and user_email in self.users_to_track) or \
+                                        (not self.users_to_track):
                                     metric_tags.append("zoom_user_qos_video:input")
                                     self.parse_and_submit_user_qos(video_input, metric_tags)
                                     metric_tags.remove("zoom_user_qos_video:input")
@@ -677,7 +705,8 @@ class ZoomCheck(AgentCheck):
                             video_output_max_loss += percentage_to_float(video_output["max_loss"])
 
                             if self.collect_participant_details:
-                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                if (self.users_to_track and user_email in self.users_to_track) or \
+                                        (not self.users_to_track):
                                     metric_tags.append("zoom_user_qos_video:output")
                                     self.parse_and_submit_user_qos(video_output, metric_tags)
                                     metric_tags.remove("zoom_user_qos_video:output")
@@ -693,20 +722,21 @@ class ZoomCheck(AgentCheck):
                                 get_and_except_string(cpu_usage, "zoom_min_cpu_usage"))
 
                             if self.collect_participant_details:
-                                if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
+                                if (self.users_to_track and user_email in self.users_to_track) or \
+                                        (not self.users_to_track):
                                     metric_tags.append("zoom_user_qos_cpu:usage")
                                     self.gauge("{}.user.qos.cpu.system_max_usage".format(self.metric_prefix),
-                                            system_max_cpu_usage_value,
-                                            tags=metric_tags)
+                                               system_max_cpu_usage_value,
+                                               tags=metric_tags)
                                     self.gauge("{}.user.qos.cpu.avg_usage".format(self.metric_prefix),
-                                            zoom_avg_cpu_usage_value,
-                                            tags=metric_tags)
+                                               zoom_avg_cpu_usage_value,
+                                               tags=metric_tags)
                                     self.gauge("{}.user.qos.cpu.max_usage".format(self.metric_prefix),
-                                            zoom_max_cpu_usage_value,
-                                            tags=metric_tags)
+                                               zoom_max_cpu_usage_value,
+                                               tags=metric_tags)
                                     self.gauge("{}.user.qos.cpu.min_usage".format(self.metric_prefix),
-                                            zoom_min_cpu_usage_value,
-                                            tags=metric_tags)
+                                               zoom_min_cpu_usage_value,
+                                               tags=metric_tags)
                                     metric_tags.remove("zoom_user_qos_cpu:usage")
 
             page_token = get_and_except_string(response, "next_page_token")
@@ -809,6 +839,7 @@ class ZoomCheck(AgentCheck):
             base_metric_tags.remove("zoom_meeting_qos_video:output")
 
     def parse_and_submit_user_qos(self, qos_values, metric_tags):
+        """Helper function used to parse through the list of user qos and submit the correct format for each"""
         bitrate = parse_kbps(
             get_and_except_string(qos_values, "bitrate"))
         avg_loss = percentage_to_float(
@@ -842,6 +873,7 @@ class ZoomCheck(AgentCheck):
                        tags=metric_tags)
 
     def get_top_25_rooms_issues(self):
+        """Fetches the top 25 issues across all rooms and submits it to DD"""
         request_path = "metrics/zoomrooms/issues"
         todays_date = str(datetime.date.today())
         response = self.call_api(request_path, "", todays_date, todays_date)
@@ -859,6 +891,7 @@ class ZoomCheck(AgentCheck):
                        tags=metric_tags)
 
     def get_im_metrics(self):
+        """Gets the IM metrics from the Zoom's meeting chat and sends it to DD"""
         request_path = "metrics/im"
         todays_date = str(datetime.date.today())
         response = self.call_api(request_path, "", todays_date, todays_date)
