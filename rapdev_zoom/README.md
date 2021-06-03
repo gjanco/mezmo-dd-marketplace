@@ -43,7 +43,7 @@ You must have the Datadog Agent installed and running. Additionally, you need to
 ### Installation
 
 ```
-sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_zoom==4.2.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_zoom==4.2.0
 ``` 
 
 ### Configuration
@@ -86,7 +86,7 @@ Finish the configuration by filling in your Zoom Account name. See below for an 
     Alternatively, you can get detailed information about the integration using the following command.
     
     ```
-    sudo ‐u dd‐agent datadog‐agent check rapdev_zoom
+    sudo -u dd-agent datadog-agent check rapdev_zoom
     ```
 
 
