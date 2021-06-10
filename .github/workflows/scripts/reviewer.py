@@ -52,6 +52,6 @@ with open(os.environ['GITHUB_EVENT_PATH']) as event_file:
 
     if http_post:
         print("This pull request makes POST or PUT http requests.")
-        pr.add_to_labels('review/http')
+        pr.add_to_labels('agent/http')
     if use_request:
         raise Exception("This pull request is using requests, please use the RequestsWrapper instead: https://datadoghq.dev/integrations-core/base/http/.")
