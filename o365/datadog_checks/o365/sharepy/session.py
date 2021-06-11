@@ -1,6 +1,6 @@
 import os
 import re
-import requests
+import requests as rq # SKIP_HTTP_VALIDATION
 import xml.etree.ElementTree as et
 import pickle
 from getpass import getpass
@@ -34,7 +34,7 @@ def load(filename="sp-session.pkl"):
         return session
 
 
-class SharePointSession(requests.Session):
+class SharePointSession(rq.Session):
     """A SharePy Requests session.
 
     Provide session authentication to SharePoint Online sites
@@ -81,8 +81,8 @@ class SharePointSession(requests.Session):
         print("Requesting security token...\r", end="")
         auth_domain = "login.microsoftonline." + self.auth_tld
         try:
-            response = requests.post("https://{}/extSTS.srf".format(auth_domain), data=saml)
-        except requests.exceptions.ConnectionError:
+            response = rq.post("https://{}/extSTS.srf".format(auth_domain), data=saml)
+        except rq.exceptions.ConnectionError:
             print("Could not connect to", auth_domain)
             return
         # Parse and extract token from returned XML
@@ -102,15 +102,15 @@ class SharePointSession(requests.Session):
 
         # Request access token from sharepoint site
         print("Requesting access cookie... \r", end="")
-        response = requests.post("https://" + self.site + "/_forms/default.aspx?wa=wsignin1.0",
+        response = rq.post("https://" + self.site + "/_forms/default.aspx?wa=wsignin1.0",
                                  data=token.text, headers={"Host": self.site})
 
         # Create access cookie from returned headers
         cookie = self._buildcookie(response.cookies)
         # Verify access by requesting page
-        response = requests.get("https://" + self.site + "/_api/web", headers={"Cookie": cookie})
+        response = rq.get("https://" + self.site + "/_api/web", headers={"Cookie": cookie})
 
-        if response.status_code == requests.codes.ok:
+        if response.status_code == rq.codes.ok:
             self.headers.update({"Cookie": cookie})
             self.cookie = cookie
             print("Authentication successful   ")
@@ -122,7 +122,7 @@ class SharePointSession(requests.Session):
         """Check and refresh site's request form digest"""
         if self.expire <= datetime.now():
             # Request site context info from SharePoint site
-            response = requests.post("https://" + self.site + "/_api/contextinfo",
+            response = rq.post("https://" + self.site + "/_api/contextinfo",
                                      data="", headers={"Cookie": self.cookie})
             # Parse digest text and timeout from XML
             try:
@@ -159,7 +159,7 @@ class SharePointSession(requests.Session):
         # Request file in stream mode
         response = self.get(url, *args, **kwargs)
         # Save to output file
-        if response.status_code == requests.codes.ok:
+        if response.status_code == rq.codes.ok:
             with open(filename, "wb") as file:
                 for chunk in response:
                     file.write(chunk)

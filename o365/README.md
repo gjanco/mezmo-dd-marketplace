@@ -27,17 +27,21 @@ Below are some screenshots of the dashboard that is included with the integratio
 
 ### Datadog Integration Install
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.0.2`
+Linux:
+* `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.0.3`
+
+Windows:
+* `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-o365=2.0.3`
 
 ### Microsoft Office 365 Configuration
 
 The Microsoft Office 365 integration requires permissions managed through your organization's Azure Active Directory as well as a dedicated "integration user account" to perform synthetic operations.
 
-1. [Create a new Office 365 user account](https://support.microsoft.com/en-us/office/add-a-new-user-10d7c185-34d1-4648-9b1d-40c45305d2cb). The integration user account should not be shared with an active user in your organization. Retain the user account username (email) and password for use in the datadog agent configuration step.
+1. [Create a new Office 365 user account](https://support.microsoft.com/en-us/office/add-a-new-user-10d7c185-34d1-4648-9b1d-40c45305d2cb). The integration user account should not be shared with an active user in your organization. The integration user should be a native M365 user, assigned a standard O365 license, and configured to not require MFA. Retain the user account username, email address, and password for use in the datadog agent configuration step.
 
 2. Add the `username` and `password` parameters to the `o365.d/o365.yaml` configuration file.  `username` should be the email address (UPN) of the Office 365 user created in step 1.
 
-3. [Create a new Azure Active Directory Application Registration](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app).
+3. [Create a new Azure Active Directory Application Registration](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app). For the delegated permissions, the effective permisions are those provided to the M365 user created in step 1. The App Registration permissions are an additional restriction limiting the scope of API calls allowed by the O365 Datadog integration.
 
 	3.1. Create a [New Registration](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps). Select a name that will clearly distinguish the application registration, e.g. *DatadogIntegration*.
 	
@@ -52,15 +56,15 @@ The Microsoft Office 365 integration requires permissions managed through your o
 		- ServiceHealth.Read
 
 	- Select `Add a permission`, `Microsoft Graph`, and then `Delegated Permissions`. Add the following permissions:
+	  - AllSites.Read
 		- Calendars.ReadWrite
-		- Channel.Create
+		- Channel.ReadBasic.All
 		- ChannelMessage.Send
 		- email
 		- Files.ReadWrite
 		- offline_access
 		- openid
 		- profile
-		- Reports.Read.All
 		- Team.ReadBasic.All
 
 	- Select `Grant Admin Consent for {Organization}` to give consent to the app registration to consume the configured API permissions.
@@ -81,7 +85,7 @@ The Microsoft Office 365 integration requires permissions managed through your o
 
 6. [Modify the OneDrive storage configuration for the integration user account](https://docs.microsoft.com/en-us/onedrive/set-retention). Specify minimum of thirty (30) days and 1024 GB to prevent the integration user synthetic files from consuming all allocated storage. The default settings, unless modified by your organization, should be thirty (30) days and 1204 GB. 
 
-7. The agent's synthetic email check is disabled by default, set `enable_email_synthetics: true` and set the target email address configured in step 5 by adding `email_address: {integration_user@email.address}` in the `o365.d/o365.yaml`.
+7. Configure the email synthetic metrics by configuring the email mailbox setup in step 5 by adding `email_address: {integration_user@email.address}` in the `o365.d/o365.yaml`.
 
 8. Add SharePoint sites to the `o365.d/o365.yaml` file to enable collection of SharePoint performance metrics. Ten (10) sites can be added under the configuration section `sharepoint_sites`. See the configuration example for syntax. The configured username and password for the performance synthetic user is used for the sharepoint login and the SharePoint site(s) must be readable by the configured user.
 
@@ -93,7 +97,7 @@ tags:
   - "office:boston"
 ```
 
-10. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7).
+11. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7).
 
 ### Validation
 
@@ -115,4 +119,5 @@ Made with ❤️ in Boston
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
 
 ---
+
 This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-o365/pricing) to purchase this application.

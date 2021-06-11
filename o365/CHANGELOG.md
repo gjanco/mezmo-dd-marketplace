@@ -1,5 +1,13 @@
 # CHANGELOG - o365
 
+## 2.0.3 / 2026-06-26
+
+* [Added] updated app registration permissions to more specific scopes.
+* [Added] added requests timeouts to authorization token invocations.
+* [Fixed] updated README on Microsoft 365 integration user license requirement and permissions.
+* [Fixed] updated dashboards.
+* [Fixed] updated ServiceComms URI path with configured TenantId.
+
 ## 2.0.2 / 2021-03-22
 
 * [Added] added 'app:o365' tag to Microsoft 365 incident events to support filtering.

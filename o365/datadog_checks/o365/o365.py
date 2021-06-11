@@ -428,7 +428,7 @@ class O365Check(AgentCheck):
             "client_id": client_id,
             "client_secret": client_secret,
         }
-        r = rq.post(url, data=data)
+        r = rq.post(url, data=data, timeout=REQ_TIMEOUT)
         r.raise_for_status()
         self.reports_token = r.json()
         return
@@ -442,15 +442,12 @@ class O365Check(AgentCheck):
 
         url = "https://login.microsoftonline.com/{}/oauth2/token".format(tenant_id)
         scopes = [
-            "Calendars.ReadWrite",
-            "Files.ReadWrite" "Group.ReadWrite.All",
-            "ChannelMessage.Send",
-            "Channel.Create",
-            "Channel.Delete",
-            "Team.ReadBasic.All",
-            "Directory.ReadWrite.All",
-            "Web.Read",
             "AllSites.Read",
+            "Calendars.ReadWrite",
+            "ChannelMessage.Send",
+            "Channel.ReadBasic.All",
+            "Files.ReadWrite",
+            "Team.ReadBasic.All",
         ]
         form_data = {
             "resource": "https://graph.microsoft.com",
@@ -462,7 +459,7 @@ class O365Check(AgentCheck):
             "scope": " ".join(scopes),
         }
 
-        r = rq.post(url, data=form_data)
+        r = rq.post(url, data=form_data, timeout=REQ_TIMEOUT)
         r.raise_for_status()
 
         self.synthetics_token = r.json()
@@ -481,7 +478,7 @@ class O365Check(AgentCheck):
             "client_secret": client_secret,
         }
 
-        r = rq.post(url, data=data)
+        r = rq.post(url, data=data, timeout=REQ_TIMEOUT)
         r.raise_for_status()
         self.management_token = r.json()
         return
@@ -2740,8 +2737,9 @@ class O365Check(AgentCheck):
     ###############################################################################################
     def get_servicecomms_incidents(self):
         token = self.management_token.get("access_token", None)
+        tenant_id       = self.instance.get("tenant_id", None)
         manage_host     = self.instance.get("manage_url", "https://manage.office.com")
-        manage_path     = "api/v1.0/contoso.com/ServiceComms/Messages"
+        manage_path     = "api/v1.0/{}/ServiceComms/Messages".format(tenant_id)
         manage_headers  = {
             "Content-Type": "application/json",
             "Authorization": "Bearer {}".format(token),
