@@ -1,6 +1,6 @@
 # CHANGELOG - o365
 
-## 2.0.3 / 2026-06-26
+## 2.0.3 / 2021-06-11
 
 * [Added] updated app registration permissions to more specific scopes.
 * [Added] added requests timeouts to authorization token invocations.
