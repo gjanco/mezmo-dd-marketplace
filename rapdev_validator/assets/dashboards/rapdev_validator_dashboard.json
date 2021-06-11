@@ -1,0 +1,534 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "Host",
+            "prefix": "validated_host"
+        },
+        {
+            "default": "*",
+            "name": "Key",
+            "prefix": "tag_key"
+        },
+        {
+            "default": "*",
+            "name": "Value",
+            "prefix": "tag_value"
+        }
+    ],
+    "title": "RapDev Validator Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Key Compliance",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:rapdev.validator.tag.missing_key{$Host,$Key} by {validated_host,tag_key}"
+                    }
+                ],
+                "time": {},
+                "title": "Tag Key Compliance Summary",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 4926929220723516,
+            "layout": {
+                "height": 32,
+                "width": 51,
+                "x": 69,
+                "y": 21
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Value Compliance",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:rapdev.validator.tag.bad_value{$Host,$Key,$Value} by {validated_host, tag_key, tag_value}"
+                    }
+                ],
+                "title": "Tag Value Compliance Summary",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 5385810209907484,
+            "layout": {
+                "height": 32,
+                "width": 51,
+                "x": 69,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "Host",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.validator.host.bad_value{$Key}"
+                    }
+                ],
+                "title": "Hosts w/ Non-Compliant Values",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6166738574792742,
+            "layout": {
+                "height": 14,
+                "width": 22,
+                "x": 0,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "%",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "(sum:rapdev.validator.host.missing_key{$Key}/sum:rapdev.validator.host.checked{$Key})*100"
+                    }
+                ],
+                "title": "% of Hosts with a Missing Key",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7192975506160674,
+            "layout": {
+                "height": 14,
+                "width": 22,
+                "x": 23,
+                "y": 21
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "%",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "(sum:rapdev.validator.host.bad_value{$Key}/sum:rapdev.validator.host.bad_value_checked{$Key})*100"
+                    }
+                ],
+                "title": "% of Hosts w/ Non-Compliant Values",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4337756586225662,
+            "layout": {
+                "height": 14,
+                "width": 22,
+                "x": 23,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "check": "rapdev.validator.tag.key_validator",
+                "group_by": [],
+                "grouping": "cluster",
+                "tags": [
+                    "*"
+                ],
+                "title": "Tag Key Compliance",
+                "title_align": "center",
+                "title_size": "16",
+                "type": "check_status"
+            },
+            "id": 2357874681392010,
+            "layout": {
+                "height": 14,
+                "width": 22,
+                "x": 46,
+                "y": 21
+            }
+        },
+        {
+            "definition": {
+                "check": "rapdev.validator.tag.value_validator",
+                "group_by": [],
+                "grouping": "cluster",
+                "tags": [
+                    "*"
+                ],
+                "title": "Tag Value Compliance",
+                "title_align": "center",
+                "title_size": "16",
+                "type": "check_status"
+            },
+            "id": 2602184603332672,
+            "layout": {
+                "height": 14,
+                "width": 22,
+                "x": 46,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.validator.tag.missing_key{$Host,$Key} by {tag_key}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Missing Keys by Tag Key",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3455436266517960,
+            "layout": {
+                "height": 17,
+                "width": 68,
+                "x": 0,
+                "y": 36
+            }
+        },
+        {
+            "definition": {
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.validator.tag.bad_value{$Host,$Key} by {tag_key}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Non-Compliance by Tag Key",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3617169022964846,
+            "layout": {
+                "height": 17,
+                "width": 68,
+                "x": -1,
+                "y": 78
+            }
+        },
+        {
+            "definition": {
+                "custom_unit": "Host",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.validator.host.missing_key{*}"
+                    }
+                ],
+                "title": "Hosts Missing Tag Keys",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 369483642041052,
+            "layout": {
+                "height": 14,
+                "width": 22,
+                "x": 0,
+                "y": 21
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "Host",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.validator.agent.installed{*}"
+                    }
+                ],
+                "title": "Number of Agents Installed",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8423819888504092,
+            "layout": {
+                "height": 14,
+                "width": 22,
+                "x": 0,
+                "y": 105
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "%",
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "(sum:rapdev.validator.agent.installed{*}/sum:rapdev.validator.host.checked{*})*100"
+                    }
+                ],
+                "title": "% of Hosts with Agent Installed",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6665178424932306,
+            "layout": {
+                "height": 14,
+                "width": 22,
+                "x": 23,
+                "y": 105
+            }
+        },
+        {
+            "definition": {
+                "check": "rapdev.validator.agent.is_installed",
+                "group_by": [],
+                "grouping": "cluster",
+                "tags": [
+                    "*"
+                ],
+                "title": "Agent Compliance",
+                "title_align": "center",
+                "title_size": "16",
+                "type": "check_status"
+            },
+            "id": 1437726547788660,
+            "layout": {
+                "height": 14,
+                "width": 22,
+                "x": 46,
+                "y": 105
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "The RapDev Validator is a tool that is used to audit DataDog hosts for tag and agent compliance, making sure hosts follow tagging guidelines and have DataDog agents running on them.",
+                "font_size": "16",
+                "show_tick": false,
+                "text_align": "left",
+                "tick_edge": "left",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 8313081272697574,
+            "layout": {
+                "height": 12,
+                "width": 60,
+                "x": 23,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-dash-logo.png"
+            },
+            "id": 3502238355125564,
+            "layout": {
+                "height": 12,
+                "width": 22,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Tag Key Compliance",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 3717231993470434,
+            "layout": {
+                "height": 7,
+                "width": 120,
+                "x": 0,
+                "y": 13
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Tag Value Compliance",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 6941520534444872,
+            "layout": {
+                "height": 7,
+                "width": 120,
+                "x": 0,
+                "y": 55
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Agent Inventory",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 335987030172920,
+            "layout": {
+                "height": 7,
+                "width": 120,
+                "x": 0,
+                "y": 97
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Agent Status",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": 1
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:rapdev.validator.agent.installed{$Host} by {validated_host, agent_version}"
+                    }
+                ],
+                "title": "Datadog Agent Inventory",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 345146869760626,
+            "layout": {
+                "height": 32,
+                "width": 51,
+                "x": 69,
+                "y": 105
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(sum:rapdev.validator.agent.installed{$Host} by {agent_version}, 10, 'last', 'desc')"
+                    }
+                ],
+                "title": "Agents Installed by Version",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 3170908297120882,
+            "layout": {
+                "height": 17,
+                "width": 68,
+                "x": -1,
+                "y": 120
+            }
+        }
+    ]
+}

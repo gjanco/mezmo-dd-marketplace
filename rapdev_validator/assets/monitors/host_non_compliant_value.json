@@ -1,0 +1,28 @@
+{
+  "name": "[RapDev Validator] Host {{validated_host.name}} has a non-compliant value for tag key {{tag_key.name}}",
+  "type": "query alert",
+  "query": "min(last_5m):avg:rapdev.validator.tag.bad_value{*} by {tag_key,tag_value,validated_host} > 0",
+  "message": "{{#is_alert}} Host {{validated_host.name}} has a non-compliant value for {{tag_key.name}}. Current value: {{tag_value.name}} {{/is_alert}} \n\n{{#is_recovery}} Host {{validated_host.name}} now has a compliant value for {{tag_key.name}} {{/is_recovery}}",
+  "tags": [
+    "integration:validator"
+  ],
+  "options": {
+    "notify_audit": false,
+    "locked": false,
+    "timeout_h": 0,
+    "silenced": {},
+    "include_tags": true,
+    "no_data_timeframe": null,
+    "require_full_window": true,
+    "new_host_delay": 300,
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "escalation_message": "",
+    "thresholds": {
+      "critical": 0
+    }
+  },
+  "recommended_monitor_metadata": {
+    "description": "Alert when a host has a non-compliant value for their tag kay"
+  }
+}

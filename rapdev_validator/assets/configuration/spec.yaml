@@ -1,0 +1,32 @@
+name: RapDev Validator
+files:
+- name: rapdev_validator.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: required_tags
+      required: true
+      value:
+        type: object
+      description: |
+        List of key/value pair tags that the check is looking for on each Agent. 
+    - name: ignore_paas
+      required: false
+      value:
+        type: boolean
+        default: false
+        example: false
+      description: |
+        Whether or not to ignore validation for hosts using apps ALB, ELB, NLB, and RDS. 
+    - name: hosts_to_ignore
+      required: false
+      value:
+        type: array
+        items:
+          type: string
+      description: |
+        List of host names that we want to ignore validation on.
+    - template: instances/default
