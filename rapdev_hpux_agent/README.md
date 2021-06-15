@@ -5,7 +5,7 @@ The HP-UX Agent allows you to collect and report on system metrics within Datado
 
 The HP-UX Agent provides the host metadata required to support the Datadog Infrastructure List, enabling your organization to work with HP-UX host systems similar to other supported Datadog host operating systems.
 
-The HP-UX Agent uses the same URLs and ports as the native agents. The Solaris Agent currently supports core infrastructure metrics and log tails. It does not support Agent checks, integrations, or service checks. 
+The HP-UX Agent uses the same URLs and ports as the native agents. The HP-UX Agent currently supports core infrastructure metrics and log tails. It does not support Agent checks, integrations, or service checks. 
 
 ### HP-UX Agent Screenshots
 
@@ -129,4 +129,4 @@ Made with ❤️ in Boston
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
 
 ---
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-solaris-agent/pricing) to purchase this application.
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-hpux-agent/pricing) to purchase this application.
