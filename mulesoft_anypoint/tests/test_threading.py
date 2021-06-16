@@ -48,5 +48,4 @@ def test_multithreading_pool_empty(multithreading_pool_4):
     assert multithreading_pool_4.get_queue_size() == 0
     assert multithreading_pool_4.get_active_size() == 4
     multithreading_pool_4.wait_and_close()
-    time.sleep(1)
     assert multithreading_pool_4.get_total_size() == 0

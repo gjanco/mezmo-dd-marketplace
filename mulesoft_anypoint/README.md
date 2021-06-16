@@ -63,7 +63,7 @@ Also, correlate the logs generated within a transaction in a single trace to nar
 
 ### **Troubleshooting**
 
-Need help? Contact us: [support_ddp@ioconnectservices.com][9].
+Need help? Contact [support_ddp@ioconnectservices.com][9].
 
 ## Setup
 
@@ -315,10 +315,9 @@ The Datadog Mule® Integration does not include any events.
 
 ## Support
 
-For any support inquiry, contact us at [support_ddp@ioconnectservices.com][9].
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][13] to purchase this application. 
 
----
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][13] to purchase this application.
+For any support inquiry, contact IO Connect Services support at [support_ddp@ioconnectservices.com][9].
 
 ##  End User License Agreement
 

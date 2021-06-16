@@ -1,8 +1,8 @@
 import os
 
 import pytest
-
 from datadog_checks.dev import get_here
+
 from datadog_checks.mulesoft_anypoint import MulesoftAnypointCheck
 
 from .docker.common import get_absolute_path_list, load_endpoints
