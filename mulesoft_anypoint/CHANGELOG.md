@@ -1,13 +1,5 @@
 # CHANGELOG - Datadog Mule® Integration
 
-## Overview
-
-The Datadog Mule® Integration is an Agent-based integration that collects metrics from MuleSoft products and uploads them into Datadog. 
-
-![Datadog Mule® Integration Bundle](images/dmi_bundle.png)
-
-You can use these metrics to take advantage of the out-of-the-box dashboards and monitors or you can create your own visualizations.
-
 ## 1.2.1 / 2021-05-31
 * [Fixed] Support for EU region in Anypoint Platform control plane.
 
