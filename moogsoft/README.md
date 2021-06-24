@@ -34,25 +34,7 @@ See everything in one view. We aggregate all of your apps, services, and infrast
 
 All that's needed to integrate Datadog to Moogsoft is, from in Moogsoft's UI, to click on Integrations > Datadog and provide your Datadog API key and Application key as detailed [here](https://docs.moogsoft.com/en/datadog-integration-mcp.html)
 
-Then, for the bi-directional integration from Moogsoft to Datadog, just create an outbound Incident Webhook from Moogsoft with the following configuration (you can also perform this step from the Moogsoft UI):
-
-URL = https://api.datadoghq.com/api/v2/incidents
-
-
-
-Headers:
-
-- Content-Type = application/json
-- DD-API-KEY = "your API key value here"
-- DD-APPLICATION-KEY = "your APPLICATION key value here"
-
-Body:
-
-{"data":{"attributes":{"customer_impacted":true,"customer_impact_scope":"$services","title":"$description","fields":{"services":{"type":"autocomplete","value":["$services"]},"severity":{"type":"dropdown","value":"SEV-1"},"detection_method":{"type":"dropdown","value":"other"}}},"relationships":{"commander":{"data":{"id":"00000000-0000-0000-0000-000000000000","type":"users"}}},"type":"incidents"}}
-
-Last step is to create a second outbound webhook in Moogsoft with identical settings as the one above except using the following as the body:
-
-{"series":[{"metric":"datadog.marketplace.moogsoft","points":[["$last_event_time","1"]]}]}
+Then, for the bi-directional integration from Moogsoft to Datadog, create an outbound Incident Webhook from Moogsoft as detailed [in the Moogsoft documentation](https://docs.moogsoft.com/en/send-incidents-to-datadog.html)
 
 
 
@@ -64,4 +46,3 @@ This application is made available through the Marketplace and is supported by a
 
 [1]: https://support.moogsoft.com
 [2]: https://app.datadoghq.com/marketplace/app/moogsoft/pricing
-
