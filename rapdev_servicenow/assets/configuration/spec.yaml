@@ -1,0 +1,54 @@
+name: RapDev ServiceNow
+files:
+- name: rapdev_servicenow.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/http
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: instance_name
+      required: true
+      description: the name of your servicenow instance 
+      value:
+        type: string
+        example: rapdevio
+    - name: stats_title
+      required: false
+      description: The title page of stats.do. Uncomment this only if your stats title page is not 'Servlet statistics'
+      value:
+        type: string
+        example: Servlet statistics
+    - name: collect_statsdo
+      required: false
+      description: collect metrics from stats.do.
+      value:
+        type: boolean
+        default: true
+        example: true
+    - name: collect_itsm_metrics
+      required: false
+      description: collect ITSM metrics.
+      value:
+        type: boolean
+        default: false
+        example: false
+    - name: incident_open_states
+      required: false
+      description: incident states indiciating a status of 'open'
+      value:
+        type: array
+        example: [1, 2, 3]
+        items:
+          type: integer
+    - name: incident_closed_states
+      required: false
+      description: incident states indicating a status of 'closed'
+      value:
+        type: array
+        example: [6, 7, 8]
+        items:
+          type: integer
+    - template: instances/http
+    - template: instances/default

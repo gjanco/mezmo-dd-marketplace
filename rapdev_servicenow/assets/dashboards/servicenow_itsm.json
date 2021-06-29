@@ -1,0 +1,929 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "instance_name",
+            "prefix": "instance_name"
+        },
+        {
+            "default": "*",
+            "name": "assignment_group",
+            "prefix": "servicenow_assignment_group"
+        }
+    ],
+    "title": "ServiceNow ITSM",
+    "widgets": [
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 20
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 10
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 10
+                            }
+                        ],
+                        "q": "sum:rapdev.servicenow.incident_breached{$instance_name,$assignment_group}"
+                    }
+                ],
+                "title": "Total SLA's Breached",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1656081760822768,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 2,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "sum:rapdev.servicenow.vip_count{$instance_name,$assignment_group}"
+                    }
+                ],
+                "title": "VIP Incidents",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8907094652105531,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 122,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Hours",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 48
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 48
+                            }
+                        ],
+                        "limit": 100,
+                        "order": "asc",
+                        "q": "min:rapdev.servicenow.incident{$instance_name,$assignment_group,open:true} by {incident_number,servicenow_priority,servicenow_assignment_group,location,assigned_to,caller,opened,description}"
+                    }
+                ],
+                "time": {
+                    "live_span": "1h"
+                },
+                "title": "Open Incidents By Age (Hours)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 7587583449519643,
+            "layout": {
+                "height": 31,
+                "width": 117,
+                "x": 2,
+                "y": 90
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.servicenow.sla{$instance_name,$assignment_group} by {sla_name}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "SLA's Breached By Type",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1463451381450916,
+            "layout": {
+                "height": 31,
+                "width": 59,
+                "x": 2,
+                "y": 58
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "SLA Stats",
+                "font_size": "36",
+                "has_padding": true,
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 4728629993688981,
+            "layout": {
+                "height": 8,
+                "width": 59,
+                "x": 2,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 10
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 5
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.servicenow.incident_breached{servicenow_priority:p1,$instance_name,$assignment_group})"
+                    }
+                ],
+                "title": "Breached P1s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6153896755435240,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 32,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 10
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 3
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 3
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.servicenow.incident_breached{servicenow_priority:p2,$instance_name,$assignment_group})"
+                    }
+                ],
+                "title": "Breached P2s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8830167286407684,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 2,
+                "y": 26
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 10
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 3
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 3
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.servicenow.incident_breached{servicenow_priority:p3,$instance_name,$assignment_group})"
+                    }
+                ],
+                "title": "Breached P3s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8892819787126779,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 32,
+                "y": 26
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 10
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 5
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 5
+                            }
+                        ],
+                        "q": "sum:rapdev.servicenow.incident_breached{servicenow_priority:p5,$instance_name,$assignment_group}"
+                    }
+                ],
+                "title": "Breached P5s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8266774822916214,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 32,
+                "y": 42
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Open Incident Stats",
+                "font_size": "36",
+                "has_padding": true,
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 2860263341126098,
+            "layout": {
+                "height": 8,
+                "width": 88,
+                "x": 63,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 10
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 5
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 5
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.servicenow.incident_breached{servicenow_priority:p4,$instance_name,$assignment_group})"
+                    }
+                ],
+                "title": "Breached P4s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8213703413986833,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 2,
+                "y": 42
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 50
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 25
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 10
+                            }
+                        ],
+                        "q": "sum:rapdev.servicenow.incident_count{$instance_name,$assignment_group}"
+                    }
+                ],
+                "title": "Total Incidents",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8341875923630920,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 62,
+                "y": 26
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.servicenow.incident_count{servicenow_priority:p1,$instance_name,$assignment_group})"
+                    }
+                ],
+                "title": "Total P1s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7553420424883719,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 92,
+                "y": 26
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.servicenow.incident_count{servicenow_priority:p2,$instance_name,$assignment_group})"
+                    }
+                ],
+                "title": "Total P2s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6585600980349006,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 122,
+                "y": 26
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.servicenow.incident_count{$instance_name,$assignment_group} by {servicenow_priority,servicenow_assignment_group}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Total Incidents",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6156912333861620,
+            "layout": {
+                "height": 15,
+                "width": 57,
+                "x": 62,
+                "y": 58
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "q": "min:rapdev.servicenow.incident{$instance_name,$assignment_group} by {incident_number}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Open Incidents By Age (Hours)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2551056923180444,
+            "layout": {
+                "height": 15,
+                "width": 57,
+                "x": 62,
+                "y": 74
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "",
+                "precision": 1,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 48
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 24
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 24
+                            }
+                        ],
+                        "q": "avg:rapdev.servicenow.sla_elapsed_time{sla_incident_number:*,sla_target:response,sla_stage:completed,$instance_name,$assignment_group}"
+                    }
+                ],
+                "title": "Average Incident Response Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7662214174176096,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 92,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 72
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 48
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 48
+                            }
+                        ],
+                        "q": "avg:rapdev.servicenow.incident_resolution_time{$instance_name,$assignment_group}"
+                    }
+                ],
+                "title": "Average Incident Resolution Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4185242826241552,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 62,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Table API Stats",
+                "font_size": "36",
+                "has_padding": true,
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 937311284190064,
+            "layout": {
+                "height": 8,
+                "width": 55,
+                "x": 152,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "q": "avg:rapdev.servicenow.http_response{$instance_name,!status_code:200} by {status_code,endpoint}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Non 200 Response Codes",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1562379355432693,
+            "layout": {
+                "height": 15,
+                "width": 56,
+                "x": 152,
+                "y": 26
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "sum",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": 95
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 90
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": 90
+                            }
+                        ],
+                        "q": "(sum:rapdev.servicenow.http_response{$instance_name,status_code:200}/sum:rapdev.servicenow.http_response{$instance_name})*100"
+                    }
+                ],
+                "title": "Successful Requests",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8628673534777894,
+            "layout": {
+                "height": 15,
+                "width": 56,
+                "x": 152,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.servicenow.incident_count{$instance_name,$assignment_group,servicenow_priority:p3})"
+                    }
+                ],
+                "title": "Total P3s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1791476381115353,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 62,
+                "y": 42
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.servicenow.incident_count{$instance_name,$assignment_group,servicenow_priority:p4})"
+                    }
+                ],
+                "title": "Total P4s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6857195538572598,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 92,
+                "y": 42
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 1
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 1
+                            }
+                        ],
+                        "q": "default_zero(sum:rapdev.servicenow.incident_count{$instance_name,$assignment_group,servicenow_priority:p5})"
+                    }
+                ],
+                "title": "Total P5s",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4978456568280269,
+            "layout": {
+                "height": 15,
+                "width": 29,
+                "x": 122,
+                "y": 42
+            }
+        }
+    ]
+}
