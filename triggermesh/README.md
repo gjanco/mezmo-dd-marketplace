@@ -19,13 +19,13 @@ All Oracle Cloud services listed [here](https://docs.oracle.com/en-us/iaas/Conte
 
 ### Metrics
 
-All the metrics that can be collected for an autonomous database are listed in the links below.
+All the metrics that can be collected for an autonomous database are listed in the link below.
 
 * Autonomous Database [metrics](https://docs.oracle.com/en-us/iaas/Content/Database/References/databasemetrics_topic-Overview_of_the_Database_Service_Autonomous_Database_Metrics.htm#overview)
 
 
 ## Support
 
-If you have any questions about the TriggerMesh OCI to Datadog integration please contact us [info@triggermesh.com](mailto:info@triggermesh.com) or create an issue in this GitHub repository.
+If you have any questions about the TriggerMesh OCI to Datadog integration please contact us [info@triggermesh.com](mailto:info@triggermesh.com).
 
 If you want to schedule a demo for the on-prem deployment scenario please contact [sales@triggermesh.com](mailto:sales@triggermesh.com)
