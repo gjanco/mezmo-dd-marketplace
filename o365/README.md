@@ -31,7 +31,7 @@ Linux:
 * `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.0.3`
 
 Windows:
-* `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-o365=2.0.3`
+* `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-o365==2.0.3`
 
 ### Microsoft Office 365 Configuration
 
