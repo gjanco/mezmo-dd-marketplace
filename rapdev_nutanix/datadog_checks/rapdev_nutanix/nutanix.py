@@ -61,7 +61,8 @@ class NutanixCheck(AgentCheck):
         self.username = self.instance.get("username")
         self.password = self.instance.get("password")
         self.collect_events = is_affirmative(self.instance.get("collect_events", False))
-        self.verbose_collection = is_affirmative(self.instance.get("verbose", False))
+        self.verbose_collection = is_affirmative(self.instance.get("verbose_collection", False))
+        self.enable_protection_domains = is_affirmative(self.instance.get("protection_domains_enabled", False))
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
         self.tags.append("nutanix_cvm:{}".format(self.cvm_host))
         self.metric_prefix = "rapdev.nutanix"
@@ -82,6 +83,8 @@ class NutanixCheck(AgentCheck):
         self.get_license()
         if self.collect_events == True:
             self.get_events()
+        if self.enable_protection_domains:
+            self.get_protection_domains()
 
     def test_cvm_connection(self):
         self.log.debug("Attempting connection test to Nutanix CVM host %s with username %s...", self.cvm_host)
@@ -101,7 +104,7 @@ class NutanixCheck(AgentCheck):
             raise ConfigurationError("Nutanix Controller VM ip address and port is needed")
 
     def call_api(self, entity):
-        results = self.http.get("https://" + self.cvm_host + "/PrismGateway/services/rest/v1/" + entity).json()
+        results = self.http.get("https://{}/PrismGateway/services/rest/v1/{}".format(self.cvm_host, entity)).json()
         return results
 
     def get_clusters(self):
@@ -282,6 +285,44 @@ class NutanixCheck(AgentCheck):
             else:
                 self.submit_metrics(stats, entity, metric_tags)
 
+    def get_protection_domains(self):
+        entity = "protection_domains"
+        response = self.call_api(entity)
+        for pd in response:
+            stats = pd["stats"]
+            usage_stats = pd["usageStats"]
+            metric_tags = self.tags.copy()
+            metric_tags.append("nutanix_type:protection_domain")
+            metric_tags.append("protection_domain:{}".format(pd["name"]))
+            self.gauge("{}.{}.vms_count".format(self.metric_prefix, entity), len(pd["vms"]), tags=metric_tags)
+            self.gauge("{}.{}.nfs_files_count".format(self.metric_prefix, entity), len(pd["nfsFiles"]), tags=metric_tags)
+            self.gauge("{}.{}.volume_groups_count".format(self.metric_prefix, entity), len(pd["volumeGroups"]), tags=metric_tags)
+            self.gauge("{}.{}.remote_sites_count".format(self.metric_prefix, entity), len(pd["remoteSiteNames"]), tags=metric_tags)
+            self.gauge("{}.{}.cron_schedules_count".format(self.metric_prefix, entity), len(pd["cronSchedules"]), tags=metric_tags)
+            self.gauge("{}.{}.pending_replication_count".format(self.metric_prefix, entity), pd["pendingReplicationCount"], tags=metric_tags)
+            self.gauge("{}.{}.ongoing_replication_count".format(self.metric_prefix, entity), pd["ongoingReplicationCount"], tags=metric_tags)
+            self.gauge("{}.{}.total_user_written_bytes".format(self.metric_prefix, entity), pd["totalUserWrittenBytes"], tags=metric_tags)
+            
+            if pd["active"] == True:
+                self.service_check("{}.{}.is_active".format(self.metric_prefix, entity), AgentCheck.OK, tags=metric_tags)
+            else:
+                self.service_check("{}.{}.is_active".format(self.metric_prefix, entity), AgentCheck.CRITICAL, tags=metric_tags)
+            
+            self.submit_metrics(stats, entity, metric_tags)
+            self.submit_metrics(usage_stats, entity, metric_tags)
+            snapshots = self.call_api("{}/{}/dr_snapshots".format(entity, pd["name"]))
+            self.gauge("{}.{}.snapshots.count".format(self.metric_prefix, entity), snapshots["metadata"]["totalEntities"], tags=metric_tags)
+            for snap in snapshots["entities"]:
+                metric_tags.append("snapshot_id:{}".format(snap["snapshotId"]))
+                metric_tags.append("located_remote_site:{}".format(snap["locatedRemoteSiteName"]))
+                if snap["state"] == "AVAILABLE":
+                    self.gauge("{}.{}.snapshots.available".format(self.metric_prefix, entity), 1, tags=metric_tags)
+                else:
+                    self.gauge("{}.{}.snapshots.available".format(self.metric_prefix, entity), 0, tags=metric_tags)
+                self.gauge("{}.{}.snapshots.size".format(self.metric_prefix, entity), snap["sizeInBytes"], tags=metric_tags)
+                if snap["exclusiveUsageInBytes"] != -1:
+                    self.gauge("{}.{}.snapshots.exclusive_usage".format(self.metric_prefix, entity), snap["exclusiveUsageInBytes"], tags=metric_tags)
+
     def get_license(self):
         entity = "license"
         response = self.call_api(entity)
@@ -289,16 +330,16 @@ class NutanixCheck(AgentCheck):
         nodes = response["nodeLicenseList"]
         cluster_license = response["clusterExpiryUsecs"]
         self.gauge("{}.{}.clusterExpiryUsecs".format(self.metric_prefix, entity), cluster_license, tags=metric_tags)
-        for node in nodes:
-            num_days_remaining = node["numDaysRemaining"]
-            current = datetime.datetime.now().timestamp()
-            diff = num_days_remaining - current
-            days_left = diff // 86400
+        if nodes is not None:
+            for node in nodes:
+                num_days_remaining = node["numDaysRemaining"]
+                current = datetime.datetime.now().timestamp()
+                diff = num_days_remaining - current
+                days_left = diff // 86400
 
-            metric_tags.append("license_id:{}".format(node["licenseId"]))
-            metric_tags.append("license_model:{}".format(node["model"]))
-            self.gauge("{}.{}.days_left".format(self.metric_prefix, entity), days_left,
-                       tags=metric_tags)
+                metric_tags.append("license_id:{}".format(node["licenseId"]))
+                metric_tags.append("license_model:{}".format(node["model"]))
+                self.gauge("{}.{}.days_left".format(self.metric_prefix, entity), days_left, tags=metric_tags)
 
     def get_events(self):
         entity = "events"

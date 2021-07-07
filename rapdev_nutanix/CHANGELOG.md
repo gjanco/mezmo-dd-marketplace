@@ -1,5 +1,8 @@
 # CHANGELOG - Nutanix
 
+## 1.2.0 / 2021-06-11
+* [Added] Added metrics for protection domains if enabled
+
 ## 1.1.1 / 2021-04-07
 
 * [BugFix] Fixed bug where total entities was being submitted for each entity, not whole cluster at a time
