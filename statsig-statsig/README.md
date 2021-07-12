@@ -26,7 +26,7 @@ The Statsig integration sends configuration change events on Statsig to Datadog.
 
 ## Setup
 
-[Click here](https://app.datadoghq.com/account/settings#integrations/statsig) to set up the integration.
+- Click [here](https://console.statsig.com/sign_up) to sign up for your Statsig account.
 
 ## Support
 
