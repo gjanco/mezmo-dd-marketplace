@@ -75,9 +75,8 @@ Datadog reviewers will add the priority of their comments. When all required cha
 The [Marketplace](https://app.datadoghq.com/marketplace) can be accessed from the Integrations tab in the Datadog app.
 
 **How does pricing work?**\
-Datadog Partners can list their integration in the Marketplace using one of the following pricing options. **Note**: All integration purchases begin with a 14-day free trial.
-- **free:** There is no billing associated with the integration, and no metering/usage metric is required.
- 
+Datadog Partners can list their integration in the Marketplace using one of the following pricing options. **Note**: All integration purchases begin with a 14-day free trial. 
+
 - **one_time:** Charges a single fee at the time of purchase, and no additional charges in the future. No metering/usage metric is required.
 
 - **flat_fee:** Charges a recurring flat fee per month regardless of a customer's usage. For example, a partner may charge a customer $100/month. No metering/usage metric is required.
