@@ -1,5 +1,8 @@
 # CHANGELOG - Nutanix
 
+## 1.3.0 / 2021-08-16
+* [Added] Configuration option for using a VM's FQDN as found in DNS
+
 ## 1.2.0 / 2021-06-11
 * [Added] Added metrics for protection domains if enabled
 

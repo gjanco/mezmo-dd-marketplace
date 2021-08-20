@@ -63,6 +63,7 @@ class NutanixCheck(AgentCheck):
         self.collect_events = is_affirmative(self.instance.get("collect_events", False))
         self.verbose_collection = is_affirmative(self.instance.get("verbose_collection", False))
         self.enable_protection_domains = is_affirmative(self.instance.get("protection_domains_enabled", False))
+        self.use_vm_fqdn = is_affirmative(self.instance.get("use_vm_fqdn", False))
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
         self.tags.append("nutanix_cvm:{}".format(self.cvm_host))
         self.metric_prefix = "rapdev.nutanix"
@@ -256,7 +257,11 @@ class NutanixCheck(AgentCheck):
             if vm["powerState"] == "on":
                 stats = vm["stats"]
                 metric_tags = self.tags.copy()
-                vmname = vm["vmName"]
+                if self.use_vm_fqdn:
+                    from socket import getfqdn
+                    vmname = getfqdn(vm["vmName"])
+                else:
+                    vmname = vm["vmName"]
                 metric_tags.append("nutanix_host:{}".format(vm["hostName"]))
                 metric_tags.append("vm_description:{}".format(vm["description"]))
                 metric_tags.append("guest_os:{}".format(vm["guestOperatingSystem"]))
