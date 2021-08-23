@@ -38,7 +38,7 @@ Find specific step-by-step configuration instructions for this integration.
 To install the Nutanix check on your host:
 
 - Linux\
-`sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_nutanix==1.1.1`
+`sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_nutanix==1.3.0`
 
 - Windows\
 `C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_nutanix==1.3.0`
