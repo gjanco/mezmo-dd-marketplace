@@ -2,6 +2,16 @@
 #
 init_config:
 
+    ## @param api_key - string - optional
+    ## Datadog api key, used when api_key is not defined per instance. If left blank, the key from datadog.yaml is used.
+    #
+    # api_key: <API_KEY>
+
+    ## @param app_key - string - optional
+    ## Datadog app key, only used for instances where app_key is not defined at the instance level.
+    #
+    # app_key: <APP_KEY>
+
     ## @param service - string - optional
     ## Attach the tag `service:<SERVICE>` to every metric, event, and service check emitted by this integration.
     ##
@@ -13,18 +23,29 @@ init_config:
 #
 instances:
 
+  -
+    ## @param api_key - string - optional
+    ## Datadog api key specifically for a single instance, takes precedence over other api_key definitions.
+    #
+    # api_key: <API_KEY>
+
+    ## @param app_key - string - optional
+    ## Datadog app key specifically for a single instance, takes precedence over other app_key definitions.
+    #
+    # app_key: <APP_KEY>
+
     ## @param required_tags - mapping - required
     ## List of key/value pair tags that the check is looking for on each Agent. 
     #
-  - required_tags: {}
+    required_tags: {}
 
     ## @param ignore_paas - boolean - optional - default: false
-    ## Whether or not to ignore validation for hosts using apps ALB, ELB, NLB, and RDS. 
+    ## Flag when set to true ignores validation for hosts using apps ALB, ELB, NLB, and RDS. 
     #
     # ignore_paas: false
 
     ## @param hosts_to_ignore - list of strings - optional
-    ## List of host names that we want to ignore validation on.
+    ## List of python regexes to match host names that we want to ignore validation on.
     #
     # hosts_to_ignore: []
 

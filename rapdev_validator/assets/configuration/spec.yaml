@@ -4,9 +4,35 @@ files:
   options:
   - template: init_config
     options:
+    - name: api_key
+      required: false
+      value:
+        type: string
+        default: false
+      description: |
+        Datadog api key, used when api_key is not defined per instance. If left blank, the key from datadog.yaml is used.
+    - name: app_key
+      required: false
+      value:
+        type: string
+      description: |
+        Datadog app key, only used for instances where app_key is not defined at the instance level.
     - template: init_config/default
   - template: instances
     options:
+    - name: api_key
+      required: false
+      value:
+        type: string
+        default: false
+      description: |
+        Datadog api key specifically for a single instance, takes precedence over other api_key definitions.
+    - name: app_key
+      required: false
+      value:
+        type: string
+      description: |
+        Datadog app key specifically for a single instance, takes precedence over other app_key definitions.
     - name: required_tags
       required: true
       value:
@@ -20,13 +46,14 @@ files:
         default: false
         example: false
       description: |
-        Whether or not to ignore validation for hosts using apps ALB, ELB, NLB, and RDS. 
+        Flag when set to true ignores validation for hosts using apps ALB, ELB, NLB, and RDS. 
     - name: hosts_to_ignore
       required: false
       value:
         type: array
         items:
           type: string
+          example: ".*-demo"
       description: |
-        List of host names that we want to ignore validation on.
+        List of python regexes to match host names that we want to ignore validation on.
     - template: instances/default

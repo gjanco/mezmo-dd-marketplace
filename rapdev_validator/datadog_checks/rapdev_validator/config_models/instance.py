@@ -17,6 +17,8 @@ class InstanceConfig(BaseModel):
     class Config:
         allow_mutation = False
 
+    api_key: Optional[str]
+    app_key: Optional[str]
     empty_default_hostname: Optional[bool]
     hosts_to_ignore: Optional[Sequence[str]]
     ignore_paas: Optional[bool]

@@ -17,6 +17,8 @@ class SharedConfig(BaseModel):
     class Config:
         allow_mutation = False
 
+    api_key: Optional[str]
+    app_key: Optional[str]
     service: Optional[str]
 
     @root_validator(pre=True)

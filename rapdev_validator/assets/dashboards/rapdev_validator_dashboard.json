@@ -17,6 +17,11 @@
             "default": "*",
             "name": "Value",
             "prefix": "tag_value"
+        },
+        {
+            "default": "*",
+            "name": "Org",
+            "prefix": "org"
         }
     ],
     "title": "RapDev Validator Dashboard",
@@ -45,7 +50,7 @@
                         ],
                         "limit": 50,
                         "order": "desc",
-                        "q": "avg:rapdev.validator.tag.missing_key{$Host,$Key} by {validated_host,tag_key}"
+                        "q": "avg:rapdev.validator.tag.missing_key{$Host,$Key,$Org} by {validated_host,tag_key}"
                     }
                 ],
                 "time": {},
@@ -86,9 +91,10 @@
                         ],
                         "limit": 50,
                         "order": "desc",
-                        "q": "avg:rapdev.validator.tag.bad_value{$Host,$Key,$Value} by {validated_host, tag_key, tag_value}"
+                        "q": "avg:rapdev.validator.tag.bad_value{$Host,$Key,$Value,$Org} by {validated_host,tag_key,tag_value}"
                     }
                 ],
+                "time": {},
                 "title": "Tag Value Compliance Summary",
                 "title_align": "left",
                 "title_size": "16",
@@ -109,10 +115,23 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.validator.host.bad_value{$Key}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.validator.host.bad_value{$Org,$Host}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "Hosts w/ Non-Compliant Values",
                 "title_align": "left",
                 "title_size": "16",
@@ -133,10 +152,29 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "(sum:rapdev.validator.host.missing_key{$Key}/sum:rapdev.validator.host.checked{$Key})*100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.validator.host.missing_key{$Org,$Host}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.validator.host.checked{$Org,$Host}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "% of Hosts with a Missing Key",
                 "title_align": "left",
                 "title_size": "16",
@@ -157,10 +195,29 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "(sum:rapdev.validator.host.bad_value{$Key}/sum:rapdev.validator.host.bad_value_checked{$Key})*100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.validator.host.bad_value{$Org,$Host}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.validator.host.bad_value_checked{$Org,$Host}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "% of Hosts w/ Non-Compliant Values",
                 "title_align": "left",
                 "title_size": "16",
@@ -180,7 +237,9 @@
                 "group_by": [],
                 "grouping": "cluster",
                 "tags": [
-                    "*"
+                    "$Key",
+                    "$Org",
+                    "$Host"
                 ],
                 "title": "Tag Key Compliance",
                 "title_align": "center",
@@ -201,7 +260,10 @@
                 "group_by": [],
                 "grouping": "cluster",
                 "tags": [
-                    "*"
+                    "$Org",
+                    "$Key",
+                    "$Host",
+                    "$Value"
                 ],
                 "title": "Tag Value Compliance",
                 "title_align": "center",
@@ -218,12 +280,32 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "bars",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "sum:rapdev.validator.tag.missing_key{$Host,$Key} by {tag_key}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.validator.tag.missing_key{$Host,$Org,$Key} by {tag_key}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -232,6 +314,7 @@
                     }
                 ],
                 "show_legend": false,
+                "time": {},
                 "title": "Missing Keys by Tag Key",
                 "title_align": "left",
                 "title_size": "16",
@@ -254,12 +337,27 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "bars",
                         "on_right_yaxis": false,
-                        "q": "sum:rapdev.validator.tag.bad_value{$Host,$Key} by {tag_key}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.validator.tag.bad_value{$Host,$Key,$Org,$Value} by {tag_key}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -268,6 +366,7 @@
                     }
                 ],
                 "show_legend": false,
+                "time": {},
                 "title": "Non-Compliance by Tag Key",
                 "title_align": "left",
                 "title_size": "16",
@@ -284,7 +383,7 @@
             "layout": {
                 "height": 17,
                 "width": 68,
-                "x": -1,
+                "x": 0,
                 "y": 78
             }
         },
@@ -294,10 +393,23 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.validator.host.missing_key{*}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.validator.host.missing_key{$Org,$Host}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "Hosts Missing Tag Keys",
                 "title_align": "left",
                 "title_size": "16",
@@ -318,10 +430,23 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.validator.agent.installed{*}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.validator.agent.installed{$Org,$Host}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "Number of Agents Installed",
                 "title_align": "left",
                 "title_size": "16",
@@ -342,10 +467,29 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "(sum:rapdev.validator.agent.installed{*}/sum:rapdev.validator.host.checked{*})*100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.validator.agent.installed{$Org,$Host}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.validator.host.checked{$Org,$Host}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "% of Hosts with Agent Installed",
                 "title_align": "left",
                 "title_size": "16",
@@ -365,7 +509,8 @@
                 "group_by": [],
                 "grouping": "cluster",
                 "tags": [
-                    "*"
+                    "$Org",
+                    "$Host"
                 ],
                 "title": "Agent Compliance",
                 "title_align": "center",
@@ -494,9 +639,10 @@
                         ],
                         "limit": 50,
                         "order": "desc",
-                        "q": "avg:rapdev.validator.agent.installed{$Host} by {validated_host, agent_version}"
+                        "q": "avg:rapdev.validator.agent.installed{$Host,$Org} by {validated_host,agent_version}"
                     }
                 ],
+                "time": {},
                 "title": "Datadog Agent Inventory",
                 "title_align": "left",
                 "title_size": "16",
@@ -514,9 +660,27 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(sum:rapdev.validator.agent.installed{$Host} by {agent_version}, 10, 'last', 'desc')"
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.validator.agent.installed{$Host,$Org} by {agent_version}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "Agents Installed by Version",
                 "title_align": "left",
                 "title_size": "16",
@@ -526,7 +690,7 @@
             "layout": {
                 "height": 17,
                 "width": 68,
-                "x": -1,
+                "x": 0,
                 "y": 120
             }
         }

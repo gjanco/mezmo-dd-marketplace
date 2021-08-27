@@ -23,7 +23,7 @@ Please note that this integration does not work on Python 2.X.X versions.
 ### Install the Validator Integration
 To install the Validator check on your host:
 
-`sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_validator==1.0.0`
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_validator==1.1.0`
 
 ### Prepare the Validator
 
@@ -34,10 +34,11 @@ The only pre-requisite to the RapDev Validator integration is having an applicat
 1. Edit the `rapdev_validator.d/conf.yaml` file, in the `conf.d/` folder at the root of your Agent's configuration directory.
   ```
   init_config:
-    app_key: 
-
+  
   instances:
-  - required_tags:
+  - api_key: ********************************
+    app_key: ****************************************
+    required_tags:
       name:
         - "*"
       env:
@@ -46,8 +47,9 @@ The only pre-requisite to the RapDev Validator integration is having an applicat
         - "prod"
     ignore_paas: true
     hosts_to_ignore:
-      - host1
-      - host2
+      - "sqlserver_.*"
+      - ".*_adserver"
+      - "i-.*00"
     empty_default_hostname: true
   ```
 2. [Restart the Datadog Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent).
