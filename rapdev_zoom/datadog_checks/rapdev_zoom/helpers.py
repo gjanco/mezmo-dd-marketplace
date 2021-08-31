@@ -31,30 +31,6 @@ def check_for_cpu_metrics(metrics):
     return False
 
 
-def get_and_except_string(value, key):
-    try:
-        return value[key]
-    except (KeyError, IndexError, TypeError):
-        return ""
-
-
-def get_and_except_list(value, key, index=None):
-    try:
-        if index:
-            return value[key][index]
-        else:
-            return value[key]
-    except (KeyError, IndexError, TypeError):
-        return []
-
-
-def get_and_except_dict(value, key):
-    try:
-        return value[key]
-    except (KeyError, IndexError, TypeError):
-        return {}
-
-
 def get_country(location):
     return location.split("(")[1][:-1]
 

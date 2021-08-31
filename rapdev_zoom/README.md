@@ -65,9 +65,6 @@ Finish the configuration by filling in your Zoom Account name. See below for an 
        api_secret: <YOUR_API_SECRET>
        min_collection_interval: 60
        account_name: <YOUR_ACCOUNT_NAME>
-       collect_plan_usage: False      # requires admin creds
-       collect_accounts: False        # requires admin creds
-       collect_im_metrics: False
        collect_top_25_issues: False
        collect_participant_details: True   # send metrics for every user rather than averaging them per meeting
        collect_usernames: True             # Collect user-level info, such as user's name, location, etc...

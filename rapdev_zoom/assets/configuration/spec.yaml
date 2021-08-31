@@ -32,22 +32,13 @@ files:
           type: string
         description: |
           The name of the Zoom Account.
-      - name: collect_accounts
+      - name: room_only_mode
         value:
-          example: false
           default: false
+          example: false
           type: boolean
         description: |
-          This changes whether the agent should collect Account level information. In order for this to work, the zooom
-          authentication method must have Admin privleges.
-      - name: collect_plan_usage
-        value:
-          example: false
-          default: false
-          type: boolean
-        description: |
-          This changes whether the agent should collect plan usage information. To enable this, the user must
-          also enable collect_accounts and the JWT token must have admin permissions to the Zoom account.
+          When set to true, the integration collects data for Zoom rooms.
       - name: collect_meeting_host
         value:
           example: true
@@ -64,21 +55,6 @@ files:
         description: |
           This changes whether the agent should collect information on each individual participants rather than
           averaging the values from each user. Note: Setting to true collects a larger amount of metrics.
-      - name: collect_im_metrics
-        value:
-          example: false
-          default: false
-          type: boolean
-        description: |
-          This changes whether the agent should collect IM metrics for each user for each meeting.
-      - name: collect_top_25_issues
-        value:
-          example: false
-          default: false
-          type: boolean
-        description: |
-          This changes whether the agent should collect the top 25 issues across your account. Note: Issues for
-          each room are already being collected for each individual meeting. This is solely for an account view.
       - name: users_to_track
         value:
           example:
@@ -92,3 +68,10 @@ files:
           email that you would only like to monitor.
       - template: instances/http
       - template: instances/default
+        overrides:
+          min_collection_interval.value.example: 60
+          min_collection_interval.enabled: true
+          min_collection_interval.description: |
+            The default for this check is 60 seconds to prevent API rate limiting.
+            This changes the collection interval of the check. For more information, see:
+            https://docs.datadoghq.com/developers/write_agent_check/#collection-interval

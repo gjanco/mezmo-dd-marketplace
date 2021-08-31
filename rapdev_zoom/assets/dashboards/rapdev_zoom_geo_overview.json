@@ -132,7 +132,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(max:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
+                        "q": "top(max:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location,zoom_user_name}, 10, 'mean', 'desc')"
                     }
                 ],
                 "title": "Bandwidth per User Location (MBPS)",
@@ -678,13 +678,27 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "sum:rapdev.zoom.users.in_meetings.count{$user_location,$account_name,$room_name,$meeting_host,$meeting_id} by {zoom_user_country}.fill(last)"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.zoom.users.in_meetings.count{$user_location,$account_name,$room_name,$meeting_host,$meeting_id} by {zoom_user_country}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "style": {
                     "palette": "hostmap_blues",
                     "palette_flip": false
                 },
+                "time": {},
                 "title": "Participants per Country",
                 "title_align": "center",
                 "title_size": "16",

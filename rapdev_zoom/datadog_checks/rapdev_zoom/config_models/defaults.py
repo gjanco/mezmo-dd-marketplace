@@ -28,28 +28,12 @@ def instance_aws_service(field, value):
     return get_default_field_value(field, value)
 
 
-def instance_collect_accounts(field, value):
-    return False
-
-
-def instance_collect_im_metrics(field, value):
-    return False
-
-
 def instance_collect_meeting_host(field, value):
     return True
 
 
 def instance_collect_participant_details(field, value):
     return True
-
-
-def instance_collect_plan_usage(field, value):
-    return False
-
-
-def instance_collect_top_25_issues(field, value):
-    return False
 
 
 def instance_connect_timeout(field, value):
@@ -101,7 +85,7 @@ def instance_log_requests(field, value):
 
 
 def instance_min_collection_interval(field, value):
-    return 15
+    return 60
 
 
 def instance_ntlm_domain(field, value):
@@ -122,6 +106,10 @@ def instance_proxy(field, value):
 
 def instance_read_timeout(field, value):
     return get_default_field_value(field, value)
+
+
+def instance_room_only_mode(field, value):
+    return False
 
 
 def instance_service(field, value):

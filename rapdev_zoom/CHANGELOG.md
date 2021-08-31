@@ -1,5 +1,12 @@
 # CHANGELOG - rapdev_zoom
 
+## 5.0.0 / 2021-08-20
+* [Added] Metric for counting API calls
+* [Added] Room only mode
+* [Removed] IM metrics function
+* [Removed] Plan usage function
+* [Removed] Account function
+
 ## 4.2.0 / 2021-05-25
 * [Added] API Error handling
 

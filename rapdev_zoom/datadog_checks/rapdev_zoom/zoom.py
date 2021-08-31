@@ -1,16 +1,13 @@
 try:
-    from datadog_checks.base import AgentCheck, ConfigurationError, is_affirmative
+    from datadog_checks.base import AgentCheck, ConfigurationError
 except ImportError:
     from checks import AgentCheck
-from datadog_checks.base.utils.subprocess_output import get_subprocess_output
 from .helpers import *
-import json
 import requests
 import time
-import re
 import datetime
 from requests.auth import HTTPBasicAuth
-import jwt
+from requests.exceptions import HTTPError
 
 REQUIRED_SETTINGS = [
     "base_api_url",
@@ -33,6 +30,9 @@ class BearerAuth(requests.auth.AuthBase):
 
 
 class ZoomCheck(AgentCheck):
+
+    __NAMESPACE__ = "rapdev.zoom"
+
     def __init__(self, *args, **kwargs):
         super(ZoomCheck, self).__init__(*args, **kwargs)
         self.base_api_url = self.instance.get("base_api_url")
@@ -42,36 +42,34 @@ class ZoomCheck(AgentCheck):
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
         self.tags.append("zoom_api:{}".format(self.base_api_url))
         self.tags.append("zoom_account_name:{}".format(self.account_name))
-        self.metric_prefix = "rapdev.zoom"
-        self.billing_metric = "{}.{}".format("datadog.marketplace", self.metric_prefix)
-        self.collect_accounts = is_affirmative(self.instance.get("collect_accounts", False))
-        self.collect_plan_usage = is_affirmative(self.instance.get("collect_plan_usage", False))
-        self.collect_participant_details = is_affirmative(self.instance.get("collect_participant_details", True))
-        self.collect_usernames = is_affirmative(self.instance.get("collect_usernames", True))
-        self.collect_top_25_issues = is_affirmative(self.instance.get("collect_top_25_issues", False))
-        self.collect_im_metrics = is_affirmative(self.instance.get("collect_im_metrics", False))
+        self.billing_metric = "{}.{}".format("datadog.marketplace", self.__NAMESPACE__)
+        self.collect_participant_details = self.instance.get("collect_participant_details", True)
+        self.collect_usernames = self.instance.get("collect_usernames", True)
         self.users_to_track = self.instance.get("users_to_track", [])
+        self.room_only_mode = self.instance.get("room_only_mode", False)
 
-        # API rate limit hits tracker
+        # API trackers
+        self.successful_api_calls = 0
+        self.failed_api_calls = 0
         self.api_rate_limits_hit = 0
 
     def check(self, instance):
         self.validate_config()
         self.test_api_connection()
-        self.get_users()
-        self.get_rooms_metrics()
-        self.get_meetings()
 
-        if self.collect_accounts:
-            self.get_accounts()
-        if self.collect_top_25_issues:
-            self.get_top_25_rooms_issues()
-        if self.collect_im_metrics:
-            self.get_im_metrics()
+        if self.room_only_mode:
+            self.get_rooms_metrics()
+        else:
+            self.get_users()
+            self.get_rooms_metrics()
+            self.get_meetings()
 
         # Send OK if the API daily limit wasn't encountered during this run 
         if self.api_rate_limits_hit == 0:
-            self.service_check("{}.can_call_api".format(self.metric_prefix), AgentCheck.OK, tags=self.tags)
+            self.service_check("can_call_api", AgentCheck.OK, tags=self.tags)
+
+        self.gauge("api.successful_calls", self.successful_api_calls, tags=self.tags)
+        self.gauge("api.failed_calls", self.failed_api_calls, tags=self.tags)
 
     def test_api_connection(self):
         self.log.debug("Attempting connection test to Zoom API URL %s.", self.base_api_url)
@@ -81,12 +79,11 @@ class ZoomCheck(AgentCheck):
                               auth=BearerAuth(generate_token(self.api_key, self.api_secret)))
             x.raise_for_status()
         except Exception as e:
-            self.log.warning("Caught exception %s", e)
-            self.log.warning("Cannot authenticate to ZOOM API. The check will not run")
-            self.service_check("{}.can_connect".format(self.metric_prefix), AgentCheck.CRITICAL, tags=self.tags)
+            self.service_check("can_connect", AgentCheck.CRITICAL, tags=self.tags)
+            raise Exception("Cannot authenticate to ZOOM API. The check will not run: {}".format(e))
         else:
             self.log.debug("Connection successful")
-            self.service_check("{}.can_connect".format(self.metric_prefix), AgentCheck.OK, tags=self.tags)
+            self.service_check("can_connect", AgentCheck.OK, tags=self.tags)
 
     def validate_config(self):
         if not self.base_api_url:
@@ -133,9 +130,11 @@ class ZoomCheck(AgentCheck):
 
             # If call is successful, return json result
             if response_code == 200:
+                self.successful_api_calls += 1
                 return results.json()
             # If 429, that means we hit rate limit
             elif response_code == 429:
+                self.failed_api_calls += 1
                 headers = results.headers
 
                 limit_type = headers.get("X-RateLimit-Type")
@@ -143,21 +142,20 @@ class ZoomCheck(AgentCheck):
                 # If we hit the queries per second limit, sleep for a sec and retry
                 if limit_type == "QPS":
                     self.log.warning("Hit Queries per Second API rate limit. Sleeping for a second then retrying...")
-                    self.service_check("{}.can_call_api".format(self.metric_prefix),
-                                       AgentCheck.WARNING, tags=self.tags)
+                    self.service_check("can_call_api", AgentCheck.WARNING, tags=self.tags)
                     time.sleep(1)
                 # If we hit the daily limit, return None
                 elif limit_type == "Daily-limit":
                     self.api_rate_limits_hit += 1
-                    self.service_check("{}.can_call_api".format(self.metric_prefix),
-                                       AgentCheck.CRITICAL, tags=self.tags)
+                    self.service_check("can_call_api", AgentCheck.CRITICAL, tags=self.tags)
                     self.log.warning("Hit Daily API rate limit. Exiting...")
                     return
             else:
                 try:
+                    self.failed_api_calls += 1
                     results.raise_for_status()
-                except requests.exceptions.HTTPError as e:
-                    raise CheckException("Non-200 response code returned from Zoom API").with_traceback(e.__traceback__)
+                except HTTPError as e:
+                    raise HTTPError("Non-200 response code returned from Zoom API: {}".format(e))
 
     def get_users(self):
         """Gets the users from Zoom API and sends in the active count and billing metric for each"""
@@ -165,14 +163,14 @@ class ZoomCheck(AgentCheck):
         response = self.call_api(request_path)
 
         while True:
-            users = get_and_except_list(response, "users")
+            users = response.get("users", [])
 
             for user in users:
                 metric_tags = self.tags.copy()
 
-                user_email = get_and_except_string(user, "email")
-                user_timezone = get_and_except_string(user, "timezone")
-                user_type = user["type"]
+                user_email = user.get("email", "")
+                user_timezone = user.get("timezone", "")
+                user_type = user.get("type")
 
                 if user_email:
                     metric_tags.append("zoom_user_email:{}".format(user_email))
@@ -186,127 +184,17 @@ class ZoomCheck(AgentCheck):
                 elif user_type == 3:
                     metric_tags.append("zoom_user_account_type:on-prem")
 
-                self.gauge("{}.users.active.count".format(self.metric_prefix),
-                           1,
-                           tags=metric_tags)
+                self.gauge("users.active.count", 1, tags=metric_tags)
 
-                self.gauge("datadog.marketplace.{}".format(self.metric_prefix),
-                           1,
-                           tags=metric_tags)
+                if not self.room_only_mode:
+                    self.gauge(self.billing_metric, 1, tags=metric_tags, raw=True)
 
-            page_token = get_and_except_string(response, "next_page_token")
+            page_token = response.get("next_page_token", "")
 
             if page_token == "":
                 break
             else:
                 response = self.call_api(request_path, page_token)
-
-    def get_accounts(self):
-        """Gets the account and the number of seats for the desired account
-        Note: this requires admin privileges on the credentials provided"""
-        request_path = "accounts"
-        response = self.call_api(request_path)
-
-        while True:
-            accounts = get_and_except_list(response, "accounts")
-
-            for account in accounts:
-                metric_tags = self.tags.copy()
-
-                account_id = get_and_except_string(account, "id")
-                account_name = get_and_except_string(account, "account_name")
-                owner_email = get_and_except_string(account, "owner_email")
-                seats = get_and_except_string(account, "seats")
-
-                if account_id:
-                    metric_tags.append("zoom_account_id:{}".format(account_id))
-                if account_name:
-                    metric_tags.append("zoom_account_name:{}".format(account_name))
-                if owner_email:
-                    metric_tags.append("zoom_account_owner_email:{}".format(owner_email))
-
-                if seats:
-                    self.gauge("{}.account.seats".format(self.metric_prefix),
-                               seats,
-                               tags=metric_tags)
-
-                if self.collect_plan_usage:
-                    self.get_usage_for_account(account_id)
-
-            page_token = get_and_except_string(response, "next_page_token")
-
-            if page_token == "":
-                break
-            else:
-                response = self.call_api(request_path, page_token)
-
-    def get_usage_for_account(self, account_id):
-        """Gets the usage for the account
-        Note: this requires admin privileges on the credentials provided"""
-        request_path = "accounts/{}/plans/usage".format(account_id)
-
-        response = self.call_api(request_path)
-
-        for plan in response:
-            metric_tags = self.tags.copy()
-            plan_tag = plan.split("plan_")[1]
-
-            metric_tags.append("zoom_plan:{}".format(plan_tag))
-
-            if plan_tag == "recording":
-                free_storage = get_and_except_string(plan, "free_storage")
-                free_storage_usage = get_and_except_string(plan, "free_storage_usage")
-                plan_storage = get_and_except_string(plan, "plan_storage")
-                plan_storage_usage = get_and_except_string(plan, "plan_storage_usage")
-                plan_storage_exceed = get_and_except_string(plan, "plan_storage_exceed")
-
-                if free_storage:
-                    metric_tags.append("zoom_plan_metric:free_storage")
-                    self.gauge("{}.plan.metrics".format(self.metric_prefix),
-                               free_storage,
-                               tags=metric_tags)
-                    metric_tags.remove("zoom_plan_metric:free_storage")
-
-                if free_storage_usage:
-                    metric_tags.append("zoom_plan_metric:free_storage_usage")
-                    self.gauge("{}.plan.metrics".format(self.metric_prefix),
-                               free_storage_usage,
-                               tags=metric_tags)
-                    metric_tags.remove("zoom_plan_metric:free_storage_usage")
-
-                if plan_storage:
-                    metric_tags.append("zoom_plan_metric:storage")
-                    self.gauge("{}.plan.metrics".format(self.metric_prefix),
-                               plan_storage,
-                               tags=metric_tags)
-                    metric_tags.remove("zoom_plan_metric:storage")
-
-                if plan_storage_usage:
-                    metric_tags.append("zoom_plan_metric:storage_usage")
-                    self.gauge("{}.plan.metrics".format(self.metric_prefix),
-                               plan_storage_usage,
-                               tags=metric_tags)
-                    metric_tags.remove("zoom_plan_metric:storage_usage")
-
-                if plan_storage_exceed:
-                    metric_tags.append("zoom_plan_metric:storage_exceed")
-                    self.gauge("{}.plan.metrics".format(self.metric_prefix),
-                               plan_storage_exceed,
-                               tags=metric_tags)
-                    metric_tags.remove("zoom_plan_metric:storage_exceed")
-            else:
-                hosts = get_and_except_string(plan, "hosts")
-                usage = get_and_except_string(plan, "usage")
-
-                if hosts:
-                    metric_tags.append("zoom_plan_metric:hosts")
-                    self.gauge("{}.plan.hosts".format(self.metric_prefix), hosts, tags=metric_tags)
-                    metric_tags.remove("zoom_plan_metric:hosts")
-
-                if usage:
-                    metric_tags.append("zoom_plan_metric:usage")
-                    self.gauge("{}.plan.usage".format(self.metric_prefix), usage, tags=metric_tags)
-                    metric_tags.remove("zoom_plan_metric:usage")
 
     def get_rooms_metrics(self):
         """Gets the metrics for each room such as component status, names, participants, etc..."""
@@ -325,17 +213,20 @@ class ZoomCheck(AgentCheck):
         rooms_under_construction = 0
 
         while True:
-            rooms = get_and_except_list(response, "zoom_rooms")
+            rooms = response.get("zoom_rooms", [])
 
             for room in rooms:
-                room_name = get_and_except_string(room, "room_name")
-                room_id = get_and_except_string(room, "id")
-                room_status = get_and_except_string(room, "status")
-                room_health = get_and_except_string(room, "health")
-                device_ip = get_and_except_string(room, "device_ip")
-                camera = get_and_except_string(room, "camera")
-                microphone = get_and_except_string(room, "microphone")
-                speaker = get_and_except_string(room, "speaker")
+                if self.room_only_mode:
+                    self.gauge(self.billing_metric, 1, tags=metric_tags, raw=True)
+
+                room_name = room.get("room_name", "")
+                room_id = room.get("id", "")
+                room_status = room.get("status", "")
+                room_health = room.get("health", "")
+                device_ip = room.get("device_ip", "")
+                camera = room.get("camera", "")
+                microphone = room.get("microphone", "")
+                speaker = room.get("speaker", "")
 
                 metric_tags = self.tags.copy()
                 if room_name:
@@ -363,9 +254,7 @@ class ZoomCheck(AgentCheck):
                         health = 1
                         healthy_rooms += 1
 
-                    self.gauge("{}.room.health".format(self.metric_prefix),
-                               health,
-                               tags=metric_tags)
+                    self.gauge("room.health", health, tags=metric_tags)
 
                 # Increment counts and send in the current status for this room
                 if room_status:
@@ -382,15 +271,13 @@ class ZoomCheck(AgentCheck):
                         status = 4
                         rooms_under_construction += 1
 
-                    self.gauge("{}.room.status".format(self.metric_prefix),
-                               status,
-                               tags=metric_tags)
+                    self.gauge("room.status", status, tags=metric_tags)
 
-                room_issues = get_and_except_list(room, "issues")
+                room_issues = room.get("issues", [])
 
                 self.parse_and_send_issues(room_issues, room_name, room_id)
 
-            page_token = get_and_except_string(response, "next_page_token")
+            page_token = response.get("next_page_token", "")
 
             if page_token == "":
                 break
@@ -401,46 +288,32 @@ class ZoomCheck(AgentCheck):
 
         # Send in the room health counts 
         metric_tags.append("zoom_room_health:critical")
-        self.gauge("{}.room.health.count".format(self.metric_prefix),
-                   critical_rooms,
-                   tags=metric_tags)
+        self.gauge("room.health.count", critical_rooms, tags=metric_tags)
         metric_tags.remove("zoom_room_health:critical")
 
         metric_tags.append("zoom_room_health:warning")
-        self.gauge("{}.room.health.count".format(self.metric_prefix),
-                   warning_rooms,
-                   tags=metric_tags)
+        self.gauge("room.health.count", warning_rooms, tags=metric_tags)
         metric_tags.remove("zoom_room_health:warning")
 
         metric_tags.append("zoom_room_health:healthy")
-        self.gauge("{}.room.health.count".format(self.metric_prefix),
-                   healthy_rooms,
-                   tags=metric_tags)
+        self.gauge("room.health.count", healthy_rooms, tags=metric_tags)
         metric_tags.remove("zoom_room_health:healthy")
 
         # Send in the room status counts
         metric_tags.append("zoom_room_status:available")
-        self.gauge("{}.room.status.count".format(self.metric_prefix),
-                   rooms_available,
-                   tags=metric_tags)
+        self.gauge("room.status.count", rooms_available, tags=metric_tags)
         metric_tags.remove("zoom_room_status:available")
 
         metric_tags.append("zoom_room_status:in_meetings")
-        self.gauge("{}.room.status.count".format(self.metric_prefix),
-                   rooms_in_meetings,
-                   tags=metric_tags)
+        self.gauge("room.status.count", rooms_in_meetings, tags=metric_tags)
         metric_tags.remove("zoom_room_status:in_meetings")
 
         metric_tags.append("zoom_room_status:offline")
-        self.gauge("{}.room.status.count".format(self.metric_prefix),
-                   rooms_offline,
-                   tags=metric_tags)
+        self.gauge("room.status.count", rooms_offline, tags=metric_tags)
         metric_tags.remove("zoom_room_status:offline")
 
         metric_tags.append("zoom_room_status:under_construction")
-        self.gauge("{}.room.status.count".format(self.metric_prefix),
-                   rooms_under_construction,
-                   tags=metric_tags)
+        self.gauge("room.status.count", rooms_under_construction, tags=metric_tags)
         metric_tags.remove("zoom_room_status:under_construction")
 
     def parse_and_send_issues(self, issues, room_name, room_id):
@@ -471,39 +344,27 @@ class ZoomCheck(AgentCheck):
         metric_tags.append("zoom_room_id:{}".format(room_id))
 
         metric_tags.append("zoom_room_component:controller")
-        self.gauge("{}.room.component.status".format(self.metric_prefix),
-                   room_controller_is_connected,
-                   tags=metric_tags)
+        self.gauge("room.component.status", room_controller_is_connected, tags=metric_tags)
         metric_tags.remove("zoom_room_component:controller")
 
         metric_tags.append("zoom_room_component:camera")
-        self.gauge("{}.room.component.status".format(self.metric_prefix),
-                   selected_camera_is_connected,
-                   tags=metric_tags)
+        self.gauge("room.component.status", selected_camera_is_connected, tags=metric_tags)
         metric_tags.remove("zoom_room_component:camera")
 
         metric_tags.append("zoom_room_component:microphone")
-        self.gauge("{}.room.component.status".format(self.metric_prefix),
-                   selected_mic_is_connected,
-                   tags=metric_tags)
+        self.gauge("room.component.status", selected_mic_is_connected, tags=metric_tags)
         metric_tags.remove("zoom_room_component:microphone")
 
         metric_tags.append("zoom_room_component:speaker")
-        self.gauge("{}.room.component.status".format(self.metric_prefix),
-                   selected_speaker_is_connected,
-                   tags=metric_tags)
+        self.gauge("room.component.status", selected_speaker_is_connected, tags=metric_tags)
         metric_tags.remove("zoom_room_component:speaker")
 
         metric_tags.append("zoom_room_component:cpu")
-        self.gauge("{}.room.component.status".format(self.metric_prefix),
-                   is_cpu_usage_ok,
-                   tags=metric_tags)
+        self.gauge("room.component.status", is_cpu_usage_ok, tags=metric_tags)
         metric_tags.remove("zoom_room_component:cpu")
 
         metric_tags.append("zoom_room_component:bandwidth")
-        self.gauge("{}.room.component.status".format(self.metric_prefix),
-                   is_bandwidth_ok,
-                   tags=metric_tags)
+        self.gauge("room.component.status", is_bandwidth_ok, tags=metric_tags)
         metric_tags.remove("zoom_room_component:bandwidth")
 
     def get_meetings(self):
@@ -513,11 +374,11 @@ class ZoomCheck(AgentCheck):
         response = self.call_api(request_path, "", todays_date, todays_date)
 
         while True:
-            meetings = get_and_except_list(response, "meetings")
+            meetings = response.get("meetings", [])
 
             for meeting in meetings:
-                host_name = get_and_except_string(meeting, "host")
-                meeting_id = get_and_except_string(meeting, "id")
+                host_name = meeting.get("host", "")
+                meeting_id = meeting.get("id", "")
 
                 metric_tags = self.tags.copy()
                 metric_tags.append("zoom_meeting_id:{}".format(meeting_id))
@@ -532,16 +393,12 @@ class ZoomCheck(AgentCheck):
                     self.log.error("Get Meeting QOS FAILED. Caught exception %s", e)
 
                 # Send in a count for this meeting 
-                self.gauge("{}.meetings.count".format(self.metric_prefix),
-                           1,
-                           tags=metric_tags)
+                self.gauge("meetings.count", 1, tags=metric_tags)
 
                 # Send in the number of participants on this meeting
-                self.gauge("{}.meetings.participants".format(self.metric_prefix),
-                           meeting["participants"],
-                           tags=metric_tags)
+                self.gauge("meetings.participants", meeting.get("participants"), tags=metric_tags)
 
-            page_token = get_and_except_string(response, "next_page_token")
+            page_token = response.get("next_page_token", "")
 
             if page_token == "":
                 break
@@ -590,31 +447,31 @@ class ZoomCheck(AgentCheck):
         valid_video_output_records = 0
 
         while True:
-            participants = get_and_except_list(response, "participants")
+            participants = response.get("participants", [])
 
             for participant in participants:
                 metric_tags = base_metric_tags.copy()
 
-                leave_time = get_and_except_string(participant, "leave_time")
+                leave_time = participant.get("leave_time", "")
 
                 if participant and leave_time == "":
                     user_email = None
                     # Check if we want to collect individual user metrics
                     if self.collect_participant_details:
-                        user_location = get_and_except_string(participant, "location")
-                        user_name = get_and_except_string(participant, "user_name")
-                        domain = get_and_except_string(participant, "domain")
-                        ip_address = get_and_except_string(participant, "ip_address")
-                        data_center = get_and_except_string(participant, "data_center")
-                        network_type = get_and_except_string(participant, "network_type")
-                        user_id = get_and_except_string(participant, "id")
+                        user_location = participant.get("location", "")
+                        user_name = participant.get("user_name", "")
+                        domain = participant.get("domain", "")
+                        ip_address = participant.get("ip_address", "")
+                        data_center = participant.get("data_center", "")
+                        network_type = participant.get("network_type", "")
+                        user_id = participant.get("id", "")
 
                         # Only need users email if the users_to_track list is set
                         if self.users_to_track and user_id:
                             request_path = "users/{}".format(user_id)
                             # noinspection PyTypeChecker
                             response = self.call_api(request_path, "", "", "", None)
-                            user_email = get_and_except_string(response, "email")
+                            user_email = response.get("email", "")
 
                             if user_email:
                                 metric_tags.append("zoom_user_email:{}".format(user_email))
@@ -635,26 +492,25 @@ class ZoomCheck(AgentCheck):
                             metric_tags.append("zoom_user_name:{}".format(user_name))
 
                     if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
-                        self.gauge("{}.users.in_meetings.count".format(self.metric_prefix),
-                                   1,
-                                   tags=metric_tags)
+                        self.gauge("users.in_meetings.count", 1, tags=metric_tags)
 
-                    recent_user_qos = get_and_except_list(participant, "user_qos", -1)
+                    recent_user_qos = participant.get("user_qos", [])
                     if recent_user_qos:
-                        audio_input = get_and_except_dict(recent_user_qos, "audio_input")
-                        audio_output = get_and_except_dict(recent_user_qos, "audio_output")
-                        video_input = get_and_except_dict(recent_user_qos, "video_input")
-                        video_output = get_and_except_dict(recent_user_qos, "video_output")
-                        cpu_usage = get_and_except_dict(recent_user_qos, "cpu_usage")
+                        recent_user_qos = recent_user_qos[-1]
+                        audio_input = recent_user_qos.get("audio_input", {})
+                        audio_output = recent_user_qos.get("audio_output", {})
+                        video_input = recent_user_qos.get("video_input", {})
+                        video_output = recent_user_qos.get("video_output", {})
+                        cpu_usage = recent_user_qos.get("cpu_usage", {})
 
                         if check_for_metrics(audio_input):
                             valid_audio_input_records += 1
 
-                            audio_input_bitrate += parse_kbps(audio_input["bitrate"])
-                            audio_input_avg_loss += percentage_to_float(audio_input["avg_loss"])
-                            audio_input_jitter += parse_milliseconds(audio_input["jitter"])
-                            audio_input_latency += parse_milliseconds(audio_input["latency"])
-                            audio_input_max_loss += percentage_to_float(audio_input["max_loss"])
+                            audio_input_bitrate += parse_kbps(audio_input.get("bitrate", ""))
+                            audio_input_avg_loss += percentage_to_float(audio_input.get("avg_loss", ""))
+                            audio_input_jitter += parse_milliseconds(audio_input.get("jitter", ""))
+                            audio_input_latency += parse_milliseconds(audio_input.get("latency", ""))
+                            audio_input_max_loss += percentage_to_float(audio_input.get("max_loss", ""))
 
                             if self.collect_participant_details:
                                 if (self.users_to_track and user_email in self.users_to_track) or \
@@ -666,11 +522,11 @@ class ZoomCheck(AgentCheck):
                         if check_for_metrics(audio_output):
                             valid_audio_output_records += 1
 
-                            audio_output_bitrate += parse_kbps(audio_output["bitrate"])
-                            audio_output_avg_loss += percentage_to_float(audio_output["avg_loss"])
-                            audio_output_jitter += parse_milliseconds(audio_output["jitter"])
-                            audio_output_latency += parse_milliseconds(audio_output["latency"])
-                            audio_output_max_loss += percentage_to_float(audio_output["max_loss"])
+                            audio_output_bitrate += parse_kbps(audio_output.get("bitrate", ""))
+                            audio_output_avg_loss += percentage_to_float(audio_output.get("avg_loss", ""))
+                            audio_output_jitter += parse_milliseconds(audio_output.get("jitter", ""))
+                            audio_output_latency += parse_milliseconds(audio_output.get("latency", ""))
+                            audio_output_max_loss += percentage_to_float(audio_output.get("max_loss", ""))
 
                             if self.collect_participant_details:
                                 if (self.users_to_track and user_email in self.users_to_track) or\
@@ -682,11 +538,11 @@ class ZoomCheck(AgentCheck):
                         if check_for_metrics(video_input):
                             valid_video_input_records += 1
 
-                            video_input_bitrate += parse_kbps(video_input["bitrate"])
-                            video_input_avg_loss += percentage_to_float(video_input["avg_loss"])
-                            video_input_jitter += parse_milliseconds(video_input["jitter"])
-                            video_input_latency += parse_milliseconds(video_input["latency"])
-                            video_input_max_loss += percentage_to_float(video_input["max_loss"])
+                            video_input_bitrate += parse_kbps(video_input.get("bitrate", ""))
+                            video_input_avg_loss += percentage_to_float(video_input.get("avg_loss", ""))
+                            video_input_jitter += parse_milliseconds(video_input.get("jitter", ""))
+                            video_input_latency += parse_milliseconds(video_input.get("latency", ""))
+                            video_input_max_loss += percentage_to_float(video_input.get("max_loss", ""))
 
                             if self.collect_participant_details:
                                 if (self.users_to_track and user_email in self.users_to_track) or \
@@ -698,11 +554,11 @@ class ZoomCheck(AgentCheck):
                         if check_for_metrics(video_output):
                             valid_video_output_records += 1
 
-                            video_output_bitrate += parse_kbps(video_output["bitrate"])
-                            video_output_avg_loss += percentage_to_float(video_output["avg_loss"])
-                            video_output_jitter += parse_milliseconds(video_output["jitter"])
-                            video_output_latency += parse_milliseconds(video_output["latency"])
-                            video_output_max_loss += percentage_to_float(video_output["max_loss"])
+                            video_output_bitrate += parse_kbps(video_output.get("bitrate", ""))
+                            video_output_avg_loss += percentage_to_float(video_output.get("avg_loss", ""))
+                            video_output_jitter += parse_milliseconds(video_output.get("jitter", ""))
+                            video_output_latency += parse_milliseconds(video_output.get("latency", ""))
+                            video_output_max_loss += percentage_to_float(video_output.get("max_loss", ""))
 
                             if self.collect_participant_details:
                                 if (self.users_to_track and user_email in self.users_to_track) or \
@@ -712,34 +568,30 @@ class ZoomCheck(AgentCheck):
                                     metric_tags.remove("zoom_user_qos_video:output")
 
                         if check_for_cpu_metrics(cpu_usage):
-                            system_max_cpu_usage_value = percentage_to_float(
-                                get_and_except_string(cpu_usage, "system_max_cpu_usage"))
-                            zoom_avg_cpu_usage_value = percentage_to_float(
-                                get_and_except_string(cpu_usage, "zoom_avg_cpu_usage"))
-                            zoom_max_cpu_usage_value = percentage_to_float(
-                                get_and_except_string(cpu_usage, "zoom_max_cpu_usage"))
-                            zoom_min_cpu_usage_value = percentage_to_float(
-                                get_and_except_string(cpu_usage, "zoom_min_cpu_usage"))
+                            system_max_cpu_usage_value = percentage_to_float(cpu_usage.get("system_max_cpu_usage", ""))
+                            zoom_avg_cpu_usage_value = percentage_to_float(cpu_usage.get("zoom_avg_cpu_usage", ""))
+                            zoom_max_cpu_usage_value = percentage_to_float(cpu_usage.get("zoom_max_cpu_usage", ""))
+                            zoom_min_cpu_usage_value = percentage_to_float(cpu_usage.get("zoom_min_cpu_usage", ""))
 
                             if self.collect_participant_details:
                                 if (self.users_to_track and user_email in self.users_to_track) or \
                                         (not self.users_to_track):
                                     metric_tags.append("zoom_user_qos_cpu:usage")
-                                    self.gauge("{}.user.qos.cpu.system_max_usage".format(self.metric_prefix),
+                                    self.gauge("user.qos.cpu.system_max_usage",
                                                system_max_cpu_usage_value,
                                                tags=metric_tags)
-                                    self.gauge("{}.user.qos.cpu.avg_usage".format(self.metric_prefix),
+                                    self.gauge("user.qos.cpu.avg_usage",
                                                zoom_avg_cpu_usage_value,
                                                tags=metric_tags)
-                                    self.gauge("{}.user.qos.cpu.max_usage".format(self.metric_prefix),
+                                    self.gauge("user.qos.cpu.max_usage",
                                                zoom_max_cpu_usage_value,
                                                tags=metric_tags)
-                                    self.gauge("{}.user.qos.cpu.min_usage".format(self.metric_prefix),
+                                    self.gauge("user.qos.cpu.min_usage",
                                                zoom_min_cpu_usage_value,
                                                tags=metric_tags)
                                     metric_tags.remove("zoom_user_qos_cpu:usage")
 
-            page_token = get_and_except_string(response, "next_page_token")
+            page_token = response.get("next_page_token", "")
 
             if page_token == "":
                 break
@@ -752,21 +604,11 @@ class ZoomCheck(AgentCheck):
             avg_audio_input_latency = calculate_average(audio_input_latency, valid_audio_input_records)
             avg_audio_input_max_loss = calculate_average(audio_input_max_loss, valid_audio_input_records)
             base_metric_tags.append("zoom_meeting_qos_audio:input")
-            self.gauge("{}.meeting.qos.bitrate".format(self.metric_prefix),
-                       audio_input_bitrate,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.average_loss".format(self.metric_prefix),
-                       avg_audio_input_avg_loss,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.jitter".format(self.metric_prefix),
-                       avg_audio_input_jitter,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.latency".format(self.metric_prefix),
-                       avg_audio_input_latency,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.max_loss".format(self.metric_prefix),
-                       avg_audio_input_max_loss,
-                       tags=base_metric_tags)
+            self.gauge("meeting.qos.bitrate", audio_input_bitrate, tags=base_metric_tags)
+            self.gauge("meeting.qos.average_loss", avg_audio_input_avg_loss, tags=base_metric_tags)
+            self.gauge("meeting.qos.jitter", avg_audio_input_jitter, tags=base_metric_tags)
+            self.gauge("meeting.qos.latency", avg_audio_input_latency, tags=base_metric_tags)
+            self.gauge("meeting.qos.max_loss", avg_audio_input_max_loss, tags=base_metric_tags)
             base_metric_tags.remove("zoom_meeting_qos_audio:input")
 
         if valid_audio_output_records > 0:
@@ -775,21 +617,11 @@ class ZoomCheck(AgentCheck):
             avg_audio_output_latency = calculate_average(audio_output_latency, valid_audio_output_records)
             avg_audio_output_max_loss = calculate_average(audio_output_max_loss, valid_audio_output_records)
             base_metric_tags.append("zoom_meeting_qos_audio:output")
-            self.gauge("{}.meeting.qos.bitrate".format(self.metric_prefix),
-                       audio_output_bitrate,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.average_loss".format(self.metric_prefix),
-                       avg_audio_output_avg_loss,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.jitter".format(self.metric_prefix),
-                       avg_audio_output_jitter,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.latency".format(self.metric_prefix),
-                       avg_audio_output_latency,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.max_loss".format(self.metric_prefix),
-                       avg_audio_output_max_loss,
-                       tags=base_metric_tags)
+            self.gauge("meeting.qos.bitrate", audio_output_bitrate, tags=base_metric_tags)
+            self.gauge("meeting.qos.average_loss", avg_audio_output_avg_loss, tags=base_metric_tags)
+            self.gauge("meeting.qos.jitter", avg_audio_output_jitter, tags=base_metric_tags)
+            self.gauge("meeting.qos.latency", avg_audio_output_latency, tags=base_metric_tags)
+            self.gauge("meeting.qos.max_loss", avg_audio_output_max_loss, tags=base_metric_tags)
             base_metric_tags.remove("zoom_meeting_qos_audio:output")
 
         if valid_video_input_records > 0:
@@ -798,21 +630,11 @@ class ZoomCheck(AgentCheck):
             avg_video_input_latency = calculate_average(audio_input_latency, valid_video_input_records)
             avg_video_input_max_loss = calculate_average(audio_input_max_loss, valid_video_input_records)
             base_metric_tags.append("zoom_meeting_qos_video:input")
-            self.gauge("{}.meeting.qos.bitrate".format(self.metric_prefix),
-                       video_input_bitrate,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.average_loss".format(self.metric_prefix),
-                       avg_video_input_avg_loss,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.jitter".format(self.metric_prefix),
-                       avg_video_input_jitter,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.latency".format(self.metric_prefix),
-                       avg_video_input_latency,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.max_loss".format(self.metric_prefix),
-                       avg_video_input_max_loss,
-                       tags=base_metric_tags)
+            self.gauge("meeting.qos.bitrate", video_input_bitrate, tags=base_metric_tags)
+            self.gauge("meeting.qos.average_loss", avg_video_input_avg_loss, tags=base_metric_tags)
+            self.gauge("meeting.qos.jitter", avg_video_input_jitter, tags=base_metric_tags)
+            self.gauge("meeting.qos.latency", avg_video_input_latency, tags=base_metric_tags)
+            self.gauge("meeting.qos.max_loss", avg_video_input_max_loss, tags=base_metric_tags)
             base_metric_tags.remove("zoom_meeting_qos_video:input")
 
         if valid_video_output_records > 0:
@@ -821,220 +643,28 @@ class ZoomCheck(AgentCheck):
             avg_video_output_latency = calculate_average(video_output_latency, valid_video_output_records)
             avg_video_output_max_loss = calculate_average(video_output_max_loss, valid_video_output_records)
             base_metric_tags.append("zoom_meeting_qos_video:output")
-            self.gauge("{}.meeting.qos.bitrate".format(self.metric_prefix),
-                       video_output_bitrate,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.average_loss".format(self.metric_prefix),
-                       avg_video_output_avg_loss,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.jitter".format(self.metric_prefix),
-                       avg_video_output_jitter,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.latency".format(self.metric_prefix),
-                       avg_video_output_latency,
-                       tags=base_metric_tags)
-            self.gauge("{}.meeting.qos.max_loss".format(self.metric_prefix),
-                       avg_video_output_max_loss,
-                       tags=base_metric_tags)
+            self.gauge("meeting.qos.bitrate", video_output_bitrate, tags=base_metric_tags)
+            self.gauge("meeting.qos.average_loss", avg_video_output_avg_loss, tags=base_metric_tags)
+            self.gauge("meeting.qos.jitter", avg_video_output_jitter, tags=base_metric_tags)
+            self.gauge("meeting.qos.latency", avg_video_output_latency, tags=base_metric_tags)
+            self.gauge("meeting.qos.max_loss", avg_video_output_max_loss, tags=base_metric_tags)
             base_metric_tags.remove("zoom_meeting_qos_video:output")
 
     def parse_and_submit_user_qos(self, qos_values, metric_tags):
         """Helper function used to parse through the list of user qos and submit the correct format for each"""
-        bitrate = parse_kbps(
-            get_and_except_string(qos_values, "bitrate"))
-        avg_loss = percentage_to_float(
-            get_and_except_string(qos_values, "avg_loss"))
-        jitter = parse_milliseconds(
-            get_and_except_string(qos_values, "jitter"))
-        latency = parse_milliseconds(
-            get_and_except_string(qos_values, "latency"))
-        max_loss = percentage_to_float(
-            get_and_except_string(qos_values, "max_loss"))
+        bitrate = parse_kbps(qos_values.get("bitrate", ""))
+        avg_loss = percentage_to_float(qos_values.get("avg_loss", ""))
+        jitter = parse_milliseconds(qos_values.get("jitter", ""))
+        latency = parse_milliseconds(qos_values.get("latency", ""))
+        max_loss = percentage_to_float(qos_values.get("max_loss", ""))
 
         if bitrate:
-            self.gauge("{}.user.qos.bitrate".format(self.metric_prefix),
-                       bitrate,
-                       tags=metric_tags)
+            self.gauge("user.qos.bitrate", bitrate, tags=metric_tags)
         if avg_loss:
-            self.gauge("{}.user.qos.average_loss".format(self.metric_prefix),
-                       avg_loss,
-                       tags=metric_tags)
+            self.gauge("user.qos.average_loss", avg_loss, tags=metric_tags)
         if jitter:
-            self.gauge("{}.user.qos.jitter".format(self.metric_prefix),
-                       jitter,
-                       tags=metric_tags)
+            self.gauge("user.qos.jitter", jitter, tags=metric_tags)
         if latency:
-            self.gauge("{}.user.qos.latency".format(self.metric_prefix),
-                       latency,
-                       tags=metric_tags)
+            self.gauge("user.qos.latency", latency, tags=metric_tags)
         if max_loss:
-            self.gauge("{}.user.qos.max_loss".format(self.metric_prefix),
-                       max_loss,
-                       tags=metric_tags)
-
-    def get_top_25_rooms_issues(self):
-        """Fetches the top 25 issues across all rooms and submits it to DD"""
-        request_path = "metrics/zoomrooms/issues"
-        todays_date = str(datetime.date.today())
-        response = self.call_api(request_path, "", todays_date, todays_date)
-
-        issues = get_and_except_list(response, "room_issues")
-
-        for issue in issues:
-            issue_name = get_and_except_string(issue, "issue_name")
-
-            metric_tags = self.tags.copy()
-            metric_tags.append("zoom_room_issue_name:{}".format(issue_name))
-
-            self.gauge("{}.room.issues.count".format(self.metric_prefix),
-                       issue["zoom_rooms_count"],
-                       tags=metric_tags)
-
-    def get_im_metrics(self):
-        """Gets the IM metrics from the Zoom's meeting chat and sends it to DD"""
-        request_path = "metrics/im"
-        todays_date = str(datetime.date.today())
-        response = self.call_api(request_path, "", todays_date, todays_date)
-
-        total_send = 0
-        total_receive = 0
-        group_send = 0
-        group_receive = 0
-        calls_send = 0
-        calls_receive = 0
-        files_send = 0
-        files_receive = 0
-        images_send = 0
-        images_receive = 0
-        voice_send = 0
-        voice_receive = 0
-        videos_send = 0
-        videos_receive = 0
-        emoji_send = 0
-        emoji_receive = 0
-
-        while True:
-            users = get_and_except_list(response, "users")
-
-            for user in users:
-                total_send += user["total_send"]
-                total_receive += user["total_receive"]
-                group_send += user["group_send"]
-                group_receive += user["group_receive"]
-                calls_send += user["calls_send"]
-                calls_receive += user["calls_receive"]
-                files_send += user["files_send"]
-                files_receive += user["files_receive"]
-                images_send += user["images_send"]
-                images_receive += user["images_receive"]
-                voice_send += user["voice_send"]
-                voice_receive += user["voice_receive"]
-                videos_send += user["videos_send"]
-                videos_receive += user["videos_receive"]
-                emoji_send += user["emoji_send"]
-                emoji_receive += user["emoji_receive"]
-
-            page_token = get_and_except_string(response, "next_page_token")
-
-            if page_token == "":
-                break
-            else:
-                response = self.call_api(request_path, page_token, todays_date, todays_date)
-
-        metric_tags = self.tags.copy()
-
-        metric_tags.append("zoom_user_im_metric:total_send")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   total_send,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:total_send")
-
-        metric_tags.append("zoom_user_im_metric:total_receive")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   total_receive,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:total_receive")
-
-        metric_tags.append("zoom_user_im_metric:group_send")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   group_send,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:group_send")
-
-        metric_tags.append("zoom_user_im_metric:group_receive")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   group_receive,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:group_receive")
-
-        metric_tags.append("zoom_user_im_metric:calls_sent")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   calls_send,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:calls_sent")
-
-        metric_tags.append("zoom_user_im_metric:calls_received")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   calls_receive,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:calls_received")
-
-        metric_tags.append("zoom_user_im_metric:files_sent")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   files_send,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:files_sent")
-
-        metric_tags.append("zoom_user_im_metric:files_received")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   files_receive,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:files_received")
-
-        metric_tags.append("zoom_user_im_metric:images_sent")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   images_send,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:images_sent")
-
-        metric_tags.append("zoom_user_im_metric:images_received")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   images_receive,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:images_received")
-
-        metric_tags.append("zoom_user_im_metric:voice_sent")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   voice_send,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:voice_sent")
-
-        metric_tags.append("zoom_user_im_metric:voice_received")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   voice_receive,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:voice_received")
-
-        metric_tags.append("zoom_user_im_metric:videos_sent")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   videos_send,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:videos_sent")
-
-        metric_tags.append("zoom_user_im_metric:videos_received")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   videos_receive,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:videos_received")
-
-        metric_tags.append("zoom_user_im_metric:emojis_sent")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   emoji_send,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:emojis_sent")
-
-        metric_tags.append("zoom_user_im_metric:emojis_received")
-        self.gauge("{}.user.im_metric".format(self.metric_prefix),
-                   emoji_receive,
-                   tags=metric_tags)
-        metric_tags.remove("zoom_user_im_metric:emojis_received")
+            self.gauge("user.qos.max_loss", max_loss, tags=metric_tags)

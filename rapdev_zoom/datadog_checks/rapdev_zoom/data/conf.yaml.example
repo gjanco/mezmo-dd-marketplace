@@ -33,17 +33,10 @@ instances:
     #
     account_name: <ACCOUNT_NAME>
 
-    ## @param collect_accounts - boolean - optional - default: false
-    ## This changes whether the agent should collect Account level information. In order for this to work, the zooom
-    ## authentication method must have Admin privleges.
+    ## @param room_only_mode - boolean - optional - default: false
+    ## When set to true, the integration collects data for Zoom rooms.
     #
-    # collect_accounts: false
-
-    ## @param collect_plan_usage - boolean - optional - default: false
-    ## This changes whether the agent should collect plan usage information. To enable this, the user must
-    ## also enable collect_accounts and the JWT token must have admin permissions to the Zoom account.
-    #
-    # collect_plan_usage: false
+    # room_only_mode: false
 
     ## @param collect_meeting_host - boolean - optional - default: true
     ## This changes whether the agent should collect information on the meeting host (e.g. first name,
@@ -56,17 +49,6 @@ instances:
     ## averaging the values from each user. Note: Setting to true collects a larger amount of metrics.
     #
     # collect_participant_details: true
-
-    ## @param collect_im_metrics - boolean - optional - default: false
-    ## This changes whether the agent should collect IM metrics for each user for each meeting.
-    #
-    # collect_im_metrics: false
-
-    ## @param collect_top_25_issues - boolean - optional - default: false
-    ## This changes whether the agent should collect the top 25 issues across your account. Note: Issues for
-    ## each room are already being collected for each individual meeting. This is solely for an account view.
-    #
-    # collect_top_25_issues: false
 
     ## @param users_to_track - list of strings - optional
     ## This changes which users the agent ingests data for. This should be a set containing each Zoom user's
@@ -370,11 +352,12 @@ instances:
     #
     # service: <SERVICE>
 
-    ## @param min_collection_interval - number - optional - default: 15
+    ## @param min_collection_interval - number - optional - default: 60
+    ## The default for this check is 60 seconds to prevent API rate limiting.
     ## This changes the collection interval of the check. For more information, see:
     ## https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
     #
-    # min_collection_interval: 15
+    min_collection_interval: 60
 
     ## @param empty_default_hostname - boolean - optional - default: false
     ## This forces the check to send metrics with no hostname.
