@@ -43,7 +43,7 @@ You must have the Datadog Agent installed and running. Additionally, you need to
 ### Installation
 
 ```
-sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_zoom==4.2.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_zoom==5.0.0
 ``` 
 
 ### Configuration
@@ -65,9 +65,9 @@ Finish the configuration by filling in your Zoom Account name. See below for an 
        api_secret: <YOUR_API_SECRET>
        min_collection_interval: 60
        account_name: <YOUR_ACCOUNT_NAME>
-       collect_top_25_issues: False
+       room_only_mode: False
        collect_participant_details: True   # send metrics for every user rather than averaging them per meeting
-       collect_usernames: True             # Collect user-level info, such as user's name, location, etc...
+       collect_usernames: True             # Collect user-level information such as username and location
        users_to_track:                     # Only pull in QOS metrics for these emails
          - "bob_smith@myorg.com"
          - "jane_doe@myorg.com"
