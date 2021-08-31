@@ -1,5 +1,4 @@
 from datadog_checks.base import AgentCheck, ConfigurationError, is_affirmative
-from datadog_checks.base.utils.subprocess_output import get_subprocess_output
 import json
 import requests
 import time
@@ -243,7 +242,7 @@ class NutanixCheck(AgentCheck):
             self.gauge("{}.{}.num_cores".format(self.metric_prefix, entity), num_cores, tags=metric_tags)
             for x in range(num_cores):
                 x += 1
-                metric_tags.append("core:{}".format(x))
+                metric_tags.append("core:{}_core{}".format(nutanix_host, x))
                 self.gauge("datadog.marketplace.{}".format(self.metric_prefix), 1.0, tags=metric_tags)
 
     def get_vms(self):

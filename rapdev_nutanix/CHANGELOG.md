@@ -1,5 +1,8 @@
 # CHANGELOG - Nutanix
 
+## 1.3.1 / 2021-08-30
+* [BugFix] General bug fixes
+
 ## 1.3.0 / 2021-08-16
 * [Added] Configuration option for using a VM's FQDN as found in DNS
 
