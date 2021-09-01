@@ -1,0 +1,111 @@
+name: RapDev Backup
+files:
+- name: rapdev_backup.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: backup_storage_platform
+      required: true
+      value:
+        type: string
+      description: |
+        The platform where you are uploading the backup to (AWS, Azure, or local)
+    - name: aws_access_key
+      secret: true
+      required: false
+      value:
+        type: string
+      description: | 
+        If platform is AWS, the access key used to authenticate to AWS api to upload to s3.
+
+        Note: If you are assuming a role, this key is from the account that is assuming the role.
+    - name: aws_secret_key
+      secret: true
+      required: false
+      value:
+        type: string
+      description: | 
+        If platform is AWS, the secret key used to authenticate to AWS api to upload to s3.
+
+        Note: If you are assuming a role, this secret is from the account that is assuming the role.
+    - name: assume_role_arn
+      secret: true
+      required: false
+      value:
+        type: string
+        example: "arn:aws:iam::ACCOUNT-ID-WITHOUT-HYPHENS:role/MyTestRole123"
+      description: | 
+        If you'd like to authenticate via assuming a role, please provide the ARN for the role to assume.
+
+        Note: This still requires the aws key/secret, however those credentials will now be for the account that is
+        assuming the role.
+    - name: assume_role_external_id
+      secret: true
+      required: false
+      value:
+        type: string
+      description: |
+        If assuming a role and an external id is required, please provide it here.
+    - name: assume_session_name
+      required: false
+      value:
+        type: string
+        default: "DatadogBackupSession"
+        example: "DatadogBackupSession"
+      description: |
+        The name you'd like to give the assume role session, if you'd like a custom name.
+    - name: aws_s3_bucket_name
+      required: false
+      value:
+        type: string
+      description: | 
+        If platform is AWS, the name of s3 bucket that stores the backup files.
+    - name: azure_connection_string
+      secret: true
+      required: false
+      value:
+        type: string
+      description: | 
+        If platform is Azure, the storage account's connection string for authentication.
+    - name: azure_container_name
+      required: false
+      value:
+        type: string
+      description: | 
+        If platform is Azure, the name of container that holds the blob storage. 
+    - name: timestamp_format
+      required: false
+      value:
+        type: string
+        default: "%Y-%m-%dT%H%M%S"
+      description: | 
+        The format for which you want the timestamp on the zipped backup file. 
+    - name: backup_path
+      required: true
+      value:
+        type: string
+      description: |
+        The absolute path for where to store backups. Set `delete_local_backups` to `True` to delete folder when done.
+
+        Note: Users will need write permissions to this directory and should also not manually add any files to this.
+    - name: delete_local_backups
+      required: false
+      value:
+        type: boolean
+        default: true
+        example: true
+      description: |
+        Whether to delete or keep local backups after each run. This will delete the folder for the "backup_path".
+    - template: instances/default
+      overrides:  
+        min_collection_interval.value.example: 86400
+        min_collection_interval.enabled: true
+        min_collection_interval.description: |
+          Backups should only need to be generated every day at most. 
+
+          This changes the collection interval of the check. For more information, see:
+          https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+    - template: instances/http
