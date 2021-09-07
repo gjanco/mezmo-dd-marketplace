@@ -1,0 +1,1380 @@
+{
+    "author_name": "RapDev",
+    "description": "This dashboard is from the RapDev Terraform integration purchased from the marketplace. For any customizations, the dashboard must be cloned and then the clone can be edited. \n\nIf there are any questions or further assistance is required, please reach out integrations@rapdev.io.",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "org_id",
+            "prefix": "tf_org_id"
+        },
+        {
+            "default": "*",
+            "name": "workspace_name",
+            "prefix": "tf_workspace_name"
+        },
+        {
+            "default": "*",
+            "name": "run_id",
+            "prefix": "tf_workspace_run_id"
+        },
+        {
+            "default": "*",
+            "name": "username",
+            "prefix": "tf_user_name"
+        },
+        {
+            "default": "*",
+            "name": "team_name",
+            "prefix": "tf_team_name"
+        }
+    ],
+    "title": "RapDev Terraform Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 2,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "green_on_white",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.count{$org_id}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Organization Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8101548005470592,
+            "layout": {
+                "height": 16,
+                "width": 28,
+                "x": 1,
+                "y": 29
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 2,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "green_on_white",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.teams.count{$org_id}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Organization's Teams Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1791409500836364,
+            "layout": {
+                "height": 16,
+                "width": 28,
+                "x": 30,
+                "y": 29
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.terraform.org.team.users.count{$org_id} by {tf_team_name}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "User Counts By Team",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5142142341525632,
+            "layout": {
+                "height": 18,
+                "width": 57,
+                "x": 1,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 2,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "green_on_white",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.workspace.count{$org_id}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "# Of Workspaces",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6714002044155782,
+            "layout": {
+                "height": 16,
+                "width": 28,
+                "x": 1,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.workspace.runs.count{$org_id,$workspace_name,$run_id} by {tf_run_source}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Run Counts by Source",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1899775583011916,
+            "layout": {
+                "height": 26,
+                "width": 57,
+                "x": 1,
+                "y": 150
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 2,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "green_on_white",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.users.count{$org_id}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Users",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8962011491080912,
+            "layout": {
+                "height": 16,
+                "width": 28,
+                "x": 30,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.terraform.org.users.count{tf_user_perms_can_manage_user_tokens:true,$org_id,$username} by {tf_org_id,tf_user_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Users: Can Manage Tokens (Org Id, Username)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 2527511231863888,
+            "layout": {
+                "height": 23,
+                "width": 57,
+                "x": 59,
+                "y": 246
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.terraform.org.teams.count{tf_team_perms_can_update_organization_access:true,$org_id,$team_name} by {tf_org_id,tf_team_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Teams: Can Update Org Access (Org Id, Team Name)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 4648526174046880,
+            "layout": {
+                "height": 23,
+                "width": 57,
+                "x": 1,
+                "y": 270
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.terraform.org.teams.count{tf_team_perms_can_update_api_token:true,$org_id,$team_name} by {tf_org_id,tf_team_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Teams: Can Update API Token (Org Id, Team Name)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 6265716120704130,
+            "layout": {
+                "height": 23,
+                "width": 57,
+                "x": 1,
+                "y": 246
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Permissions Audit",
+                "font_size": "36",
+                "has_padding": true,
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 5719622051553004,
+            "layout": {
+                "height": 12,
+                "width": 87,
+                "x": 15,
+                "y": 232
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.terraform.org.users.count{tf_user_perms_can_create_organizations:true,$org_id,$username} by {tf_org_id,tf_user_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Users: Can Create Orgs (Org Id, Username)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 1015147925523386,
+            "layout": {
+                "height": 23,
+                "width": 57,
+                "x": 59,
+                "y": 270
+            }
+        },
+        {
+            "definition": {
+                "sizing": "contain",
+                "type": "image",
+                "url": "data:image/png;base64,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"
+            },
+            "id": 142861043380484,
+            "layout": {
+                "height": 11,
+                "width": 43,
+                "x": 15,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Workspace Runs",
+                "font_size": "36",
+                "has_padding": true,
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 2748088247178808,
+            "layout": {
+                "height": 12,
+                "width": 87,
+                "x": 15,
+                "y": 109
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.workspace.runs.count{$org_id,$workspace_name,$run_id} by {tf_run_has_changes}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Run Counts with Changes",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 1231680005236208,
+            "layout": {
+                "height": 26,
+                "width": 57,
+                "x": 1,
+                "y": 177
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.workspace.runs.count{$org_id,$workspace_name,$run_id} by {tf_run_trigger_reason}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Run Counts by Trigger Reason",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2752392892598420,
+            "layout": {
+                "height": 26,
+                "width": 57,
+                "x": 1,
+                "y": 204
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.workspace.runs.count{$org_id,$workspace_name,$run_id} by {tf_workspace_name,tf_run_is_destroy}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "\"Is Destroy\" Runs (Workspace, True or False)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 5155019337943756,
+            "layout": {
+                "height": 26,
+                "width": 57,
+                "x": 59,
+                "y": 204
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.workspace.runs.count{$org_id,$workspace_name,$run_id} by {tf_workspace_name,tf_run_is_plan_only}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "\"Is Plan Only\" Runs (Workspace, True or False)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 7290989087346508,
+            "layout": {
+                "height": 26,
+                "width": 57,
+                "x": 59,
+                "y": 150
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.workspace.runs.count{$org_id,$workspace_name,$run_id} by {tf_workspace_name,tf_run_is_refresh_only}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "\"Is Refresh Only\" Runs (Workspace, True or False)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 4552804858118502,
+            "layout": {
+                "height": 26,
+                "width": 57,
+                "x": 59,
+                "y": 177
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Count",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "sum:rapdev.terraform.variables.count{$org_id} by {tf_variable_key, tf_variable_is_sensitive, tf_variable_is_hcl, tf_variable_category}"
+                    }
+                ],
+                "title": "Variables",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 8929686902019212,
+            "layout": {
+                "height": 35,
+                "width": 57,
+                "x": 59,
+                "y": 46
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Days Since Last Update",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "yellow_on_white",
+                                "value": 15
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "green_on_white",
+                                "value": 15
+                            }
+                        ],
+                        "limit": 100,
+                        "order": "desc",
+                        "q": "max:rapdev.terraform.org.workspace.last_updated{$org_id,$workspace_name} by {tf_workspace_name, tf_org_id, tf_workspace_tf_version, tf_workspace_source, tf_workspace_environment, tf_workspace_execution_mode}"
+                    }
+                ],
+                "title": "Workspace Specs",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 1706889339436058,
+            "layout": {
+                "height": 25,
+                "width": 115,
+                "x": 1,
+                "y": 82
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.terraform.org.users.count{$org_id,tf_user_is_service_account:true,$username} by {tf_org_id,tf_user_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Users: Is Service Account (Org Id, Username)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 534135111415204,
+            "layout": {
+                "height": 23,
+                "width": 57,
+                "x": 59,
+                "y": 294
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.terraform.org.teams.count{$org_id,tf_team_perms_can_update_visibility:true,$team_name} by {tf_org_id,tf_team_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Teams: Can Update Visibility (Org Id, Team Name)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 7777777762922218,
+            "layout": {
+                "height": 23,
+                "width": 57,
+                "x": 1,
+                "y": 294
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.terraform.org.teams.count{$org_id,tf_team_perms_can_update_membership:true,$team_name} by {tf_org_id,tf_team_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Teams: Can Update Membership (Org Id, Team Name)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 2013074506795674,
+            "layout": {
+                "height": 23,
+                "width": 57,
+                "x": 1,
+                "y": 342
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.terraform.org.teams.count{$org_id,tf_team_perms_can_destroy:true,$team_name} by {tf_org_id,tf_team_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Teams: Can Destroy (Org Id, Team Name)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 1657828300494100,
+            "layout": {
+                "height": 23,
+                "width": 57,
+                "x": 1,
+                "y": 318
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "green_on_white",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.variables.count{$org_id}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "All Variables",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2068900415910898,
+            "layout": {
+                "height": 16,
+                "width": 28,
+                "x": 59,
+                "y": 29
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "green_on_white",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.variables.count{tf_variable_is_sensitive:true,$org_id}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Sensitive Variables",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3397879982957044,
+            "layout": {
+                "height": 16,
+                "width": 28,
+                "x": 88,
+                "y": 29
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Organizations Overview",
+                "font_size": "36",
+                "has_padding": true,
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 1037843891938378,
+            "layout": {
+                "height": 12,
+                "width": 87,
+                "x": 15,
+                "y": 15
+            }
+        },
+        {
+            "definition": {
+                "sizing": "cover",
+                "type": "image",
+                "url": "https://s3.amazonaws.com/files.rapdev.io/images/rapdev-dash-logo.png"
+            },
+            "id": 3832524126901890,
+            "layout": {
+                "height": 11,
+                "width": 43,
+                "x": 59,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "**STATUS KEY:**\n\n 0 --> Pending\n\n 1 --> Applied\n\n 2 --> Planned and Finished\n\n 3 --> Discarded\n\n 4 --> Canceled\n\n 5 --> Errored\n\n6 --> Unsupported (Contact RapDev)",
+                "font_size": "14",
+                "has_padding": true,
+                "show_tick": true,
+                "text_align": "left",
+                "tick_edge": "left",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 7756699660264212,
+            "layout": {
+                "height": 26,
+                "width": 18,
+                "x": 118,
+                "y": 123
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Days Since Last Run",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "yellow_on_white",
+                                "value": 15
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "green_on_white",
+                                "value": 15
+                            }
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "max:rapdev.terraform.org.workspace.latest_run.days_since{*} by {tf_workspace_name, tf_run_id, tf_run_has_changes, tf_run_is_plan_only, tf_run_source, tf_run_trigger_reason}"
+                    },
+                    {
+                        "aggregator": "last",
+                        "alias": "Run Status",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 3
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "yellow_on_white",
+                                "value": 3
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "green_on_white",
+                                "value": 3
+                            }
+                        ],
+                        "q": "max:rapdev.terraform.org.workspace.run.status{*} by {tf_workspace_name, tf_run_id, tf_run_has_changes, tf_run_is_plan_only, tf_run_source, tf_run_trigger_reason}"
+                    }
+                ],
+                "title": "Latest Runs Per Workspace",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 4858850073776118,
+            "layout": {
+                "height": 26,
+                "width": 115,
+                "x": 1,
+                "y": 123
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 2,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "green_on_white",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.agent_pools.count{$org_id}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Agent Pools Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7764962743922042,
+            "layout": {
+                "height": 16,
+                "width": 37,
+                "x": 1,
+                "y": 381
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 2,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "green_on_white",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.agent_pool.agents.count{*}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Agents Count (All Pools)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6921561079061412,
+            "layout": {
+                "height": 16,
+                "width": 37,
+                "x": 40,
+                "y": 381
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Agent Status",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 3
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "yellow_on_white",
+                                "value": 2
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "green_on_white",
+                                "value": 2
+                            }
+                        ],
+                        "limit": 100,
+                        "order": "desc",
+                        "q": "max:rapdev.terraform.org.agent_pool.agent.status{*} by {tf_agent_ip, tf_agent_name, host}"
+                    }
+                ],
+                "title": "Agent Status",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 3574168762167872,
+            "layout": {
+                "height": 25,
+                "width": 115,
+                "x": 1,
+                "y": 398
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "green_on_white",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.terraform.org.agent_pool.auth_tokens.count{*}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Auth Tokens Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7231075170622874,
+            "layout": {
+                "height": 16,
+                "width": 37,
+                "x": 79,
+                "y": 381
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Agents Overview",
+                "font_size": "36",
+                "has_padding": true,
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 7419272110412956,
+            "layout": {
+                "height": 12,
+                "width": 87,
+                "x": 15,
+                "y": 367
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "**STATUS KEY:**\n\n 0 --> Idle\n\n 1 --> Busy\n\n 2 --> Exited\n\n 3 --> Errored\n\n 4 --> Unsupported (Contact RapDev)",
+                "font_size": "14",
+                "has_padding": true,
+                "show_tick": true,
+                "text_align": "left",
+                "tick_edge": "left",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 322054507041838,
+            "layout": {
+                "height": 25,
+                "width": 18,
+                "x": 118,
+                "y": 398
+            }
+        }
+    ]
+}

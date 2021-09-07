@@ -1,0 +1,31 @@
+name: RapDev Terraform
+files:
+- name: rapdev_terraform.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: api_token
+      required: true
+      value:
+        type: string
+      description: |
+        The API Token used to authenticate to the Terraform API.
+    - name: collect_agents
+      required: false
+      value:
+        type: boolean
+        example: false
+        default: false
+      description: |
+        Whether the Datadog Agent should or should not collect metrics on the Terraform agents.
+    - template: instances/default
+      overrides:  
+        min_collection_interval.value.example: 60
+        min_collection_interval.enabled: true
+        min_collection_interval.description: |
+          This changes the collection interval of the check. For more information, see:
+          https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+    - template: instances/http 
