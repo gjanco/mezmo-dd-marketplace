@@ -149,7 +149,7 @@ class ZoomCheck(AgentCheck):
                     self.api_rate_limits_hit += 1
                     self.service_check("can_call_api", AgentCheck.CRITICAL, tags=self.tags)
                     self.log.warning("Hit Daily API rate limit. Exiting...")
-                    return
+                    return {}
             else:
                 try:
                     self.failed_api_calls += 1

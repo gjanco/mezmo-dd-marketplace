@@ -1,5 +1,8 @@
 # CHANGELOG - rapdev_zoom
 
+## 5.0.1 / 2021-09-07
+* [Fixed] Fix for return type when daily api limit is hit
+
 ## 5.0.0 / 2021-08-20
 * [Added] Metric for counting API calls
 * [Added] Room only mode
