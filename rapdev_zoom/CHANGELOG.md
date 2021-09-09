@@ -1,5 +1,8 @@
 # CHANGELOG - rapdev_zoom
 
+## 5.0.2 / 2021-09-09
+* [Fixed] Billing metric tags
+
 ## 5.0.1 / 2021-09-07
 * [Fixed] Fix for return type when daily api limit is hit
 

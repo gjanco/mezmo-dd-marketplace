@@ -216,9 +216,6 @@ class ZoomCheck(AgentCheck):
             rooms = response.get("zoom_rooms", [])
 
             for room in rooms:
-                if self.room_only_mode:
-                    self.gauge(self.billing_metric, 1, tags=metric_tags, raw=True)
-
                 room_name = room.get("room_name", "")
                 room_id = room.get("id", "")
                 room_status = room.get("status", "")
@@ -241,6 +238,9 @@ class ZoomCheck(AgentCheck):
                     metric_tags.append("zoom_room_microphone:{}".format(microphone))
                 if speaker:
                     metric_tags.append("zoom_room_speaker:{}".format(speaker))
+
+                if self.room_only_mode:
+                    self.gauge(self.billing_metric, 1, tags=metric_tags, raw=True)
 
                 # Increment counts and send in the current health for this room
                 if room_health:
