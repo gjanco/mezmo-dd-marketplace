@@ -62,31 +62,39 @@ You must have the Datadog Agent installed and running. Additionally, you need to
 
 1. Go to https://app.oz-code.com and follow the instructions to install the agent on your local machine
 
-2. Disable auto agent load on the machine
+2. Deal with auto-updates - Ozcode agent can now auto update. To get the current version of agent and set the version environment variable, use the following script:
+
    ```
-   cd %PROGRAM FILES%\OzCode\Production Debuger\Agent\config\
+   ECHO OFF; FOR /F %%A in ('powershell.exe -Command "$js = Get-Content \"$env:PROGRAMFILES\OzCode\Production Debugger Agent\Versions\version_settings.json\" | ConvertFrom-Json; $js.CurrentVersion"') do (set OZCODE_AGENT_VERSION=%A)
+   ```
+   This script sets variable `OZCODE_AGENT_VERSION` with current agent version (for example, `1.0.4311`)
+
+3. Disable auto agent load on the machine
+   ```
+   cd %PROGRAMFILES%\OzCode\OzCode\Production Debugger Agent\Versions\%OZCODE_AGENT_VERSION%\Config\
    OzCode.Configuration.Utility.exe disable
    ```
 
-3. Manually inject the following environment variables
+4. Manually inject the following environment variables
 
    For .Net Framework:
 
    Variable |  Value 
    --- | ---
+   OZCODE_AGENT_VERSION | < CURRENT-AGENT-VERSION > ```// see step #2```
    CLR_ENABLE_PROFILING | 1
    CLR_PROFILER | {DBE6D54B-4A04-4FD0-83EB-12A1A9DEC58B}
-   CLR_PROFILER_PATH_32 | C:\Program Files\OzCode\Production Debugger Agent\agent\x32\OzCodeClrProfilerMultiplexer.dll
-   CLR_PROFILER_PATH_64 | C:\Program Files\OzCode\Production Debugger Agent\agent\x64\OzCodeClrProfilerMultiplexer.dll
+   CLR_PROFILER_PATH_32 | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\x32\OzCodeClrProfilerMultiplexer.dll
+   CLR_PROFILER_PATH_64 | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\x64\OzCodeClrProfilerMultiplexer.dll
    CLR_PROFILERS | OZCODE;DD
    CLR_OZCODE_PROFILER | {DBE6D54B-4A04-4FD0-83EB-12A1A9DEC58B}
-   CLR_OZCODE_PROFILER_PATH_32 | C:\Program Files\OzCode\Production Debugger Agent\agent\x32\OzCodeClrProfiler.dll
-   CLR_OZCODE_PROFILER_PATH_64 | C:\Program Files\OzCode\Production Debugger Agent\agent\x64\OzCodeClrProfiler.dll
+   CLR_OZCODE_PROFILER_PATH_32 | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\x32\OzCodeClrProfiler.dll
+   CLR_OZCODE_PROFILER_PATH_64 | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\x64\OzCodeClrProfiler.dll
    CLR_OZCODE_ENABLE_PROFILING | 1
    CLR_OZCODE_REVERT_REJIT_CALL_ORDER | 0
    CLR_OZCODE_PRIORITY | 2.0
-   CLR_OZCODE_HOME | C:\Program Files\OzCode\Production Debugger Agent\agent\net461
-   CLR_PROFILER_HOME | C:\Program Files\OzCode\Production Debugger Agent\agent\net461
+   CLR_OZCODE_HOME | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\net461
+   CLR_PROFILER_HOME | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\net461
    CLR_DD_PROFILER | {846F5F1C-F9AE-4B07-969E-05C26BC060D8}
    CLR_DD_PROFILER_PATH | C:\Program Files\Datadog\\.NET Tracer\Datadog.Trace.ClrProfiler.Native.dll
    CLR_DD_ENABLE_PROFILING | 1
@@ -101,19 +109,20 @@ You must have the Datadog Agent installed and running. Additionally, you need to
 
    Variable |  Value 
    --- | ---
+   OZCODE_AGENT_VERSION | < CURRENT-AGENT-VERSION > ```// see step #2```
    CORECLR_ENABLE_PROFILING | 1
    CORECLR_PROFILER | {3BF080FE-7DEB-4051-AEF1-BD3AB01F1883}
-   CORECLR_PROFILER_PATH_32 | C:\Program Files\OzCode\Production Debugger Agent\agent\x32\OzCodeClrProfilerMultiplexer.dll
-   CORECLR_PROFILER_PATH_64 | C:\Program Files\OzCode\Production Debugger Agent\agent\x64\OzCodeClrProfilerMultiplexer.dll
+   CORECLR_PROFILER_PATH_32 | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\x32\OzCodeClrProfilerMultiplexer.dll
+   CORECLR_PROFILER_PATH_64 | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\x64\OzCodeClrProfilerMultiplexer.dll
    CORECLR_PROFILERS | OZCODE;DD
    CORECLR_OZCODE_PROFILER | {09992526-3e32-4995-8d3d-a97c839393e1}
-   CORECLR_OZCODE_PROFILER_PATH_32 | C:\Program Files\OzCode\Production Debugger Agent\agent\x32\OzCodeClrProfiler.dll
-   CORECLR_OZCODE_PROFILER_PATH_64 | C:\Program Files\OzCode\Production Debugger Agent\agent\x64\OzCodeClrProfiler.dll
+   CORECLR_OZCODE_PROFILER_PATH_32 | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\x32\OzCodeClrProfiler.dll
+   CORECLR_OZCODE_PROFILER_PATH_64 | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\x64\OzCodeClrProfiler.dll
    CORECLR_OZCODE_ENABLE_PROFILING | 1
    CORECLR_OZCODE_REVERT_REJIT_CALL_ORDER | 0
    CORECLR_OZCODE_PRIORITY | 2.0
-   CORECLR_OZCODE_HOME | C:\Program Files\OzCode\Production Debugger Agent\agent\netstandard2.0
-   CORECLR_PROFILER_HOME | C:\Program Files\OzCode\Production Debugger Agent\agent\netstandard2.0
+   CORECLR_OZCODE_HOME | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\netstandard2.0
+   CORECLR_PROFILER_HOME | C:\Program Files\OzCode\Production Debugger Agent\Versions\\%OZCODE_AGENT_VERSION%\Agent\netstandard2.0
    CORECLR_DD_PROFILER | {846F5F1C-F9AE-4B07-969E-05C26BC060D8}
    CORECLR_DD_PROFILER_PATH | C:\Program Files\Datadog\\.NET Tracer\Datadog.Trace.ClrProfiler.Native.dll
    CORECLR_DD_ENABLE_PROFILING | 1
