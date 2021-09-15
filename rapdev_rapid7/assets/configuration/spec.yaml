@@ -1,0 +1,55 @@
+name: RapDev Rapid7
+files:
+- name: rapdev_rapid7.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: dd_api_key
+      required: true
+      secret: true
+      value:
+        type: string
+      description: |
+        The DD API Key
+    - name: dd_app_key
+      required: true
+      secret: true
+      value:
+        type: string
+      description: |
+        The DD APP Key    
+    - name: api_key
+      required: true
+      secret: true
+      value:
+        type: string
+      description: |
+        The Rapid7 IDR API Key used to authenticate
+    - name: url
+      required: true
+      value:
+        type: string
+      description: |
+        The API url that the agent needs to target to pull data from.
+    - name: log_interval
+      required: false
+      value:
+        type: string
+        example: "last 15 minutes"
+        default: "last 1 minutes"
+      description: |
+        The period of time for which we are grabbing logs. Minimum period is last 1 minutes
+    - name: select
+      required: false
+      value:
+        type: array
+        items:
+          type: string
+        example: ["<RAPID7_LOGSET_1>", "<RAPID7_LOGSET_2>"]
+      description: |
+        Specific log sets if not interested in all. Log sets should be entered as described on rapid7 log search UI.    
+    - template: instances/default
+    

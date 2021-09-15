@@ -1,0 +1,3891 @@
+{
+    "title": "RapDev Rapid7 Dashboard",
+    "description": "",
+    "widgets": [
+        {
+            "id": 296737055620644,
+            "layout": {
+                "x": 1.0774980709876587,
+                "y": 0,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Total Count",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 8723615762482164,
+            "layout": {
+                "x": 22,
+                "y": 22,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Threat Level: None",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.hash_reputation.threat_level:None"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 4697581076135066,
+            "layout": {
+                "x": 43,
+                "y": 22,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Hash Known Reputation",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.hash_reputation.reputation:Known"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 3670151234838984,
+            "layout": {
+                "x": 64,
+                "y": 22,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Hash Unknown Reputation",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 0
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.hash_reputation.reputation:Unknown"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 6355584296389414,
+            "layout": {
+                "x": 1,
+                "y": 44,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Low",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 0
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.hash_reputation.reliability:Low"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 5741985614363200,
+            "layout": {
+                "x": 22,
+                "y": 44,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Medium",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 0
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.hash_reputation.reliability:Medium"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 6722649104038628,
+            "layout": {
+                "x": 43,
+                "y": 44,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "High",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": 0
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.hash_reputation.reliability:High"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 6721471373784346,
+            "layout": {
+                "x": 64,
+                "y": 44,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Very High",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": 0
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.hash_reputation.reliability:\"Very High\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 5185343816471254,
+            "layout": {
+                "x": 1,
+                "y": 38,
+                "width": 83,
+                "height": 5
+            },
+            "definition": {
+                "type": "note",
+                "content": "Hash Reliability",
+                "background_color": "white",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": true,
+                "tick_pos": "50%",
+                "tick_edge": "bottom",
+                "has_padding": false
+            }
+        },
+        {
+            "id": 1975081392126470,
+            "layout": {
+                "x": 1,
+                "y": 16,
+                "width": 83,
+                "height": 5
+            },
+            "definition": {
+                "type": "note",
+                "content": "Hash Threat and Reputation",
+                "background_color": "white",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": true,
+                "tick_pos": "50%",
+                "tick_edge": "bottom",
+                "has_padding": false
+            }
+        },
+        {
+            "id": 8986453084311212,
+            "layout": {
+                "x": 133,
+                "y": 60,
+                "width": 28,
+                "height": 15
+            },
+            "definition": {
+                "title": "Top R7 Host Activity",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8569507855703154,
+            "layout": {
+                "x": 115,
+                "y": 0,
+                "width": 29,
+                "height": 14
+            },
+            "definition": {
+                "title": "Low Reliability Hashes by Host",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:Low"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6334833590789678,
+            "layout": {
+                "x": 115,
+                "y": 15,
+                "width": 29,
+                "height": 14
+            },
+            "definition": {
+                "title": "Medium Reliability Hashes by Host",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:Medium"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2173838476982910,
+            "layout": {
+                "x": 115,
+                "y": 30,
+                "width": 29,
+                "height": 14
+            },
+            "definition": {
+                "title": "High Reliability Hashes by Host",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:High"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2491452476062332,
+            "layout": {
+                "x": 115,
+                "y": 45,
+                "width": 29,
+                "height": 14
+            },
+            "definition": {
+                "title": "Very High Reliability Hashes by Host",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:\"Very High\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7650603582962572,
+            "layout": {
+                "x": 85,
+                "y": 0,
+                "width": 29,
+                "height": 14
+            },
+            "definition": {
+                "title": "Low Reliability Hashes by User",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:Low"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@process.username",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 1781156212470146,
+            "layout": {
+                "x": 85,
+                "y": 15,
+                "width": 29,
+                "height": 14
+            },
+            "definition": {
+                "title": "Medium Reliability Hashes by User",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:Medium"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@process.username",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2547700495249114,
+            "layout": {
+                "x": 85,
+                "y": 30,
+                "width": 29,
+                "height": 14
+            },
+            "definition": {
+                "title": "High Reliability Hashes by User",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:High"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@process.username",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3408717325841830,
+            "layout": {
+                "x": 85,
+                "y": 45,
+                "width": 29,
+                "height": 14
+            },
+            "definition": {
+                "title": "Very High Reliability Hashes by User",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:\"Very High\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@process.username",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5645248495904006,
+            "layout": {
+                "x": 22,
+                "y": 0,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Signed Valid",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.exe_file.signing_status:SIGNED_VALID"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 5824613340356562,
+            "layout": {
+                "x": 43,
+                "y": 0,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Signed Invalid",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.exe_file.signing_status:SIGNED_INVALID"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 3357195784416160,
+            "layout": {
+                "x": 64,
+                "y": 0,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Unsigned",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" @process.exe_file.signing_status:UNSIGNED"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 4815056920762946,
+            "layout": {
+                "x": 1,
+                "y": 60,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Low Reliability by Hostname",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:Low"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 30000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 7908125476624568,
+            "layout": {
+                "x": 1,
+                "y": 22,
+                "width": 20,
+                "height": 15
+            },
+            "definition": {
+                "title": "Threat Level: Not None",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Activity/Process Start Events\" -@process.hash_reputation.threat_level:None"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true
+            }
+        },
+        {
+            "id": 6943936429086774,
+            "layout": {
+                "x": 34,
+                "y": 60,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Medium Reliability by Hostname",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:Medium"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 30000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 6395936693564466,
+            "layout": {
+                "x": 67,
+                "y": 60,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "High Reliability by Hostname",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:High"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 30000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 6281946981352570,
+            "layout": {
+                "x": 100,
+                "y": 60,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Very High Reliability by Hostname",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @process.hash_reputation.reliability:\"Very High\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 30000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 5061855897480486,
+            "layout": {
+                "x": 1,
+                "y": 98,
+                "width": 31,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent Version",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@agentVersion",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5918420896774366,
+            "layout": {
+                "x": 1,
+                "y": 82,
+                "width": 31,
+                "height": 15
+            },
+            "definition": {
+                "title": "Total Agent Beacons",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 7285523936621480,
+            "layout": {
+                "x": 33,
+                "y": 98,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent Semantic Version",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@agentSemanticVersion",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7045377039973044,
+            "layout": {
+                "x": 66,
+                "y": 82,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent System Version",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@sysVersion",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 421543577777484,
+            "layout": {
+                "x": 41.08333333333334,
+                "y": 162,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent System Memory Use",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.usedMemory",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.usedMemory",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 4725243853835402,
+            "layout": {
+                "x": 99,
+                "y": 162,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent System Memory Use",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.usedMemory",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.usedMemory",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 8141969951283758,
+            "layout": {
+                "x": 1,
+                "y": 162,
+                "width": 39,
+                "height": 15
+            },
+            "definition": {
+                "title": "Top Agent System Memory Use",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.usedMemory",
+                                    "interval": 60000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.usedMemory",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8556751213669620,
+            "layout": {
+                "x": 1,
+                "y": 146,
+                "width": 39,
+                "height": 15
+            },
+            "definition": {
+                "title": "Top Agent System Free Memory",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.freeMemory",
+                                    "interval": 60000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.freeMemory",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5967371448622246,
+            "layout": {
+                "x": 41,
+                "y": 146,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent System Free Memory",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.freeMemory",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.freeMemory",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 1644830153625842,
+            "layout": {
+                "x": 99,
+                "y": 146,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent System Free Memory",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.freeMemory",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.freeMemory",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 1124718358081870,
+            "layout": {
+                "x": 1,
+                "y": 130,
+                "width": 39,
+                "height": 15
+            },
+            "definition": {
+                "title": "Top Total Agent System Memory",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.totalMemory",
+                                    "interval": 60000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.totalMemory",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6909845345852708,
+            "layout": {
+                "x": 99,
+                "y": 130,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Total Agent System Memory",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.totalMemory",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.totalMemory",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 3059215603696526,
+            "layout": {
+                "x": 41,
+                "y": 130,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Total Agent System Memory",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.totalMemory",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.totalMemory",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 1721841258877370,
+            "layout": {
+                "x": 1,
+                "y": 178,
+                "width": 39,
+                "height": 15
+            },
+            "definition": {
+                "title": "Top Agent System Memory Utilization",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.memoryUsagePercentage",
+                                    "interval": 60000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.memoryUsagePercentage",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4369439991224152,
+            "layout": {
+                "x": 41,
+                "y": 178,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Top Agent System Memory Utilization",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.memoryUsagePercentage",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.memoryUsagePercentage",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 6964659413014532,
+            "layout": {
+                "x": 99,
+                "y": 178,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Top Agent System Memory Utilization",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@agentSystemMemoryUsageMetrics.memoryUsagePercentage",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@agentSystemMemoryUsageMetrics.memoryUsagePercentage",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 7319758587679818,
+            "layout": {
+                "x": 1,
+                "y": 114,
+                "width": 39,
+                "height": 15
+            },
+            "definition": {
+                "title": "Top Agent System CPU Utilization",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@cpuUsage",
+                                    "interval": 60000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostId",
+                                        "sort": {
+                                            "metric": "@cpuUsage",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 1806068269911760,
+            "layout": {
+                "x": 41,
+                "y": 114,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent System CPU Utilization",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@cpuUsage",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@cpuUsage",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "purple",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 8129295072669260,
+            "layout": {
+                "x": 99,
+                "y": 114,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent System CPU Utilization",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@cpuUsage",
+                                    "interval": 30000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@cpuUsage",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "purple",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 2727541101520600,
+            "layout": {
+                "x": 1,
+                "y": 76,
+                "width": 116,
+                "height": 5
+            },
+            "definition": {
+                "type": "note",
+                "content": "Agent Summary",
+                "background_color": "white",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": false
+            }
+        },
+        {
+            "id": 6736270822696336,
+            "layout": {
+                "x": 99,
+                "y": 98,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent Queued Jobs",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@numQueuedJobs",
+                                    "interval": 60000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostId",
+                                        "sort": {
+                                            "metric": "@numQueuedJobs",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "grey",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 4894522693345582,
+            "layout": {
+                "x": 99,
+                "y": 82,
+                "width": 57,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent Running Jobs",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@numRunningJobs",
+                                    "interval": 60000,
+                                    "aggregation": "avg"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostId",
+                                        "sort": {
+                                            "metric": "@numRunningJobs",
+                                            "aggregation": "avg",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "grey",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 5235799883381474,
+            "layout": {
+                "x": 33,
+                "y": 82,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Agent Domain Summary",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@domain",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 1525668167018372,
+            "layout": {
+                "x": 66,
+                "y": 98,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Last Logged in User",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set_log_stream:\"Endpoint Agent/Agent Beacons\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@lastLoggedInUser",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7249580374192910,
+            "layout": {
+                "x": 40,
+                "y": 216,
+                "width": 38,
+                "height": 15
+            },
+            "definition": {
+                "title": "Endpoint Process Activity",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@process.name",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 1479988032319560,
+            "layout": {
+                "x": 79,
+                "y": 216,
+                "width": 38,
+                "height": 15
+            },
+            "definition": {
+                "title": "Endpoint Process Breakdown",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@process.name",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 3128084530139794,
+            "layout": {
+                "x": 1,
+                "y": 216,
+                "width": 38,
+                "height": 15
+            },
+            "definition": {
+                "title": "Endpoint Process Top List",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 50,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 120000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@process.name",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 50
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 317924736738712,
+            "layout": {
+                "x": 118,
+                "y": 216,
+                "width": 38,
+                "height": 15
+            },
+            "definition": {
+                "title": "R7 Process Activity",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@process.r7_id",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 7441970911471902,
+            "layout": {
+                "x": 1,
+                "y": 232,
+                "width": 38,
+                "height": 15
+            },
+            "definition": {
+                "title": "Endpoint Parent Process Top List",
+                "title_size": "16",
+                "title_align": "center",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 50,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 120000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@parent_process.name",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 50
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6627385150910226,
+            "layout": {
+                "x": 40,
+                "y": 232,
+                "width": 38,
+                "height": 15
+            },
+            "definition": {
+                "title": "Endpoint Parent Process Activity",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@parent_process.name",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 3888952231985666,
+            "layout": {
+                "x": 79,
+                "y": 232,
+                "width": 38,
+                "height": 15
+            },
+            "definition": {
+                "title": "Endpoint Parent Process Breakdown",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@parent_process.name",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 5974196945799250,
+            "layout": {
+                "x": 118,
+                "y": 232,
+                "width": 38,
+                "height": 15
+            },
+            "definition": {
+                "title": "R7 Parent Process Breakdown",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 60000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@parent_process.r7_id",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 6247604882423268,
+            "layout": {
+                "x": 1,
+                "y": 200,
+                "width": 51,
+                "height": 15
+            },
+            "definition": {
+                "title": "Endpoint Host Activity",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 30000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 6657024982670932,
+            "layout": {
+                "x": 53,
+                "y": 200,
+                "width": 51,
+                "height": 15
+            },
+            "definition": {
+                "title": "Endpoint Host Breakdown",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 30000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 3579226469420994,
+            "layout": {
+                "x": 105,
+                "y": 200,
+                "width": 51,
+                "height": 15
+            },
+            "definition": {
+                "title": "Endpoint Host Activity",
+                "title_size": "16",
+                "title_align": "center",
+                "show_legend": false,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:r7 @log_info.log_set:\"Endpoint Activity\""
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@sequence_number",
+                                    "interval": 30000,
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@hostname",
+                                        "sort": {
+                                            "metric": "@sequence_number",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "area"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 370107236777228,
+            "layout": {
+                "x": 1,
+                "y": 194,
+                "width": 120,
+                "height": 5
+            },
+            "definition": {
+                "type": "note",
+                "content": "Endpoint Process Summary",
+                "background_color": "white",
+                "font_size": "24",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": false
+            }
+        }
+    ],
+    "template_variables": [],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "add-km7-ks8"
+}
