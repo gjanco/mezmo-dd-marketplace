@@ -1,0 +1,30 @@
+{
+  "name": "[RapDev Sophos] Managed Endpoint Health has Changed",
+  "type": "service check",
+  "query": "\"rapdev.sophos.endpoint.overall_health\".over(\"*\").by(\"endpoint_name\",\"endpoint_os\",\"endpoint_owner\").last(2).count_by_status()",
+  "message": "{{#is_warning}}\nSophos Managed Endpoint {{endpoint_name.name}} is in SUSPICIOUS health.\n{{/is_warning}} \n\n{{#is_alert}}\nSophos Managed Endpoint {{endpoint_name.name}} is in BAD/UNKNOWN health.\n{{/is_alert}} \n\n{{#is_recovery}}\nSophos Managed Endpoint {{endpoint_name.name}} is in GOOD health.\n{{/is_recovery}} \n\nOwner: {{endpoint_owner.name}} \nOS: {{endpoint_os.name}}",
+  "tags": [
+    "integration:rapdev-sophos"
+  ],
+  "options": {
+    "notify_audit": false,
+    "locked": false,
+    "timeout_h": 0,
+    "silenced": {},
+    "include_tags": false,
+    "thresholds": {
+      "unknown": 1,
+      "warning": 1,
+      "ok": 1,
+      "critical": 1
+    },
+    "new_host_delay": 300,
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "no_data_timeframe": 2
+  },
+  "restricted_roles": null,
+  "recommended_monitor_metadata": {
+    "description": "Alert when a Sophos endpoint is no longer in good health."
+  }
+}

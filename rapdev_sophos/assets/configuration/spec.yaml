@@ -1,0 +1,56 @@
+name: RapDev Sophos
+files:
+- name: rapdev_sophos.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: base_api_url
+      required: true
+      value:
+        type: string
+        example: https://api.central.sophos.com
+      description: |
+        The base API URL used for hitting the Sophos whoami API for retrieving the Tenant ID
+    - name: client_id
+      required: true
+      value:
+        type: string
+      description: |
+        The Client ID of your service principal.
+        https://developer.sophos.com/getting-started
+    - name: client_secret
+      required: true
+      secret: true
+      value:
+        type: string
+      description: |
+        The Client Secret for your service principal.
+        https://developer.sophos.com/getting-started
+    - name: collect_alert_logs
+      required: true
+      value:
+        type: boolean
+        example: false
+        default: false
+      description: |
+        Change to true to collect alert logs from your Sophos instance's Alert API.
+    - name: log_url
+      required: true
+      value:
+        type: string
+        default: "https://http-intake.logs.datadoghq.com/v1/input"
+        example: "https://http-intake.logs.datadoghq.com/v1/input"
+      description: |
+        Datadog log intake API endpoint
+    - name: verbose_endpoints
+      value:
+        type: boolean
+        example: false
+        default: false
+      description: |
+        Change to true to collect the status information about the individual Sophos services running on each endpoint.
+    - template: instances/http
+    - template: instances/default

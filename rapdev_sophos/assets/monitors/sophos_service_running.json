@@ -1,0 +1,30 @@
+{
+	"name": "[RapDev Sophos] Sophos Service on Managed Endpoint is Stopped",
+	"type": "service check",
+	"query": "\"rapdev.sophos.endpoint.service_running\".over(\"*\").by(\"endpoint_name\",\"endpoint_os\",\"endpoint_owner\",\"sophos_service\").last(2).count_by_status()",
+	"message": "{{#is_alert}}\nSophos Service {{sophos_service.name}} on managed endpoint {{endpoint_name.name}} is STOPPED.\n{{/is_alert}}\n\n{{#is_recovery}}\nSophos Service {{sophos_service.name}} on managed endpoint {{endpoint_name.name}} is RUNNING.\n{{/is_recovery}} \nOS: {{endpoint_os.name}} \nOwner: {{endpoint_owner.name}}",
+	"tags": [
+		"integration:rapdev-sophos"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"thresholds": {
+			"warning": 1,
+			"ok": 1,
+			"critical": 5
+		},
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"no_data_timeframe": 2
+	},
+	"priority": null,
+	"restricted_roles": null,
+    "recommended_monitor_metadata": {
+		"description": "Alert when a Sophos Service stops."
+	}
+}

@@ -1,0 +1,704 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "Type",
+            "prefix": "endpoint_type"
+        },
+        {
+            "default": "*",
+            "name": "Endpoint",
+            "prefix": "endpoint_name"
+        },
+        {
+            "default": "*",
+            "name": "OS",
+            "prefix": "endpoint_os"
+        },
+        {
+            "default": "*",
+            "name": "Platform",
+            "prefix": "endpoint_platform"
+        },
+        {
+            "default": "*",
+            "name": "Owner",
+            "prefix": "endpoint_owner"
+        },
+        {
+            "default": "*",
+            "name": "HealthStatus",
+            "prefix": "health_status"
+        },
+        {
+            "default": "*",
+            "name": "ThreatStatus",
+            "prefix": "threat_status"
+        },
+        {
+            "default": "*",
+            "name": "ServiceSummaryStatus",
+            "prefix": "service_summary_status"
+        },
+        {
+            "default": "*",
+            "name": "ServiceStatus",
+            "prefix": "service_status"
+        }
+    ],
+    "title": "RapDev Sophos Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "top(sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner,$HealthStatus,$ThreatStatus,$ServiceSummaryStatus,$ServiceStatus} by {endpoint_os}, 25, \"mean\", \"desc\")"
+                    }
+                ],
+                "title": "Registered Endpoints by OS",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 8501903135893628,
+            "layout": {
+                "height": 31,
+                "width": 41,
+                "x": 0,
+                "y": 32
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner,$HealthStatus,$ThreatStatus,$ServiceSummaryStatus,$ServiceStatus}"
+                    }
+                ],
+                "title": "Endpoints Registered",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2371786828674198,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 21,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_green",
+                                "value": 90
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 80
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": 80
+                            }
+                        ],
+                        "q": "(sum:rapdev.sophos.endpoint.overall_health{health_status:good,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                    }
+                ],
+                "title": "Endpoints in Good Health",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4638891777248678,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 42,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 10
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 10
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 20
+                            }
+                        ],
+                        "q": "(sum:rapdev.sophos.endpoint.overall_health{health_status:bad,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                    }
+                ],
+                "title": "Endpoints in Bad Health",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7166636312205632,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 84,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 10
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_yellow",
+                                "value": 30
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 30
+                            }
+                        ],
+                        "q": "(sum:rapdev.sophos.endpoint.overall_health{health_status:suspicious,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                    }
+                ],
+                "title": "Endpoints in Suspicious Health",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1655456750424540,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 63,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": 95
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_yellow",
+                                "value": 95
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": 80
+                            }
+                        ],
+                        "q": "(sum:rapdev.sophos.endpoint.threat_health{threat_status:good,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.health_found{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                    }
+                ],
+                "title": "Endpoints with No Threats",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 438269967128840,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 0,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 10
+                            }
+                        ],
+                        "q": "(sum:rapdev.sophos.endpoint.threat_health{threat_status:bad,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.health_found{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                    }
+                ],
+                "title": "Endpoints with Threats",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2170028755787674,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 21,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": 95
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 75
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": 75
+                            }
+                        ],
+                        "q": "(sum:rapdev.sophos.endpoint.overall_services_health{service_summary_status:good,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                    }
+                ],
+                "title": "Endpoints in Good Service State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7906363456867576,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 42,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 5
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 3
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 3
+                            }
+                        ],
+                        "q": "(sum:rapdev.sophos.endpoint.overall_services_health{service_summary_status:bad,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                    }
+                ],
+                "title": "Endpoints in Bad Service State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5463772689363510,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 63,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "has_background": false,
+                "has_border": true,
+                "horizontal_align": "center",
+                "sizing": "contain",
+                "type": "image",
+                "url": "https://1000logos.net/wp-content/uploads/2020/08/Sophos-Logo.png",
+                "vertical_align": "center"
+            },
+            "id": 2200884417375788,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "columns": [],
+                "indexes": [],
+                "message_display": "expanded-md",
+                "query": "source:sophos $Type $Endpoint $OS $Platform $Owner",
+                "show_date_column": true,
+                "show_message_column": true,
+                "sort": {
+                    "column": "time",
+                    "order": "desc"
+                },
+                "title": "",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "log_stream"
+            },
+            "id": 7184173601289310,
+            "layout": {
+                "height": 31,
+                "width": 62,
+                "x": 42,
+                "y": 32
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_green",
+                                "value": 95
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 75
+                            },
+                            {
+                                "comparator": "<",
+                                "palette": "white_on_red",
+                                "value": 75
+                            }
+                        ],
+                        "q": "(sum:rapdev.sophos.endpoint.tamper_protection_health{tamper_status:true,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                    }
+                ],
+                "title": "Endpoints with Tamper Protection",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7584572158523164,
+            "layout": {
+                "height": 15,
+                "width": 20,
+                "x": 84,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "alias": "Endpoints Running",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "sum:rapdev.sophos.endpoint.service_health{$Type,$Endpoint,$OS,$Platform,$Owner} by {sophos_service,endpoint_platform,service_status}"
+                    }
+                ],
+                "title": "Sophos Services",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 6962122493921530,
+            "layout": {
+                "height": 35,
+                "width": 34,
+                "x": 105,
+                "y": 16
+            }
+        },
+        {
+            "definition": {
+                "check": "rapdev.sophos.endpoint.overall_health",
+                "group_by": [],
+                "grouping": "cluster",
+                "tags": [
+                    "*"
+                ],
+                "title": "Endpoint Health",
+                "title_align": "left",
+                "title_size": "20",
+                "type": "check_status"
+            },
+            "id": 5841406408503504,
+            "layout": {
+                "height": 15,
+                "width": 34,
+                "x": 105,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Owner,$Platform} by {endpoint_os}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Endpoints by OS",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2729507901879162,
+            "layout": {
+                "height": 23,
+                "width": 34,
+                "x": 0,
+                "y": 64
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Owner,$Platform} by {endpoint_platform}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Endpoints by Platform",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7837718903945796,
+            "layout": {
+                "height": 23,
+                "width": 34,
+                "x": 35,
+                "y": 64
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "on_right_yaxis": false,
+                        "q": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Owner,$Platform} by {endpoint_type}",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Endpoints by Type",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3737461160702132,
+            "layout": {
+                "height": 23,
+                "width": 34,
+                "x": 70,
+                "y": 64
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "change_type": "absolute",
+                        "compare_to": "day_before",
+                        "increase_good": true,
+                        "order_by": "change",
+                        "order_dir": "desc",
+                        "q": "sum:rapdev.sophos.endpoint.overall_health{health_status:good} by {endpoint_os,endpoint_platform,endpoint_type}"
+                    }
+                ],
+                "time": {},
+                "title": "Endpoint Overall Health (vs Yesterday)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "change"
+            },
+            "id": 1730969244224858,
+            "layout": {
+                "height": 35,
+                "width": 34,
+                "x": 105,
+                "y": 52
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "alias": "Seconds Since Last Seen",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "limit": 50,
+                        "order": "desc",
+                        "q": "avg:rapdev.sophos.endpoint.last_seen{$Type,$Endpoint,$OS,$Platform,$Owner,$HealthStatus,$ThreatStatus,$ServiceSummaryStatus,$ServiceStatus} by {endpoint_name,endpoint_os,endpoint_owner,endpoint_platform}"
+                    }
+                ],
+                "title": "All Devices Under Management",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 2257726156614264,
+            "layout": {
+                "height": 32,
+                "width": 139,
+                "x": 0,
+                "y": 88
+            }
+        }
+    ]
+}
