@@ -1,10 +1,6 @@
 from datadog_checks.base import AgentCheck, ConfigurationError, is_affirmative
-import json
-import requests
 import time
-import re
 import datetime
-from requests.auth import HTTPBasicAuth
 
 REQUIRED_SETTINGS = [
     "cvm_host",
@@ -87,7 +83,7 @@ class NutanixCheck(AgentCheck):
             self.get_protection_domains()
 
     def test_cvm_connection(self):
-        self.log.debug("Attempting connection test to Nutanix CVM host %s with username %s...", self.cvm_host)
+        self.log.debug("Attempting connection test to Nutanix CVM host {} with username {}...".format(self.cvm_host, self.username))
         x = self.http.get("https://" + self.cvm_host + "/PrismGateway/services/rest/v1/cluster")
         response_code = x.status_code
         if response_code == 200:
@@ -257,8 +253,12 @@ class NutanixCheck(AgentCheck):
                 stats = vm["stats"]
                 metric_tags = self.tags.copy()
                 if self.use_vm_fqdn:
-                    from socket import getfqdn
-                    vmname = getfqdn(vm["vmName"])
+                    from socket import gethostbyname_ex
+                    try:
+                        vmname = gethostbyname_ex(vm["vmName"])[0]
+                    except:
+                        self.log.error("Could not find an FQDN for VM named {} in DNS, resorting to using display name".format(vm["vmName"]))
+                        vmname = vm["vmName"]
                 else:
                     vmname = vm["vmName"]
                 metric_tags.append("nutanix_host:{}".format(vm["hostName"]))

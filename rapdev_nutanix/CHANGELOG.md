@@ -1,5 +1,8 @@
 # CHANGELOG - Nutanix
 
+## 1.3.2 / 2021-09-13
+* [BugFix] Swap use_vm_fqdn to use gethostbyname_ex instead of getfqdn due to this method only checking first DNS server
+
 ## 1.3.1 / 2021-08-30
 * [BugFix] General bug fixes
 
