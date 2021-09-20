@@ -315,19 +315,15 @@ The Datadog Mule® Integration does not include any events.
 
 ## Support
 
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][13] to purchase this application. 
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][11] to purchase this application. 
 
 For any support inquiry, contact IO Connect Services support at [support_ddp@ioconnectservices.com][9].
-
-##  End User License Agreement
-
-A copy of the End User   License Agreement is located in the file [EULA - IO Connect Services.pdf][10]
 
 ## About IO Connect Services
 
 IO Connect Services is a company specializing in Information Technology Consultancy Services. Our practices are Cloud Technologies, Systems Integration, Big Data, Cybersecurity, and Software Engineering. We provide services in all North America, Europe and Latin America. Our headquarters are located in the NYC metropolitan area and we also have offices in Guadalajara, Mexico and Madrid, Spain.
 
-Visit  [https://www.ioconnectservices.com][11]
+Visit [https://www.ioconnectservices.com][10]
 
 [1]: https://www.ioconnectservices.com
 [2]: https://docs.datadoghq.com/agent/autodiscovery/integrations
@@ -338,7 +334,5 @@ Visit  [https://www.ioconnectservices.com][11]
 [7]: https://docs.datadoghq.com/developers/integrations/new_check_howto/?tab=configurationfile#installing
 [8]: https://docs.datadoghq.com/developers/guide/custom-python-package/?tab=linux
 [9]: mailto:support_ddp@ioconnectservices.com
-[10]: assets/EULA%20-%20IO%20Connect%20Services.pdf
-[11]: https://www.ioconnectservices.com
-[12]: mailto:dmi@ioconnectservices.com
-[13]: https://app.datadoghq.com/marketplace/app/ioconnect-mulesoft-anypoint/pricing
+[10]: https://www.ioconnectservices.com
+[11]: https://app.datadoghq.com/marketplace/app/ioconnect-mulesoft-anypoint/pricing
