@@ -10,7 +10,7 @@ The dashboard shows a view of your Datadog's account monitoring status and lets 
 ![](images/maindashview.png)
 
 
-*Have a specific request for this Datadog tool, looking for 24/7 managed services for AWS with a platform built on Datadog, or need expertise on AWS or Datadog? Reach out to our sales team [sales team](trek10.com/contact) and let us explore how we can help you*
+*Have a specific request for this Datadog tool, looking for 24/7 managed services for AWS with a platform built on Datadog, or need expertise on AWS or Datadog? Reach out to our sales team [sales team](https://trek10.com/contact) and let us explore how we can help you*
 
 ### Metrics
 * Trek10 will push a metric nightly, trek10.coverage.aws_metric_count, that can be used to see how many metrics are currently being ingested into your Datadog account that don't have monitors for them. The metric will have the tag `metric_type` that can be filtered down to the values `all_metrics`, `metrics_monitored`, and `monitoring_recommendations`. 
