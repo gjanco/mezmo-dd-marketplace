@@ -1,7 +1,7 @@
 {
   "name": "[RapDev Validator] {{org.name}}: Host {{validated_host.name}} is missing required tag key {{tag_key.name}}",
   "type": "query alert",
-  "query": "min(last_5m):avg:rapdev.validator.tag.missing_key{*} by {tag_key,validated_host,org} > 0",
+  "query": "min(last_5m):avg:rapdev.validator.tag.missing_key{entity_type:host} by {tag_key,validated_host,org} > 0",
   "message": "{{org.name}}: {{#is_alert}} Host {{validated_host.name}} is missing the required tag key of {{tag_key.name}}. Please make sure this key is added with a proper value to make it compliant. {{/is_alert}} \n\n{{#is_recovery}} Host {{validated_host.name}} is now compliant after the tag key {{tag_key.name}} was added. {{/is_recovery}}",
   "tags": [
     "integration:validator"

@@ -1,7 +1,7 @@
 {
   "name": "[RapDev Validator] {{org.name}}: Host {{validated_host.name}} has a non-compliant value for tag key {{tag_key.name}}",
   "type": "query alert",
-  "query": "min(last_5m):avg:rapdev.validator.tag.bad_value{*} by {tag_key,tag_value,validated_host,org} > 0",
+  "query": "min(last_5m):avg:rapdev.validator.tag.bad_value{entity_type:host} by {tag_key,tag_value,validated_host,org} > 0",
   "message": "{{org.name}}: {{#is_alert}} Host {{validated_host.name}} has a non-compliant value for {{tag_key.name}}. Current value: {{tag_value.name}} {{/is_alert}} \n\n{{#is_recovery}} Host {{validated_host.name}} now has a compliant value for {{tag_key.name}} {{/is_recovery}}",
   "tags": [
     "integration:validator"

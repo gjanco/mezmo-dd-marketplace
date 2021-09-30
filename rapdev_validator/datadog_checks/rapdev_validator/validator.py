@@ -3,21 +3,25 @@ try:
 except ImportError:
     from checks import AgentCheck
 import re
-import os
 import yaml
-import json
 import traceback
-from sys import platform
 from requests import HTTPError
+try:
+    from datadog_agent import get_config
+except ImportError:
+    def get_config(key):
+        return ""
 
-IGNORE_APPS = {
+IGNORE_APPS = [
     "alb",
     "elb",
     "nlb",
     "rds"
-}
+]
 
-REQUIRED_TAGS = []
+REQUIRED_TAGS = [
+    "vendor:rapdev"
+]
 
 API_URL = "https://api.datadoghq.com"
 
@@ -38,20 +42,19 @@ class ValidatorCheck(AgentCheck):
         metric_prefix (str): static prefix for all metrics submitted to the Datadog api with this integration
     """
     
-
     __NAMESPACE__ = "rapdev.validator"
 
     def __init__(self, *args, **kwargs):
-        """
-        initialization of the class, calls its parent, validates the config and gathers/formats
-        required information for the check
-        """
         super(ValidatorCheck, self).__init__(*args, **kwargs)
         self.options = self.get_keys()
         self.check_initializations.append(self.validate_config)
         
         self.org = self.get_org(self.options)
-        self.yaml_tag_dict = yaml.load(str(self.instance.get("required_tags")))
+        self.yaml_host_tag_dict = yaml.load(str(self.instance.get("required_tags")))
+        self.check_synthetics = self.instance.get("validate_synthetics", False)
+        self.yaml_synthetic_tag_dict = self.instance.get("synthetic_tags", [])
+        if self.yaml_synthetic_tag_dict:
+            yaml.load(str(self.instance.get("synthetic_tags")))
         self.ignore_paas = is_affirmative(self.instance.get("ignore_paas", False))
         self.ignore_hosts = set(self.instance.get("hosts_to_ignore", []))
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
@@ -61,13 +64,14 @@ class ValidatorCheck(AgentCheck):
         main check loop grabs all of the hosts from the Datadog api, and iterates over them, checking the agent
         and tag information as it goes, and submits its findings to the Datadog api
         """
+
         self.tags = list(set(self.tags))
+        self.tags.append("org:{}".format(self.org))
         self.log.debug("Attempting to grab the total number of active hosts from your Datadog account....")
 
-        response = self.http.get("{}/api/v1/hosts/totals".format(API_URL), extra_headers=self.options).json()
+        response = self.http.get("{}/api/v1/hosts/totals".format(API_URL), extra_headers = self.options).json()
         total_hosts = response.get("total_active")
         
-        # Try to run the main functions. Raises an exception and failing service check if the API doesn't return hosts
         n = 0
         count = 1000
         while n < total_hosts:
@@ -77,72 +81,17 @@ class ValidatorCheck(AgentCheck):
                 if not self.is_ignored_host(host.get("name")):
                     self.validate_agent(host)
                     if not self.ignore_paas:
-                        self.validate_tags(host)
-                    elif self.ignore_paas and not set(host["apps"]).intersection(IGNORE_APPS):
-                        self.validate_tags(host)
+                        self.validate_host(host)
+                    elif self.ignore_paas and not set(host.get("apps")).intersection(IGNORE_APPS):
+                        self.validate_host(host)
                 
                 n += 1
-    
-    def get_config(self, key, passthrough_exceptions=False):
-        """
-        function to read in the value for a specific key from the main datadog.yaml config file
         
-        args:
-            key (str): target key to read the value of
-            passthrough_exceptions (bool): default False, flag to allow exceptions to bubble up normally instead
-                                           of raising a custom exception (used because set_proxy code expects
-                                           a KeyError to bubble up)
-                                           
-        returns:
-            (multiple types): returns the parsed out value from the target key. since it's yaml, technically
-                              can return str, int, list, or dict depending on the target data. here we're only
-                              using it for strings though
-                              
-        raises:
-            (Exception): custom exception is raised if the os platform is not supported, as well as for
-                         all other exceptions if passthrough_exceptions is set to False
-            (FileNotFoundError): raises this exeption if passthrough_exceptions is True and the datadog.yaml file
-                                 can not be found
-            (KeyError): raises this exception if passthrough_exceptions is True and the key specified is not present
-                        (or commented out) in the main datadog.yaml
-        """
-        config_file_name = "datadog.yaml"
-        # Windows
-        if platform == "win32":
-            path = os.path.join(os.getenv("PROGRAMDATA"), "Datadog")
-        # Linux
-        elif platform == "linux" or platform == "linux2":
-            path = "/etc/datadog-agent/"
-        # Mac
-        elif platform == "darwin":
-            path = "/opt/datadog-agent/etc/"
-        # Unsupported
-        else:
-            raise Exception("OS Platform {} not supported.".format(platform))
-            
-        target = os.path.join(path, config_file_name)
-        try:
-            with open(target, "r") as infile:
-                parsed_yaml = yaml.load(infile.read(), Loader=yaml.FullLoader)
-                
-            return parsed_yaml[key]
-            
-        # catching all exeptions and then filtering on type instead of catching each exception
-        # separately to reduce copied code
-        except Exception as e:
-            exception_text = "Unexpected exception when retrieving {} from {}: {}".format(key, target, traceback.format_exc())
-            
-            if type(e) is FileNotFoundError:
-                exception_text = "No configuration file {} found. Please try again with a valid configuration file.".format(target)
-            elif type(e) is KeyError:
-                exception_text = "{} not found in {}. Please make sure the target key is defined properly and uncommented.".format(key, target)
-            
-            self.log.error(exception_text)
-            
-            if passthrough_exceptions:
-                raise e
-            else:
-                raise Exception(exception_text)
+        if self.check_synthetics and self.yaml_synthetic_tag_dict:
+            response = self.http.get("{}/api/v1/synthetics/tests".format(API_URL), extra_headers=self.options).json()
+            synthetic_list = response.get("tests")
+            for synthetic in synthetic_list:
+                self.validate_synthetics(synthetic)
         
     def get_keys(self):
         """
@@ -180,7 +129,7 @@ class ValidatorCheck(AgentCheck):
             api_key = self.init_config.get("api_key", False)
         # if no api key specified for instance, grab from main datadog.yaml
         if not api_key:
-            api_key = self.get_config("api_key")
+            api_key = get_config("api_key")
         # if no api key found and somehow gets here, throw an exception
         # (it should not be able to get here with passthrough_exceptions set to False for get_config)
         if not api_key:
@@ -204,13 +153,14 @@ class ValidatorCheck(AgentCheck):
     def validate_config(self):
         """
         This function validates that the required config is present in the conf.yaml
-        
-        raises:
-            (datadog_checks.base.ConfigurationError): raises this exception if any of the checks in the function
-                                                      fail, meaning required data is missing from the config(s)
         """
-        if not self.yaml_tag_dict:
+        if not self.yaml_host_tag_dict:
             raise ConfigurationError("Please provide a list of required tag keys and values")
+
+        if self.check_synthetics and not self.yaml_synthetic_tag_dict:
+            raise ConfigurationError("Define synthetic tags if you'd like to validate the synthetics")
+        elif not self.check_synthetics and self.yaml_synthetic_tag_dict:
+            raise ConfigurationError("Enable the validate_synthetics setting to check synthetic tags")
     
     def obf_text(self, secret_text):
         """
@@ -247,11 +197,8 @@ class ValidatorCheck(AgentCheck):
         returns:
             org_name (str): name of the org associate with the current api/app key. in multi org accounts
                             it will choose the first account it finds marked 'parent_billing' in its billing type
-                            
-        raises:
-            (requests.HTTPError): will raise this if it fails all retries due to an HTTPError, causing the
-                                  integration to halt
         """
+        
         try:
             response = self.http.get("{}/api/v1/org".format(API_URL), extra_headers=self.options, timeout=10)
             response.raise_for_status()
@@ -270,7 +217,7 @@ class ValidatorCheck(AgentCheck):
             return org_name
             
         except HTTPError as e:
-            self.log.error("Failed retrieving org for api key: {}, retries left: {}".format(self.obf_text(options.get('api_key', "")), retries))
+            self.log.error("Failed retrieving org for api key: {}, retries left: {}".format(self.obf_text(options.get("api_key", "")), retries))
             if retries > 0:
                 return self.get_org(options, retries-1)
             else:
@@ -280,148 +227,84 @@ class ValidatorCheck(AgentCheck):
     def validate_agent(self, host):
         """
         This function checks if agents are installed on the hosts
-        
-        metrics submitted:
-            gauges:
-                - {self.metric_prefix}.agent.installed: 1 if the agent is installed, 0 otherwise
-                
-            agent checks:
-                - {self.metric_prefix}.agent.is_installed: AgentCheck.OK if the agent is installed,
-                                                           AgentCheck.CRITICAL otherwise
-                                                           
+                                      
         args:
-            host (dict): host dictionary containing all relevant host data from the Datadog api, including
-                         but not limited to; hostname, and tags
+            host (dict): host dictionary containing all relevant host data from the Datadog api
         """
-        if not set(host["apps"]).intersection(IGNORE_APPS):
-            hostname = host["name"]
+        if not set(host.get("apps")).intersection(IGNORE_APPS):
+            hostname = host.get("name")
             metric_tags = self.tags.copy()
             metric_tags.append("validated_host:{}".format(hostname))
             metric_tags.append("org:{}".format(self.org))
-            source_list = host["sources"]
+            source_list = host.get("sources")
 
             # Checks if agent is present in the source list, and tags the metrics with the version
-            if "agent" in source_list and host['meta'] and 'agent_version' in host['meta'].keys():
-                metric_tags.append("agent_version:{}".format(host['meta']['agent_version']))
+            if "agent" in source_list and host.get('meta') and 'agent_version' in host.get('meta').keys():
+                metric_tags.append("agent_version:{}".format(host.get('meta').get('agent_version')))
                 self.service_check("agent.is_installed", AgentCheck.OK, tags=metric_tags)
                 self.gauge("agent.installed", 1, tags=metric_tags, hostname=None)
             else:
                 self.service_check("agent.is_installed", AgentCheck.CRITICAL, tags=metric_tags)
                 self.gauge("agent.installed", 0, tags=metric_tags, hostname=None)
     
-    def validate_tags(self, host):
+    def validate_host(self, host):
         """
         This function validates the tag keys and their values for the host being checked
         
-        metrics submitted:
-            gauges:
-                - {self.metric_prefix}.host.checked: submits 1 for each host that has been checked
-                - {self.metric_prefix}.host.keys_checked: submits 1 for each host that has had its tag keys checked
-                - {self.metric_prefix}.tag.missing_key: submits 1 for each key missing, otherwise 0 if the key is found
-                - {self.metric_prefix}.tag.bad_value: submits 1 if the current key has an invalid value, otherwise 0
-                - {self.metric_prefix}.host.missing_key: submits 1 if any of the keys were missing on this host, otherwise 0
-                - {self.metric_prefix}.host.bad_value_checked: submits 1 if the host had at least 1 key match, otherwise 0
-                - {self.metric_prefix}.host.bad_value: submits 1 if any values for any keys were invalid, otheriwse 0
-                
-            agent checks:
-                - {self.metric_prefix}.tag.key_validator: AgentCheck.OK for each valid key,
-                                                          AgentCheck.CRITICAL for each invalid key
-                - {self.metric_prefix}.tag.value_validator: AgentCheck.OK for each valid value for a valid key,
-                                                            AgentCheck.CRITICAL for each invalid value for a valid key
-        
         args:
-            host (dict): host dictionary containing all relevant host data from the Datadog api, including
-                         but not limited to; hostname, and tags
+            host (dict): host dictionary containing all relevant host data from the Datadog api
         """
-        hostname = host["name"]
+        hostname = host.get("name")
         metric_tags = self.tags.copy()
+        metric_tags.append("entity_type:host")
         metric_tags.append("validated_host:{}".format(hostname))
-        metric_tags.append("org:{}".format(self.org))
-        host_tag_list = []
-        tag_source_list = host["tags_by_source"]
+        #metric_tags.append("org:{}".format(self.org))
         
-        self.gauge("host.checked", 1, tags=metric_tags, hostname=None)
+        tag_source_dict = host.get("tags_by_source")
         
         # Create list of all host tags coming into Datadog for this host
-        for source in tag_source_list:
-            host_tag_list.append(tag_source_list.get(source))
-        
-        host_tag_dict = {}
+        host_tag_list = []
+        for source in tag_source_dict:
+            source_tags = tag_source_dict.get(source)
+            for tag in source_tags:
+                host_tag_list.append(tag)
 
         # Split the stringed tags into key:value pairs and create a dictionary
-        for tag in host_tag_list:
-            for item in tag:
-                if ":" in item:
-                    key, value = item.split(":", 1)
-                    host_tag_dict[key] = value
-                else:
-                    key, value = item, "NONE"
-                    host_tag_dict[key] = value
+        
+        host_tag_dict = self.split_tags(host_tag_list)
 
-        validator_dict = {}
-        key_list = []
-        had_key = False
-        # Loop through the keys supplied in the YAML conf
-        for key in self.yaml_tag_dict.keys():
-            key_lower = key.lower()
-            self.gauge("host.keys_checked", 1, tags=metric_tags, hostname=None)
-            key_tags = metric_tags.copy()
-            key_tags.append("tag_key:{}".format(key_lower))
+        # Validate the tags against the YAML
+        self.validate_tags(self.yaml_host_tag_dict, host_tag_dict, metric_tags)
 
-            # Check if the key outlined as required in the YAML is assigned to the host being checked
-            if key_lower not in host_tag_dict.keys():
-                key_list.append(False)
-                self.service_check("tag.key_validator", AgentCheck.CRITICAL, tags=key_tags)
-                self.gauge("tag.missing_key", 1, tags=key_tags, hostname=None)
-            
-            # Only submits tag value based metrics if the key is found on the host
-            else:
-                key_list.append(True)
-                self.service_check("tag.key_validator", AgentCheck.OK, tags=key_tags)
-                self.gauge("tag.missing_key", 0, tags=key_tags, hostname=None)
-                value_tags = key_tags.copy()
-                had_key = True
+    def validate_synthetics(self, synthetic):
+        """
+        This function validates the tag keys and their values for the synthetic being checked
+        
+        args:
+            synthetic (dict): synthetic dictionary containing all relevant synthetic data from the Datadog api
+        """
+        metric_tags = self.tags.copy()
+        metric_tags.append("entity_type:synthetic")
+        metric_tags.append("validated_synthetic_id:{}".format(synthetic.get("public_id")))
+        metric_tags.append("validated_synthetic_name:{}".format(synthetic.get("name")))
+        test_type = synthetic.get("type")
+        test_subtype = synthetic.get("subtype", None)
+        metric_tags.append("check_type:{}".format(test_type))
+        if test_subtype:
+            metric_tags.append("check_subtype:{}".format(test_subtype))
 
-                # Create a dictionary to be used to check if the key being checked contains any allowed values
-                validator_dict[key_lower] = []
-                for key_value in self.yaml_tag_dict.get(key):
-                    if key_value == "*":
-                        key_value_lower = key_value
-                    else:
-                        key_value_lower = key_value.lower()
-                    if key_value_lower == host_tag_dict.get(key_lower) or key_value_lower == "*":
-                        validator_dict[key_lower].append(True)
-                        break
-                    else:
-                        validator_dict[key_lower].append(False)
-                value_tags.append("tag_value:{}".format(host_tag_dict.get(key_lower)))
-
-                # Validates if this key contains any of the allowed values from the YAML
-                if any(validator_dict[key_lower]):
-                    self.service_check("tag.value_validator", AgentCheck.OK, tags=value_tags)
-                    self.gauge("tag.bad_value", 0, tags=value_tags, hostname=None)
-                else:
-                    self.service_check("tag.value_validator", AgentCheck.CRITICAL, tags=value_tags)
-                    self.gauge("tag.bad_value", 1, tags=value_tags, hostname=None)
-
-        # Labels host as good if all keys checked via YAML are present on host
-        if all(key_list):
-            self.gauge("host.missing_key", 0, tags=metric_tags, hostname=None)
-        else:
-            self.gauge("host.missing_key", 1, tags=metric_tags, hostname=None)
-
-        # Labels host as good if all keys checked via YAML have allowed values
-        # If 1 key is found without any allowed value, host is marked bad
-        if had_key:
-            self.gauge("host.bad_value_checked", 1, tags=metric_tags, hostname=None)
-            for val_key, val_list in validator_dict.items():
-                if any(val_list):
-                    self.gauge("host.bad_value", 0, tags=metric_tags, hostname=None)
-                else:
-                    self.gauge("host.bad_value", 1, tags=metric_tags, hostname=None)
-                    break
-        else:
-            self.gauge("host.bad_value_checked", 0, tags=metric_tags, hostname=None)
+        if test_type == "api" and test_subtype == "http":
+            metric_tags.append("url:{}".format(synthetic.get("config").get("request").get("url")))
+        elif test_type == "api" and test_subtype == "ssl":
+            metric_tags.append("url:{}".format(synthetic.get("config").get("request").get("host")))
+        elif test_type == "api" and test_subtype == "multi":
+            metric_tags.append("url:multiple")
+        elif test_type == "browser":
+            metric_tags.append("url:{}".format(synthetic.get("config").get("request").get("url")))
+        
+        test_tags_list = synthetic.get("tags")
+        synthetic_tag_dict = self.split_tags(test_tags_list)
+        self.validate_tags(self.yaml_synthetic_tag_dict, synthetic_tag_dict, metric_tags)
     
     def is_ignored_host(self, hostname):
         """
@@ -440,3 +323,99 @@ class ValidatorCheck(AgentCheck):
                 return True
                 
         return False
+
+    def validate_tags(self, yaml_tag_dict, entity_tag_dict, metric_tags):
+        """
+        function that does the actual tag validation for the list submitted in the calling functions
+
+        args:
+            yaml_tag_dict (dict): dictionary of tags defined in the conf.yaml
+            entity_tag_dict (dict): dictionary of tags that are defined for the host, synthetic, etc being validated
+            metric_tags (list): tags to apply to the metrics and service_checks submitted in this function
+        """
+        validator_dict = {}
+        key_list = []
+        had_key = False
+        self.gauge("entity.checked", 1, tags=metric_tags, hostname=None)
+        # Loop through the keys supplied in the YAML conf
+        for key in yaml_tag_dict.keys():
+            key_lower = key.lower()
+            self.gauge("keys_checked", 1, tags=metric_tags, hostname=None)
+            key_tags = metric_tags.copy()
+            key_tags.append("tag_key:{}".format(key_lower))
+
+            # Check if the key outlined as required in the YAML is assigned 
+            if key_lower not in entity_tag_dict.keys():
+                key_list.append(False)
+                self.service_check("tag.key_validator", AgentCheck.CRITICAL, tags=key_tags)
+                self.gauge("tag.missing_key", 1, tags=key_tags, hostname=None)
+            
+            # Only submits tag value based metrics if the key is found
+            else:
+                key_list.append(True)
+                self.service_check("tag.key_validator", AgentCheck.OK, tags=key_tags)
+                self.gauge("tag.missing_key", 0, tags=key_tags, hostname=None)
+                value_tags = key_tags.copy()
+                had_key = True
+
+                # Create a dictionary to be used to check if the key being checked contains any allowed values
+                validator_dict[key_lower] = []
+                for key_value in yaml_tag_dict.get(key):
+                    if key_value == "*":
+                        key_value_lower = key_value
+                    else:
+                        key_value_lower = key_value.lower()
+                    if key_value_lower == entity_tag_dict.get(key_lower) or key_value_lower == "*":
+                        validator_dict[key_lower].append(True)
+                        break
+                    else:
+                        validator_dict[key_lower].append(False)
+                value_tags.append("tag_value:{}".format(entity_tag_dict.get(key_lower)))
+
+                # Validates if this key contains any of the allowed values from the YAML
+                if any(validator_dict.get(key_lower)):
+                    self.service_check("tag.value_validator", AgentCheck.OK, tags=value_tags)
+                    self.gauge("tag.bad_value", 0, tags=value_tags, hostname=None)
+                else:
+                    self.service_check("tag.value_validator", AgentCheck.CRITICAL, tags=value_tags)
+                    self.gauge("tag.bad_value", 1, tags=value_tags, hostname=None)
+
+        # Labels as good if all keys checked via YAML are present
+        if all(key_list):
+            self.gauge("missing_key", 0, tags=metric_tags, hostname=None)
+        else:
+            self.gauge("missing_key", 1, tags=metric_tags, hostname=None)
+
+        # Labels as good if all keys checked via YAML have allowed values
+        # If 1 key is found without any allowed value, is marked bad
+        if had_key:
+            self.gauge("bad_value_checked", 1, tags=metric_tags, hostname=None)
+            for val_key, val_list in validator_dict.items():
+                if any(val_list):
+                    self.gauge("bad_value", 0, tags=metric_tags, hostname=None)
+                else:
+                    self.gauge("bad_value", 1, tags=metric_tags, hostname=None)
+                    break
+        else:
+            self.gauge("bad_value_checked", 0, tags=metric_tags, hostname=None)
+
+    def split_tags(self, tag_list):
+        """
+        function that splits the list of stringed tags into a dictionary
+
+        args:
+            tag_list (list): list of key:value pairs as strings
+        
+        returns:
+            tag_dict (dict): dictionary of the tag_list key:value pairs
+        """
+        tag_dict = {}
+        for tag in tag_list:
+            if ":" in tag:
+                key, value = tag.split(":", 1)
+                tag_dict[key] = value
+            else:
+                key, value = tag, "NONE"
+                tag_dict[key] = value
+
+        return tag_dict

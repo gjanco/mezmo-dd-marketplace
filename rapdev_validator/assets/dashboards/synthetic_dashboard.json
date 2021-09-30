@@ -1,0 +1,562 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "ordered",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "SyntheticName",
+            "prefix": "validated_synthetic_name"
+        },
+        {
+            "default": "*",
+            "name": "SyntheticID",
+            "prefix": "validated_synthetic_id"
+        },
+        {
+            "default": "*",
+            "name": "Key",
+            "prefix": "tag_key"
+        },
+        {
+            "default": "*",
+            "name": "Value",
+            "prefix": "tag_value"
+        },
+        {
+            "default": "*",
+            "name": "Org",
+            "prefix": "org"
+        },
+        {
+            "default": "*",
+            "name": "CheckType",
+            "prefix": "check_type"
+        },
+        {
+            "default": "*",
+            "name": "CheckSubType",
+            "prefix": "check_subtype"
+        }
+    ],
+    "title": "RapDev Validator Synthetic Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "background_color": "gray",
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Synthetic Tag Key Compliance",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "autoscale": false,
+                            "custom_unit": "Test",
+                            "precision": 0,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:rapdev.validator.missing_key{entity_type:synthetic,$SyntheticName,$SyntheticID,$Org,$Key,$CheckType,$CheckSubType}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Synthetics Missing Tag Keys",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 5305269824675076,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "%",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "(query1 / query2) * 100"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:rapdev.validator.missing_key{entity_type:synthetic,$SyntheticName,$SyntheticID,$Org,$Key,$CheckType,$CheckSubType}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:rapdev.validator.entity.checked{entity_type:synthetic,$SyntheticName,$SyntheticID,$Org,$Key,$CheckType,$CheckSubType}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "% of Synthetics with a Missing Key",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 412103476019382,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 2,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "check": "rapdev.validator.tag.key_validator",
+                            "group_by": [],
+                            "grouping": "cluster",
+                            "tags": [
+                                "$Key",
+                                "$Org",
+                                "entity_type:synthetic",
+                                "$SyntheticName",
+                                "$SyntheticID",
+                                "$CheckType",
+                                "$CheckSubType"
+                            ],
+                            "title": "Tag Key Compliance",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "check_status"
+                        },
+                        "id": 8556320442543856,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 4,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "custom_links": [
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "containers"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "hosts"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "logs"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "traces"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "profiles"
+                                },
+                                {
+                                    "label": "View Related Synthetic",
+                                    "link": "/synthetics/details/{{validated_synthetic_id.value}}"
+                                }
+                            ],
+                            "has_search_bar": "auto",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Key Compliance",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": ">=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<",
+                                                    "palette": "white_on_green",
+                                                    "value": 1
+                                                }
+                                            ],
+                                            "formula": "query1",
+                                            "limit": {
+                                                "count": 50,
+                                                "order": "desc"
+                                            }
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:rapdev.validator.tag.missing_key{entity_type:synthetic,$SyntheticName,$SyntheticID,$Org,$Key,$CheckType,$CheckSubType} by {validated_synthetic_name,tag_key,validated_synthetic_id}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {},
+                            "title": "Tag Key Compliance Summary",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_table"
+                        },
+                        "id": 7754538766728148,
+                        "layout": {
+                            "height": 5,
+                            "width": 6,
+                            "x": 6,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "markers": [],
+                            "requests": [
+                                {
+                                    "display_type": "bars",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "on_right_yaxis": false,
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:rapdev.validator.tag.missing_key{entity_type:synthetic,$SyntheticName,$SyntheticID,$Org,$Key,$CheckType,$CheckSubType} by {tag_key}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Missing Keys by Tag Key",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries",
+                            "yaxis": {
+                                "include_zero": true,
+                                "label": "",
+                                "max": "auto",
+                                "min": "auto",
+                                "scale": "linear"
+                            }
+                        },
+                        "id": 4654171643255186,
+                        "layout": {
+                            "height": 3,
+                            "width": 6,
+                            "x": 0,
+                            "y": 2
+                        }
+                    }
+                ]
+            },
+            "id": 7195583103722540,
+            "layout": {
+                "height": 6,
+                "width": 12,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "background_color": "gray",
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Synthetic Tag Value Compliance",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "autoscale": false,
+                            "custom_unit": "Test",
+                            "precision": 0,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:rapdev.validator.bad_value{entity_type:synthetic,$SyntheticName,$SyntheticID,$Org,$CheckType,$CheckSubType}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Synthetics w/ Non-Compliant Values",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 4333548899543254,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "%",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero((default_zero(query1) / default_zero(query2)) * 100)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:rapdev.validator.bad_value{entity_type:synthetic,$SyntheticName,$SyntheticID,$Org,$CheckType,$CheckSubType}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:rapdev.validator.bad_value_checked{entity_type:synthetic,$SyntheticName,$SyntheticID,$Org,$CheckType,$CheckSubType}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "% of Synthetics w/ Non-Compliant Values",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 8786401769091568,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 2,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "check": "rapdev.validator.tag.value_validator",
+                            "group_by": [],
+                            "grouping": "cluster",
+                            "tags": [
+                                "$Org",
+                                "$Key",
+                                "$Value",
+                                "entity_type:synthetic",
+                                "$SyntheticName",
+                                "$SyntheticID",
+                                "$CheckType",
+                                "$CheckSubType"
+                            ],
+                            "title": "Tag Value Compliance",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "check_status"
+                        },
+                        "id": 2779465942069750,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 4,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "custom_links": [
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "containers"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "hosts"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "logs"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "traces"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "profiles"
+                                },
+                                {
+                                    "label": "View Related Synthetic",
+                                    "link": "/synthetics/details/{{validated_synthetic_id.value}}"
+                                }
+                            ],
+                            "has_search_bar": "auto",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Value Compliance",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": ">=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<",
+                                                    "palette": "white_on_green",
+                                                    "value": 1
+                                                }
+                                            ],
+                                            "formula": "query1",
+                                            "limit": {
+                                                "count": 50,
+                                                "order": "desc"
+                                            }
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:rapdev.validator.tag.bad_value{entity_type:synthetic,$SyntheticName,$SyntheticID,$Org,$Key,$Value,$CheckType,$CheckSubType} by {validated_synthetic_name,tag_key,tag_value,validated_synthetic_id}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {},
+                            "title": "Tag Value Compliance Summary",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_table"
+                        },
+                        "id": 860650150223276,
+                        "layout": {
+                            "height": 5,
+                            "width": 6,
+                            "x": 6,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "markers": [],
+                            "requests": [
+                                {
+                                    "display_type": "bars",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "on_right_yaxis": false,
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:rapdev.validator.tag.bad_value{$SyntheticName,entity_type:synthetic,$SyntheticID,$Org,$Key,$Value,$CheckType,$CheckSubType} by {tag_key}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Non-Compliance by Tag Key",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries",
+                            "yaxis": {
+                                "include_zero": true,
+                                "label": "",
+                                "max": "auto",
+                                "min": "auto",
+                                "scale": "linear"
+                            }
+                        },
+                        "id": 4527705288491776,
+                        "layout": {
+                            "height": 3,
+                            "width": 6,
+                            "x": 0,
+                            "y": 2
+                        }
+                    }
+                ]
+            },
+            "id": 1899294227287196,
+            "layout": {
+                "height": 6,
+                "width": 12,
+                "x": 0,
+                "y": 6
+            }
+        }
+    ]
+}

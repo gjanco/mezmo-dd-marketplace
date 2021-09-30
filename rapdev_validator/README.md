@@ -23,7 +23,12 @@ Please note that this integration does not work on Python 2.X.X versions.
 ### Install the Validator Integration
 To install the Validator check on your host:
 
-`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_validator==1.1.0`
+- Linux
+
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_validator==2.0.0`
+- Windows
+
+`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_validator==2.0.0`
 
 ### Prepare the Validator
 
@@ -50,6 +55,14 @@ The only pre-requisite to the RapDev Validator integration is having an applicat
       - "sqlserver_.*"
       - ".*_adserver"
       - "i-.*00"
+    validate_synthetics: true
+    synthetic_tags:
+      env:
+        - "dev"
+        - "qa"
+        - "prod"
+      application:
+        - "*"
     empty_default_hostname: true
   ```
 2. [Restart the Datadog Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent).
@@ -58,9 +71,12 @@ The only pre-requisite to the RapDev Validator integration is having an applicat
 1. [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-information) and look for `rapdev_validator` under the Checks section.
 
 Alternatively, you can get detailed information about the integration using the following command.
-```
-sudo ‐u dd‐agent datadog‐agent check rapdev_validator
-```
+- Linux
+
+`sudo ‐u dd‐agent datadog‐agent check rapdev_validator`
+- Windows
+
+`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe check rapdev_validator`
 
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:

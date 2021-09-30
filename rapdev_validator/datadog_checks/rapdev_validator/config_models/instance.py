@@ -19,13 +19,16 @@ class InstanceConfig(BaseModel):
 
     api_key: Optional[str]
     app_key: Optional[str]
+    disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]
     hosts_to_ignore: Optional[Sequence[str]]
     ignore_paas: Optional[bool]
     min_collection_interval: Optional[float]
     required_tags: Mapping[str, Any]
     service: Optional[str]
+    synthetic_tags: Optional[Mapping[str, Any]]
     tags: Optional[Sequence[str]]
+    validate_synthetics: Optional[bool]
 
     @root_validator(pre=True)
     def _initial_validation(cls, values):

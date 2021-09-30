@@ -24,6 +24,10 @@ def instance_app_key(field, value):
     return get_default_field_value(field, value)
 
 
+def instance_disable_generic_tags(field, value):
+    return False
+
+
 def instance_empty_default_hostname(field, value):
     return False
 
@@ -44,5 +48,13 @@ def instance_service(field, value):
     return get_default_field_value(field, value)
 
 
+def instance_synthetic_tags(field, value):
+    return get_default_field_value(field, value)
+
+
 def instance_tags(field, value):
     return get_default_field_value(field, value)
+
+
+def instance_validate_synthetics(field, value):
+    return False
