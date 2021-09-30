@@ -35,6 +35,7 @@ class InstanceConfig(BaseModel):
         allow_mutation = False
 
     account_name: str
+    allow_redirects: Optional[bool]
     api_key: str
     api_secret: str
     auth_token: Optional[AuthToken]
@@ -46,6 +47,7 @@ class InstanceConfig(BaseModel):
     collect_meeting_host: Optional[bool]
     collect_participant_details: Optional[bool]
     connect_timeout: Optional[float]
+    disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]
     extra_headers: Optional[Mapping[str, Any]]
     headers: Optional[Mapping[str, Any]]
@@ -63,6 +65,7 @@ class InstanceConfig(BaseModel):
     persist_connections: Optional[bool]
     proxy: Optional[Proxy]
     read_timeout: Optional[float]
+    request_size: Optional[float]
     room_only_mode: Optional[bool]
     service: Optional[str]
     skip_proxy: Optional[bool]

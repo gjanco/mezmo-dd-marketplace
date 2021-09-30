@@ -8,6 +8,10 @@ def shared_service(field, value):
     return get_default_field_value(field, value)
 
 
+def instance_allow_redirects(field, value):
+    return True
+
+
 def instance_assume_role_arn(field, value):
     return 'arn:aws:iam::ACCOUNT-ID-WITHOUT-HYPHENS:role/MyTestRole123'
 
@@ -66,6 +70,10 @@ def instance_connect_timeout(field, value):
 
 def instance_delete_local_backups(field, value):
     return True
+
+
+def instance_disable_generic_tags(field, value):
+    return False
 
 
 def instance_empty_default_hostname(field, value):
@@ -134,6 +142,10 @@ def instance_proxy(field, value):
 
 def instance_read_timeout(field, value):
     return get_default_field_value(field, value)
+
+
+def instance_request_size(field, value):
+    return 16
 
 
 def instance_service(field, value):

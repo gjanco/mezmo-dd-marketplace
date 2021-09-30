@@ -34,6 +34,7 @@ class InstanceConfig(BaseModel):
     class Config:
         allow_mutation = False
 
+    allow_redirects: Optional[bool]
     assume_role_arn: Optional[str]
     assume_role_external_id: Optional[str]
     assume_session_name: Optional[str]
@@ -51,6 +52,7 @@ class InstanceConfig(BaseModel):
     backup_storage_platform: str
     connect_timeout: Optional[float]
     delete_local_backups: Optional[bool]
+    disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]
     extra_headers: Optional[Mapping[str, Any]]
     headers: Optional[Mapping[str, Any]]
@@ -68,6 +70,7 @@ class InstanceConfig(BaseModel):
     persist_connections: Optional[bool]
     proxy: Optional[Proxy]
     read_timeout: Optional[float]
+    request_size: Optional[float]
     service: Optional[str]
     skip_proxy: Optional[bool]
     tags: Optional[Sequence[str]]

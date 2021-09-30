@@ -17,6 +17,7 @@ class InstanceConfig(BaseModel):
     api_key: str
     dd_api_key: str
     dd_app_key: str
+    disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]
     log_interval: Optional[str]
     min_collection_interval: Optional[float]
