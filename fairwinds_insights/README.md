@@ -2,9 +2,7 @@
 
 ## Overview
 
-![Dashboard](images/dashboard.png)
-
-### Software to protect and optimize your mission-critical Kubernetes applications
+Software to protect and optimize your mission-critical Kubernetes applications
 
 #### Streamline handoffs from development to operations
 
@@ -35,7 +33,7 @@ Login to Fairwinds Insights and navigate to your Organization's Settings page, t
 
 ### Configuration
 
-Login to [Fairwinds Insights][1] and navigate to the settings page for your organization and input your Datadog API key in the section marked Datadog.
+You can modify your Datadog configuration in your Organization's Settings page.
 
 ### Validation
 
