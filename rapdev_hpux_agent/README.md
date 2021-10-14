@@ -7,14 +7,6 @@ The HP-UX Agent provides the host metadata required to support the Datadog Infra
 
 The HP-UX Agent uses the same URLs and ports as the native agents. The HP-UX Agent currently supports core infrastructure metrics and log tails. It does not support Agent checks, integrations, or service checks. 
 
-### HP-UX Agent Screenshots
-
-![Screenshot1](images/1.png)
-
-![Screenshot2](images/2.png)
-
-![Screenshot3](images/3.png)
-
 ## Setup
 
 1. A current installation of curl is required on each HP-UX Agent host. The HP-UX Agent was built and tested with [curl-7.73.0](http://hpux.connect.org.uk/hppd/hpux/Networking/WWW/curl-7.73.0/) from the [HP-UX Porting and Archive Centre](http://hpux.connect.org.uk).

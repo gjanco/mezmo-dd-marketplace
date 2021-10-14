@@ -7,14 +7,6 @@ The Solaris Agent provides the host metadata required to support the Datadog Inf
 
 The Solaris Agent uses the same URLs and ports as the native agents. The Solaris Agent currently supports core infrastructure metrics and log tails. It does not support Agent checks, integrations, or service checks. 
 
-### Solaris agent in infrastructure list
-
-![Screenshot1](images/1.png)
-
-![Screenshot2](images/2.png)
-
-![Screenshot3](images/3.png)
-
 ## Setup
 
 1. A current installation of curl is required on each Solaris Agent host system. The Solaris Agent was built and tested with curl from the [OpenCSW](https://www.opencsw.org/about/) project.

@@ -1,29 +1,53 @@
 {
-  "display_name": "RapDev Sophos",
-  "maintainer": "integrations@rapdev.io",
-  "manifest_version": "1.0.0",
-  "name": "rapdev_sophos",
-  "metric_prefix": "rapdev.sophos",
-  "metric_to_check": "rapdev.sophos.endpoint.registered",
-  "creates_events": false,
-  "short_description": "Monitor the health of your Sophos managed endpoints",
-  "guid": "b6c8e656-e484-44bb-bfc1-cfa08fcab648",
-  "support": "partner",
-  "supported_os": [
-    "linux",
-    "mac_os",
-    "windows"
+  "manifest_version": "2.0.0",
+  "app_uuid": "86b68ae7-ba52-4160-bbf5-e1455fafa677",
+  "app_id": "rapdev-sophos",
+  "classifier_tags": [
+    "Supported OS::Linux",
+    "Supported OS::Mac OS",
+    "Supported OS::Windows"
   ],
-  "public_title": "RapDev Sophos",
-  "categories": [
-    ""
-  ],
-  "type": "check",
-  "is_public": false,
-  "integration_id": "rapdev-sophos",
+  "display_on_public_website": false,
+  "tile": {
+    "overview": "README.md#Overview",
+    "configuration": "README.md#Setup",
+    "support": "README.md#Support",
+    "changelog": "CHANGELOG.md",
+    "description": "Monitor the health of your Sophos managed endpoints",
+    "title": "RapDev Sophos",
+    "media": [
+      {
+        "media_type": "image",
+        "caption": "Sophos Dashboard",
+        "image_url": "images/dashboard.png"
+      }
+    ]
+  },
+  "author": {
+    "homepage": "https://www.rapdev.io",
+    "name": "RapDev.io",
+    "support_email": "integrations@rapdev.io",
+    "vendor_id": "rapdev",
+    "sales_email": "ddsales@rapdev.io"
+  },
+  "oauth": {},
   "assets": {
-    "configuration": {
-      "spec": "assets/configuration/spec.yaml"
+    "integration": {
+      "source_type_name": "RapDev Sophos",
+      "configuration": {
+        "spec": "assets/configuration/spec.yaml"
+      },
+      "events": {
+        "creates_events": false
+      },
+      "metrics": {
+        "prefix": "rapdev.sophos.",
+        "check": "rapdev.sophos.endpoint.registered",
+        "metadata_path": "metadata.csv"
+      },
+      "service_checks": {
+        "metadata_path": "assets/service_checks.json"
+      }
     },
     "dashboards": {
       "RapDev Sophos Dashboard": "assets/dashboards/rapdev_sophos_dashboard.json"
@@ -32,18 +56,7 @@
       "[RapDev Sophos] Managed Endpoint Health has Changed": "assets/monitors/sophos_endpoint_health.json",
       "[RapDev Sophos] Sophos Service on Managed Endpoint is Stopped": "assets/monitors/sophos_service_running.json"
     },
-    "saved_views": {},
-    "service_checks": "assets/service_checks.json",
-    "metrics_metadata": "metadata.csv",
     "logs": {}
-  },
-  "terms": {
-    "eula": "assets/EULA.pdf",
-    "legal_email": "ddsales@rapdev.io"
-  },
-  "author": {
-    "name": "RapDev.io",
-    "homepage": "https://www.rapdev.io"
   },
   "pricing": [
     {
@@ -51,7 +64,13 @@
       "unit_price": 1,
       "unit_label": "Registered Endpoint",
       "tag": "endpoint_name",
-      "metric": "datadog.marketplace.rapdev.sophos"
+      "metric": "datadog.marketplace.rapdev.sophos",
+      "product_id": "sophos",
+      "includes_assets": true,
+      "short_description": "Unit price per endpoint"
     }
-  ]
+  ],
+  "legal_terms": {
+    "eula": "assets/EULA.pdf"
+  }
 }

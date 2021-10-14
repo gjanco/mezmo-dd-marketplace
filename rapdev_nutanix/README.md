@@ -3,18 +3,6 @@
 ## Overview
 The Nutanix Integration monitors storage, CPU usage, read/write IOPS, and other metrics within Nutanix Clusters, to ensure that your environment is running at optimal performance at all times. The integration comes with 4 Dashboards which allows you to view your Nutanix Clusters from an overview, as well as getting granular and pin-pointing potential performance degradations. The Nutanix Integration also comes with monitors for key metrics such as storage utilization and deduplication savings, which are integral to the overall performance of the Nutanix environment.
 
-### Nutanix Overview Dashboard 
-![Screenshot1](images/4.png)
-
-### Nutanix VMs Dashboard
-![Screenshot2](images/5.png)
-
-### Nutanix Clusters Dashboard 
-![Screenshot3](images/6.png)
-
-### Nutanix Hosts and Disks Dashboard
-![Screenshot3](images/7.png)
-
 ### Monitors
 
 1. Nutanix Cluster Storage Utilization

@@ -3,9 +3,6 @@
 ## Overview
 The RapDev validator solves the problem for monitoring tag and Agent compliance in your Datadog environment. The integration accepts a list of tag keys and their values that you deem as acceptable per your environments tagging strategy, then reports these as metrics and service checks into your Datadog instance. This way, you can display whether the hosts in your environment have the correct tags applied to them.
 
-### Validator Dashboard 
-![Screenshot1](images/validator.png)
-
 ### Dashboards
 1. RapDev Validator Dashboard
 

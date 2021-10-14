@@ -2,20 +2,10 @@
 
 ## Overview
 
-[![Oracle TimesTen Datadog Integration](images/video.png)](https://www.youtube.com/watch?v=W0Sko27hxrA)
-
 The Oracle TimesTen integration enables you to monitor your TimesTen in-memory databases. This integration covers over 200 metrics and provides details about your top queries, database status, execution times, and much more.
 
 Below are some screenshots of the dashboard that is included with the integration.
 
-![Screenshot1](images/1.png)
-
-![Screenshot2](images/2.png)
-
-![Screenshot3](images/3.png)
-
-![Screenshot4](images/4.png)
- 
 ## Setup
 
 ### Prerequisites

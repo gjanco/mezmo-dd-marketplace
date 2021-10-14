@@ -8,14 +8,6 @@ Datadog Reporter allows you to schedule reports and email them out on a set inte
 
 This integration will setup a new dashboard in your Datadog instance called **Datadog Reporter**.  The application can be accessed directly by going to the dashboard and creating a new user from that iFrame.  *Your Datadog account will NOT work in the DD Reporter application.  You must register a seperate account*
 
-### Sample Email Report
-
-![Screenshot1](images/3.png)
-
-### Report Configuration Page
-
-![Screenshot1](images/1.png)
-
 ## Setup
 You can use Public or Private dashboards with the reporter.  To start navigate to the **Datadog Reporter Dashboard** and **create a new account**. Your Datadog username and password will not work.  
 

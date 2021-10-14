@@ -5,10 +5,6 @@ This integration uses the Rapid7 REST API to query IDR log streams. The integrat
 ### Metrics
 The count of logs processed per check is reported as a metric.
 
-### Dashboards
-![Screenshot1](images/rapdev_rapid7_dashboard_.png)
-![Screenshot1](images/agent_sum.png)
-![Screenshot1](images/endpoint_process.png)
 ### Log Collection
 This integration calls to Rapid7 logs API to query all logs available in the last time interval. The default time interval is the last minute. You can specify specific [Log Sets][5] as detailed in Rapid7 insightIDR [Log Search Documentation][6] to get only those logs.
 

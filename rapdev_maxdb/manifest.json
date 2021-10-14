@@ -1,27 +1,65 @@
 {
-  "display_name": "RapDev MaxDB",
-  "maintainer": "integrations@rapdev.io",
-  "manifest_version": "1.0.0",
-  "name": "rapdev_maxdb",
-  "metric_prefix": "rapdev.maxdb.",
-  "metric_to_check": "rapdev.maxdb.db_state",
-  "creates_events": false,
-  "short_description": "Monitor volume, cache, schema, table and other metrics from your MaxDB databases",
-  "guid": "b002557b-f27c-47ad-8db7-a93c75b81707",
-  "support": "partner",
-  "supported_os": [
-    "linux",
-    "mac_os",
-    "windows"
+  "manifest_version": "2.0.0",
+  "app_uuid": "f30ae17c-d58a-43f4-a8a6-693279394101",
+  "app_id": "rapdev-maxdb",
+  "classifier_tags": [
+    "Supported OS::Linux",
+    "Supported OS::Mac OS",
+    "Supported OS::Windows",
+    "Category::Marketplace",
+    "Category::Data Store"
   ],
-  "public_title": "MaxDB Integration",
-  "categories": ["marketplace", "data store"],
-  "type": "check",
-  "is_public": true,
-  "integration_id": "rapdev-maxdb",
+  "display_on_public_website": true,
+  "tile": {
+    "overview": "README.md#Overview",
+    "configuration": "README.md#Setup",
+    "support": "README.md#Support",
+    "changelog": "CHANGELOG.md",
+    "description": "Monitor volume, cache, schema, table and other metrics from your MaxDB databases",
+    "title": "MaxDB Integration",
+    "media": [
+      {
+        "media_type": "image",
+        "caption": "Database Status & Data/Log Metrics",
+        "image_url": "images/1.png"
+      },
+      {
+        "media_type": "image",
+        "caption": "Database Cache Metrics",
+        "image_url": "images/2.png"
+      },
+      {
+        "media_type": "image",
+        "caption": "Session, OMS, and Schema Metrics",
+        "image_url": "images/3.png"
+      }
+    ]
+  },
+  "author": {
+    "homepage": "https://www.rapdev.io",
+    "name": "RapDev.io",
+    "support_email": "integrations@rapdev.io",
+    "vendor_id": "rapdev",
+    "sales_email": "ddsales@rapdev.io"
+  },
+  "oauth": {},
   "assets": {
-    "configuration": {
-      "spec": "assets/configuration/spec.yaml"
+    "integration": {
+      "source_type_name": "RapDev MaxDB",
+      "configuration": {
+        "spec": "assets/configuration/spec.yaml"
+      },
+      "events": {
+        "creates_events": false
+      },
+      "metrics": {
+        "prefix": "rapdev.maxdb.",
+        "check": "rapdev.maxdb.db_state",
+        "metadata_path": "metadata.csv"
+      },
+      "service_checks": {
+        "metadata_path": "assets/service_checks.json"
+      }
     },
     "dashboards": {
       "RapDev MaxDB Dashboard": "assets/dashboards/rapdev_maxdb_dashboard.json"
@@ -32,26 +70,21 @@
       "RapDev MaxDB Lock Utilization": "assets/monitors/rapdev_maxdb_lock_utilization.json",
       "RapDev MaxDB Log Area Usage": "assets/monitors/rapdev_maxdb_log_area_usage.json",
       "RapDev MaxDB Database State": "assets/monitors/rapdev_maxdb_state.json"
-    },
-    "saved_views": {},
-    "service_checks": "assets/service_checks.json",
-    "metrics_metadata": "metadata.csv"
-  },
-  "author": {
-    "name": "RapDev.io",
-    "homepage": "https://www.rapdev.io"
+    }
   },
   "pricing": [
     {
       "billing_type": "tag_count",
-      "unit_price": 50.0,
+      "unit_price": 50,
       "unit_label": "Database",
       "tag": "db",
-      "metric": "datadog.marketplace.rapdev.maxdb"
+      "metric": "datadog.marketplace.rapdev.maxdb",
+      "product_id": "maxdb",
+      "includes_assets": true,
+      "short_description": "Unit price per db"
     }
   ],
-  "terms": {
-    "eula": "assets/EULA.pdf",
-    "legal_email": "ddsales@rapdev.io"
+  "legal_terms": {
+    "eula": "assets/EULA.pdf"
   }
 }

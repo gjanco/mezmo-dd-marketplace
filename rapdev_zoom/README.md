@@ -4,21 +4,6 @@
 
 The Zoom Integration has the capability of monitoring Meetings, Rooms, Users, Network Statistics, and Geolocation Overviews to provide an optimal experience for your employees, no matter where they are located around the world. The integration comes pre-built with four fully customizable dashboards that bring the most crucial information to the surface. Additionally, we've designed our visuals to be deliverable without changes to C-Level Executives, Managers, Tech Leads, Engineers, and much more!
 
-### Meetings Overview
-![Screenshot1](images/meetings.png)
-
-### Zoom Rooms Dashboard
-![Screenshot1](images/rooms.png)
-
-### Meeting Quality Overview
-![Screenshot1](images/meeting_quality.png)
-
-### User Details Dashboard
-![Screenshot1](images/user_details.png)
-
-### Geolocation Overview
-![Screenshot1](images/geo.png)
-
 ### Monitors
 
 1. Zoom Room Has Problem

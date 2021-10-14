@@ -4,9 +4,6 @@
 
 The Terraform integration allows organizations to actively monitor their Terraform accounts to gain a better understanding of how well it's working and how often it's being used. The integration even goes as deep as providing a permissions audit. 
 
-### RapDev Terraform Dashboard
-![Screenshot1](images/terraform_dashboard.png)
-
 ### Dashboards
 
 1. RapDev Terraform Dashboard
