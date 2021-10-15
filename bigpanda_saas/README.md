@@ -9,20 +9,6 @@ The end result: IT Ops, NOC, DevOps and SRE teams are able to quickly get a holi
 
 This offering in the Datadog marketplace provides access to the BigPanda platform. If you are already a BigPanda customer and need to connect your instance to Datadog, [click here](/account/settings#integrations/bigpanda) to set up the integration.
 
-![Before BigPanda & DD](images/bigpanda_dd_before.png)
-
-![After BigPanda & DD](images/bigpanda_dd_after.png)
-
-![BigPanda Incident Feed](images/BP1.png)
-
-![BigPanda Incident Timeline](images/BP2.png)
-
-![BigPanda Topology](images/BP3.png)
-
-![BigPanda Analytics](images/BP4.png)
-
-![BigPanda Analytics 2](images/BP5.png)
-
 ## Setup
 
 If you have just purchased BigPanda, a representative will reach out to you shortly to set up your environment and guide you through your deployment.
