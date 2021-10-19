@@ -1,0 +1,44 @@
+name: "crest_data_systems_dell_emc_isilon"
+files:
+- name: "crest_data_systems_dell_emc_isilon.yaml"
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: ip_address
+      required: true
+      description: IP Address needed in URL
+      value:
+        type: string
+        example: "<IP_ADDRESS>"
+    - name: username
+      required: true
+      description: "Username for API call"
+      value:
+        type: string
+        example: "<USERNAME>"
+    - name: password
+      required: true
+      description: "Password for API call"
+      value:
+        type: string
+        example: "<PASSWORD>"
+    - name: port
+      required: true
+      description: "Port for API call"
+      value:
+        type: string
+        example: "8080"
+    - name: certificate_path
+      required: false
+      description: "Absolute Path of the SSL Certificate"
+      value:
+        type: string
+        example: "<ABSOLUTE_PATH_TO_CERTIFICATE>"
+    - template: instances/default
+      overrides:
+        min_collection_interval.value.display_default: 15
+        min_collection_interval.value.example: 120
+        min_collection_interval.required: true

@@ -1,0 +1,432 @@
+{
+    "title": "Dell EMC Isilon - Quota Information",
+    "description": "",
+    "widgets": [
+        {
+            "id": 1247727116721252,
+            "layout": {
+                "x": 33,
+                "y": 0,
+                "width": 120,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "User Quota",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 7930085239088672,
+            "layout": {
+                "x": 33,
+                "y": 8,
+                "width": 30,
+                "height": 26
+            },
+            "definition": {
+                "title": "Count",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.quota_information.quota_type_count{cds.emc.isilon.quota-type:user_quotas_count,$Cluster}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2
+            }
+        },
+        {
+            "id": 1592466322997584,
+            "layout": {
+                "x": 64,
+                "y": 8,
+                "width": 89,
+                "height": 26
+            },
+            "definition": {
+                "title": "Usage (in MB)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.quota_information.quota_type_information{cds.emc.isilon.quota-type:user,$Cluster} by {cds.emc.isilon.quota-id,cds.emc.isilon.quota-space,cds.emc.isilon.quota-type}",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 8439617928726430,
+            "layout": {
+                "x": 33.076967592592595,
+                "y": 35,
+                "width": 120,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Directory Quota",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2024309066490394,
+            "layout": {
+                "x": 33,
+                "y": 43,
+                "width": 30,
+                "height": 26
+            },
+            "definition": {
+                "title": "Count",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.quota_information.quota_type_count{cds.emc.isilon.quota-type:directory_quotas_count,$Cluster}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2
+            }
+        },
+        {
+            "id": 1419030628725602,
+            "layout": {
+                "x": 64,
+                "y": 43,
+                "width": 89,
+                "height": 26
+            },
+            "definition": {
+                "title": "Usage (in MB)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.quota_information.quota_type_information{cds.emc.isilon.quota-type:directory,$Cluster} by {cds.emc.isilon.quota-id,cds.emc.isilon.quota-space,cds.emc.isilon.quota-type}",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 3495665277499762,
+            "layout": {
+                "x": 33.08333333333333,
+                "y": 70,
+                "width": 120,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Group Quota",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6856073991562952,
+            "layout": {
+                "x": 33,
+                "y": 78,
+                "width": 30,
+                "height": 26
+            },
+            "definition": {
+                "title": "Count",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.quota_information.quota_type_count{cds.emc.isilon.quota-type:group_quotas_count,$Cluster}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2
+            }
+        },
+        {
+            "id": 5180735199784386,
+            "layout": {
+                "x": 64,
+                "y": 78,
+                "width": 89,
+                "height": 26
+            },
+            "definition": {
+                "title": "Usage (in MB)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.quota_information.quota_type_information{cds.emc.isilon.quota-type:group,$Cluster} by {cds.emc.isilon.quota-id,cds.emc.isilon.quota-space,cds.emc.isilon.quota-type}",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 1482804849044842,
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Dell_Technologies/Dell_Technologies-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Dell_Technologies/Dell_Technologies-Logo.wine.png",
+                "sizing": "cover",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 509381169220030,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Quota Information\n- This dashboard provides quota information.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 5910483493962316,
+            "layout": {
+                "x": 0,
+                "y": 21,
+                "width": 31,
+                "height": 19
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. User Quota Count\n2. User Quota Usage (in MB)\n3. Directory Quota Count\n4. Directory Quota Usage (in MB)\n5. Group Quota Count\n6. Group Quota Usage (in MB)",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6796059794233428,
+            "layout": {
+                "x": 0,
+                "y": 41,
+                "width": 31,
+                "height": 21
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Metrics\n`Note: All metrics are prefixed with 'cds.emc.isilon'.`\n\n- Below are the metric names and the corresponding interval at which they are collected.\n  - quota_type_count - 1 hour\n  - quota_type_information - 1 hour",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Cluster",
+            "default": "*",
+            "prefix": "cds.emc.isilon.cluster"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": true,
+    "notify_list": [],
+    "id": "mvh-nqj-vwv"
+}

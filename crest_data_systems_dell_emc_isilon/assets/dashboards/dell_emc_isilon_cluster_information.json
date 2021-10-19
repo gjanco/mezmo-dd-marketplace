@@ -1,0 +1,883 @@
+{
+    "title": "Dell EMC Isilon - Cluster Information",
+    "description": "",
+    "widgets": [
+        {
+            "id": 6481720970872904,
+            "layout": {
+                "x": 33,
+                "y": 41,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Disk Usage",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 3862587641082198,
+            "layout": {
+                "x": 33,
+                "y": 49,
+                "width": 31,
+                "height": 21
+            },
+            "definition": {
+                "title": "Disk Usage (in GB)",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_overview.disk_usage{$Cluster} by {cds.emc.isilon.disk-type-with-usage}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2739723296738206,
+            "layout": {
+                "x": 65,
+                "y": 49,
+                "width": 60,
+                "height": 21
+            },
+            "definition": {
+                "title": "Disk Usage over Time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Used in %",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_overview.cluster_disk_usage_over_time{$Cluster}.rollup(avg, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 1605526673920670,
+            "layout": {
+                "x": 127,
+                "y": 8,
+                "width": 66,
+                "height": 31
+            },
+            "definition": {
+                "title": "Hard Drive Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "q": "avg:cds.emc.isilon.cluster_inventory.hard_drive_details{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster, cds.emc.isilon.bay, cds.emc.isilon.logical-number, cds.emc.isilon.type, cds.emc.isilon.status}",
+                        "alias": "Disk Index",
+                        "limit": 5000,
+                        "order": "asc"
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 4032583542485060,
+            "layout": {
+                "x": 195,
+                "y": 8,
+                "width": 24,
+                "height": 31
+            },
+            "definition": {
+                "type": "note",
+                "content": "**Field Descriptions:**\n1. **Node**: Node that the disk belongs to\n2. **Cluster**: Cluster that the disk belongs to\n3. **Bay**: Bay number of the disk\n4. **Logical Number**: Logical Number of the disk\n5. **Type**: Type of disk\n6. **Status**: Health status of the disk\n7. **Index**: Disk index",
+                "background_color": "gray",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "center",
+                "show_tick": true,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4754201551443502,
+            "layout": {
+                "x": 153,
+                "y": 40,
+                "width": 66,
+                "height": 31
+            },
+            "definition": {
+                "title": "SSD Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "q": "avg:cds.emc.isilon.cluster_inventory.ssd_details{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster, cds.emc.isilon.bay, cds.emc.isilon.logical-number, cds.emc.isilon.type, cds.emc.isilon.status}",
+                        "alias": "Disk Index",
+                        "limit": 5000,
+                        "order": "desc"
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 1748886822032524,
+            "layout": {
+                "x": 127,
+                "y": 40,
+                "width": 24,
+                "height": 31
+            },
+            "definition": {
+                "type": "note",
+                "content": "**Field Descriptions:**\n1. **Node**: Node that the disk belongs to\n2. **Cluster**: Cluster that the disk belongs to\n3. **Bay**: Bay number of the disk\n4. **Logical Number**: Logical Number of the disk\n5. **Type**: Type of disk\n6. **Status**: Health status of the disk\n7. **Index**: Disk index",
+                "background_color": "gray",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "center",
+                "show_tick": true,
+                "tick_pos": "50%",
+                "tick_edge": "right",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 8047820881997758,
+            "layout": {
+                "x": 127,
+                "y": 99,
+                "width": 92,
+                "height": 25
+            },
+            "definition": {
+                "title": "Node Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.in_bytes{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
+                        "alias": "In b/s",
+                        "limit": 50,
+                        "order": "desc"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.out_bytes{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
+                        "alias": "Out b/s",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.total_bytes{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
+                        "alias": "Total b/s",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.hdd_size{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
+                        "alias": "HDD Size (in GB)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.hdd_used_percentage{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
+                        "alias": "HDD Used(%)",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.ssd_size{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
+                        "alias": "SSD Size (in GB)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.ssd_used_percentage{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
+                        "alias": "SSD Used(%)",
+                        "cell_display_mode": [
+                            "bar"
+                        ],
+                        "aggregator": "avg"
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 5618117410534366,
+            "layout": {
+                "x": 33.08333333333333,
+                "y": 72,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Throughput Details",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 7414708596455838,
+            "layout": {
+                "x": 33,
+                "y": 80,
+                "width": 92,
+                "height": 31
+            },
+            "definition": {
+                "title": "External Network Throughput Rate over Time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Throughput Rate (Mbps)",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "sum:cds.emc.isilon.cluster_overview.external_network_throughput_rate_over_time{$Cluster}.rollup(sum, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 4265075259299060,
+            "layout": {
+                "x": 33,
+                "y": 112,
+                "width": 92,
+                "height": 31
+            },
+            "definition": {
+                "title": "File System Throughput over Time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "sum:cds.emc.isilon.cluster_overview.file_system_throughput_over_time{$Cluster} by {cds.emc.isilon.traffic-type}.rollup(sum, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 3325621282090628,
+            "layout": {
+                "x": 127,
+                "y": 91,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Node and Node Pool Details",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 7382798679926512,
+            "layout": {
+                "x": 127,
+                "y": 72,
+                "width": 92,
+                "height": 17
+            },
+            "definition": {
+                "title": "Storage Tiers",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.disk_used{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
+                        "alias": "Disk Used%",
+                        "limit": 50,
+                        "order": "desc"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.total_disk{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
+                        "alias": "Total Disk (in GB)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.virtual_hot_spare{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
+                        "alias": "Virtual Hot Spare (in GB)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.ssd_used{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
+                        "alias": "SSD Used%",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.total_ssd{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
+                        "alias": "Total SSD (in GB)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 620683584356256,
+            "layout": {
+                "x": 127,
+                "y": 125,
+                "width": 92,
+                "height": 18
+            },
+            "definition": {
+                "title": "Node Pools",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.disk_used{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
+                        "alias": "Disk Used(%)",
+                        "limit": 50,
+                        "order": "desc"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.total_disk{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
+                        "alias": "Total Disk (in GB)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.virtual_hot_spare{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
+                        "alias": "Virtual Hot Spare (in GB)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.ssd_used{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
+                        "alias": "SSD Used(%)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    },
+                    {
+                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.total_ssd{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
+                        "alias": "Total SSD (in GB)",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "aggregator": "avg"
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 3936133650898996,
+            "layout": {
+                "x": 33,
+                "y": 0,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "CPU Usage",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6003113442326990,
+            "layout": {
+                "x": 33,
+                "y": 8,
+                "width": 92,
+                "height": 31
+            },
+            "definition": {
+                "title": "CPU Usage over Time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_overview.cpu_usage_over_time{$Cluster} by {cds.emc.isilon.used-by}.rollup(avg, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 8507912768174504,
+            "layout": {
+                "x": 221,
+                "y": 37,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Other Information",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6735384202489454,
+            "layout": {
+                "x": 221,
+                "y": 45,
+                "width": 92,
+                "height": 28
+            },
+            "definition": {
+                "title": "Client Connections over Time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_overview.client_connections_over_time{$Cluster} by {cds.emc.isilon.node}.rollup(max, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 6667608811935580,
+            "layout": {
+                "x": 221,
+                "y": 8,
+                "width": 92,
+                "height": 27
+            },
+            "definition": {
+                "title": "License Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "aggregator": "avg",
+                        "cell_display_mode": [
+                            "number"
+                        ],
+                        "q": "avg:cds.emc.isilon.cluster_inventory.license_details{$Cluster} by {cds.emc.isilon.cluster, cds.emc.isilon.license_name, cds.emc.isilon.status, cds.emc.isilon.duration, cds.emc.isilon.expiry_date}",
+                        "alias": "index",
+                        "limit": 100,
+                        "order": "asc"
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 4423865209259554,
+            "layout": {
+                "x": 127,
+                "y": 0,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Storage Details",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1824697937640472,
+            "layout": {
+                "x": 221,
+                "y": 0,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "License Details",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 3481597739484662,
+            "layout": {
+                "x": 0.08333301544189453,
+                "y": 0,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Dell_Technologies/Dell_Technologies-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Dell_Technologies/Dell_Technologies-Logo.wine.png",
+                "sizing": "cover",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 3961122577392934,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Cluster Information\n- This dashboard provides cluster level information.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2412198214134002,
+            "layout": {
+                "x": 0,
+                "y": 21,
+                "width": 31,
+                "height": 33
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. CPU Usage over Time\n2. Disk Usage (in GB)\n3. Disk Usage over Time\n4. External Network Throughput Rate over Time\n5. File System Throughput over Time\n6. Hard Drive Details\n7. SSD Details\n8. Storage Tiers\n9. Node Details\n10. Node Pools\n11. License Details\n12. Client Connections over Time",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 8539752396387256,
+            "layout": {
+                "x": 0,
+                "y": 55,
+                "width": 31,
+                "height": 60
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Metrics\n`Note: All metrics are prefixed with 'cds.emc.isilon'.`\n\n- Below are the metric names and the corresponding interval at which they are collected.\n  - cpu_usage_over_time - 2 mins\n  - disk_usage - 10 mins\n  - cluster_disk_usage_over_time - 10 mins\n  - external_network_throughput_rate_over_time - 2 mins\n  - fileSystem_throughput_over_time - 2 mins\n  - hard_drive_details - 10 mins\n  - ssd_details - 10 mins\n  - storage_tiers.disk_used - 1 hour\n  - storage_tiers.total_disk - 1 hour\n  - storage_tiers.virtual_hot_spare - 1 hour\n  - storage_tiers.ssd_used - 1 hour\n  - storage_tiers.total_ssd - 1 hour\n  - node_details.in_bytes - 10 mins\n  - node_details.out_bytes - 10 mins\n  - node_details.total_bytes - 10 mins\n  - node_details.hdd_size - 10 mins\n  - node_details.hdd_used_percentage - 10 mins\n  - node_details.ssd_size - 10 mins\n  - node_details.ssd_used_percentage - 10 mins\n  - node_pools.disk_used - 1 hour\n  - node_pools.total_disk - 1 hour\n  - node_pools.virtual_hot_spare - 1 hour\n  - node_pools.ssd_used - 1 hour\n  -  node_pools.total_ssd - 1 hour\n  - license_details - 1 hour\n  - client_connections_over_time - 2 mins",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Cluster",
+            "default": "*",
+            "prefix": "cds.emc.isilon.cluster"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": true,
+    "notify_list": [],
+    "id": "n5e-xir-7ph"
+}

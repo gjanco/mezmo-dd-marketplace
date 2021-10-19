@@ -1,0 +1,649 @@
+{
+    "title": "Dell EMC Isilon - File System",
+    "description": "",
+    "widgets": [
+        {
+            "id": 6709034715771052,
+            "layout": {
+                "x": 33,
+                "y": 0,
+                "width": 108,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "File System Performance",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 418301533430042,
+            "layout": {
+                "x": 33,
+                "y": 8,
+                "width": 51,
+                "height": 29
+            },
+            "definition": {
+                "title": "File System Performance by Node over Time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Throughput(Mbps)",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.file_system_performance.file_system_performance_by_node_over_time{$Cluster,$Node} by {cds.emc.isilon.node}.rollup(avg, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 6567831671156796,
+            "layout": {
+                "x": 143,
+                "y": 0,
+                "width": 108,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "File System Cache Performance",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4451175291461058,
+            "layout": {
+                "x": 33,
+                "y": 38,
+                "width": 51,
+                "height": 29
+            },
+            "definition": {
+                "title": "Event Rate by Event Type over Time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Event Rate",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "query": "max:cds.emc.isilon.file_system_performance.event_rate_by_event_type_over_time{$Cluster,$Node} by {cds.emc.isilon.usage}.rollup(max, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 1845514493692350,
+            "layout": {
+                "x": 85,
+                "y": 38,
+                "width": 56,
+                "height": 29
+            },
+            "definition": {
+                "title": "File System Critical Events",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "max:cds.emc.isilon.file_system_performance.file_system_critical_events{$Cluster,$Node} by {cds.emc.isilon.event-rate}.rollup(max, 300)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 6039019567558410,
+            "layout": {
+                "x": 85,
+                "y": 8,
+                "width": 56,
+                "height": 29
+            },
+            "definition": {
+                "title": "Event Rate by Node over Time for Critical Events",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "query": "max:cds.emc.isilon.file_system_performance.event_rate_by_node_over_time_for_critical_events{$Cluster,$Node} by {cds.emc.isilon.node}.rollup(max, 300)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 7372418533499770,
+            "layout": {
+                "x": 143,
+                "y": 8,
+                "width": 52,
+                "height": 29
+            },
+            "definition": {
+                "title": "File System Cached Data Age in Hours",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.file_system_cache_performance.file_system_cached_data_age{$Cluster,$Node} by {cds.emc.isilon.node}.rollup(max, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "warm",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 7731227702398404,
+            "layout": {
+                "x": 196,
+                "y": 8,
+                "width": 55,
+                "height": 29
+            },
+            "definition": {
+                "title": "L2 Cache Read Wait (Mbps)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.file_system_cache_performance.l2_cache_read_wait_time{$Cluster,$Node} by {cds.emc.isilon.node}.rollup(max, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 464955854861368,
+            "layout": {
+                "x": 143,
+                "y": 38,
+                "width": 52,
+                "height": 29
+            },
+            "definition": {
+                "title": "L2 Cache Hit Rate for Read (Mbps)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.file_system_cache_performance.l2_cache_hit_rate{$Cluster,$Node} by {cds.emc.isilon.node}.rollup(max, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 7268561340532820,
+            "layout": {
+                "x": 196,
+                "y": 38,
+                "width": 55,
+                "height": 29
+            },
+            "definition": {
+                "title": "L2 Cache Prefetch Hit Rate (Mbps)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.file_system_cache_performance.l2_cache_prefetch_hit_rate{$Cluster,$Node} by {cds.emc.isilon.node}.rollup(max, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 1466977133430576,
+            "layout": {
+                "x": 143,
+                "y": 68,
+                "width": 108,
+                "height": 29
+            },
+            "definition": {
+                "title": "L2 Cache Miss Rate for Read (Mbps)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.file_system_cache_performance.l2_cache_miss_rate{$Cluster,$Node} by {cds.emc.isilon.node}.rollup(max, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 7016256797499104,
+            "layout": {
+                "x": 2.9213634532030985e-7,
+                "y": 1.0596381293402777e-7,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Dell_Technologies/Dell_Technologies-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Dell_Technologies/Dell_Technologies-Logo.wine.png",
+                "sizing": "cover",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 5240668173946842,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# File System\n- This dashboard provides file system details at the node level.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2281728772220516,
+            "layout": {
+                "x": 0,
+                "y": 21,
+                "width": 31,
+                "height": 27
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. File System Performance by Node over Time\n2. Event Rate by Event Type over Time\n3. Event Rate by Node over Time for Critical Events\n4. File System Critical Events\n5. File System Cached Data Age in Hours\n6. L2 Cache Hit Rate for Read (Mbps)\n7. L2 Cache Miss Rate for Read (Mbps)\n8. L2 Cache Read Wait (Mbps)\n9. L2 Cache Prefetch Hit Rate (Mbps)",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1872817443317988,
+            "layout": {
+                "x": 0,
+                "y": 49,
+                "width": 31,
+                "height": 39
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Metrics\n`Note: All metrics are prefixed with 'cds.emc.isilon'.`\n\n- Below are the metric names and the corresponding interval at which they are collected.\n  - file_system_performance_by_node_over_time - 2 mins\n  - event_rate_by_event_type_over_time - 2 mins\n  - event_rate_by_node_over_time_for_critical_events - 2 mins\n  - file_system_critical_events - 2 mins\n  - file_system_cached_data_age - 2 mins\n  - l2_cache_hit_rate - 2 mins\n  - l2_cache_miss_rate - 2 mins\n  - l2_cache_read_wait_time - 2 mins\n  - l2_cache_prefetch_hit_rate - 2 mins",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Cluster",
+            "default": "*",
+            "prefix": "cds.emc.isilon.cluster"
+        },
+        {
+            "name": "Node",
+            "default": "*",
+            "prefix": "cds.emc.isilon.node"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": true,
+    "notify_list": [],
+    "id": "sz7-jew-jnr"
+}

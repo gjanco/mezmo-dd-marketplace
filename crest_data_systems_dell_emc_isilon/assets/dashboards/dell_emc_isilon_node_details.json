@@ -1,0 +1,672 @@
+{
+    "title": "Dell EMC Isilon - Node Details",
+    "description": "",
+    "widgets": [
+        {
+            "id": 4327792142045212,
+            "layout": {
+                "x": 33,
+                "y": 69,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Disk Usage",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 3992247838317820,
+            "layout": {
+                "x": 33,
+                "y": 77,
+                "width": 30,
+                "height": 25
+            },
+            "definition": {
+                "title": "Disk Usage in GB",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 25,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.emc.isilon.node_details.disk_usage{$Cluster,$Node} by {cds.emc.isilon.usage}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2291483519505434,
+            "layout": {
+                "x": 65,
+                "y": 77,
+                "width": 60,
+                "height": 25
+            },
+            "definition": {
+                "title": "Disk usage over time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Used in %",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "max:cds.emc.isilon.node_details.disk_usage_over_time{$Cluster,$Node}.rollup(max, 600)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 6715856370454542,
+            "layout": {
+                "x": 33.06944444444444,
+                "y": 0,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "CPU Usage",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 527497231599032,
+            "layout": {
+                "x": 33.00000002068584,
+                "y": 46,
+                "width": 30,
+                "height": 21
+            },
+            "definition": {
+                "title": "Memory Usage in GB",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 25,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "query": "sum:cds.emc.isilon.node_details.memory_usage{$Cluster,$Node} by {cds.emc.isilon.usage}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7626355566352924,
+            "layout": {
+                "x": 33,
+                "y": 8,
+                "width": 92,
+                "height": 29
+            },
+            "definition": {
+                "title": "CPU usage over time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "max:cds.emc.isilon.node_details.cpu_usage_over_time{$Cluster,$Node} by {cds.emc.isilon.cpu-usage}.rollup(avg, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 2970964530101864,
+            "layout": {
+                "x": 127,
+                "y": 5.298190686175985e-8,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Throughput Details",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6210442232783668,
+            "layout": {
+                "x": 127,
+                "y": 8,
+                "width": 92,
+                "height": 29
+            },
+            "definition": {
+                "title": "File system throughput",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "sum:cds.emc.isilon.node_details.file_system_throughput{$Cluster,$Node} by {cds.emc.isilon.usage}.rollup(sum, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 2089629086169876,
+            "layout": {
+                "x": 127,
+                "y": 38,
+                "width": 92,
+                "height": 29
+            },
+            "definition": {
+                "title": "External Network Throughput in Mbps",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Throughput Rate",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "sum:cds.emc.isilon.node_details.external_network_throughput{$Cluster,$Node}.rollup(sum, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 3555279395369328,
+            "layout": {
+                "x": 221,
+                "y": 5.036960413207225e-7,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Power & Temprature Details",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4722229593809962,
+            "layout": {
+                "x": 221,
+                "y": 8,
+                "width": 92,
+                "height": 29
+            },
+            "definition": {
+                "title": "Power Details over Time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "max:cds.emc.isilon.node_details.power_details_over_time{$Cluster,$Node} by {cds.emc.isilon.sensor}.rollup(max, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 5358374600620388,
+            "layout": {
+                "x": 221,
+                "y": 38,
+                "width": 92,
+                "height": 29
+            },
+            "definition": {
+                "title": "Temperature Details over Time(max)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "max:cds.emc.isilon.node_details.temperature_details_over_time{$Cluster,$Node} by {cds.emc.isilon.sensor}.rollup(max, 120)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 8641733719924940,
+            "layout": {
+                "x": 33,
+                "y": 38,
+                "width": 92,
+                "height": 7
+            },
+            "definition": {
+                "type": "note",
+                "content": "Memory Usage",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4630668678004086,
+            "layout": {
+                "x": 65,
+                "y": 46,
+                "width": 60,
+                "height": 21
+            },
+            "definition": {
+                "title": "Memory Usage over Time in GB",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "max:cds.emc.isilon.node_details.memory_usage{$Cluster,$Node} by {cds.emc.isilon.usage}.rollup(max, 600)",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 5378851923522708,
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Dell_Technologies/Dell_Technologies-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Dell_Technologies/Dell_Technologies-Logo.wine.png",
+                "sizing": "cover",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 1917006652523400,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Node Details\n- This dashboard provides node level information.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4011019487303622,
+            "layout": {
+                "x": 0,
+                "y": 21,
+                "width": 31,
+                "height": 29
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. CPU Usage over Time\n2. Memory Usage in GB\n3. Memory Usage over Time in GB\n4. Disk Usage in GB\n5. Disk Usage over Time\n6. File system throughput\n7. External Network Throughput in Mbps\n8. Power Details over Time\n9. Temperature Details over Time (max)",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 5949705879410150,
+            "layout": {
+                "x": 0,
+                "y": 51,
+                "width": 31,
+                "height": 36
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Metrics\n`Note: All metrics are prefixed with 'cds.emc.isilon'.`\n\n- Below are the metric names and the corresponding interval at which they are collected.\n  - cpu_usage_over_time - 2 mins\n  - memory_usage - 2 mins\n  - disk_usage - 10 mins\n  - disk_usage_over_time - 10 mins\n  - file_system_throughput - 2 mins\n  - external_network_throughput - 2 mins\n  - power_details_over_time - 2 mins\n  - temperature_details_over_time - 2 mins",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Cluster",
+            "default": "*",
+            "prefix": "cds.emc.isilon.cluster"
+        },
+        {
+            "name": "Node",
+            "default": "*",
+            "prefix": "cds.emc.isilon.node"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": true,
+    "notify_list": [],
+    "id": "3a5-twt-q3h"
+}
