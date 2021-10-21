@@ -100,6 +100,7 @@ class SyntheticEmailCheck(AgentCheck):
             metric_tags = self.tags.copy()
             metric_tags.append("{}:{}".format("cloud", "aws"))
             metric_tags.append("{}:{}".format("region", metric.get("sourceRegion")))
+            metric_tags.append("{}:{}".format("probe_region", metric.get("sourceRegion")))
 
             bounce_type = metric.get("bounceType", None)
             bounce_sub_type = metric.get("bounceSubType", None)
@@ -118,6 +119,19 @@ class SyntheticEmailCheck(AgentCheck):
                 elapsed_seen,
                 tags=metric_tags,
             )
+
+            hop_list = metric.get("hopList", [])
+            for hop in hop_list:
+                hop_tags = metric_tags.copy()
+                hop_tags.append("{}:{}".format("relay_host", hop.get("host", None)))
+                hop_tags.append("{}:{}".format("relay_index", hop.get("index", None)))
+                hop_tags.append("{}:{}".format("relay_id", hop.get("id", None)))
+                hop_elapsed = float(hop.get("elapsed", 0))
+                self.gauge(
+                    "{}.hop.elapsed".format(self.metric_prefix),
+                    hop_elapsed,
+                    tags=hop_tags,
+                )
 
             if bounce_sub_type:
                 metric_tags.append("{}:{}".format("bounce_type", bounce_sub_type))

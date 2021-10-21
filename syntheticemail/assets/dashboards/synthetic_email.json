@@ -1,501 +1,1075 @@
 {
-    "title": "Synthetic Email",
-    "description": "",
     "author_name": "RapDev",
-    "widgets": [
-      {
-        "id": 0,
-        "definition": {
-          "type": "note",
-          "content": " US-EAST-1",
-          "background_color": "blue",
-          "font_size": "24",
-          "text_align": "right",
-          "show_tick": true,
-          "tick_pos": "50%",
-          "tick_edge": "right"
-        },
-        "layout": {
-          "x": 0,
-          "y": 22,
-          "width": 18,
-          "height": 7
-        }
-      },
-      {
-        "id": 1,
-        "definition": {
-          "type": "image",
-          "url": "https://files.rapdev.io/images/rapdev-dash-logo.png",
-          "sizing": "fit"
-        },
-        "layout": {
-          "x": 0,
-          "y": 0,
-          "width": 18,
-          "height": 17
-        }
-      },
-      {
-        "id": 2,
-        "definition": {
-          "type": "note",
-          "content": "EU-CENTRAL-1",
-          "background_color": "blue",
-          "font_size": "24",
-          "text_align": "center",
-          "show_tick": true,
-          "tick_pos": "50%",
-          "tick_edge": "right"
-        },
-        "layout": {
-          "x": 0,
-          "y": 37,
-          "width": 18,
-          "height": 7
-        }
-      },
-      {
-        "id": 3,
-        "definition": {
-          "type": "note",
-          "content": "AP-SOUTHEAST-2",
-          "background_color": "blue",
-          "font_size": "24",
-          "text_align": "center",
-          "show_tick": true,
-          "tick_pos": "50%",
-          "tick_edge": "right"
-        },
-        "layout": {
-          "x": 0,
-          "y": 53,
-          "width": 18,
-          "height": 10
-        }
-      },
-      {
-        "id": 4,
-        "definition": {
-          "type": "timeseries",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.rtt{$region,$email} by {region}",
-              "display_type": "line",
-              "style": {
-                "palette": "warm",
-                "line_type": "solid",
-                "line_width": "normal"
-              }
-            }
-          ],
-          "custom_links": [],
-          "yaxis": {
-            "label": "",
-            "scale": "linear",
-            "min": "auto",
-            "max": "auto",
-            "include_zero": true
-          },
-          "title": "Average RTT by Region (ms)",
-          "title_size": "16",
-          "title_align": "left",
-          "show_legend": false
-        },
-        "layout": {
-          "x": 20,
-          "y": 0,
-          "width": 61,
-          "height": 17
-        }
-      },
-      {
-        "id": 5,
-        "definition": {
-          "type": "toplist",
-          "requests": [
-            {
-              "q": "top(avg:rapdev.syntheticemail.rtt{$region,$email} by {region,email}, 10, 'mean', 'desc')"
-            }
-          ],
-          "custom_links": [],
-          "title": "Top Average RTT (ms)",
-          "title_size": "16",
-          "title_align": "left"
-        },
-        "layout": {
-          "x": 82,
-          "y": 0,
-          "width": 61,
-          "height": 17
-        }
-      },
-      {
-        "id": 6,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.rtt{region:us-east-1,$email}",
-              "aggregator": "avg"
-            }
-          ],
-          "custom_links": [],
-          "title": "Average RTT (ms)",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": false,
-          "custom_unit": "ms",
-          "precision": 0
-        },
-        "layout": {
-          "x": 20,
-          "y": 18,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 7,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.hops{region:us-east-1,$email}",
-              "aggregator": "avg"
-            }
-          ],
-          "custom_links": [],
-          "title": "Hops Count",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "hops",
-          "precision": 2
-        },
-        "layout": {
-          "x": 51,
-          "y": 18,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 8,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.last_sent{region:us-east-1,$email}",
-              "aggregator": "avg"
-            }
-          ],
-          "custom_links": [],
-          "title": "Seconds Elapsed Since Last Email",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "s",
-          "precision": 0
-        },
-        "layout": {
-          "x": 82,
-          "y": 18,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 9,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.last_seen{region:us-east-1,$email}",
-              "aggregator": "last",
-              "conditional_formats": [
-                {
-                  "comparator": "<=",
-                  "value": 330,
-                  "palette": "white_on_green"
-                },
-                {
-                  "comparator": ">",
-                  "value": 330,
-                  "palette": "white_on_yellow"
-                },
-                {
-                  "comparator": ">=",
-                  "value": 660,
-                  "palette": "white_on_red"
-                }
-              ]
-            }
-          ],
-          "custom_links": [],
-          "title": "Last Infrastructure Check-In (seconds)",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "s",
-          "precision": 2
-        },
-        "layout": {
-          "x": 113,
-          "y": 18,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 10,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.rtt{region:eu-central-1,$email}",
-              "aggregator": "avg"
-            }
-          ],
-          "custom_links": [],
-          "title": "Average RTT (ms)",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": false,
-          "custom_unit": "ms",
-          "precision": 0
-        },
-        "layout": {
-          "x": 20,
-          "y": 34,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 11,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.hops{region:eu-central-1,$email}",
-              "aggregator": "avg"
-            }
-          ],
-          "custom_links": [],
-          "title": "Hops Count",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "hops",
-          "precision": 2
-        },
-        "layout": {
-          "x": 51,
-          "y": 34,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 12,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.last_sent{region:eu-central-1,$email}",
-              "aggregator": "avg"
-            }
-          ],
-          "custom_links": [],
-          "title": "Seconds Elapsed Since Last Email",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "s",
-          "precision": 0
-        },
-        "layout": {
-          "x": 82,
-          "y": 34,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 13,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.last_seen{region:eu-central-1,$email}",
-              "aggregator": "last",
-              "conditional_formats": [
-                {
-                  "comparator": "<=",
-                  "value": 330,
-                  "palette": "white_on_green"
-                },
-                {
-                  "comparator": ">",
-                  "value": 330,
-                  "palette": "white_on_yellow"
-                },
-                {
-                  "comparator": ">=",
-                  "value": 660,
-                  "palette": "white_on_red"
-                }
-              ]
-            }
-          ],
-          "custom_links": [],
-          "title": "Last Infrastructure Check-In (seconds)",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "s",
-          "precision": 2
-        },
-        "layout": {
-          "x": 113,
-          "y": 34,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 14,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.rtt{region:ap-southeast-2,$email}",
-              "aggregator": "avg"
-            }
-          ],
-          "custom_links": [],
-          "title": "Average RTT (ms)",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": false,
-          "custom_unit": "ms",
-          "precision": 0
-        },
-        "layout": {
-          "x": 20,
-          "y": 50,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 15,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.hops{region:eu-central-1,$email}",
-              "aggregator": "avg"
-            }
-          ],
-          "custom_links": [],
-          "title": "Hops Count",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "hops",
-          "precision": 2
-        },
-        "layout": {
-          "x": 51,
-          "y": 50,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 16,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.last_sent{region:ap-southeast-2,$email}",
-              "aggregator": "avg"
-            }
-          ],
-          "custom_links": [],
-          "title": "Seconds Elapsed Since Last Email",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "s",
-          "precision": 0
-        },
-        "layout": {
-          "x": 82,
-          "y": 50,
-          "width": 30,
-          "height": 15
-        }
-      },
-      {
-        "id": 17,
-        "definition": {
-          "type": "query_value",
-          "requests": [
-            {
-              "q": "avg:rapdev.syntheticemail.last_seen{region:ap-southeast-2,$email}",
-              "aggregator": "last",
-              "conditional_formats": [
-                {
-                  "comparator": "<=",
-                  "value": 330,
-                  "palette": "white_on_green"
-                },
-                {
-                  "comparator": ">",
-                  "value": 330,
-                  "palette": "white_on_yellow"
-                },
-                {
-                  "comparator": ">",
-                  "value": 660,
-                  "palette": "white_on_green"
-                }
-              ]
-            }
-          ],
-          "custom_links": [],
-          "title": "Last Infrastructure Check-In (seconds)",
-          "title_size": "16",
-          "title_align": "left",
-          "autoscale": true,
-          "custom_unit": "s",
-          "precision": 2
-        },
-        "layout": {
-          "x": 113,
-          "y": 50,
-          "width": 30,
-          "height": 15
-        }
-      }
-    ],
-    "template_variables": [
-      {
-        "name": "region",
-        "default": "*",
-        "prefix": "region"
-      },
-      {
-        "name": "email",
-        "default": "*",
-        "prefix": "email"
-      }
-    ],
+    "description": "",
     "layout_type": "free",
-    "is_read_only": true,
-    "notify_list": [],
-    "id": 30378
-  }
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "region",
+            "prefix": "probe_region"
+        },
+        {
+            "default": "*",
+            "name": "email",
+            "prefix": "email"
+        }
+    ],
+    "title": "Synthetic Email v1.1.0",
+    "widgets": [
+        {
+            "definition": {
+                "background_color": "blue",
+                "content": " US-EAST-1",
+                "font_size": "18",
+                "show_tick": true,
+                "text_align": "right",
+                "tick_edge": "right",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 0,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 0,
+                "y": 18
+            }
+        },
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-dash-logo.png"
+            },
+            "id": 1,
+            "layout": {
+                "height": 17,
+                "width": 18,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "background_color": "blue",
+                "content": "EU-CENTRAL-1",
+                "font_size": "18",
+                "show_tick": true,
+                "text_align": "right",
+                "tick_edge": "right",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 2,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 0,
+                "y": 27
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.rtt{$region,$email} by {region}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average RTT by Region (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4,
+            "layout": {
+                "height": 17,
+                "width": 56,
+                "x": 20,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.rtt{$region,$email} by {region,email}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Top Average RTT (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 5,
+            "layout": {
+                "height": 17,
+                "width": 52,
+                "x": 77,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "ms",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.rtt{$email,probe_region:us-east-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Average RTT (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 20,
+                "y": 18
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "hops",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.hops{$email,probe_region:us-east-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Hops Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 39,
+                "y": 18
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "ms",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.rtt{$email,probe_region:eu-central-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Average RTT (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 10,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 20,
+                "y": 27
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "hops",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.hops{$email,probe_region:eu-central-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Hops Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 11,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 39,
+                "y": 27
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "ms",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.rtt{$email,probe_region:ap-southeast-2}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Average RTT (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 14,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 20,
+                "y": 45
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "hops",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.hops{$email,probe_region:ap-southeast-2}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Hops Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 15,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 39,
+                "y": 45
+            }
+        },
+        {
+            "definition": {
+                "background_color": "blue",
+                "content": "AP-SOUTHEAST-1",
+                "font_size": "18",
+                "show_tick": true,
+                "text_align": "right",
+                "tick_edge": "right",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 4891569715096190,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 4.873806222433399e-07,
+                "y": 36
+            }
+        },
+        {
+            "definition": {
+                "background_color": "blue",
+                "content": "AP-SOUTHEAST-2",
+                "font_size": "18",
+                "show_tick": true,
+                "text_align": "right",
+                "tick_edge": "right",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 6794722517178357,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 0,
+                "y": 45
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "ms",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.rtt{$email,probe_region:ap-southeast-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Average RTT (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3509455746668087,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 20,
+                "y": 36
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "hops",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.hops{$email,probe_region:ap-southeast-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Hops Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3850509504909239,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 39,
+                "y": 36
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "ms",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.rtt{$email,probe_region:ap-south-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Average RTT (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7661349869138094,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 20,
+                "y": 54
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "hops",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.hops{$email,region:ap-south-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Hops Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5977628933818611,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 39,
+                "y": 54
+            }
+        },
+        {
+            "definition": {
+                "background_color": "blue",
+                "content": "AP-SOUTH-1",
+                "font_size": "18",
+                "show_tick": true,
+                "text_align": "right",
+                "tick_edge": "right",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 7525221922509644,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 0,
+                "y": 54
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_unit": "ms",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.rtt{$email,probe_region:ap-northeast-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Average RTT (ms)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 818978213584233,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 20,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "hops",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.hops{$email,probe_region:ap-northeast-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Hops Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4924854899941441,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 39,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "background_color": "blue",
+                "content": "AP-NORTHEAST-1",
+                "font_size": "18",
+                "show_tick": true,
+                "text_align": "right",
+                "tick_edge": "right",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 4542078462434130,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 0,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.syntheticemail.hop.elapsed{$region,$email} by {relay_index}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "time": {},
+                "title": "Max Hop Elapsed (All Regions, Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4514763241152290,
+            "layout": {
+                "height": 17,
+                "width": 52,
+                "x": 77,
+                "y": 18
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.last_sent{$email,probe_region:us-east-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Last Sent (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1935658176486171,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 58,
+                "y": 18
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.last_sent{$email,probe_region:eu-central-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Last Sent (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3860003757545993,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 58,
+                "y": 27
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.last_sent{$email,region:ap-southeast-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Last Sent (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 7545712819191266,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 58,
+                "y": 36
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.last_sent{$email,probe_region:ap-southeast-2}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Last Sent (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5183146760555177,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 58,
+                "y": 45
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.last_sent{$email,probe_region:ap-south-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Last Sent (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 889578173246215,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 58,
+                "y": 54
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "s",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.last_sent{$email,probe_region:ap-northeast-1}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Last Sent (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2487150222969899,
+            "layout": {
+                "height": 8,
+                "width": 18,
+                "x": 58,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.syntheticemail.bounced{$region}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Max Bounces (All Regions)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6507021940296191,
+            "layout": {
+                "height": 17,
+                "width": 52,
+                "x": 77,
+                "y": 54
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.syntheticemail.hops{$region,$email} by {region,email}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "dashed",
+                            "line_width": "thick",
+                            "palette": "cool"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "time": {},
+                "title": "Hop Count By Email, Region",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 8199792982606507,
+            "layout": {
+                "height": 17,
+                "width": 52,
+                "x": 77,
+                "y": 36
+            }
+        }
+    ]
+}
