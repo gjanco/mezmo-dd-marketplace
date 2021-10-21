@@ -141,8 +141,20 @@ This isn't the metric you're looking for? Missing a critical feature for your or
 ### Installation
 
 1. z/IRIS server: IronTap
-	1. [IronTap Image](https://public.mainstorconcept.com/home/IronTap-Image.1121255425.html)
-	2. [Configure IronTap server](https://public.mainstorconcept.com/home/Configure-IronTap-container.1121517569.html)
+	1. Login Data:
+		* username: datadog-trial
+		* password: We will provide the password for the repository with the license via email within 24 hours.
+	2. [IronTap Image](https://public.mainstorconcept.com/home/IronTap-Image.1121255425.html)
+		* Enter the command in your CLI and follow the prompts entering your login data.  
+		
+		    docker login mainstorconcept.jfrog.io
+		
+		* Enter the second command to obtain z/IRIS.  		
+		
+			docker pull mainstorconcept.jfrog.io/ziris-docker-release/irontap:latest-kafka-otel
+	
+	3. [Configure IronTap server](https://public.mainstorconcept.com/home/Configure-IronTap-container.1121517569.html)
+	
 2. z/IRIS z/OS Client
 	1. [Install z/IRIS z/OS Client](https://public.mainstorconcept.com/home/Install-z%2FIRIS-clients.713228788.html)
 	2. [Configure z/IRIS Clients](https://public.mainstorconcept.com/home/Configure-z%2FIRIS-Clients.713228858.html)
