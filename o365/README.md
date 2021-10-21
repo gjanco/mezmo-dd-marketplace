@@ -4,17 +4,15 @@ The Microsoft Office 365 integration monitors product activity, usage and licens
 
 All integrations can be toggled on and off in the ```o365.yaml``` file as part of the integration.  Its recommended to disable any products you dont want to monitor to avoid usage of additional metrics.
 
-Below are some screenshots of the dashboard that is included with the integration.
-
 ## Setup
 
 ### Datadog Integration Install
 
 Linux:
-* `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.0.3`
+* `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.1.0`
 
 Windows:
-* `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-o365==2.0.3`
+* `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-o365==2.1.0`
 
 ### Microsoft Office 365 Configuration
 
@@ -74,17 +72,47 @@ The Microsoft Office 365 integration requires permissions managed through your o
 
 9. The integration configuration defaults to `probe_mode: true`, which will operate with application performance synthetics only. For your primary integration location, change `probe_mode: false` in the configuration yaml to enable report metrics and your tenant's Office 365 incident events.
 
-10. Add the `office` tag to the integration configuration in `o365.d/o365.yaml` file to correspond to each office location from which the integration will be running synthetic checks, e.g.:
+10. (Optional) On the primary site running the O365 reports, which is configured with `probe_mode: true`, enable TopN for Outlook Mailbox Storage and Deleted Used metrics by user. Update the `o365.d/o365.yaml` file and set the parameter `outlook_mailbox_topn` to an appropriate positive integer value of your choosing. A value of `0` disables TopN Outlook mailbox metrics, while a value of `-1` enables collection of all users Outlook mailbox used metrics.
+
+11. Add the `office` tag to the integration configuration in `o365.d/o365.yaml` file to correspond to each office location from which the integration will be running synthetic checks, e.g.:
 ```
 tags:
   - "office:boston"
 ```
 
-11. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7).
+12. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7).
 
 ### Validation
 
 [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-status-and-information) and look for `o365` under the Checks section.
+
+### Known Issues
+<hr>
+
+**After enabling `outlook_mailbox_topn` the `upn` and `display_name` tags are displayed as Azure Object GUIDs, masking expected user information.**
+
+Microsoft changed the Graph Reports data to default to GUID values as an additional privacy feature. You can switch back to using the unmasked values with the following configuration change:
+
+*Global administrators can revert this change for their tenant and show identifiable user information if their organizations privacy practices allow. This can be achieved in the admin center by going to the Settings > Org Settings > Services page and selecting 'Reports'. Under 'choose how to show user information', select 'Show identifiable user information in reports'. Showing identifiable user information is a logged event in the Microsoft 365 Compliance Center Audit log.*
+
+<hr>
+
+**Synthetic Email with Outlook data is not displayed in the Office365 dashboard. The Datadog Agent O365 integration reports successful execution and the synthetic email user mailbox shows properly forwarded emails.**
+
+Microsoft M365 Exchange implements the [Sender Rewriting Scheme (SRS)](https://docs.microsoft.com/en-us/office365/troubleshoot/antispam/sender-rewriting-scheme) which targets auto-forwarding incompatability with SPF. When this feature is triggered, the Office 365 integration synthetic email probes are re-enveloped by M365 Exchange and are no longer recognized as responses to the initial synthetic email probes.
+
+As a resolution, create a user mailbox redirect rule in the synthetic user's Outlook instead of a forwarding rule.
+
+	1. Log in to Outlook with the synthetic user created for the O365 integration.
+	2. Navigate to `Settings` -> `View all Outlook settings` -> `Rules` -> `Add new rule`.
+	3. Configure the following rule:
+		3.1 [Name] "Redirect Synthetic Probe"
+		3.2 [Condition] "Subject Includes" = "Synthetic Email Probe"
+		3.3 [Add an action] "Redirect to" = "probe@synth-rapdev.io"
+		3.4 (Optional) [Add an action] "Mark as read"
+		3.5 (Optional) [Add an action] "Delete"
+
+Once the rule is configured, email responses will populate Datadog metrics and dashboards within 5-10 minutes.
 
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 

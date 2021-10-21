@@ -1,0 +1,288 @@
+{
+    "author_name": "RapDev",
+    "description": null,
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "default": "*",
+            "name": "Organization_ID",
+            "prefix": "tenant_id"
+        }
+    ],
+    "title": "Office365 Outlook Mailboxes v2.1.0",
+    "widgets": [
+        {
+            "definition": {
+                "sizing": "fit",
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-dash-logo.png"
+            },
+            "id": 39,
+            "layout": {
+                "height": 11,
+                "width": 21,
+                "x": 81,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Number of Mailboxes",
+                                "cell_display_mode": "bar",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 50,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.o365.outlook.mailbox.quota{$Organization_ID} by {category}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Outlook Mailbox Quota Counts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 41,
+            "layout": {
+                "height": 21,
+                "width": 48,
+                "x": 54,
+                "y": 13
+            }
+        },
+        {
+            "definition": {
+                "sizing": "zoom",
+                "type": "image",
+                "url": "https://office365.delaware.gov/wp-content/uploads/sites/135/2019/06/Outlook_256x256-1.png"
+            },
+            "id": 3851208434286448,
+            "layout": {
+                "height": 11,
+                "width": 13,
+                "x": 0,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.o365.outlook.mailbox.total{$Organization_ID}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.o365.outlook.mailbox.quota{category:send_prohibited,$Organization_ID}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    },
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.o365.outlook.mailbox.quota{category:send/receive_prohibited,$Organization_ID}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "orange"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Mailbox Total Quota Limits",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6317660564575744,
+            "layout": {
+                "height": 11,
+                "width": 33,
+                "x": 47,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "markers": [],
+                "requests": [
+                    {
+                        "display_type": "area",
+                        "on_right_yaxis": false,
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.o365.outlook.mailbox.storage.used{$Organization_ID}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "cool"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Mailbox Total Storage Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 868476748718055,
+            "layout": {
+                "height": 11,
+                "width": 32,
+                "x": 14,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "event_size": "l",
+                "query": "tags:app:o365,workload:exchange",
+                "tags_execution": "and",
+                "time": {
+                    "live_span": "1w"
+                },
+                "title": "Office 365 Exchange Events",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "event_stream"
+            },
+            "id": 2094290673508610,
+            "layout": {
+                "height": 36,
+                "width": 102,
+                "x": 0,
+                "y": 35
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Mailbox Storage Used",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            },
+                            {
+                                "alias": "Deleted Used",
+                                "formula": "query2"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.o365.outlook.mailbox.detail.storage.used{$Organization_ID} by {display_name}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "max:rapdev.o365.outlook.mailbox.detail.deleted.used{$Organization_ID} by {display_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Top 50 Mailboxes Storage and Deleted Used",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 1685249820026670,
+            "layout": {
+                "height": 21,
+                "width": 53,
+                "x": 0,
+                "y": 13
+            }
+        }
+    ]
+}

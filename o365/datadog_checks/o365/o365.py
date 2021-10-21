@@ -50,6 +50,7 @@ REPORTS = {
         "Reports.OutlookActivity.UserCounts": "OutlookActivityUserCounts",
         "Reports.OutlookAppUsage.UserCounts": "OutlookAppUsageAppsUserCounts",
         "Reports.OutlookAppUsage.VersionsUserCounts": "OutlookAppUsageVersionsUserCounts",
+        "Reports.OutlookMailboxUsage.Detail": "OutlookMailboxUsageDetail",
         "Reports.OutlookMailboxUsage.MailboxCounts": "OutlookMailboxUsageMailboxCounts",
         "Reports.OutlookMailboxUsage.QuotaStatusMailboxCounts": "OutlookMailboxUsageQuotaStatusMailboxCounts",
         "Reports.OutlookMailboxUsage.Storage": "OutlookMailboxUsageStorage",        
@@ -323,7 +324,6 @@ class O365Check(AgentCheck):
 
                     send_metric = getattr(self, metric_type)
                     send_metric(metric_name, metric_value, tags=metric_tags + append_tags)
-            return
 
     def period_report_to_metrics(self, url, headers, row_fields, tag_fields, agg_fields, tags):
         aggregates = {}
@@ -383,6 +383,94 @@ class O365Check(AgentCheck):
                 metric_tags = tags.copy()
                 send_metric = getattr(self, metric_type)
                 send_metric(metric_name, aggregates.setdefault(column_name, -1.0), tags=metric_tags + append_tags)
+
+    def daily_report_to_metrics_topn(self, url, headers, row_fields, tag_fields, tags, topn):
+        with rq.get(url, headers=headers, stream=True, timeout=REQ_TIMEOUT) as r:
+            r.raise_for_status()
+            lines = (line.decode("utf-8") for line in r.iter_lines())
+
+            # latest daily report date
+            latest_date = "1900-01-01"
+            rows = []
+            for row in csv.DictReader(lines):
+                rows.append(row)
+                report_date = row.get("Report Date")
+                if  report_date > latest_date:
+                    latest_date = report_date
+
+            metric_lists = {}
+            for row in rows:
+                if row.get("Report Date") < latest_date:
+                    continue
+
+                metric_tags = tags.copy()
+                for column, tag_key in tag_fields.items():
+                    tag_val = row.get(column, None)
+                    metric_tags.append("{}:{}".format(tag_key, tag_val))
+
+                for definition in row_fields:
+                    column_name = definition.get("column_name")
+                    metric_name = definition.get("metric_name")
+                    metric_type = definition.get("metric_type")
+                    default_val = definition.get("default_val", None)
+                    parser_func = definition.get("parser_func")
+                    append_tags = definition.get("append_tags", [])
+
+                    column_value = row.get(column_name, default_val)
+                    parse_method = getattr(self, parser_func)
+                    metric_value = parse_method(column_value)
+
+                    # Ignore column tags on refresh metrics
+                    if metric_name.endswith('.refresh'):
+                        metric_tags = tags.copy()
+
+                    metric_lists.setdefault(metric_name, []).append((metric_type, 
+                        metric_value, metric_tags + append_tags))
+
+                for metric_name in metric_lists.keys():
+                    top = sorted(metric_lists[metric_name], key = lambda x: x[1], reverse=True)[:topn]
+
+                    for m in top:
+                        (metric_type, metric_value, tags) = m
+                        send_metric = getattr(self, metric_type)
+                        send_metric(metric_name, metric_value, tags=tags)
+
+    def period_report_to_metrics_topn(self, url, headers, row_fields, tag_fields, tags, topn):
+        aggregates   = {}
+        metric_lists = {}
+        with rq.get(url, headers=headers, stream=True, timeout=REQ_TIMEOUT) as r:
+            r.raise_for_status()
+            lines = (line.decode("utf-8") for line in r.iter_lines())
+
+            for row in csv.DictReader(lines):
+                for definition in row_fields:
+                    column_name = definition.get("column_name")
+                    metric_name = definition.get("metric_name")
+                    metric_type = definition.get("metric_type")
+                    default_val = definition.get("default_val", None)
+                    parser_func = definition.get("parser_func")
+                    append_tags = definition.get("append_tags", [])
+
+                    column_value = row.get(column_name, default_val)
+                    parse_method = getattr(self, parser_func)
+                    metric_value = parse_method(column_value)
+
+                    metric_tags = tags.copy()
+                    if not metric_name.endswith('.refresh'):
+                        for column, tag_key in tag_fields.items():
+                            tag_val = row.get(column, None)
+                            metric_tags.append("{}:{}".format(tag_key, tag_val))
+
+                    metric_lists.setdefault(metric_name, []).append((metric_type, 
+                        metric_value, metric_tags + append_tags))
+                    
+        for metric_name in metric_lists.keys():
+            top = sorted(metric_lists[metric_name], key = lambda x: x[1], reverse=True)[:topn]
+
+            for m in top:
+                (metric_type, metric_value, metric_tags) = m
+                send_metric = getattr(self, metric_type)
+                send_metric(metric_name, metric_value, tags=metric_tags)
 
     def get_synthetic_http_metric(self, metric_pre, verb, url, headers, data, tags):
         metric_tags = tags.copy()
@@ -820,6 +908,49 @@ class O365Check(AgentCheck):
         ]
 
         self.daily_report_to_metrics(report_url, report_headers, row_fields, tag_fields, self.tags)
+        return
+
+    ##########################################################################################
+    ## Reports.OutlookMailboxUsage (TopN)
+    ##########################################################################################
+    def OutlookMailboxUsageDetail(self, period="d7"):
+        report_prefix   = "{}.{}".format(self.metric_prefix, "outlook.mailbox.detail")
+        report_path     = "v1.0/reports/getMailboxUsageDetail(period='{}')".format(period)
+        report_host     = self.instance.get("graph_url", "https://graph.microsoft.com")
+        report_url      = "{}/{}".format(report_host, report_path)
+        report_token    = self.reports_token.get("access_token", None)
+        report_headers  = {"Authorization": "Bearer {}".format(report_token)}
+
+        tag_fields = {
+            "User Principal Name": "upn",
+            "Display Name": "display_name"
+        }
+        col_fields = []
+        row_fields = [
+            {
+                "column_name": self.report_refresh_column,
+                "metric_name": "{}.refresh".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_elapsed_days",  
+            },
+            {
+                "column_name": "Storage Used (Byte)",
+                "metric_name": "{}.storage.used".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            },
+            {
+                "column_name": "Deleted Item Size (Byte)",
+                "metric_name": "{}.deleted.used".format(report_prefix),
+                "metric_type": "gauge",
+                "parser_func": "parse_float",
+            }
+        ]
+
+        topN = self.instance.get("outlook_mailbox_topn", 0)
+        if topN != 0:
+            self.period_report_to_metrics_topn(report_url, report_headers, row_fields, tag_fields, 
+                self.tags, topN )
         return
 
     ##########################################################################################

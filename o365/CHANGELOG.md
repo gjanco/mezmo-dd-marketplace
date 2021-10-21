@@ -1,5 +1,11 @@
 # CHANGELOG - o365
 
+## 2.1.0 / 2021-09-30
+
+* [Added] feature to report on top Outlook mailbox storage used and deleted dimensioned by user principal. Feature is enabled and configured with the `outlook_mailbox_topn` parameter.
+* [Added] outlook mailboxes dashboard.
+* [Fixed] minor configuration issues with dashboards.
+
 ## 2.0.3 / 2021-06-11
 
 * [Added] updated app registration permissions to more specific scopes.
