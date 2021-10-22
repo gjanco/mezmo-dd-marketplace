@@ -57,7 +57,7 @@ Email: [support@shoreline.io][2]
 For more information, see the [Shoreline documentation][9].
 
 [1]: images/integrate_shoreline_and_datadog.png
-[2]: support@shoreline.io
+[2]: mailto:support@shoreline.io
 [3]: https://shoreline.io/datadog?source=DatadogMarketplace
 [4]: https://docs.shoreline.io/integrations/datadog
 [5]: https://docs.shoreline.io/installation/kubernetes
