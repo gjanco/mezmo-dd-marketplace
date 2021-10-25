@@ -7,18 +7,17 @@ After signup, this integration copies a dashboard into your Datadog account and 
 
 The dashboard shows a view of your Datadog's account monitoring status and lets you generate a report for monitored and unmonitored metrics. The first event monitor alerts you when Trek10 discovers new important AWS CloudWatch metrics without corresponding monitors. The second event monitor informs you of new CloudWatch metrics added to our recommendations list that matches AWS services you use.
 
-![](images/maindashview.png)
 
 
 *Have a specific request for this Datadog tool, looking for 24/7 managed services for AWS with a platform built on Datadog, or need expertise on AWS or Datadog? Reach out to our sales team [sales team](https://trek10.com/contact) and let us explore how we can help you*
 
 ### Metrics
 * Trek10 will push a metric nightly, trek10.coverage.aws_metric_count, that can be used to see how many metrics are currently being ingested into your Datadog account that don't have monitors for them. The metric will have the tag `metric_type` that can be filtered down to the values `all_metrics`, `metrics_monitored`, and `monitoring_recommendations`. 
-![](images/metric_image.png)
-   
+
+
 ### Events
 * Trek10 also pushes events when we find unmonitored services. The event will link you back to the primary dashboard so you can see recent recommendations as well generate a report.
-![](images/event_image.png)
+
    
 ### Monitors
 * Trek10 provides two monitors to alert you when you have unmonitored services.
@@ -26,6 +25,13 @@ The dashboard shows a view of your Datadog's account monitoring status and lets 
 ### Dashboards
 * Trek10 provides a centralized, high level, dashboard that allows you to see a count of unmonitored metrics, see recent recommendations, generate a PDF report of all recommendations, and control whether the integration checks your account nightly for new recommendations.
 
+### Usage
+The main use of this integration is to allow you to quickly see which AWS metrics you have in your account that you don't have corresponding monitors for. You can check in on the dashboard weekly and generate a report, or you can set up monitors to alert you daily if you would rather be notified that way. 
+
+### Vendor Information
+* Trek10 
+* Bio: We are technical gurus and builders at heart. Long time users of AWS and Datadog we have helped numerous companies in their adoptions of both with professional service and training engagements. We primarily use Datadog as a tool in our managed services for AWS. We took an internal tool that lets us know when we need to add monitors to one of our client's accounts and modified it for your use.
+* website: trek10.com
 
 ## Setup
 No big setup required!
@@ -52,10 +58,4 @@ This application is made available through the Marketplace and is supported by a
 
 
 
-## Usage
-The main use of this integration is to allow you to quickly see which AWS metrics you have in your account that you don't have corresponding monitors for. You can check in on the dashboard weekly and generate a report, or you can set up monitors to alert you daily if you would rather be notified that way. 
 
-## Vendor Information
-* Trek10 
-* Bio: We are technical gurus and builders at heart. Long time users of AWS and Datadog we have helped numerous companies in their adoptions of both with professional service and training engagements. We primarily use Datadog as a tool in our managed services for AWS. We took an internal tool that lets us know when we need to add monitors to one of our client's accounts and modified it for your use.
-* website: trek10.com
