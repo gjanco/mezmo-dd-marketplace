@@ -1,4 +1,4 @@
-# Moogsoft Observability Cloud
+# Moogsoft
 
 ## Overview
 
@@ -7,10 +7,6 @@ Easily integrate Datadog and Moogsoft for combined AI monitoring and observabili
 Moogsoft provides an advanced self-servicing AI-driven observability platform that allows software engineers, developers, and operations to instantly see everything, know what's wrong, and fix things faster.
 
 Moogsoft delivers an enterprise-class, cloud-native platform that empowers customers to drive adoption at their own pace at a much lower cost.
-
-![Moogsoft Correlation](images/moogsoft.correlation.png)
-
-![Moogsoft Dashboard](images/moogsoft.dashboard.png)
 
 ### Observe
 
@@ -24,11 +20,9 @@ Watch alert volumes go down and see productivity go up. We help eliminate event 
 
 See everything in one view. We aggregate all of your apps, services, and infrastructure alerts to a single console for increased agility, fewer alerts, and faster resolution times.
 
-### Moogsoft Observability Cloud Data Flow
+### Moogsoft Data Flow
 
-![Moogsoft Correlation](images/moogsoft.main.jpg)
-
-![Moogsoft Main](images/moogsoft.flow.png)
+Data flows through Moogsoft gaining context and reducing noise at each step. Metrics become events, events become stateful alerts, and alerts are correlated into incidents.
 
 ## Setup
 
