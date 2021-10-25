@@ -311,9 +311,11 @@ The Datadog Mule® Integration does not include any events.
 
 ## Support
 
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][11] to purchase this application. 
-
 For any support inquiry, contact IO Connect Services support at [support_ddp@ioconnectservices.com][9].
+
+---
+
+This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][11] to purchase this application.
 
 ## About IO Connect Services
 
