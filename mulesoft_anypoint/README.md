@@ -18,7 +18,7 @@ You can use these metrics to take advantage of the out-of-the-box dashboards and
 
 ![Operations: Infrastructure dashboard](images/dmi_ops_infra.png)
 
-![Operations: Infrastructure dashboard](images/dmi_ops_apis.png)
+![Operations: APIs dashboard](images/dmi_ops_apis.png)
 
 ![Operations: Resources allocation and usage dashboard](images/dmi_ops_allocation.png)
 
@@ -55,11 +55,7 @@ Use the Datadog Connector for Mule 4 with Datadog APM tracing to gain visibility
 
 Measure the performance of the operations in your flows as granular as needed using spans.
 
-![Datadog APM](images/dmi_apm_trace.png)
-
 Also, correlate the logs generated within a transaction in a single trace to narrow down any performance optimization or troubleshooting scope.
-
-![Datadog APM](images/dmi_apm_logs.png)
 
 ### **Troubleshooting**
 
