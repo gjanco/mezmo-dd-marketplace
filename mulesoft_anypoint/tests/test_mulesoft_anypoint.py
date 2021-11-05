@@ -1,8 +1,8 @@
 import os
 
 import pytest
-from datadog_checks.dev import get_here
 
+from datadog_checks.dev import get_here
 from datadog_checks.mulesoft_anypoint import MulesoftAnypointCheck
 
 from .docker.common import get_absolute_path_list, load_endpoints
@@ -19,9 +19,7 @@ from datadog_checks.mulesoft_anypoint.vendor.integration_core.readers.mulesoft_a
 
 def run_integration(aggregator, instances, configured_init_config, check_metrics=True):
     for instance in instances:
-        endpoints = load_endpoints(
-            os.path.join(get_here(), "docker", "apis"), instance.get("api_filter")
-        )
+        endpoints = load_endpoints(os.path.join(get_here(), "docker", "apis"), instance.get("api_filter"))
         c = MulesoftAnypointCheck(
             "mulesoft_anypoint",
             {},
@@ -42,10 +40,7 @@ def run_integration(aggregator, instances, configured_init_config, check_metrics
                         aggregator.assert_metric(
                             ".".join([metric_prefix, k]),
                             value=v,
-                            tags=[
-                                str(key + ":" + str(value))
-                                for key, value in tagslist.items()
-                            ],
+                            tags=[str(key + ":" + str(value)) for key, value in tagslist.items()],
                             metric_type=aggregator.METRIC_ENUM_MAP[metric.get("type")],
                         )
             aggregator.assert_service_check(
@@ -106,9 +101,7 @@ def test_collect_results(
     instance,
     aggregator,
 ):
-    metric_prefix = get_metrics_prefix(
-        BASE_PREFIX, configured_init_config.get("app_env")
-    )
+    metric_prefix = get_metrics_prefix(BASE_PREFIX, configured_init_config.get("app_env"))
     check = MulesoftAnypointCheck(
         "mulesoft_anypoint",
         {},

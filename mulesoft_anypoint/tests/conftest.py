@@ -1,6 +1,7 @@
 import os
 
 import pytest
+
 from datadog_checks.dev import docker_run, get_docker_hostname, get_here
 
 from .docker.common import load_endpoints
@@ -77,21 +78,17 @@ def instance4():
 @pytest.fixture
 def configured_init_config():
     init_config_copy = INIT_CONFIG.copy()
-    init_config_copy["hosts"]["anypoint"] = init_config_copy["hosts"][
-        "anypoint"
-    ].format(get_docker_hostname())
-    init_config_copy["hosts"]["object_store_v2"] = init_config_copy["hosts"][
-        "object_store_v2"
-    ].format(get_docker_hostname())
-    init_config_copy["hosts"]["object_store_v2_stats"] = init_config_copy["hosts"][
-        "object_store_v2_stats"
-    ].format(get_docker_hostname())
-    init_config_copy["hosts"]["mule_server"] = init_config_copy["hosts"][
-        "mule_server"
-    ].format(get_docker_hostname())
-    init_config_copy["hosts"]["oauth_provider"] = init_config_copy["hosts"][
-        "oauth_provider"
-    ].format(get_docker_hostname())
+    init_config_copy["hosts"]["anypoint"] = init_config_copy["hosts"]["anypoint"].format(get_docker_hostname())
+    init_config_copy["hosts"]["object_store_v2"] = init_config_copy["hosts"]["object_store_v2"].format(
+        get_docker_hostname()
+    )
+    init_config_copy["hosts"]["object_store_v2_stats"] = init_config_copy["hosts"]["object_store_v2_stats"].format(
+        get_docker_hostname()
+    )
+    init_config_copy["hosts"]["mule_server"] = init_config_copy["hosts"]["mule_server"].format(get_docker_hostname())
+    init_config_copy["hosts"]["oauth_provider"] = init_config_copy["hosts"]["oauth_provider"].format(
+        get_docker_hostname()
+    )
     return init_config_copy
 
 
@@ -338,9 +335,7 @@ def json_data():
 
 @pytest.fixture(scope="module")
 def selector():
-    return {
-        "tags_expr_str": {"tk1": "{pk1}", "tk2": "$.data.[*].dk1", "tk3": "literal"}
-    }
+    return {"tags_expr_str": {"tk1": "{pk1}", "tk2": "$.data.[*].dk1", "tk3": "literal"}}
 
 
 @pytest.fixture(scope="module")

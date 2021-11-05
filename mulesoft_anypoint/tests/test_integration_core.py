@@ -42,9 +42,7 @@ def test_load_config(test_path, test_utils):
     test_utils = os.path.join(root_path, "tests", test_utils)
     configs = load_config(test_utils, None)
     assert len(configs) == 2
-    assert ("test1" in configs[1] and "etest1" in configs[0]) or (
-        "test1" in configs[0] and "etest1" in configs[1]
-    )
+    assert ("test1" in configs[1] and "etest1" in configs[0]) or ("test1" in configs[0] and "etest1" in configs[1])
     configs = load_config(test_utils, "test_config")
     assert len(configs) == 1
     assert "test1" in configs[0]
@@ -78,9 +76,7 @@ def test_reader_mulesoft_anypoint_unexpected_error(fake_logger, configured_init_
 
 @pytest.mark.unit
 @pytest.mark.usefixtures("dd_environment")
-def test_reader_mulesoft_anypoint_customer_provisioned(
-    fake_logger, configured_init_config
-):
+def test_reader_mulesoft_anypoint_customer_provisioned(fake_logger, configured_init_config):
     os.environ["mininterval"] = "-1"
     no_customer_key_config = configured_init_config.copy()
     del no_customer_key_config["customer_key"]

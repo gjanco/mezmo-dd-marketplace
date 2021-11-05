@@ -8,9 +8,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 endpoints = {}
-DATE_REGEX = (
-    "\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d:[0-5]\\d|Z)"
-)
+DATE_REGEX = "\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d:[0-5]\\d|Z)"
 
 
 def compare_exp_req(exp_dict, req_dict):
@@ -62,20 +60,12 @@ def path_n(*params):
     url = str("/".join(item for item in params if item))
     endpoint = endpoints.get(url)
     if endpoint:
-        check_headers = compare_exp_req(
-            endpoint.get("headers", {}), dict(request.headers)
-        )
-        check_qparams = compare_exp_req(
-            endpoint.get("query_params", {}), dict(request.args)
-        )
+        check_headers = compare_exp_req(endpoint.get("headers", {}), dict(request.headers))
+        check_qparams = compare_exp_req(endpoint.get("query_params", {}), dict(request.args))
         if check_headers and check_qparams:
-            response_location = endpoint["response"].get(
-                get_response_selector_key(endpoint), ""
-            )
+            response_location = endpoint["response"].get(get_response_selector_key(endpoint), "")
             if response_location:
-                response_content = os.path.join(
-                    "apis_response", endpoint["api_name"], response_location
-                )
+                response_content = os.path.join("apis_response", endpoint["api_name"], response_location)
                 with open(response_content) as f:
                     response = json.load(f)
             else:
@@ -85,9 +75,7 @@ def path_n(*params):
         else:
             response_body = jsonify(
                 error="bad request",
-                description="query params ok:{} headers ok:{}".format(
-                    check_headers, check_qparams
-                ),
+                description="query params ok:{} headers ok:{}".format(check_headers, check_qparams),
             )
             response_code = 400
     else:
@@ -99,9 +87,7 @@ def path_n(*params):
     return response_body, response_code, response_headers
 
 
-route = (
-    "/<a>/<b>/<c>/<d>/<e>/<f>/<g>/<h>/<i>/<j>/<k>/<l>/<m>/<n>/<o>/<p>/<q>/<r>/<s>/<t>"
-)
+route = "/<a>/<b>/<c>/<d>/<e>/<f>/<g>/<h>/<i>/<j>/<k>/<l>/<m>/<n>/<o>/<p>/<q>/<r>/<s>/<t>"
 
 
 @app.route(route[: 4 * 1], methods=["GET", "POST"])

@@ -26,17 +26,11 @@ class ReporterDatadog(IReporter):
 
     def report_metric(self, report_item):
         if report_item.report_type == ReportItemType.COUNT:
-            self._datadog_agent.count(
-                report_item.name, round(report_item.value, 2), tags=report_item.tags
-            )
+            self._datadog_agent.count(report_item.name, round(report_item.value, 2), tags=report_item.tags)
         if report_item.report_type == ReportItemType.GAUGE:
-            self._datadog_agent.gauge(
-                report_item.name, round(report_item.value, 2), tags=report_item.tags
-            )
+            self._datadog_agent.gauge(report_item.name, round(report_item.value, 2), tags=report_item.tags)
         if report_item.report_type == ReportItemType.SERVICE_CHECK:
-            self._datadog_agent.service_check(
-                report_item.name, report_item.value.value, message=report_item.message
-            )
+            self._datadog_agent.service_check(report_item.name, report_item.value.value, message=report_item.message)
 
 
 class Logger(ILogger):
@@ -66,9 +60,7 @@ class MulesoftAnypointCheck(AgentCheck):
         self._logger.debug("MulesoftAnypointCheck init()")
         self._reader = ReaderMulesoftAnypoint(logger=self._logger, config=instance)
         n_threads = instance["threads"]
-        self._integration_core = IntegrationCore(
-            self._logger, n_threads, self._reader, self._reporter
-        )
+        self._integration_core = IntegrationCore(self._logger, n_threads, self._reader, self._reporter)
         self._service_check_name = ".".join(
             [
                 get_metrics_prefix(BASE_PREFIX, instance.get("app_env") or "prod"),
@@ -77,16 +69,11 @@ class MulesoftAnypointCheck(AgentCheck):
         )
 
     def _report_service_check(self, results):
-        results_log = (
-            "MulesoftAnypointCheck _report_service_check(): Results list size:"
-            + str(len(results))
-        )
+        results_log = "MulesoftAnypointCheck _report_service_check(): Results list size:" + str(len(results))
         self._logger.debug(results_log)
         for ep_result in results:
             if ep_result.value == CheckStatus.CRITICAL:
-                message = "Check result {}: {}".format(
-                    ep_result.value, ep_result.message
-                )
+                message = "Check result {}: {}".format(ep_result.value, ep_result.message)
                 self._logger.error(message)
             message = "Reporting {} ".format(ep_result.name)
             self._logger.debug(message)
