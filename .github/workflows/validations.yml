@@ -1,0 +1,107 @@
+name: Validations
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  validations-core:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Upgrade Python packaging tools
+      run: |
+        pip install --disable-pip-version-check --upgrade pip setuptools wheel
+
+    - name: Install ddev
+      run: |
+        pip install "datadog-checks-dev[cli]"
+
+    - name: Configure ddev and CI
+      run: |
+        ddev config set repos.marketplace .
+        ddev config set repo marketplace
+        ddev config set orgs.ci.dd_url "https://app.datadoghq.com"
+        ddev config set org ci
+        ddev ci setup
+
+    - name: Validate CI
+      run: |
+        ddev validate ci
+
+    - name: Validate CODEOWNERS
+      run: |
+        ddev validate codeowners
+
+    - name: Validate configuration
+      run: |
+        ddev validate config changed
+
+    - name: Validate configuration models
+      run: |
+        ddev validate models changed
+
+    - name: Validate dashboards
+      run: |
+        ddev validate models changed
+
+    - name: Validate manifests
+      run: |
+        ddev validate manifest changed
+
+    - name: Validate metadata
+      run: |
+        ddev validate metadata changed
+
+    - name: Validate READMEs
+      run: |
+        ddev validate readmes changed
+
+    - name: Validate recommended-monitors
+      run: |
+        ddev validate recommended-monitors changed
+
+    - name: Validate saved-views
+      run: |
+        ddev validate saved-views changed
+
+    - name: Validate service-checks
+      run: |
+        ddev validate service-checks changed
+
+    - name: Validate imports
+      run: |
+        ddev validate imports changed
+
+    - name: Validate package
+      run: |
+        ddev validate package changed
+
+    - name: Validate JMX-metrics
+      run: |
+        ddev validate jmx-metrics changed
+
+    - name: Validate EULA
+      run: |
+        ddev validate eula
+
+    - name: Comment PR on failure
+      if: ${{ failure() && github.event.pull_request.merged != true }}
+      uses: actions/github-script@0.3.0
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+          github.issues.createComment({ issue_number, owner, repo, body: "The `validations-core` job has failed; please review the `Files changed` tab for possible suggestions to resolve." });
