@@ -1,4 +1,7 @@
 # CHANGELOG - rapdev_zoom
+## 5.1.0 / 2021-10-27
+* [Added] Functionality to support Zoom sub-accounts
+* [Changed] Dashboards to include support for tags for sub-accounts
 
 ## 5.0.2 / 2021-09-09
 * [Fixed] Billing metric tags

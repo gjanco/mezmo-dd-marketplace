@@ -32,11 +32,11 @@ def instance_aws_service(field, value):
     return get_default_field_value(field, value)
 
 
-def instance_collect_meeting_host(field, value):
+def instance_collect_participant_details(field, value):
     return True
 
 
-def instance_collect_participant_details(field, value):
+def instance_collect_usernames(field, value):
     return True
 
 
@@ -58,6 +58,10 @@ def instance_extra_headers(field, value):
 
 def instance_headers(field, value):
     return get_default_field_value(field, value)
+
+
+def instance_is_sub_account(field, value):
+    return False
 
 
 def instance_kerberos_auth(field, value):
@@ -89,6 +93,10 @@ def instance_kerberos_principal(field, value):
 
 
 def instance_log_requests(field, value):
+    return False
+
+
+def instance_master_api_mode(field, value):
     return False
 
 

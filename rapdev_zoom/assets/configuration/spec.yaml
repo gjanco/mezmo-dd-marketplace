@@ -11,6 +11,7 @@ files:
         required: true
         value:
           type: string
+          example: https://api.zoom.us/v2/
         description: |
           The API url that the agent needs to target to pull data from.
       - name: api_key
@@ -31,7 +32,25 @@ files:
         value:
           type: string
         description: |
-          The name of the Zoom Account.
+          The name of the Zoom account. If running in "master api" mode this is the
+          name of the master account.
+      - name: is_sub_account
+        required: false
+        value:
+          default: false
+          example: false
+          type: boolean
+        description: |
+          Whether this account is a "sub account". Set to true to append "_sub-account"
+          to the account name tag ingested with every metric for this account.
+      - name: master_api_mode
+        required: false
+        value:
+          default: false
+          example: false
+          type: boolean
+        description: |
+          When set to true, the integration collects metrics on sub-accounts. 
       - name: room_only_mode
         value:
           default: false
@@ -39,14 +58,14 @@ files:
           type: boolean
         description: |
           When set to true, the integration collects data for Zoom rooms.
-      - name: collect_meeting_host
+      - name: collect_usernames
         value:
           example: true
           default: true
           type: boolean
         description: |
-          This changes whether the agent should collect information on the meeting host (e.g. first name,
-          last name, etc..).
+          This changes whether the Agent should collect the information of users such as first name,
+          last name, host's name, etc.
       - name: collect_participant_details
         value:
           example: true

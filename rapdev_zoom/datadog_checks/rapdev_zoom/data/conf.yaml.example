@@ -16,7 +16,7 @@ instances:
     ## @param base_api_url - string - required
     ## The API url that the agent needs to target to pull data from.
     #
-  - base_api_url: <BASE_API_URL>
+  - base_api_url: https://api.zoom.us/v2/
 
     ## @param api_key - string - required
     ## The Zoom Account API Key that the agent can use to generate a JWT token.
@@ -29,20 +29,32 @@ instances:
     api_secret: <API_SECRET>
 
     ## @param account_name - string - required
-    ## The name of the Zoom Account.
+    ## The name of the Zoom account. If running in "master api" mode this is the
+    ## name of the master account.
     #
     account_name: <ACCOUNT_NAME>
+
+    ## @param is_sub_account - boolean - optional - default: false
+    ## Whether this account is a "sub account". Set to true to append "_sub-account"
+    ## to the account name tag ingested with every metric for this account.
+    #
+    # is_sub_account: false
+
+    ## @param master_api_mode - boolean - optional - default: false
+    ## When set to true, the integration collects metrics on sub-accounts. 
+    #
+    # master_api_mode: false
 
     ## @param room_only_mode - boolean - optional - default: false
     ## When set to true, the integration collects data for Zoom rooms.
     #
     # room_only_mode: false
 
-    ## @param collect_meeting_host - boolean - optional - default: true
-    ## This changes whether the agent should collect information on the meeting host (e.g. first name,
-    ## last name, etc..).
+    ## @param collect_usernames - boolean - optional - default: true
+    ## This changes whether the Agent should collect the information of users such as first name,
+    ## last name, host's name, etc.
     #
-    # collect_meeting_host: true
+    # collect_usernames: true
 
     ## @param collect_participant_details - boolean - optional - default: true
     ## This changes whether the agent should collect information on each individual participants rather than

@@ -1,1599 +1,1662 @@
 {
     "author_name": "RapDev",
-    "description": "Dashboard to dive into overall call quality for ongoing Zoom calls",
-    "layout_type": "free",
-    "template_variables": [
-        {
-            "default": "*",
-            "name": "meeting_id",
-            "prefix": "zoom_meeting_id"
-        },
-        {
-            "default": "*",
-            "name": "meeting_host",
-            "prefix": "zoom_meeting_host"
-        },
-        {
-            "default": "*",
-            "name": "room_name",
-            "prefix": "zoom_room_name"
-        },
-        {
-            "default": "*",
-            "name": "account_name",
-            "prefix": "zoom_account_name"
-        },
-        {
-            "default": "*",
-            "name": "user_location",
-            "prefix": "zoom_user_location"
-        },
-        {
-            "default": "*",
-            "name": "user_name",
-            "prefix": "zoom_user_name"
-        }
-    ],
     "title": "RapDev Zoom Meeting Quality",
+    "description": "A dashboard to monitor overall call quality for ongoing Zoom calls.\n\nClone this template dashboard to make changes and add your own graph widgets.",
     "widgets": [
-        {
-            "definition": {
-                "sizing": "fit",
-                "type": "image",
-                "url": "https://cuit.columbia.edu/sites/default/files/styles/cu_crop/public/content/zoom-logo-transparent-6.png?itok=PJk3QEss"
-            },
-            "id": 0,
-            "layout": {
-                "height": 11,
-                "width": 18,
-                "x": 0,
-                "y": 1
-            }
+      {
+        "id": 0,
+        "layout": {
+          "x": 0,
+          "y": 1,
+          "width": 18,
+          "height": 11
         },
-        {
-            "definition": {
-                "autoscale": false,
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">=",
-                                "custom_bg_color": "#0179f9",
-                                "palette": "custom_bg",
-                                "value": 0
-                            }
-                        ],
-                        "q": "default_zero(sum:rapdev.zoom.meetings.participants{$meeting_host,$meeting_id,$account_name})"
-                    }
-                ],
-                "title": "Participants in Meetings",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 5115189288791516,
-            "layout": {
-                "height": 11,
-                "width": 18,
-                "x": 0,
-                "y": 13
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">=",
-                                "custom_bg_color": "#0179f9",
-                                "palette": "custom_bg",
-                                "value": 0
-                            }
-                        ],
-                        "q": "default_zero(sum:rapdev.zoom.meetings.count{$account_name}.rollup(sum, 60))"
-                    }
-                ],
-                "title": "Ongoing Meetings",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 959881715554954,
-            "layout": {
-                "height": 11,
-                "width": 18,
-                "x": 19,
-                "y": 13
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_unit": "MBPS",
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">=",
-                                "custom_bg_color": "#0179f9",
-                                "palette": "custom_bg",
-                                "value": 0
-                            }
-                        ],
-                        "q": "sum:rapdev.zoom.user.qos.bitrate{$user_location,$account_name,$meeting_host,$meeting_id}/1000"
-                    }
-                ],
-                "title": "Total Meeting Bandwidth",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 480681569169360,
-            "layout": {
-                "height": 11,
-                "width": 19,
-                "x": 38,
-                "y": 13
-            }
-        },
-        {
-            "definition": {
-                "background_color": "gray",
-                "content": "# Meetings Video Quality Metrics",
-                "font_size": "14",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
-            },
-            "id": 5879080422870580,
-            "layout": {
-                "height": 6,
-                "width": 67,
-                "x": 35,
-                "y": 67
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Average Audio Receiving Latency (ms)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 490021006013778,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 103,
-                "y": 93
-            }
-        },
-        {
-            "definition": {
-                "background_color": "gray",
-                "content": "# Meetings Audio Quality Metrics",
-                "font_size": "14",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
-            },
-            "id": 3744853147782816,
-            "layout": {
-                "height": 6,
-                "width": 67,
-                "x": 103,
-                "y": 67
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Video Sending Jitter (ms)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 1104404045760636,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 69,
-                "y": 111
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Audio Receiving Jitter (ms)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 3251736663688436,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 103,
-                "y": 111
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Video Sending Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 2505037730108644,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 69,
-                "y": 129
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Audio Receiving Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 2373292791399094,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 103,
-                "y": 129
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Max Video Sending Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 4906957136420688,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 69,
-                "y": 147
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "on_right_yaxis": false,
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:input,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Max Audio Receiving Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 7697078266524102,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 103,
-                "y": 147
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:output,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Video Sending Latency (ms)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 244317770801862,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 69,
-                "y": 93
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.meetings.count{$account_name,$user_location,$room_name}.rollup(max, 60))",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "on_right_yaxis": false,
-                        "q": "default_zero(week_before(sum:rapdev.zoom.meetings.count{$account_name,$user_location,$room_name}))",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "warm"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Ongoing Meetings",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 2169341963784778,
-            "layout": {
-                "height": 11,
-                "width": 38,
-                "x": 19,
-                "y": 1
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id})/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Bandwidth per Meeting (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 3247601149156674,
-            "layout": {
-                "height": 20,
-                "width": 57,
-                "x": 0,
-                "y": 25
-            }
-        },
-        {
-            "definition": {
-                "color_by_groups": [
-                    "zoom_meeting_qos_network_type"
-                ],
-                "requests": {
-                    "x": {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_id, zoom_meeting_qos_network_type}"
-                    },
-                    "y": {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_meeting_id, zoom_meeting_qos_network_type}"
-                    }
-                },
-                "time": {},
-                "title": "Audio Receiving Latency vs Jitter By Meeting",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "scatterplot",
-                "xaxis": {
-                    "include_zero": false,
-                    "label": "QoS Latency"
-                },
-                "yaxis": {
-                    "include_zero": false,
-                    "label": "QoS Jitter"
-                }
-            },
-            "id": 117585337859150,
-            "layout": {
-                "height": 23,
-                "width": 47,
-                "x": 106,
-                "y": 1
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
-                    }
-                ],
-                "time": {},
-                "title": "Video Sending Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 6247308252464694,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 69,
-                "y": 75
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
-                    }
-                ],
-                "title": "Top Audio Receiving Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 770958225045752,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 103,
-                "y": 75
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
-                    }
-                ],
-                "title": "Video Receiving Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 4391882905460278,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 35,
-                "y": 75
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Average Video Receiving Latency (ms)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 3479918428038952,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 35,
-                "y": 93
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Video Receiving Jitter (ms)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 4723126760116144,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 35,
-                "y": 111
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Video Receiving Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 1893492088729326,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 35,
-                "y": 129
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_video:input,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Max Video Receiving Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 7380231684173098,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 35,
-                "y": 147
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
-                    }
-                ],
-                "time": {},
-                "title": "Top Audio Sending Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 7916670118158904,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 137,
-                "y": 75
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Audio Sending Latency (ms)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 1673742751995028,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 137,
-                "y": 93
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Audio Sending Jitter (ms)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 3840971168800894,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 137,
-                "y": 111
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_id,zoom_meeting_host})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Average Audio Sending Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 7801348875053580,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 137,
-                "y": 129
-            }
-        },
-        {
-            "definition": {
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "legend_layout": "vertical",
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "on_right_yaxis": false,
-                        "q": "default_zero(avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_meeting_host,zoom_meeting_id})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,$account_name,zoom_user_qos_audio:output,$user_location,$room_name,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Max Audio Sending Loss (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 4521248074683850,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 137,
-                "y": 147
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location})/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Bandwidth per Location (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 2886921881371240,
-            "layout": {
-                "height": 20,
-                "width": 41,
-                "x": 0,
-                "y": 46
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}/1000,10,'mean','desc')"
-                    }
-                ],
-                "title": "Bandwidth per Location (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 4705421256024658,
-            "layout": {
-                "height": 20,
-                "width": 32,
-                "x": 42,
-                "y": 46
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_meeting_host,zoom_meeting_id}/1000,10,'mean','desc')"
-                    }
-                ],
-                "title": "Bandwidth per Meeting (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 2697461277257100,
-            "layout": {
-                "height": 20,
-                "width": 47,
-                "x": 58,
-                "y": 25
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name})/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "on_right_yaxis": false,
-                        "q": "default_zero(week_before(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name}))/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "warm"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Total Bandwidth (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 8982604496435880,
-            "layout": {
-                "height": 20,
-                "width": 47,
-                "x": 106,
-                "y": 25
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_user_name}/1000,10,'mean','desc')"
-                    }
-                ],
-                "title": "Bandwidth per User (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 2985224297843762,
-            "layout": {
-                "height": 20,
-                "width": 40,
-                "x": 113,
-                "y": 46
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name,$user_name} by {zoom_user_name})/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Bandwidth per User (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 6018863891846058,
-            "layout": {
-                "height": 20,
-                "width": 37,
-                "x": 75,
-                "y": 46
-            }
-        },
-        {
-            "definition": {
-                "color_by_groups": [],
-                "requests": {
-                    "x": {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}"
-                    },
-                    "y": {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$user_location,$room_name} by {zoom_user_location}"
-                    }
-                },
-                "title": "Bitrate vs Latency by Location",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "scatterplot",
-                "xaxis": {
-                    "label": "User Bitrate (kpbs)"
-                },
-                "yaxis": {
-                    "label": "User Latency (ms)"
-                }
-            },
-            "id": 6165908651964208,
-            "layout": {
-                "height": 23,
-                "width": 47,
-                "x": 58,
-                "y": 1
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(max:rapdev.zoom.user.qos.cpu.avg_usage{$meeting_id,$meeting_host,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Average Zoom CPU Usage",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 5050639660025904,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 1,
-                "y": 75
-            }
-        },
-        {
-            "definition": {
-                "background_color": "gray",
-                "content": "# Meetings CPU Usage Metrics",
-                "font_size": "14",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
-            },
-            "id": 6947204302482306,
-            "layout": {
-                "height": 6,
-                "width": 33,
-                "x": 1,
-                "y": 67
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(max:rapdev.zoom.user.qos.cpu.max_usage{$meeting_id,$meeting_host,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Max Zoom CPU Usage",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 5781629350664928,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 1,
-                "y": 93
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(max:rapdev.zoom.user.qos.cpu.min_usage{$meeting_id,$meeting_host,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Min Zoom CPU Usage",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 1359800904525410,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 1,
-                "y": 111
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(max:rapdev.zoom.user.qos.cpu.system_max_usage{$meeting_id,$meeting_host,$user_name} by {zoom_user_name})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "System Max CPU Usage",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 1888235896139858,
-            "layout": {
-                "height": 17,
-                "width": 33,
-                "x": 1,
-                "y": 129
-            }
+        "definition": {
+          "type": "image",
+          "url": "https://cuit.columbia.edu/sites/default/files/styles/cu_crop/public/content/zoom-logo-transparent-6.png?itok=PJk3QEss",
+          "sizing": "fit"
         }
+      },
+      {
+        "id": 5115189288791516,
+        "layout": {
+          "x": 0,
+          "y": 13,
+          "width": 18,
+          "height": 11
+        },
+        "definition": {
+          "title": "Participants in Meetings",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "query_value",
+          "requests": [
+            {
+              "formulas": [
+                {
+                  "formula": "default_zero(query1)"
+                }
+              ],
+              "conditional_formats": [
+                {
+                  "custom_bg_color": "#0179f9",
+                  "comparator": ">=",
+                  "palette": "custom_bg",
+                  "value": 0
+                }
+              ],
+              "response_format": "scalar",
+              "queries": [
+                {
+                  "query": "sum:rapdev.zoom.meetings.participants{$meeting_host,$meeting_id,$zoom_account_name}",
+                  "data_source": "metrics",
+                  "name": "query1",
+                  "aggregator": "last"
+                }
+              ]
+            }
+          ],
+          "autoscale": false,
+          "precision": 0
+        }
+      },
+      {
+        "id": 959881715554954,
+        "layout": {
+          "x": 19,
+          "y": 13,
+          "width": 18,
+          "height": 11
+        },
+        "definition": {
+          "title": "Ongoing Meetings",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "query_value",
+          "requests": [
+            {
+              "formulas": [
+                {
+                  "formula": "default_zero(query1)"
+                }
+              ],
+              "conditional_formats": [
+                {
+                  "custom_bg_color": "#0179f9",
+                  "comparator": ">=",
+                  "palette": "custom_bg",
+                  "value": 0
+                }
+              ],
+              "response_format": "scalar",
+              "queries": [
+                {
+                  "query": "sum:rapdev.zoom.meetings.count{$zoom_account_name}",
+                  "data_source": "metrics",
+                  "name": "query1",
+                  "aggregator": "last"
+                }
+              ]
+            }
+          ],
+          "autoscale": true,
+          "precision": 0
+        }
+      },
+      {
+        "id": 480681569169360,
+        "layout": {
+          "x": 38,
+          "y": 13,
+          "width": 18,
+          "height": 11
+        },
+        "definition": {
+          "title": "Total Meeting Bandwidth",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "sum:rapdev.zoom.user.qos.bitrate{$user_location,$meeting_host,$meeting_id,$zoom_account_name}/1000",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "custom_bg_color": "#0179f9",
+                  "comparator": ">=",
+                  "palette": "custom_bg",
+                  "value": 0
+                }
+              ]
+            }
+          ],
+          "autoscale": true,
+          "custom_unit": "MBPS",
+          "precision": 0
+        }
+      },
+      {
+        "id": 5879080422870580,
+        "layout": {
+          "x": 35,
+          "y": 71,
+          "width": 67,
+          "height": 6
+        },
+        "definition": {
+          "type": "note",
+          "content": "# Meetings Video Quality Metrics",
+          "background_color": "gray",
+          "font_size": "14",
+          "text_align": "center",
+          "show_tick": true,
+          "tick_pos": "25%",
+          "tick_edge": "bottom"
+        }
+      },
+      {
+        "id": 490021006013778,
+        "layout": {
+          "x": 103,
+          "y": 97,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Audio Receiving Latency (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,zoom_user_qos_audio:input,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 3744853147782816,
+        "layout": {
+          "x": 103,
+          "y": 71,
+          "width": 67,
+          "height": 6
+        },
+        "definition": {
+          "type": "note",
+          "content": "# Meetings Audio Quality Metrics",
+          "background_color": "gray",
+          "font_size": "14",
+          "text_align": "center",
+          "show_tick": true,
+          "tick_pos": "25%",
+          "tick_edge": "bottom"
+        }
+      },
+      {
+        "id": 1104404045760636,
+        "layout": {
+          "x": 69,
+          "y": 115,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Video Sending Jitter (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,zoom_user_qos_video:output,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 3251736663688436,
+        "layout": {
+          "x": 103,
+          "y": 115,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Audio Receiving Jitter (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_host})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,zoom_user_qos_audio:input,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 2505037730108644,
+        "layout": {
+          "x": 69,
+          "y": 133,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Video Sending Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_host})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,zoom_user_qos_video:output,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 2373292791399094,
+        "layout": {
+          "x": 103,
+          "y": 133,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Audio Receiving Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_host})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,zoom_user_qos_audio:input,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 4906957136420688,
+        "layout": {
+          "x": 69,
+          "y": 151,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Max Video Sending Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,zoom_user_qos_video:output,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 7697078266524102,
+        "layout": {
+          "x": 103,
+          "y": 151,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Max Audio Receiving Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id})",
+              "on_right_yaxis": false,
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,zoom_user_qos_audio:input,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 244317770801862,
+        "layout": {
+          "x": 69,
+          "y": 97,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Video Sending Latency (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_host})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,zoom_user_qos_video:output,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 2169341963784778,
+        "layout": {
+          "x": 19,
+          "y": 1,
+          "width": 37,
+          "height": 11
+        },
+        "definition": {
+          "title": "Ongoing Meetings",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.meetings.count{$user_location,$room_name,$zoom_account_name}.rollup(max, 60))",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(week_before(sum:rapdev.zoom.meetings.count{$user_location,$room_name,$zoom_account_name}))",
+              "on_right_yaxis": false,
+              "style": {
+                "palette": "warm",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 3247601149156674,
+        "layout": {
+          "x": 0,
+          "y": 25,
+          "width": 56,
+          "height": 23
+        },
+        "definition": {
+          "title": "Bandwidth per Meeting (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$user_location,$room_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id})/1000",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 117585337859150,
+        "layout": {
+          "x": 114,
+          "y": 1,
+          "width": 56,
+          "height": 23
+        },
+        "definition": {
+          "title": "Audio Receiving Latency vs Jitter By Meeting",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "scatterplot",
+          "requests": {
+            "x": {
+              "q": "avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$user_location,$room_name,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_qos_network_type}",
+              "aggregator": "avg"
+            },
+            "y": {
+              "q": "avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$user_location,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_qos_network_type}",
+              "aggregator": "avg"
+            }
+          },
+          "xaxis": {
+            "include_zero": false,
+            "label": "QoS Latency"
+          },
+          "yaxis": {
+            "include_zero": false,
+            "label": "QoS Jitter"
+          },
+          "color_by_groups": [
+            "zoom_meeting_qos_network_type"
+          ]
+        }
+      },
+      {
+        "id": 6247308252464694,
+        "layout": {
+          "x": 69,
+          "y": 79,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Video Sending Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 770958225045752,
+        "layout": {
+          "x": 103,
+          "y": 79,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Top Audio Receiving Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 4391882905460278,
+        "layout": {
+          "x": 35,
+          "y": 79,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Video Receiving Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 3479918428038952,
+        "layout": {
+          "x": 35,
+          "y": 97,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Video Receiving Latency (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_host})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,zoom_user_qos_video:input,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 4723126760116144,
+        "layout": {
+          "x": 35,
+          "y": 115,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Video Receiving Jitter (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,zoom_user_qos_video:input,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 1893492088729326,
+        "layout": {
+          "x": 35,
+          "y": 133,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Video Receiving Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_host})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,zoom_user_qos_video:input,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 7380231684173098,
+        "layout": {
+          "x": 35,
+          "y": 151,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Max Video Receiving Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_video:input,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,zoom_user_qos_video:input,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 7916670118158904,
+        "layout": {
+          "x": 137,
+          "y": 79,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Top Audio Sending Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(max:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id}, 5, 'max', 'desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 1673742751995028,
+        "layout": {
+          "x": 137,
+          "y": 97,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Audio Sending Latency (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.latency{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,zoom_user_qos_audio:output,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 3840971168800894,
+        "layout": {
+          "x": 137,
+          "y": 115,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Audio Sending Jitter (ms)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.jitter{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_host})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,zoom_user_qos_audio:output,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 7801348875053580,
+        "layout": {
+          "x": 137,
+          "y": 133,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Audio Sending Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.average_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_id,zoom_meeting_host})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,zoom_user_qos_audio:output,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 4521248074683850,
+        "layout": {
+          "x": 137,
+          "y": 151,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Max Audio Sending Loss (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "legend_layout": "vertical",
+          "legend_columns": [
+            "avg",
+            "min",
+            "max",
+            "value",
+            "sum"
+          ],
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.meeting.qos.max_loss{zoom_meeting_qos_audio:output,$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id})",
+              "on_right_yaxis": false,
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.max_loss{$meeting_id,$meeting_host,zoom_user_qos_audio:output,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 2886921881371240,
+        "layout": {
+          "x": 0,
+          "y": 49,
+          "width": 42,
+          "height": 20
+        },
+        "definition": {
+          "title": "Bandwidth per Location (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$user_location,$room_name,$zoom_account_name} by {zoom_user_location})/1000",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 4705421256024658,
+        "layout": {
+          "x": 43,
+          "y": 49,
+          "width": 41,
+          "height": 20
+        },
+        "definition": {
+          "title": "Bandwidth per Location (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$user_location,$room_name,$zoom_account_name} by {zoom_user_location}/1000,10,'mean','desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 2697461277257100,
+        "layout": {
+          "x": 57,
+          "y": 25,
+          "width": 56,
+          "height": 23
+        },
+        "definition": {
+          "title": "Bandwidth per Meeting (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$user_location,$room_name,$zoom_account_name} by {zoom_meeting_host,zoom_meeting_id}/1000,10,'mean','desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 8982604496435880,
+        "layout": {
+          "x": 114,
+          "y": 25,
+          "width": 56,
+          "height": 23
+        },
+        "definition": {
+          "title": "Total Bandwidth (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$user_location,$room_name,$zoom_account_name})/1000",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(week_before(sum:rapdev.zoom.meeting.qos.bitrate{$meeting_id,$meeting_host,$user_location,$room_name,$zoom_account_name}))/1000",
+              "on_right_yaxis": false,
+              "style": {
+                "palette": "warm",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 2985224297843762,
+        "layout": {
+          "x": 129,
+          "y": 49,
+          "width": 41,
+          "height": 20
+        },
+        "definition": {
+          "title": "Bandwidth per User (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name}/1000,10,'mean','desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 6018863891846058,
+        "layout": {
+          "x": 86,
+          "y": 49,
+          "width": 42,
+          "height": 20
+        },
+        "definition": {
+          "title": "Bandwidth per User (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$user_location,$room_name,$user_name,$zoom_account_name} by {zoom_user_name})/1000",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 6165908651964208,
+        "layout": {
+          "x": 57,
+          "y": 1,
+          "width": 56,
+          "height": 23
+        },
+        "definition": {
+          "title": "Bitrate vs Latency by Location",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "scatterplot",
+          "requests": {
+            "x": {
+              "q": "avg:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$user_location,$room_name,$zoom_account_name} by {zoom_user_location}",
+              "aggregator": "avg"
+            },
+            "y": {
+              "q": "avg:rapdev.zoom.user.qos.latency{$user_location,$room_name,$zoom_account_name} by {zoom_user_location}",
+              "aggregator": "avg"
+            }
+          },
+          "xaxis": {
+            "label": "User Bitrate (kpbs)"
+          },
+          "yaxis": {
+            "label": "User Latency (ms)"
+          },
+          "color_by_groups": []
+        }
+      },
+      {
+        "id": 5050639660025904,
+        "layout": {
+          "x": 0,
+          "y": 79,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Average Zoom CPU Usage",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(max:rapdev.zoom.user.qos.cpu.avg_usage{$meeting_id,$meeting_host,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 6947204302482306,
+        "layout": {
+          "x": 0,
+          "y": 71,
+          "width": 33,
+          "height": 6
+        },
+        "definition": {
+          "type": "note",
+          "content": "# Meetings CPU Usage Metrics",
+          "background_color": "gray",
+          "font_size": "14",
+          "text_align": "center",
+          "show_tick": true,
+          "tick_pos": "50%",
+          "tick_edge": "bottom"
+        }
+      },
+      {
+        "id": 5781629350664928,
+        "layout": {
+          "x": 0,
+          "y": 97,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Max Zoom CPU Usage",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(max:rapdev.zoom.user.qos.cpu.max_usage{$meeting_id,$meeting_host,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 1359800904525410,
+        "layout": {
+          "x": 0,
+          "y": 115,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "Min Zoom CPU Usage",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(max:rapdev.zoom.user.qos.cpu.min_usage{$meeting_id,$meeting_host,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 1888235896139858,
+        "layout": {
+          "x": 0,
+          "y": 133,
+          "width": 33,
+          "height": 17
+        },
+        "definition": {
+          "title": "System Max CPU Usage",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(max:rapdev.zoom.user.qos.cpu.system_max_usage{$meeting_id,$meeting_host,$user_name,$zoom_account_name} by {zoom_user_name})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 5170804718201050,
+        "layout": {
+          "x": 103,
+          "y": 71,
+          "width": 67,
+          "height": 6
+        },
+        "definition": {
+          "type": "note",
+          "content": "# Meetings Audio Quality Metrics",
+          "background_color": "gray",
+          "font_size": "14",
+          "text_align": "center",
+          "show_tick": true,
+          "tick_pos": "75%",
+          "tick_edge": "bottom"
+        }
+      },
+      {
+        "id": 4099681046158426,
+        "layout": {
+          "x": 35,
+          "y": 71,
+          "width": 67,
+          "height": 6
+        },
+        "definition": {
+          "type": "note",
+          "content": "# Meetings Video Quality Metrics",
+          "background_color": "gray",
+          "font_size": "14",
+          "text_align": "center",
+          "show_tick": true,
+          "tick_pos": "75%",
+          "tick_edge": "bottom"
+        }
+      }
+    ],
+    "template_variables": [
+      {
+        "name": "meeting_id",
+        "default": "*",
+        "prefix": "zoom_meeting_id",
+        "available_values": []
+      },
+      {
+        "name": "meeting_host",
+        "default": "*",
+        "prefix": "zoom_meeting_host",
+        "available_values": []
+      },
+      {
+        "name": "room_name",
+        "default": "*",
+        "prefix": "zoom_room_name",
+        "available_values": []
+      },
+      {
+        "name": "zoom_account_name",
+        "default": "*",
+        "prefix": "zoom_account_name",
+        "available_values": []
+      },
+      {
+        "name": "user_location",
+        "default": "*",
+        "prefix": "zoom_user_location",
+        "available_values": []
+      },
+      {
+        "name": "user_name",
+        "default": "*",
+        "prefix": "zoom_user_name",
+        "available_values": []
+      }
+    ],
+    "layout_type": "free",
+    "template_variable_presets": [
+      {
+        "name": "All hands call",
+        "template_variables": [
+          {
+            "name": "meeting_id",
+            "value": "89878992601"
+          }
+        ]
+      }
     ]
-}
+  }
+  

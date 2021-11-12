@@ -35,20 +35,31 @@ class ZoomCheck(AgentCheck):
 
     def __init__(self, *args, **kwargs):
         super(ZoomCheck, self).__init__(*args, **kwargs)
+        
+        # Base tags/params
         self.base_api_url = self.instance.get("base_api_url")
         self.account_name = self.instance.get("account_name")
-        self.api_key = self.instance.get("api_key")
-        self.api_secret = self.instance.get("api_secret")
+        self.billing_metric = "{}.{}".format("datadog.marketplace", self.__NAMESPACE__)
+
+        # Initialize tags
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
         self.tags.append("zoom_api:{}".format(self.base_api_url))
-        self.tags.append("zoom_account_name:{}".format(self.account_name))
-        self.billing_metric = "{}.{}".format("datadog.marketplace", self.__NAMESPACE__)
+
+        # Zoom authentication params
+        self.api_key = self.instance.get("api_key")
+        self.api_secret = self.instance.get("api_secret")
+
+        # Run mode params
         self.collect_participant_details = self.instance.get("collect_participant_details", True)
         self.collect_usernames = self.instance.get("collect_usernames", True)
         self.users_to_track = self.instance.get("users_to_track", [])
         self.room_only_mode = self.instance.get("room_only_mode", False)
+        
+        # Master API flags
+        self.is_sub_account = self.instance.get("is_sub_account", False)
+        self.master_api_mode = self.instance.get("master_api_mode", False)
 
-        # API trackers
+        # Initialize API trackers
         self.successful_api_calls = 0
         self.failed_api_calls = 0
         self.api_rate_limits_hit = 0
@@ -57,19 +68,63 @@ class ZoomCheck(AgentCheck):
         self.validate_config()
         self.test_api_connection()
 
-        if self.room_only_mode:
-            self.get_rooms_metrics()
+        # Append master account name at start of every run (in case it was removed)
+        base_tags = list(self.tags)
+
+        if self.is_sub_account:
+            base_tags.append("zoom_account_name:{}_sub-account".format(self.account_name))
         else:
-            self.get_users()
-            self.get_rooms_metrics()
-            self.get_meetings()
+            base_tags.append("zoom_account_name:{}".format(self.account_name))
+
+        # Reset API trackers at the start of every check run
+        self.reset_trackers()
+
+        # Check if we only care about rooms metrics
+        if self.room_only_mode:
+            self.get_rooms_metrics(base_tags)
+        # Otherwise get all metrics
+        else:
+            self.get_users(base_tags)
+            self.get_rooms_metrics(base_tags)
+            self.get_meetings(base_tags)
 
         # Send OK if the API daily limit wasn't encountered during this run 
         if self.api_rate_limits_hit == 0:
-            self.service_check("can_call_api", AgentCheck.OK, tags=self.tags)
+            self.service_check("can_call_api", AgentCheck.OK, tags=base_tags)
 
-        self.gauge("api.successful_calls", self.successful_api_calls, tags=self.tags)
-        self.gauge("api.failed_calls", self.failed_api_calls, tags=self.tags)
+        # Submit the metrics for api failed vs successful
+        self.gauge("api.successful_calls", self.successful_api_calls, tags=base_tags)
+        self.gauge("api.failed_calls", self.failed_api_calls, tags=base_tags)
+
+        # Check if we should poll for sub-accounts, this will only run if we are running
+        # the integration using credentials from the master account
+        if self.master_api_mode:
+            # Get all sub accounts via API
+            sub_accounts = self.get_sub_accounts()
+
+            for sub_account_name, sub_account_id in sub_accounts.items():
+                # Reset trackers for each "sub-account" so we have API metrics for each
+                self.reset_trackers()
+
+                # Recopy list of tags
+                sub_account_tags = list(self.tags)
+
+                # Add the zoom sub-account name as a tag for all the metrics
+                sub_account_tags.append("zoom_account_name:{}_sub-account".format(sub_account_name))
+
+                if self.room_only_mode:
+                    self.get_rooms_metrics(sub_account_tags, account_id=sub_account_id)
+                else:
+                    self.get_users(sub_account_tags, account_id=sub_account_id)
+                    self.get_rooms_metrics(sub_account_tags, account_id=sub_account_id)
+                    self.get_meetings(sub_account_tags, account_id=sub_account_id)
+
+                # Send OK if the API daily limit wasn't encountered during this run 
+                if self.api_rate_limits_hit == 0:
+                    self.service_check("can_call_api", AgentCheck.OK, tags=sub_account_tags)
+
+                self.gauge("api.successful_calls", self.successful_api_calls, tags=sub_account_tags)
+                self.gauge("api.failed_calls", self.failed_api_calls, tags=sub_account_tags)
 
     def test_api_connection(self):
         self.log.debug("Attempting connection test to Zoom API URL %s.", self.base_api_url)
@@ -132,6 +187,11 @@ class ZoomCheck(AgentCheck):
             if response_code == 200:
                 self.successful_api_calls += 1
                 return results.json()
+            # 400 is response code for not supported calls (e.g. free plan making paid plan calls)
+            elif response_code == 400:
+                self.failed_api_calls += 1
+                self.log.warning("Error making API call: {}".format(results.text))    
+                return {}
             # If 429, that means we hit rate limit
             elif response_code == 429:
                 self.failed_api_calls += 1
@@ -144,6 +204,7 @@ class ZoomCheck(AgentCheck):
                     self.log.warning("Hit Queries per Second API rate limit. Sleeping for a second then retrying...")
                     self.service_check("can_call_api", AgentCheck.WARNING, tags=self.tags)
                     time.sleep(1)
+                    continue
                 # If we hit the daily limit, return None
                 elif limit_type == "Daily-limit":
                     self.api_rate_limits_hit += 1
@@ -152,21 +213,24 @@ class ZoomCheck(AgentCheck):
                     return {}
             else:
                 try:
-                    self.failed_api_calls += 1
                     results.raise_for_status()
                 except HTTPError as e:
                     raise HTTPError("Non-200 response code returned from Zoom API: {}".format(e))
-
-    def get_users(self):
+            
+    def get_users(self, base_tags, account_id=None):
         """Gets the users from Zoom API and sends in the active count and billing metric for each"""
-        request_path = "users"
+        if account_id:
+            request_path = "accounts/{}/users".format(account_id)
+        else:
+            request_path = "users"
+
         response = self.call_api(request_path)
 
         while True:
             users = response.get("users", [])
 
             for user in users:
-                metric_tags = self.tags.copy()
+                metric_tags = base_tags.copy()
 
                 user_email = user.get("email", "")
                 user_timezone = user.get("timezone", "")
@@ -194,11 +258,15 @@ class ZoomCheck(AgentCheck):
             if page_token == "":
                 break
             else:
-                response = self.call_api(request_path, page_token)
+                response = self.call_api(request_path, next_page_token=page_token)
 
-    def get_rooms_metrics(self):
+    def get_rooms_metrics(self, base_tags, account_id=None):
         """Gets the metrics for each room such as component status, names, participants, etc..."""
-        request_path = "metrics/zoomrooms"
+        if account_id:
+            request_path = "accounts/{}/metrics/zoomrooms".format(account_id)
+        else:
+            request_path = "metrics/zoomrooms"
+
         response = self.call_api(request_path)
 
         # Rooms Health counts
@@ -225,7 +293,9 @@ class ZoomCheck(AgentCheck):
                 microphone = room.get("microphone", "")
                 speaker = room.get("speaker", "")
 
-                metric_tags = self.tags.copy()
+                # If tags provided (running in sub account mode), copy those instead
+                metric_tags = base_tags.copy()
+                
                 if room_name:
                     metric_tags.append("zoom_room_name:{}".format(room_name))
                 if room_id:
@@ -275,16 +345,16 @@ class ZoomCheck(AgentCheck):
 
                 room_issues = room.get("issues", [])
 
-                self.parse_and_send_issues(room_issues, room_name, room_id)
+                self.parse_and_send_issues(room_issues, room_name, room_id, base_tags)
 
             page_token = response.get("next_page_token", "")
 
             if page_token == "":
                 break
             else:
-                response = self.call_api(request_path, page_token)
+                response = self.call_api(request_path, next_page_token=page_token)
 
-        metric_tags = self.tags.copy()
+        metric_tags = base_tags.copy()
 
         # Send in the room health counts 
         metric_tags.append("zoom_room_health:critical")
@@ -316,7 +386,7 @@ class ZoomCheck(AgentCheck):
         self.gauge("room.status.count", rooms_under_construction, tags=metric_tags)
         metric_tags.remove("zoom_room_status:under_construction")
 
-    def parse_and_send_issues(self, issues, room_name, room_id):
+    def parse_and_send_issues(self, issues, room_name, room_id, base_tags):
         """Helper function for parsing room issues"""
         room_controller_is_connected = 1
         selected_camera_is_connected = 1
@@ -339,7 +409,7 @@ class ZoomCheck(AgentCheck):
             elif issue == "Low bandwidth network is detected":
                 is_bandwidth_ok = 0
 
-        metric_tags = self.tags.copy()
+        metric_tags = base_tags.copy()
         metric_tags.append("zoom_room_name:{}".format(room_name))
         metric_tags.append("zoom_room_id:{}".format(room_id))
 
@@ -367,11 +437,15 @@ class ZoomCheck(AgentCheck):
         self.gauge("room.component.status", is_bandwidth_ok, tags=metric_tags)
         metric_tags.remove("zoom_room_component:bandwidth")
 
-    def get_meetings(self):
+    def get_meetings(self, base_tags, account_id=None):
         """Gets all the current meetings with the participants and calls the QOS function on each"""
-        request_path = "metrics/meetings"
+        if account_id:
+            request_path = "accounts/{}/metrics/meetings".format(account_id)
+        else:
+            request_path = "metrics/meetings"
+        
         todays_date = str(datetime.date.today())
-        response = self.call_api(request_path, "", todays_date, todays_date)
+        response = self.call_api(request_path, next_page_token="", from_date=todays_date, to_date=todays_date)
 
         while True:
             meetings = response.get("meetings", [])
@@ -379,8 +453,9 @@ class ZoomCheck(AgentCheck):
             for meeting in meetings:
                 host_name = meeting.get("host", "")
                 meeting_id = meeting.get("id", "")
-
-                metric_tags = self.tags.copy()
+                
+                metric_tags = base_tags.copy()
+                
                 metric_tags.append("zoom_meeting_id:{}".format(meeting_id))
 
                 if self.collect_usernames:
@@ -388,7 +463,7 @@ class ZoomCheck(AgentCheck):
 
                 # Get the QOS metrics for every particpant in the meeting
                 try:
-                    self.get_meeting_qos(meeting_id, host_name)
+                    self.get_meeting_qos(meeting_id, host_name, metric_tags, account_id=account_id)
                 except Exception as e:
                     self.log.error("Get Meeting QOS FAILED. Caught exception %s", e)
 
@@ -403,19 +478,20 @@ class ZoomCheck(AgentCheck):
             if page_token == "":
                 break
             else:
-                response = self.call_api(request_path, page_token, todays_date, todays_date)
+                response = self.call_api(request_path, next_page_token=page_token, from_date=todays_date, to_date=todays_date)
 
-    def get_meeting_qos(self, meeting_id, host_name):
+    def get_meeting_qos(self, meeting_id, host_name, base_tags, account_id=None):
         """Gets the QOS for each participant in the current meeting"""
-        request_path = "metrics/meetings/{}/participants/qos".format(meeting_id)
-        response = self.call_api(request_path, "", "", "", 10)
+        if account_id:
+            request_path = "accounts/{}/metrics/meetings/{}/participants/qos".format(account_id, meeting_id)
+        else:
+            request_path = "metrics/meetings/{}/participants/qos".format(meeting_id)
+        
+        response = self.call_api(request_path, next_page_token="", from_date="", to_date="", page_size=10)
 
-        base_metric_tags = self.tags.copy()
-        base_metric_tags.append("zoom_meeting_id:{}".format(meeting_id))
-
-        if self.collect_usernames:
-            base_metric_tags.append("zoom_meeting_host:{}".format(host_name))
-
+        # Base tags provided here should already have meeting id and host (if ingesting)
+        base_metric_tags = base_tags.copy()
+        
         # Audio input/output counts
         audio_input_bitrate = 0
         audio_input_avg_loss = 0.0
@@ -468,10 +544,14 @@ class ZoomCheck(AgentCheck):
 
                         # Only need users email if the users_to_track list is set
                         if self.users_to_track and user_id:
-                            request_path = "users/{}".format(user_id)
+                            if account_id:
+                                user_request_path = "accounts/{}/users/{}".format(account_id, user_id)
+                            else:
+                                user_request_path = "users/{}".format(user_id)                            
+                            
                             # noinspection PyTypeChecker
-                            response = self.call_api(request_path, "", "", "", None)
-                            user_email = response.get("email", "")
+                            user_response = self.call_api(user_request_path, next_page_token="", from_date="", to_date="", page_size=None)
+                            user_email = user_response.get("email", "")
 
                             if user_email:
                                 metric_tags.append("zoom_user_email:{}".format(user_email))
@@ -596,7 +676,7 @@ class ZoomCheck(AgentCheck):
             if page_token == "":
                 break
             else:
-                response = self.call_api(request_path, page_token, "", "", 10)
+                response = self.call_api(request_path, next_page_token=page_token, from_date="", to_date="", page_size=10)
 
         if valid_audio_input_records > 0:
             avg_audio_input_avg_loss = calculate_average(audio_input_avg_loss, valid_audio_input_records)
@@ -668,3 +748,52 @@ class ZoomCheck(AgentCheck):
             self.gauge("user.qos.latency", latency, tags=metric_tags)
         if max_loss:
             self.gauge("user.qos.max_loss", max_loss, tags=metric_tags)
+
+    def get_sub_accounts(self):
+        """Gets the sub accounts from Zoom API and returns the IDs as a list"""
+        request_path = "accounts/"
+        response = self.call_api(request_path)
+
+        account_ids = {}
+
+        while True:
+            accounts = response.get("accounts", [])
+
+            for account in accounts:
+                metric_tags = self.tags.copy()
+
+                account_id = account.get("id", "")
+                account_name = account.get("account_name", "")
+                account_owner = account.get("owner_email", "")
+                account_type = account.get("account_type", "")
+                account_seats = account.get("seats", 0)
+
+                # Only add account if it's not free, free accounts have minimal API access
+                if account_type != "free":
+                    account_ids[account_name] = account_id
+
+                if account_name:
+                    metric_tags.append("zoom_account_name:{}_sub-account".format(account_name))
+                if account_owner:
+                    metric_tags.append("zoom_sub_account_owner:{}".format(account_owner))
+                if account_type:
+                    metric_tags.append("zoom_sub_account_type:{}".format(account_type))
+                if account_seats:
+                    metric_tags.append("zoom_sub_account_seats:{}".format(account_seats))
+
+                self.gauge("sub_accounts.count", 1, tags=metric_tags)
+
+            page_token = response.get("next_page_token", "")
+
+            if page_token == "":
+                break
+            else:
+                response = self.call_api(request_path, next_page_token=page_token)
+        
+        return account_ids
+
+    def reset_trackers(self):
+        """Helper function that resets any desired values"""
+        self.successful_api_calls = 0
+        self.failed_api_calls = 0
+        self.api_rate_limits_hit = 0

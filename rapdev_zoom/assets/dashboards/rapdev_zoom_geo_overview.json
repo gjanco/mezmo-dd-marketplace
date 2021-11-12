@@ -1,719 +1,724 @@
 {
     "author_name": "RapDev",
-    "description": "Dashboard to dive into overall call quality for ongoing Zoom calls (cloned)",
-    "layout_type": "free",
-    "template_variables": [
-        {
-            "default": "*",
-            "name": "meeting_id",
-            "prefix": "zoom_meeting_id"
-        },
-        {
-            "default": "*",
-            "name": "meeting_host",
-            "prefix": "zoom_meeting_host"
-        },
-        {
-            "default": "*",
-            "name": "room_name",
-            "prefix": "zoom_room_name"
-        },
-        {
-            "default": "*",
-            "name": "account_name",
-            "prefix": "zoom_account_name"
-        },
-        {
-            "default": "*",
-            "name": "user_location",
-            "prefix": "zoom_user_location"
-        }
-    ],
     "title": "RapDev Zoom Geolocation Overview",
+    "description": "A dashboard to monitor overall call quality for ongoing Zoom calls.\n\nClone this template dashboard to make changes and add your own graph widgets.",
     "widgets": [
-        {
-            "definition": {
-                "sizing": "fit",
-                "type": "image",
-                "url": "https://cuit.columbia.edu/sites/default/files/styles/cu_crop/public/content/zoom-logo-transparent-6.png?itok=PJk3QEss"
-            },
-            "id": 0,
-            "layout": {
-                "height": 11,
-                "width": 18,
-                "x": 0,
-                "y": 1
-            }
+      {
+        "id": 0,
+        "layout": {
+          "x": 0,
+          "y": 1,
+          "width": 18,
+          "height": 11
         },
-        {
-            "definition": {
-                "autoscale": true,
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">=",
-                                "custom_bg_color": "#0179f9",
-                                "palette": "custom_bg",
-                                "value": 0
-                            }
-                        ],
-                        "q": "default_zero(sum:rapdev.zoom.meetings.count{$account_name,$user_location,$room_name,$meeting_host,$meeting_id})"
-                    }
-                ],
-                "title": "Ongoing Meetings",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 959881715554954,
-            "layout": {
-                "height": 11,
-                "width": 19,
-                "x": 19,
-                "y": 13
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_unit": "MBPS",
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">=",
-                                "custom_bg_color": "#0179f9",
-                                "palette": "custom_bg",
-                                "value": 0
-                            }
-                        ],
-                        "q": "sum:rapdev.zoom.user.qos.bitrate{$user_location,$account_name,$meeting_host,$meeting_id,$room_name}/1000"
-                    }
-                ],
-                "title": "Total Meeting Bandwidth",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 480681569169360,
-            "layout": {
-                "height": 11,
-                "width": 19,
-                "x": 19,
-                "y": 1
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}/1000,10,'mean','desc')"
-                    }
-                ],
-                "title": "Bandwidth per Location (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 4705421256024658,
-            "layout": {
-                "height": 23,
-                "width": 37,
-                "x": 116,
-                "y": 1
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(max:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location,zoom_user_name}, 10, 'mean', 'desc')"
-                    }
-                ],
-                "title": "Bandwidth per User Location (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 2697461277257100,
-            "layout": {
-                "height": 20,
-                "width": 38,
-                "x": 39,
-                "y": 25
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center})/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    },
-                    {
-                        "display_type": "line",
-                        "metadata": [
-                            {
-                                "alias_name": "Last Week Bandwidth",
-                                "expression": "default_zero(week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center}))/1000"
-                            }
-                        ],
-                        "on_right_yaxis": false,
-                        "q": "default_zero(week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center}))/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "warm"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Total Bandwidth by Zoom Datacenter",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 8982604496435880,
-            "layout": {
-                "height": 20,
-                "width": 37,
-                "x": 78,
-                "y": 25
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center}/1000,10,'mean','desc')"
-                    }
-                ],
-                "title": "Bandwidth per Zoom Datacenter (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 2985224297843762,
-            "layout": {
-                "height": 20,
-                "width": 37,
-                "x": 116,
-                "y": 25
-            }
-        },
-        {
-            "definition": {
-                "color_by_groups": [],
-                "requests": {
-                    "x": {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}"
-                    },
-                    "y": {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}"
-                    }
-                },
-                "title": "Jitter vs Latency by User Location",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "scatterplot",
-                "xaxis": {
-                    "label": "User Bitrate (kpbs)"
-                },
-                "yaxis": {
-                    "label": "User Latency (ms)"
-                }
-            },
-            "id": 6165908651964208,
-            "layout": {
-                "height": 20,
-                "width": 37,
-                "x": 78,
-                "y": 88
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location})/1000",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Bandwidth per Location (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 6565914587658544,
-            "layout": {
-                "height": 23,
-                "width": 37,
-                "x": 78,
-                "y": 1
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$room_name,$user_location,$account_name} by {zoom_user_location})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Latency by User Location (MS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 4080249675246146,
-            "layout": {
-                "height": 20,
-                "width": 38,
-                "x": 0,
-                "y": 25
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$room_name,$user_location,$account_name} by {zoom_user_location})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Jitter by User Location (MS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 7670368876586040,
-            "layout": {
-                "height": 20,
-                "width": 38,
-                "x": 0,
-                "y": 46
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(max:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
-                    }
-                ],
-                "title": "Jitter per User Location (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 4384597025444304,
-            "layout": {
-                "height": 20,
-                "width": 38,
-                "x": 39,
-                "y": 46
-            }
-        },
-        {
-            "definition": {
-                "color_by_groups": [],
-                "requests": {
-                    "x": {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center,zoom_meeting_id}"
-                    },
-                    "y": {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center,zoom_meeting_id}"
-                    }
-                },
-                "title": "Jitter vs Latency by Zoom Datacenter",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "scatterplot",
-                "xaxis": {
-                    "label": "User Bitrate (kpbs)"
-                },
-                "yaxis": {
-                    "label": "User Latency (ms)"
-                }
-            },
-            "id": 1272900525533436,
-            "layout": {
-                "height": 20,
-                "width": 37,
-                "x": 116,
-                "y": 88
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$room_name,$user_location,$account_name} by {zoom_user_location})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Avg Loss by User Location (%)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 3398868220943460,
-            "layout": {
-                "height": 20,
-                "width": 38,
-                "x": 0,
-                "y": 67
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(avg:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$room_name,$user_location,$account_name} by {zoom_user_location})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Bitrate by User Location (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 1346801745187466,
-            "layout": {
-                "height": 20,
-                "width": 38,
-                "x": 0,
-                "y": 88
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(max:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
-                    }
-                ],
-                "title": "Avg Loss per User Location (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 8100804252612412,
-            "layout": {
-                "height": 20,
-                "width": 38,
-                "x": 39,
-                "y": 67
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(max:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
-                    }
-                ],
-                "title": "Bitrate per User Location (MBPS)",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 2553262884865420,
-            "layout": {
-                "height": 20,
-                "width": 38,
-                "x": 39,
-                "y": 88
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">=",
-                                "custom_bg_color": "#0179f9",
-                                "palette": "custom_bg",
-                                "value": 0
-                            }
-                        ],
-                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name})"
-                    }
-                ],
-                "title": "Active Participants in Meetings",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 4160138687970610,
-            "layout": {
-                "height": 11,
-                "width": 18,
-                "x": 0,
-                "y": 13
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_location})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Meeting Participants By City",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 7425728318637654,
-            "layout": {
-                "height": 20,
-                "width": 37,
-                "x": 78,
-                "y": 46
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_country})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Meeting Participants By Country",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 1005155042148380,
-            "layout": {
-                "height": 20,
-                "width": 37,
-                "x": 116,
-                "y": 46
-            }
-        },
-        {
-            "definition": {
-                "markers": [],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center})",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "title": "Meeting Participants by Zoom Datacenter",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 5017523366890260,
-            "layout": {
-                "height": 20,
-                "width": 37,
-                "x": 78,
-                "y": 67
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "q": "top(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$account_name,$user_location,$room_name} by {zoom_user_data_center}, 10, 'last', 'desc')"
-                    }
-                ],
-                "title": "Meeting Participants per Zoom Datacenter",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "toplist"
-            },
-            "id": 7638984307806690,
-            "layout": {
-                "height": 20,
-                "width": 37,
-                "x": 116,
-                "y": 67
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "formula": "query1"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "aggregator": "last",
-                                "data_source": "metrics",
-                                "name": "query1",
-                                "query": "sum:rapdev.zoom.users.in_meetings.count{$user_location,$account_name,$room_name,$meeting_host,$meeting_id} by {zoom_user_country}"
-                            }
-                        ],
-                        "response_format": "scalar"
-                    }
-                ],
-                "style": {
-                    "palette": "hostmap_blues",
-                    "palette_flip": false
-                },
-                "time": {},
-                "title": "Participants per Country",
-                "title_align": "center",
-                "title_size": "16",
-                "type": "geomap",
-                "view": {
-                    "focus": "WORLD"
-                }
-            },
-            "id": 8236278173743594,
-            "layout": {
-                "height": 21,
-                "width": 38,
-                "x": 39,
-                "y": 1
-            }
+        "definition": {
+          "type": "image",
+          "url": "https://cuit.columbia.edu/sites/default/files/styles/cu_crop/public/content/zoom-logo-transparent-6.png?itok=PJk3QEss",
+          "sizing": "fit"
         }
-    ]
-}
+      },
+      {
+        "id": 959881715554954,
+        "layout": {
+          "x": 19,
+          "y": 13,
+          "width": 18,
+          "height": 11
+        },
+        "definition": {
+          "title": "Ongoing Meetings",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.meetings.count{$zoom_account_name,$user_location,$room_name,$meeting_host,$meeting_id})",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "custom_bg_color": "#0179f9",
+                  "comparator": ">=",
+                  "palette": "custom_bg",
+                  "value": 0
+                }
+              ]
+            }
+          ],
+          "autoscale": true,
+          "precision": 0
+        }
+      },
+      {
+        "id": 480681569169360,
+        "layout": {
+          "x": 19,
+          "y": 1,
+          "width": 18,
+          "height": 11
+        },
+        "definition": {
+          "title": "Total Meeting Bandwidth",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "sum:rapdev.zoom.user.qos.bitrate{$user_location,$zoom_account_name,$meeting_host,$meeting_id,$room_name}/1000",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "custom_bg_color": "#0179f9",
+                  "comparator": ">=",
+                  "palette": "custom_bg",
+                  "value": 0
+                }
+              ]
+            }
+          ],
+          "autoscale": true,
+          "custom_unit": "MBPS",
+          "precision": 0
+        }
+      },
+      {
+        "id": 4705421256024658,
+        "layout": {
+          "x": 114,
+          "y": 1,
+          "width": 37,
+          "height": 23
+        },
+        "definition": {
+          "title": "Bandwidth per Location (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_location}/1000,10,'mean','desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 2697461277257100,
+        "layout": {
+          "x": 38,
+          "y": 25,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Bandwidth per User Location (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(max:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_location,zoom_user_name}, 10, 'mean', 'desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 8982604496435880,
+        "layout": {
+          "x": 76,
+          "y": 25,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Total Bandwidth by Zoom Datacenter",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_data_center})/1000",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            },
+            {
+              "q": "default_zero(week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_data_center}))/1000",
+              "on_right_yaxis": false,
+              "metadata": [
+                {
+                  "expression": "default_zero(week_before(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$account_name,$user_location} by {zoom_user_data_center}))/1000",
+                  "alias_name": "Last Week Bandwidth"
+                }
+              ],
+              "style": {
+                "palette": "warm",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 2985224297843762,
+        "layout": {
+          "x": 114,
+          "y": 25,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Bandwidth per Zoom Datacenter (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_data_center}/1000,10,'mean','desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 6165908651964208,
+        "layout": {
+          "x": 76,
+          "y": 88,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Jitter vs Latency by User Location",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "scatterplot",
+          "requests": {
+            "x": {
+              "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_location}",
+              "aggregator": "avg"
+            },
+            "y": {
+              "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_location}",
+              "aggregator": "avg"
+            }
+          },
+          "xaxis": {
+            "label": "User Bitrate (kpbs)"
+          },
+          "yaxis": {
+            "label": "User Latency (ms)"
+          },
+          "color_by_groups": []
+        }
+      },
+      {
+        "id": 6565914587658544,
+        "layout": {
+          "x": 76,
+          "y": 1,
+          "width": 37,
+          "height": 23
+        },
+        "definition": {
+          "title": "Bandwidth per Location (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_location})/1000",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 4080249675246146,
+        "layout": {
+          "x": 0,
+          "y": 25,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Latency by User Location (MS)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$room_name,$user_location,$zoom_account_name} by {zoom_user_location})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 7670368876586040,
+        "layout": {
+          "x": 0,
+          "y": 46,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Jitter by User Location (MS)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$room_name,$user_location,$zoom_account_name} by {zoom_user_location})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 4384597025444304,
+        "layout": {
+          "x": 38,
+          "y": 46,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Jitter per User Location (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(max:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 1272900525533436,
+        "layout": {
+          "x": 114,
+          "y": 88,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Jitter vs Latency by Zoom Datacenter",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "scatterplot",
+          "requests": {
+            "x": {
+              "q": "avg:rapdev.zoom.user.qos.jitter{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_data_center,zoom_meeting_id}",
+              "aggregator": "avg"
+            },
+            "y": {
+              "q": "avg:rapdev.zoom.user.qos.latency{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_data_center,zoom_meeting_id}",
+              "aggregator": "avg"
+            }
+          },
+          "xaxis": {
+            "label": "User Bitrate (kpbs)"
+          },
+          "yaxis": {
+            "label": "User Latency (ms)"
+          },
+          "color_by_groups": []
+        }
+      },
+      {
+        "id": 3398868220943460,
+        "layout": {
+          "x": 0,
+          "y": 67,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Avg Loss by User Location (%)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$room_name,$user_location,$zoom_account_name} by {zoom_user_location})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 1346801745187466,
+        "layout": {
+          "x": 0,
+          "y": 88,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Bitrate by User Location (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(avg:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$room_name,$user_location,$zoom_account_name} by {zoom_user_location})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 8100804252612412,
+        "layout": {
+          "x": 38,
+          "y": 67,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Avg Loss per User Location (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(max:rapdev.zoom.user.qos.average_loss{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 2553262884865420,
+        "layout": {
+          "x": 38,
+          "y": 88,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Bitrate per User Location (MBPS)",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(max:rapdev.zoom.user.qos.bitrate{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_location}, 10, 'mean', 'desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 4160138687970610,
+        "layout": {
+          "x": 0,
+          "y": 13,
+          "width": 18,
+          "height": 11
+        },
+        "definition": {
+          "title": "Active Participants in Meetings",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "query_value",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name})",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "custom_bg_color": "#0179f9",
+                  "comparator": ">=",
+                  "palette": "custom_bg",
+                  "value": 0
+                }
+              ]
+            }
+          ],
+          "autoscale": true,
+          "precision": 0
+        }
+      },
+      {
+        "id": 7425728318637654,
+        "layout": {
+          "x": 76,
+          "y": 46,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Meeting Participants By City",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_location})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 1005155042148380,
+        "layout": {
+          "x": 114,
+          "y": 46,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Meeting Participants By Country",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_country})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 5017523366890260,
+        "layout": {
+          "x": 76,
+          "y": 67,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Meeting Participants by Zoom Datacenter",
+          "title_size": "16",
+          "title_align": "left",
+          "show_legend": false,
+          "type": "timeseries",
+          "requests": [
+            {
+              "q": "default_zero(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_data_center})",
+              "style": {
+                "palette": "dog_classic",
+                "line_type": "solid",
+                "line_width": "normal"
+              },
+              "display_type": "line"
+            }
+          ],
+          "yaxis": {
+            "include_zero": true,
+            "scale": "linear",
+            "label": "",
+            "min": "auto",
+            "max": "auto"
+          },
+          "markers": []
+        }
+      },
+      {
+        "id": 7638984307806690,
+        "layout": {
+          "x": 114,
+          "y": 67,
+          "width": 37,
+          "height": 20
+        },
+        "definition": {
+          "title": "Meeting Participants per Zoom Datacenter",
+          "title_size": "16",
+          "title_align": "left",
+          "type": "toplist",
+          "requests": [
+            {
+              "q": "top(sum:rapdev.zoom.users.in_meetings.count{$meeting_id,$meeting_host,$zoom_account_name,$user_location,$room_name} by {zoom_user_data_center}, 10, 'last', 'desc')"
+            }
+          ]
+        }
+      },
+      {
+        "id": 8236278173743594,
+        "layout": {
+          "x": 38,
+          "y": 1,
+          "width": 37,
+          "height": 21
+        },
+        "definition": {
+          "title": "Participants per Country",
+          "title_size": "16",
+          "title_align": "center",
+          "type": "geomap",
+          "requests": [
+            {
+              "formulas": [
+                {
+                  "formula": "query1"
+                }
+              ],
+              "response_format": "scalar",
+              "queries": [
+                {
+                  "query": "sum:rapdev.zoom.users.in_meetings.count{$user_location,$zoom_account_name,$room_name,$meeting_host,$meeting_id} by {zoom_user_country}",
+                  "data_source": "metrics",
+                  "name": "query1",
+                  "aggregator": "last"
+                }
+              ]
+            }
+          ],
+          "style": {
+            "palette": "hostmap_blues",
+            "palette_flip": false
+          },
+          "view": {
+            "focus": "WORLD"
+          }
+        }
+      }
+    ],
+    "template_variables": [
+      {
+        "name": "meeting_id",
+        "default": "*",
+        "prefix": "zoom_meeting_id",
+        "available_values": []
+      },
+      {
+        "name": "meeting_host",
+        "default": "*",
+        "prefix": "zoom_meeting_host",
+        "available_values": []
+      },
+      {
+        "name": "room_name",
+        "default": "*",
+        "prefix": "zoom_room_name",
+        "available_values": []
+      },
+      {
+        "name": "zoom_account_name",
+        "default": "*",
+        "prefix": "zoom_account_name",
+        "available_values": []
+      },
+      {
+        "name": "user_location",
+        "default": "*",
+        "prefix": "zoom_user_location",
+        "available_values": []
+      }
+    ],
+    "layout_type": "free"
+  }
+  
