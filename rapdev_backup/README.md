@@ -14,20 +14,41 @@ This Agent check is only intended to run on Python3.X version on Agent v7.
 Functionality for Python2.X is not guaranteed. For running python3 on Agent v6, please refer to 
 [these docs](https://docs.datadoghq.com/agent/guide/agent-v6-python-3/?tab=hostagent).
 
-Install the following libraries using the Agent's embedded python, otherwise the check will not be able to run:
+Install or upgrade the following libraries using the Agent's embedded python, otherwise the check will not be able to run:
  
  - boto3 (aws)
 
-   `sudo -Hu dd-agent /opt/datadog-agent/embedded/bin/pip install boto3`
+   ```
+   *Linux*
+   sudo -Hu dd-agent /opt/datadog-agent/embedded/bin/pip install boto3 --upgrade
+   
+   *Windows*
+   %PROGRAMFILES%\Datadog\"Datadog Agent"\embedded<PYTHON_MAJOR_VERSION>\python -m pip install boto3 --upgrade
+   ```
  
  - azure
 
-   `sudo -Hu dd-agent /opt/datadog-agent/embedded/bin/pip install azure-storage-blob`
+   ```
+   *Linux*
+   sudo -Hu dd-agent /opt/datadog-agent/embedded/bin/pip install azure-storage-blob --upgrade
+   
+   *Windows*
+   %PROGRAMFILES%\Datadog\"Datadog Agent"\embedded<PYTHON_MAJOR_VERSION>\python -m pip install azure-storage-blob --upgrade
+   ```
 
 ### Installation
 Run the following command to enable the Backup Integration on your Datadog Agent:
 
-`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==1.0.0`
+```
+*Linux*
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==1.0.0
+
+*Powershell*
+& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==1.0.0
+
+*Command Prompt*
+"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==1.0.0
+```
 
 ### Datadog Configuration
 
@@ -37,6 +58,12 @@ and pass that value into the `init_config` section of your `conf.d/rapdev_backup
 ```
 init_config:
   app_key: "<MY_APP_KEY>"
+
+instances:
+  - backup_storage_platform: AWS
+    aws_access_key: <MY_KEY>
+    aws_secret_key: <MY_SECRET_KEY>
+    aws_s3_bucket_name: my_bucket/my_backups_folder
 ```
 
 ### Backup Configurations
@@ -137,7 +164,14 @@ Once all your configurations are setup, [restart the agent][1].
 Alternatively, you can get detailed information about the integration using the following command.
     
 ```
+*Linux*
 sudo -u dd-agent datadog-agent check rapdev_backup
+
+*Powershell*
+& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" check rapdev_backup
+
+*Command Prompt*
+"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" check rapdev_backup
 ```
 
 ## Data Collected
