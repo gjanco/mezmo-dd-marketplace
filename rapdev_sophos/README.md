@@ -54,7 +54,7 @@ Alternatively, you can get detailed information about the integration using the 
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
 
-- Support: integrations@rapdev.io
+- Support: datadog-engineering@rapdev.io
 - Sales: sales@rapdev.io
 - Chat: RapDev.io/products
 - Phone: 855-857-0222
@@ -62,7 +62,7 @@ For support or feature requests, contact RapDev.io through the following channel
 ---
 Made with ❤️ in Boston
 
-*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:integrations@rapdev.io), and we'll build it!!*
+*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:datadog-engineering@rapdev.io), and we'll build it!!*
 
 ---
 This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][5] to purchase this application.

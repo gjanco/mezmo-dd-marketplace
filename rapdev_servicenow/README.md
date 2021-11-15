@@ -65,7 +65,7 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
 ## Support
 For support or feature requests, contact RapDev.io through the following channels: 
 
- - Email: integrations@rapdev.io 
+ - Email: datadog-engineering@rapdev.io 
  - Chat: [RapDev.io/products](https://rapdev.io/products)
  - Phone: 855-857-0222 
 
@@ -73,7 +73,7 @@ For support or feature requests, contact RapDev.io through the following channel
 
 Made with ❤️ in Boston
 
-*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
+*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:datadog-engineering@rapdev.io) and we'll build it!!*
 
 ---
 This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-o365/pricing) to purchase this application.

@@ -38,7 +38,7 @@ setup(
     url='https://www.rapdev.io',
     # Author details
     author='RapDev',
-    author_email='integrations@rapdev.io',
+    author_email='datadog-engineering@rapdev.io',
     # License
     license='BSD-3-Clause',
     # See https://pypi.org/classifiers

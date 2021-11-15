@@ -22,14 +22,14 @@ This integration monitors email mailboxes and measures full send-receive synthet
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
 
- - Email: integrations@rapdev.io 
+ - Email: datadog-engineering@rapdev.io 
  - Chat: [RapDev.io/products](https://rapdev.io/products)
  - Phone: 855-857-0222 
 
 ---
 Made with ❤️ in Boston
 
-*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:integrations@rapdev.io) and we'll build it!!*
+*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:datadog-engineering@rapdev.io) and we'll build it!!*
 
 ---
 This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-syntheticemail/pricing) to purchase this application.
