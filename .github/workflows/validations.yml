@@ -30,6 +30,7 @@ jobs:
         pip install "datadog-checks-dev[cli]"
 
     - name: Configure ddev and CI
+      id: configure_ddev
       run: |
         ddev config set repos.marketplace .
         ddev config set repo marketplace
@@ -38,62 +39,78 @@ jobs:
         ddev ci setup
 
     - name: Validate CI
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate ci
 
     - name: Validate CODEOWNERS
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate codeowners
 
     - name: Validate configuration
+      id: validate_config
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate config changed
 
     - name: Validate configuration models
+      if: ${{ steps.validate_config.conclusion == 'success' }}
       run: |
         ddev validate models changed
 
     - name: Validate dashboards
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate models changed
 
     - name: Validate manifests
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate manifest changed
 
     - name: Validate metadata
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate metadata changed
 
     - name: Validate READMEs
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate readmes changed
 
     - name: Validate recommended-monitors
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate recommended-monitors changed
 
     - name: Validate saved-views
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate saved-views changed
 
     - name: Validate service-checks
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate service-checks changed
 
     - name: Validate imports
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate imports changed
 
     - name: Validate package
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate package changed
 
     - name: Validate JMX-metrics
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate jmx-metrics changed
 
     - name: Validate EULA
+      if: ${{ steps.configure_ddev.conclusion == 'success' }}
       run: |
         ddev validate eula
 
