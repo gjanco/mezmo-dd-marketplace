@@ -1,0 +1,72 @@
+name: Scadamods Kepserver
+files:
+- name: scadamods_kepserver.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/http
+    - template: init_config/default
+  - template: instances
+    options:
+      - name: host
+        required: true
+        value:
+          example: http://127.0.0.1
+          type: string
+        description: |
+          Base URL of Kepserver Configuration API.
+      - name: port
+        required: true
+        value:
+          example: 57412
+          type: integer
+        description: |
+          Base URL Port of Kepserver Configuration API.
+      - name: config_api_url
+        required: true
+        value:
+          example: /config/v1/project
+          default: /config/v1/project
+          type: string
+        description: |
+          Path for Kepserver config api path.
+      - name: eventlog_api_url
+        required: true
+        value:
+          example: /config/v1/event_log
+          default:  /config/v1/event_log
+          type: string
+        description: |
+          Path for Kepserver event log api path.
+      - name: kepserver_tag_filters
+        required: true
+        value:
+          example:
+            - /channels/*
+            - /channels/Channel1/*
+          default: 
+            - /channels/*
+          type: array
+          items:
+            type: string
+        description: |
+          A list of paths that will be used to retrieve tags, using wildcards '*' will pull all tags from the branch path.
+      - name: opcua_host
+        required: true
+        value:
+          example: opc.tcp://127.0.0.1:49320
+          default: opc.tcp://127.0.0.1:49320
+          type: string
+        description: |
+          A opc.tcp protocol path with host IP and port. Real time system health monitoring.
+      - name: logging_endpoint
+        required: true
+        multiple: false
+        value:
+          type: string
+          example: "https://http-intake.logs.datadoghq.com/v1/input/"
+          default: "https://http-intake.logs.datadoghq.com/v1/input/"
+        description: |
+          Datadog log intake endpoint
+      - template: instances/http
+      - template: instances/default

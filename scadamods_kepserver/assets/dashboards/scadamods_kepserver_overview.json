@@ -1,0 +1,976 @@
+{
+  "title": "Kepserver Overview Demonstration",
+  "description": "## Kepserver Overview \n\nScadamods has created a dashboard for Kepware's Kepserver EX Application. The Kepserver Application is used as a data concentrator for remote telemetry units (RTUs) in the industrial sector. It supports an extensive library of drivers for protocol communications and is hosted on a site server. \n\n- [Scadamods Support](www.scadamods.com)\n- [Kepserver Manual](https://github.com/scadadog/public_artifacts/blob/2baab850c291bcb6c670b45a327cf548c5f5b5bf/kepserverex-manual.pdf)",
+  "widgets": [
+    {
+      "id": 3920481828388210,
+      "definition": {
+        "title": "Host Activity",
+        "type": "group",
+        "background_color": "vivid_blue",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 1750449328222578,
+            "definition": {
+              "type": "image",
+              "url": "https://raw.githubusercontent.com/scadadog/public_artifacts/2baab850c291bcb6c670b45a327cf548c5f5b5bf/scadamods_kepware_logo.svg",
+              "url_dark_theme": "https://raw.githubusercontent.com/scadadog/public_artifacts/2baab850c291bcb6c670b45a327cf548c5f5b5bf/scadamods_kepware_logo_dark.svg",
+              "sizing": "contain",
+              "has_background": false,
+              "has_border": false,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 843397194707872,
+            "definition": {
+              "type": "image",
+              "url": "https://raw.githubusercontent.com/webkul/vivid/03a53f3a4e999578d2a8f5166bac8493ea00c737/icons/desktop.svg",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": false,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 5,
+              "y": 0,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 3872710123821310,
+            "definition": {
+              "title": "",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:system.cpu.user{project:corded-guild-298901} by {host}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 7,
+              "y": 0,
+              "width": 5,
+              "height": 2
+            }
+          },
+          {
+            "id": 3323769070891028,
+            "definition": {
+              "type": "note",
+              "content": "# Host Overview\nShows the connected hosts running the Datadog Agent with the Kepserver Check. The Kepserver application can be hosted on a separate host by adjusting the configuration settings and providing the remote API endpoint for Kepserver.\n\n# Can Connect Check\nA service check running on the Host confirming that Kepserver is online and active. If this check is in error state then the Kepserver Application's API endpoint is either not configured or the application has not been initialized on the server.\n\n> For additional support on configuring Kepserver hosts please contact us at scadamods@support.com",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 2,
+              "width": 5,
+              "height": 4
+            }
+          },
+          {
+            "id": 8266662937196990,
+            "definition": {
+              "title": "Kepserver Host",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "hostmap",
+              "requests": {
+                "fill": {
+                  "q": "sum:system.cpu.system{field:apps:agent} by {host}"
+                },
+                "size": {
+                  "q": "sum:system.uptime{field:apps:agent} by {host}"
+                }
+              },
+              "node_type": "host",
+              "no_metric_hosts": true,
+              "no_group_hosts": true,
+              "group": [
+                "project",
+                "field:apps"
+              ],
+              "scope": [
+                "field:apps:agent"
+              ],
+              "style": {
+                "palette": "green_to_orange",
+                "palette_flip": false
+              }
+            },
+            "layout": {
+              "x": 5,
+              "y": 2,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "id": 6687600125433204,
+            "definition": {
+              "title": "Host Connectivity",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "check_status",
+              "check": "scadamods_kepserver.can_connect",
+              "grouping": "cluster",
+              "group_by": [
+                "host"
+              ],
+              "tags": [
+                "*"
+              ]
+            },
+            "layout": {
+              "x": 8,
+              "y": 2,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 4767383552399226,
+            "definition": {
+              "title": "Kepserver API Connectivity",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "check_status",
+              "check": "scadamods_kepserver.can_connect",
+              "grouping": "check",
+              "group": "host:win-os-testbench-1.us-central1-a.c.corded-guild-298901.internal",
+              "group_by": [],
+              "tags": [
+                "*"
+              ]
+            },
+            "layout": {
+              "x": 10,
+              "y": 2,
+              "width": 2,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 7
+      }
+    },
+    {
+      "id": 1020450437941922,
+      "definition": {
+        "title": "Events and Logging",
+        "type": "group",
+        "background_color": "vivid_blue",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 3864247492691276,
+            "definition": {
+              "type": "note",
+              "content": "# Events from Kepserver's Event Log\n\nThe Kepserver application events are constantly changing and are tracking system events that dictate an error, warning , or info state. The user can see these events in the `Event Log` on Kepserver. By rolling them up into events users can correlate application activity with interruptions in data quality.\n",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "bottom",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 549518468110820,
+            "definition": {
+              "type": "note",
+              "content": "# Logging of Full Tag Configuration\n\nThe Kepserver configuration settings are rolled into a log output. The configuration is a schema of the channel, device and tag hierarchy. Users can choose to use the logs to validate properties such as limits and R/W permissions. \n\n> Note: These logs do not change often.",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "bottom",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 6,
+              "y": 0,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 1266745517296118,
+            "definition": {
+              "title": "",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "event_stream",
+              "query": "*Kepserver*",
+              "tags_execution": "and",
+              "event_size": "s"
+            },
+            "layout": {
+              "x": 0,
+              "y": 2,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 6135751365022554,
+            "definition": {
+              "title": "",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "log_stream",
+              "indexes": [],
+              "query": "service:kepserver",
+              "sort": {
+                "column": "time",
+                "order": "desc"
+              },
+              "columns": [
+                "host",
+                "service"
+              ],
+              "show_date_column": true,
+              "show_message_column": true,
+              "message_display": "expanded-md"
+            },
+            "layout": {
+              "x": 6,
+              "y": 2,
+              "width": 6,
+              "height": 4
+            }
+          },
+          {
+            "id": 2918699777558524,
+            "definition": {
+              "title": "KepserverEx Log",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "event_timeline",
+              "query": "*Kepserver*",
+              "tags_execution": "and"
+            },
+            "layout": {
+              "x": 0,
+              "y": 4,
+              "width": 6,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 7,
+        "width": 12,
+        "height": 7
+      }
+    },
+    {
+      "id": 1131142662300296,
+      "definition": {
+        "title": "Tag Configuration Overview",
+        "type": "group",
+        "background_color": "vivid_purple",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 7288662402742626,
+            "definition": {
+              "type": "note",
+              "content": "# Total Channels\nRepresents the number of channels that have been configured on the Kepserver application. ",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 2257749998302920,
+            "definition": {
+              "type": "image",
+              "url": "https://raw.githubusercontent.com/webkul/vivid/03a53f3a4e999578d2a8f5166bac8493ea00c737/icons/export.svg",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": false,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 4,
+              "y": 0,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 3216684529264086,
+            "definition": {
+              "title": "Total Channels",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:scadamods.kepserver.configured.channels.count{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            },
+            "layout": {
+              "x": 6,
+              "y": 0,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 5456163818150038,
+            "definition": {
+              "type": "note",
+              "content": "# Total Devices\nRepresents the number of devices that have been configured on the Kepserver application. Channels contain a list of devices. Devices have specific configuration based on device driver.",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 2,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 6366053753050328,
+            "definition": {
+              "type": "image",
+              "url": "https://raw.githubusercontent.com/webkul/vivid/03a53f3a4e999578d2a8f5166bac8493ea00c737/icons/processor.svg",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": false,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 4,
+              "y": 2,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 1216867038873786,
+            "definition": {
+              "title": "Total Devices",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:scadamods.kepserver.configured.devices.count{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            },
+            "layout": {
+              "x": 6,
+              "y": 2,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 2076576789323478,
+            "definition": {
+              "type": "note",
+              "content": "# Total Tags vs. Active Tags\nRepresents the total number of tags configured in Kepserver and the number of tags that are currently active. Active tags are able to accessed by clients. This is not the same as the current count of active tags read by a connected client.",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 4,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 3449712721267898,
+            "definition": {
+              "type": "image",
+              "url": "https://raw.githubusercontent.com/webkul/vivid/03a53f3a4e999578d2a8f5166bac8493ea00c737/icons/tag.svg",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": false,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 4,
+              "y": 4,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 929459703410588,
+            "definition": {
+              "title": "Total Tag Count",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "max:scadamods.kepserver.system.total_tag_count{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            },
+            "layout": {
+              "x": 6,
+              "y": 4,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 5764119026076078,
+            "definition": {
+              "title": "Active Tag Count",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "conditional_formats": [
+                    {
+                      "comparator": "<",
+                      "palette": "white_on_red",
+                      "value": 0
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "max:scadamods.kepserver.system.active_tag_count{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            },
+            "layout": {
+              "x": 8,
+              "y": 4,
+              "width": 2,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 14,
+        "width": 12,
+        "height": 7
+      }
+    },
+    {
+      "id": 5526760898907828,
+      "definition": {
+        "title": "Client Activity ",
+        "type": "group",
+        "background_color": "vivid_orange",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 7984623832823642,
+            "definition": {
+              "type": "image",
+              "url": "https://raw.githubusercontent.com/webkul/vivid/03a53f3a4e999578d2a8f5166bac8493ea00c737/icons/desktop.svg",
+              "sizing": "contain",
+              "margin": "md",
+              "has_background": false,
+              "has_border": false,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 4984838488606844,
+            "definition": {
+              "type": "note",
+              "content": "# Successful Writes vs. Successful Reads\nShows the reads and writes that where successful across all of the connected clients. Users can add widgets that break this number down even further. \n\n> Note: These metrics are only available if users enable Kepserver `System Diagnostics` for the project. See help guide for more information or contact scadamods@support.com",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 2,
+              "y": 0,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 3702659411479856,
+            "definition": {
+              "title": "Succesful Writes",
+              "title_size": "16",
+              "title_align": "left",
+              "time": {
+                "live_span": "1w"
+              },
+              "type": "change",
+              "requests": [
+                {
+                  "order_by": "change",
+                  "order_dir": "desc",
+                  "compare_to": "hour_before",
+                  "q": "avg:scadamods.kepserver.statistics.successful_writes{*} by {channel}",
+                  "show_present": true,
+                  "increase_good": true,
+                  "change_type": "relative"
+                }
+              ]
+            },
+            "layout": {
+              "x": 6,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "id": 5378979669319918,
+            "definition": {
+              "title": "Succesful Reads",
+              "title_size": "16",
+              "title_align": "left",
+              "time": {
+                "live_span": "1w"
+              },
+              "type": "change",
+              "requests": [
+                {
+                  "order_by": "change",
+                  "order_dir": "desc",
+                  "compare_to": "hour_before",
+                  "q": "avg:scadamods.kepserver.statistics.successful_reads{*} by {channel}",
+                  "show_present": true,
+                  "increase_good": true,
+                  "change_type": "relative"
+                }
+              ]
+            },
+            "layout": {
+              "x": 9,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "id": 2386482360503440,
+            "definition": {
+              "title": "Number of Agents",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "check_status",
+              "check": "datadog.agent.up",
+              "grouping": "cluster",
+              "group_by": [],
+              "tags": [
+                "*"
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 2,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 7356243231652438,
+            "definition": {
+              "title": "TX Bytes",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:scadamods.kepserver.statistics.tx_bytes{*} by {channel,host,kepserver_api}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 6,
+              "y": 2,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "id": 3731839722249838,
+            "definition": {
+              "title": "RX Bytes",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:scadamods.kepserver.statistics.rx_bytes{*} by {host,channel,kepserver_api}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 9,
+              "y": 2,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "id": 4298608754737984,
+            "definition": {
+              "type": "note",
+              "content": "# Devices in Error\nThe total count of devices across all clients that are in an error state. Users can break utilize this metric to correlate data gaps from device data.\n\n> Note: These metrics are only available if users enable Kepserver `System Diagnostics` for the project. See help guide for more information or contact scadamods@support.com",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 2,
+              "y": 3,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 6870348478242104,
+            "definition": {
+              "title": "Connected Clients",
+              "title_size": "20",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "abs(query1 - 1)"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "max:scadamods.kepserver.system.client_count{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            },
+            "layout": {
+              "x": 0,
+              "y": 4,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 6759184253846316,
+            "definition": {
+              "title": "Devices In Error",
+              "title_size": "20",
+              "title_align": "left",
+              "type": "query_table",
+              "requests": [
+                {
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": "<=",
+                      "palette": "white_on_green",
+                      "value": 0
+                    },
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_red",
+                      "value": 1
+                    }
+                  ],
+                  "order": "desc",
+                  "q": "max:scadamods.kepserver.devices.seconds_in_error{host:*} by {host, channel, device}",
+                  "limit": 50,
+                  "cell_display_mode": [
+                    "bar"
+                  ]
+                }
+              ],
+              "has_search_bar": "auto"
+            },
+            "layout": {
+              "x": 6,
+              "y": 4,
+              "width": 6,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 21,
+        "width": 12,
+        "height": 7
+      }
+    }
+  ],
+  "template_variables": [],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed",
+  "id": "96z-ykx-j8w"
+}
