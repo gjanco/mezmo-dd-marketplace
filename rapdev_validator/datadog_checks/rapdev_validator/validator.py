@@ -23,7 +23,13 @@ REQUIRED_TAGS = [
     "vendor:rapdev"
 ]
 
-API_URL = "https://api.datadoghq.com"
+API_URL_MAP = {
+    "com": "api.datadoghq.com",
+    "eu": "api.datadoghq.eu",
+    "us3": "api.us3.datadoghq.com",
+    "us5": "api.us5.datadoghq.com",
+    "gov": "api.ddog-gov.com"
+}
 
 class ValidatorCheck(AgentCheck):
     """
@@ -46,16 +52,18 @@ class ValidatorCheck(AgentCheck):
 
     def __init__(self, *args, **kwargs):
         super(ValidatorCheck, self).__init__(*args, **kwargs)
+        self.dd_site = self.instance.get("dd_site", "com")
+        self.api_url = API_URL_MAP.get(self.dd_site)
         self.options = self.get_keys()
-        self.check_initializations.append(self.validate_config)
-        
+        self.check_initializations.append(self.validate_config) 
         self.org = self.get_org(self.options)
-        self.yaml_host_tag_dict = yaml.load(str(self.instance.get("required_tags")))
+
+        self.check_hosts = self.instance.get("validate_hosts", True)
         self.check_synthetics = self.instance.get("validate_synthetics", False)
-        self.yaml_synthetic_tag_dict = self.instance.get("synthetic_tags", [])
-        if self.yaml_synthetic_tag_dict:
-            yaml.load(str(self.instance.get("synthetic_tags")))
         self.ignore_paas = is_affirmative(self.instance.get("ignore_paas", False))
+
+        self.yaml_host_tag_dict = self.instance.get("required_tags", {})
+        self.yaml_synthetic_tag_dict = self.instance.get("synthetic_tags", {})
         self.ignore_hosts = set(self.instance.get("hosts_to_ignore", []))
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
 
@@ -67,28 +75,30 @@ class ValidatorCheck(AgentCheck):
 
         self.tags = list(set(self.tags))
         self.tags.append("org:{}".format(self.org))
-        self.log.debug("Attempting to grab the total number of active hosts from your Datadog account....")
 
-        response = self.http.get("{}/api/v1/hosts/totals".format(API_URL), extra_headers = self.options).json()
-        total_hosts = response.get("total_active")
-        
-        n = 0
-        count = 1000
-        while n < total_hosts:
-            response = self.http.get("{}/api/v1/hosts?start={}&count={}".format(API_URL, n, count), extra_headers=self.options).json()
-            host_list = response.get("host_list", [])
-            for host in host_list:
-                if not self.is_ignored_host(host.get("name")):
-                    self.validate_agent(host)
-                    if not self.ignore_paas:
-                        self.validate_host(host)
-                    elif self.ignore_paas and not set(host.get("apps")).intersection(IGNORE_APPS):
-                        self.validate_host(host)
-                
-                n += 1
-        
+        if self.check_hosts and self.yaml_host_tag_dict:
+            self.log.debug("Attempting to grab the total number of active hosts from your Datadog account....")
+
+            response = self.http.get("https://{}/api/v1/hosts/totals".format(self.api_url), extra_headers = self.options).json()
+            total_hosts = response.get("total_active")
+            
+            n = 0
+            count = 1000
+            while n < total_hosts:
+                response = self.http.get("https://{}/api/v1/hosts?start={}&count={}".format(self.api_url, n, count), extra_headers=self.options).json()
+                host_list = response.get("host_list", [])
+                for host in host_list:
+                    if not self.is_ignored_host(host.get("name")):
+                        self.validate_agent(host)
+                        if not self.ignore_paas:
+                            self.validate_host(host)
+                        elif self.ignore_paas and not set(host.get("apps")).intersection(IGNORE_APPS):
+                            self.validate_host(host)
+                    
+                    n += 1
+            
         if self.check_synthetics and self.yaml_synthetic_tag_dict:
-            response = self.http.get("{}/api/v1/synthetics/tests".format(API_URL), extra_headers=self.options).json()
+            response = self.http.get("https://{}/api/v1/synthetics/tests".format(self.api_url), extra_headers=self.options).json()
             synthetic_list = response.get("tests")
             for synthetic in synthetic_list:
                 self.validate_synthetics(synthetic)
@@ -121,26 +131,28 @@ class ValidatorCheck(AgentCheck):
             (datadog_checks.base.ConfigurationError): raises this exception if it is not able to determine either
                                                       the api key, or app key, for the current instance
         """
-        api_key = self.instance.get("api_key", False) # default to instance based api key
-        app_key = self.instance.get("app_key", False) # default to instance based app key
+        api_key = self.instance.get("api_key", "") # default to instance based api key
+        app_key = self.instance.get("app_key", "") # default to instance based app key
         
         # if no api key specified for instance, grab from init_config
         if not api_key:
-            api_key = self.init_config.get("api_key", False)
-        # if no api key specified for instance, grab from main datadog.yaml
-        if not api_key:
-            api_key = get_config("api_key")
-        # if no api key found and somehow gets here, throw an exception
-        # (it should not be able to get here with passthrough_exceptions set to False for get_config)
-        if not api_key:
-            raise ConfigurationError("No api key found")
+            api_key = self.init_config.get("api_key", "")
+            # if no api key specified for instance, grab from main datadog.yaml
+            if not api_key:
+                api_key = get_config("api_key")
+                
+                # if no api key found and somehow gets here, throw an exception
+                # (it should not be able to get here with passthrough_exceptions set to False for get_config)
+                if not api_key:
+                    raise ConfigurationError("No api key found")
             
         # if no app key specfied for instance, grab from init_config
         if not app_key:
-            app_key = self.init_config.get("app_key", False)
-        # if no app key found throw an exception
-        if not app_key:
-            raise ConfigurationError("No app key found")
+            app_key = self.init_config.get("app_key", "")
+            
+            # if no app key found throw an exception
+            if not app_key:
+                raise ConfigurationError("No app key found")
             
         options = {
             "Content-Type": "Application/json",
@@ -154,13 +166,18 @@ class ValidatorCheck(AgentCheck):
         """
         This function validates that the required config is present in the conf.yaml
         """
-        if not self.yaml_host_tag_dict:
+        if self.check_hosts and not self.yaml_host_tag_dict:
             raise ConfigurationError("Please provide a list of required tag keys and values")
+        elif not self.check_hosts and self.yaml_host_tag_dict:
+            raise ConfigurationError("Enable the validate_hosts setting to check host tags")
 
         if self.check_synthetics and not self.yaml_synthetic_tag_dict:
             raise ConfigurationError("Define synthetic tags if you'd like to validate the synthetics")
         elif not self.check_synthetics and self.yaml_synthetic_tag_dict:
             raise ConfigurationError("Enable the validate_synthetics setting to check synthetic tags")
+        
+        if self.dd_site not in API_URL_MAP.keys():
+            raise ConfigurationError("Please provide a valid Datadog site - com, eu, us3, us5, or gov")
     
     def obf_text(self, secret_text):
         """
@@ -200,19 +217,20 @@ class ValidatorCheck(AgentCheck):
         """
         
         try:
-            response = self.http.get("{}/api/v1/org".format(API_URL), extra_headers=self.options, timeout=10)
+            response = self.http.get("https://{}/api/v1/org".format(self.api_url), extra_headers=self.options, timeout=10)
             response.raise_for_status()
-            orgs = response.json().get("orgs")
-            org_name = None
+            
+            orgs = response.json().get("orgs", [])
+            org_name = ""
             
             # use parent_billing for name from multi org accounts
             if len(orgs) > 1:
                 for org in orgs:
-                    if org.get("billing").get("type") == "parent_billing":
-                        org_name = org.get("name")
+                    if org.get("billing", {}).get("type", "") == "parent_billing":
+                        org_name = org.get("name", "")
                         break
             else:
-                org_name = orgs[0].get("name")
+                org_name = orgs[0].get("name", "")
                 
             return org_name
             
@@ -232,15 +250,20 @@ class ValidatorCheck(AgentCheck):
             host (dict): host dictionary containing all relevant host data from the Datadog api
         """
         if not set(host.get("apps")).intersection(IGNORE_APPS):
-            hostname = host.get("name")
+            hostname = host.get("name", "")
             metric_tags = self.tags.copy()
-            metric_tags.append("validated_host:{}".format(hostname))
+
+            if hostname:
+                metric_tags.append("validated_host:{}".format(hostname))
+            
             metric_tags.append("org:{}".format(self.org))
-            source_list = host.get("sources")
+            source_list = host.get("sources", [])
+
+            host_meta = host.get("meta", {})
 
             # Checks if agent is present in the source list, and tags the metrics with the version
-            if "agent" in source_list and host.get('meta') and 'agent_version' in host.get('meta').keys():
-                metric_tags.append("agent_version:{}".format(host.get('meta').get('agent_version')))
+            if ("agent" in source_list) and host_meta and ('agent_version' in host_meta.keys()):
+                metric_tags.append("agent_version:{}".format(host_meta.get('agent_version', "")))
                 self.service_check("agent.is_installed", AgentCheck.OK, tags=metric_tags)
                 self.gauge("agent.installed", 1, tags=metric_tags, hostname=None)
             else:
@@ -254,13 +277,14 @@ class ValidatorCheck(AgentCheck):
         args:
             host (dict): host dictionary containing all relevant host data from the Datadog api
         """
-        hostname = host.get("name")
+        hostname = host.get("name", "")
         metric_tags = self.tags.copy()
         metric_tags.append("entity_type:host")
-        metric_tags.append("validated_host:{}".format(hostname))
-        #metric_tags.append("org:{}".format(self.org))
+
+        if hostname:
+            metric_tags.append("validated_host:{}".format(hostname))
         
-        tag_source_dict = host.get("tags_by_source")
+        tag_source_dict = host.get("tags_by_source", {})
         
         # Create list of all host tags coming into Datadog for this host
         host_tag_list = []
@@ -287,22 +311,25 @@ class ValidatorCheck(AgentCheck):
         metric_tags.append("entity_type:synthetic")
         metric_tags.append("validated_synthetic_id:{}".format(synthetic.get("public_id")))
         metric_tags.append("validated_synthetic_name:{}".format(synthetic.get("name")))
-        test_type = synthetic.get("type")
-        test_subtype = synthetic.get("subtype", None)
-        metric_tags.append("check_type:{}".format(test_type))
+        
+        # Get test types and add them as tags
+        test_type = synthetic.get("type", "")
+        test_subtype = synthetic.get("subtype", "")
+        if test_type:
+            metric_tags.append("check_type:{}".format(test_type))
         if test_subtype:
             metric_tags.append("check_subtype:{}".format(test_subtype))
 
-        if test_type == "api" and test_subtype == "http":
-            metric_tags.append("url:{}".format(synthetic.get("config").get("request").get("url")))
+        metric_request = synthetic.get("config", {}).get("request", {})
+
+        if (test_type == "api" and test_subtype == "http") or (test_type == "browser"):
+            metric_tags.append("url:{}".format(metric_request.get("url", "")))
         elif test_type == "api" and test_subtype == "ssl":
-            metric_tags.append("url:{}".format(synthetic.get("config").get("request").get("host")))
+            metric_tags.append("url:{}".format(metric_request.get("host", "")))
         elif test_type == "api" and test_subtype == "multi":
             metric_tags.append("url:multiple")
-        elif test_type == "browser":
-            metric_tags.append("url:{}".format(synthetic.get("config").get("request").get("url")))
         
-        test_tags_list = synthetic.get("tags")
+        test_tags_list = synthetic.get("tags", [])
         synthetic_tag_dict = self.split_tags(test_tags_list)
         self.validate_tags(self.yaml_synthetic_tag_dict, synthetic_tag_dict, metric_tags)
     
@@ -344,6 +371,9 @@ class ValidatorCheck(AgentCheck):
             key_tags = metric_tags.copy()
             key_tags.append("tag_key:{}".format(key_lower))
 
+            # Lower case the entity tag dictionary
+            entity_tag_dict = dict((k.lower(), v.lower()) for k,v in entity_tag_dict.items())
+
             # Check if the key outlined as required in the YAML is assigned 
             if key_lower not in entity_tag_dict.keys():
                 key_list.append(False)
@@ -365,7 +395,7 @@ class ValidatorCheck(AgentCheck):
                         key_value_lower = key_value
                     else:
                         key_value_lower = key_value.lower()
-                    if key_value_lower == entity_tag_dict.get(key_lower) or key_value_lower == "*":
+                    if key_value_lower == entity_tag_dict.get(key_lower, "") or key_value_lower == "*":
                         validator_dict[key_lower].append(True)
                         break
                     else:

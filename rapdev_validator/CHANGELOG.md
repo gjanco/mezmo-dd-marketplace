@@ -1,5 +1,16 @@
 # CHANGELOG - rapdev_validator
 
+## 2.1.0 / 2021-11-02
+
+#### Feature Updates
+  * Added a configuration flag for `dd_site` to allow EU, US3, US5, and GOV Datadog customers to utilize the integration due to having different API endpoints
+
+## 2.0.0 / 2021-09-30
+
+#### Feature Updates
+  * added the ability to validate tags on Synthetics
+  * added a synthetic dashboard for validated Synthetics
+
 ## 1.1.0 / 2021-08-12
 ### Feature Update & Bugfixes
 

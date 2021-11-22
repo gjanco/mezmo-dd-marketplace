@@ -13,21 +13,73 @@ from datadog_checks.base.utils.models import validation
 from . import defaults, validators
 
 
+class AuthToken(BaseModel):
+    class Config:
+        allow_mutation = False
+
+    reader: Optional[Mapping[str, Any]]
+    writer: Optional[Mapping[str, Any]]
+
+
+class Proxy(BaseModel):
+    class Config:
+        allow_mutation = False
+
+    http: Optional[str]
+    https: Optional[str]
+    no_proxy: Optional[Sequence[str]]
+
+
 class InstanceConfig(BaseModel):
     class Config:
         allow_mutation = False
 
+    allow_redirects: Optional[bool]
     api_key: Optional[str]
     app_key: Optional[str]
+    auth_token: Optional[AuthToken]
+    auth_type: Optional[str]
+    aws_host: Optional[str]
+    aws_region: Optional[str]
+    aws_service: Optional[str]
+    connect_timeout: Optional[float]
+    dd_site: Optional[str]
     disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]
+    extra_headers: Optional[Mapping[str, Any]]
+    headers: Optional[Mapping[str, Any]]
     hosts_to_ignore: Optional[Sequence[str]]
     ignore_paas: Optional[bool]
+    kerberos_auth: Optional[str]
+    kerberos_cache: Optional[str]
+    kerberos_delegate: Optional[bool]
+    kerberos_force_initiate: Optional[bool]
+    kerberos_hostname: Optional[str]
+    kerberos_keytab: Optional[str]
+    kerberos_principal: Optional[str]
+    log_requests: Optional[bool]
     min_collection_interval: Optional[float]
-    required_tags: Mapping[str, Any]
+    ntlm_domain: Optional[str]
+    password: Optional[str]
+    persist_connections: Optional[bool]
+    proxy: Optional[Proxy]
+    read_timeout: Optional[float]
+    request_size: Optional[float]
+    required_tags: Optional[Mapping[str, Any]]
     service: Optional[str]
+    skip_proxy: Optional[bool]
     synthetic_tags: Optional[Mapping[str, Any]]
     tags: Optional[Sequence[str]]
+    timeout: Optional[float]
+    tls_ca_cert: Optional[str]
+    tls_cert: Optional[str]
+    tls_ignore_warning: Optional[bool]
+    tls_private_key: Optional[str]
+    tls_use_host_header: Optional[bool]
+    tls_verify: Optional[bool]
+    use_legacy_auth_encoding: Optional[bool]
+    username: Optional[str]
+    validate_hosts: Optional[bool]
     validate_synthetics: Optional[bool]
 
     @root_validator(pre=True)
