@@ -47,15 +47,15 @@ def validate_media_elements(check_name, manifest_dict):
             aspect_ratio = round(width / height, 4)
             if aspect_ratio != TARGET_ASPECT_RATIO:
                 output = (f'  The aspect ratio for the image at `{image_path}` is {aspect_ratio}, but should be 16:9 '
-                          '({TARGET_ASPECT_RATIO}).')
+                          f'({TARGET_ASPECT_RATIO}).')
                 error_output.append(output)
             if width < MINIMUM_WIDTH:
                 output = (f'  The width for the image at `{image_path}` should be a minimum of {MINIMUM_WIDTH}px, but '
-                          'is currently {width}px.')
+                          f'is currently {width}px.')
                 error_output.append(output)
             elif width > MAXIMUM_WIDTH:
                 output = (f'  The width for the image at `{image_path}` should be a maximum of {MAXIMUM_WIDTH}px, but '
-                          'is currently {width}px.')
+                          f'is currently {width}px.')
                 error_output.append(output)
         except FileNotFoundError:
             output = f'  Image could not be opened at `{image_path}`.'
@@ -102,7 +102,7 @@ def main():
     if all_errors:
         for err in all_errors:
             print(err)
-        raise AssertionError(f'Media validations have failed for this manifest file: {manifest_path}')
+        raise AssertionError(f'Media validations have failed for this PR.')
     else:
         print(f'All media elements have been successfully validated!')
 
