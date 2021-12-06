@@ -41,13 +41,13 @@ Run the following command to enable the Backup Integration on your Datadog Agent
 
 ```
 *Linux*
-sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==1.0.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==1.1.0
 
 *Powershell*
-& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==1.0.0
+& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==1.1.0
 
 *Command Prompt*
-"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==1.0.0
+"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==1.1.0
 ```
 
 ### Datadog Configuration
@@ -138,7 +138,15 @@ Your options are below:
     ```
 
 2) Create a new S3 bucket to store the backups to or pick an existing one. 
-   Paste the name of the bucket in `aws_s3_bucket_name`.
+   Paste the name of the bucket in `aws_s3_bucket_name` (no trailing `/` is required). If you'd like to include a sub path
+   for your S3 bucket (e.g. `mybucket/sub_path/`) please include the subpath in the `aws_s3_sub_path`
+   parameter with a trailing `/`. For example, if you add `mytesting_folder` inside the `testing123` bucket,
+   your configuration looks like this:
+
+   ```
+   aws_s3_bucket_name: testing123
+   aws_s3_sub_path: mytesting_folder/
+   ```
 
 #### Azure Environment Configuration
 

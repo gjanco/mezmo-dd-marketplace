@@ -44,6 +44,7 @@ class InstanceConfig(BaseModel):
     aws_host: Optional[str]
     aws_region: Optional[str]
     aws_s3_bucket_name: Optional[str]
+    aws_s3_sub_path: Optional[str]
     aws_secret_key: Optional[str]
     aws_service: Optional[str]
     azure_connection_string: Optional[str]

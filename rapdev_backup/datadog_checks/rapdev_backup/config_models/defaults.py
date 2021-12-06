@@ -45,7 +45,11 @@ def instance_aws_region(field, value):
 
 
 def instance_aws_s3_bucket_name(field, value):
-    return get_default_field_value(field, value)
+    return 'my_s3_bucket'
+
+
+def instance_aws_s3_sub_path(field, value):
+    return 'my_s3_folder/my_nested_folder'
 
 
 def instance_aws_secret_key(field, value):

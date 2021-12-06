@@ -51,6 +51,7 @@ class BackupCheck(AgentCheck):
         self.assume_session_name = self.instance.get("assume_session_name", "DatadogBackupSession")
         self.assume_role_external_id = self.instance.get("assume_role_external_id")
         self.aws_s3_bucket_name = self.instance.get("aws_s3_bucket_name", None)
+        self.aws_s3_sub_path = self.instance.get("aws_s3_sub_path", "")
 
         # Azure authentication
         self.azure_connection_string = self.instance.get("azure_connection_string", None)
@@ -80,6 +81,9 @@ class BackupCheck(AgentCheck):
                 self.assume_session_name,
                 self.assume_role_external_id
             )
+
+            if self.aws_s3_sub_path:
+                backup_file_name = self.aws_s3_sub_path + backup_file_name
 
             if upload_backup_to_s3(s3_client, self.aws_s3_bucket_name, backup_file_path, backup_file_name):
                 self.log.info("Successfully uploaded backup to S3 Bucket {}".format(self.aws_s3_bucket_name))
