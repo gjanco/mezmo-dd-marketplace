@@ -22,6 +22,11 @@
             "default": "*",
             "name": "PowerBank",
             "prefix": "bankid"
+        },
+        {
+            "default": "*",
+            "prefix": "snmp_host",
+            "name": "Sysname"
         }
     ],
     "title": "RapDev APC PDU Dashboard",
@@ -35,7 +40,7 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:snmp.GroupTotalEnergy{$IP,$SNMP_Profile,$Host}/10"
+                        "q": "avg:snmp.GroupTotalEnergy{$IP,$SNMP_Profile,$Host, $Sysname}/10"
                     }
                 ],
                 "title": "Total Group Energy",
@@ -60,7 +65,7 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:snmp.sysUpTimeInstance{$IP,$SNMP_Profile,$Host}/8640000"
+                        "q": "avg:snmp.sysUpTimeInstance{$IP,$SNMP_Profile,$Host, $Sysname}/8640000"
                     }
                 ],
                 "title": "System Up Time",
@@ -84,7 +89,7 @@
                 "requests": [
                     {
                         "aggregator": "last",
-                        "q": "avg:snmp.DeviceStatusLoadState{$IP,$SNMP_Profile,$Host}"
+                        "q": "avg:snmp.DeviceStatusLoadState{$IP,$SNMP_Profile,$Host, $Sysname}"
                     }
                 ],
                 "title": "Current Load State",
@@ -128,7 +133,7 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:snmp.DeviceStatusPower{$IP,$SNMP_Profile,$Host}/100"
+                        "q": "avg:snmp.DeviceStatusPower{$IP,$SNMP_Profile,$Host, $Sysname}/100"
                     }
                 ],
                 "title": "Power Consumption",
@@ -164,7 +169,7 @@
                                 "value": 0
                             }
                         ],
-                        "q": "max:snmp.DeviceStatusPowerSupplyAlarm{$IP,$SNMP_Profile,$Host}"
+                        "q": "max:snmp.DeviceStatusPowerSupplyAlarm{$IP,$SNMP_Profile,$Host, $Sysname}"
                     }
                 ],
                 "title": "Power Supply Alarm",
@@ -186,7 +191,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.PhaseStatusCurrent{$IP,$SNMP_Profile,$Host} by {snmp_device}/10",
+                        "q": "avg:snmp.PhaseStatusCurrent{$IP,$SNMP_Profile,$Host, $Sysname} by {snmp_device}/10",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -221,7 +226,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.PhaseStatusVoltage{$IP,$SNMP_Profile,$Host} by {snmp_device}",
+                        "q": "avg:snmp.PhaseStatusVoltage{$IP,$SNMP_Profile,$Host, $Sysname} by {snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -259,7 +264,7 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "max:snmp.DeviceStatusPeakPower{$IP,$SNMP_Profile,$Host}/100"
+                        "q": "max:snmp.DeviceStatusPeakPower{$IP,$SNMP_Profile,$Host, $Sysname}/100"
                     }
                 ],
                 "title": "Peak Power",
@@ -299,7 +304,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Current{$IP,$SNMP_Profile,$Host,$PowerBank} by {bankid,snmp_device}/10",
+                        "q": "avg:snmp.Current{$IP,$SNMP_Profile,$Host,$PowerBank, $Sysname} by {bankid,snmp_device}/10",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -356,7 +361,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Load.State{$IP,$SNMP_Profile,$Host,$PowerBank} by {bankid,snmp_device}",
+                        "q": "avg:snmp.Load.State{$IP,$SNMP_Profile,$Host,$PowerBank, $Sysname} by {bankid,snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -392,7 +397,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.DeviceStatusPower{$IP,$SNMP_Profile,$Host} by {snmp_device}/100",
+                        "q": "avg:snmp.DeviceStatusPower{$IP,$SNMP_Profile,$Host, $Sysname} by {snmp_device}/100",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",

@@ -5,8 +5,8 @@
     "template_variables": [
         {
             "default": "*",
-            "name": "InterfaceDescription",
-            "prefix": "interfacedescription"
+            "name": "interface_alias",
+            "prefix": "ifAlias"
         },
         {
             "default": "*",
@@ -26,16 +26,20 @@
         {
             "default": "*",
             "name": "Interface",
-            "prefix": "interface"
+            "prefix": "ifName"
         },
         {
             "default": "*",
             "name": "Port",
             "prefix": "port"
+        },
+        {
+          "default": "*",
+          "prefix": "snmp_host",
+          "name": "Sysname"
         }
     ],
    "title":"RapDev Steelhead Riverbed Dashboard",
-   "description":"",
    "widgets":[
       {
          "id":1587407586667716,
@@ -52,7 +56,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP}/8640000",
+                  "q":"avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP,$Sysname}/8640000",
                   "aggregator":"avg"
                }
             ],
@@ -78,7 +82,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"avg:snmp.CPU.Utilization{$Host,$SNMP_Profile,$IP}",
+                  "q":"avg:snmp.CPU.Utilization{$Host,$SNMP_Profile,$IP,$Sysname}",
                   "aggregator":"avg"
                }
             ],
@@ -104,7 +108,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"avg:snmp.Connections.Active{$Host,$SNMP_Profile,$IP}",
+                  "q":"avg:snmp.Connections.Active{$Host,$SNMP_Profile,$IP,$Sysname}",
                   "aggregator":"last"
                }
             ],
@@ -147,7 +151,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"max:snmp.HealthStatus{$SNMP_Profile,$IP,$Host}",
+                  "q":"max:snmp.HealthStatus{$SNMP_Profile,$IP,$Host,$Sysname}",
                   "aggregator":"last",
                   "conditional_formats":[
                      {
@@ -191,7 +195,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.OptimizationStatus{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.OptimizationStatus{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -289,7 +293,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"avg:snmp.Temperature{$Host,$SNMP_Profile,$IP}",
+                  "q":"avg:snmp.Temperature{$Host,$SNMP_Profile,$IP,$Sysname}",
                   "aggregator":"last"
                }
             ],
@@ -332,7 +336,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"avg:snmp.Connections.Active{$Host,$SNMP_Profile,$IP}",
+                  "q":"avg:snmp.Connections.Active{$Host,$SNMP_Profile,$IP,$Sysname}",
                   "aggregator":"last"
                }
             ],
@@ -356,7 +360,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.Connections.HalfOpened{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.Connections.HalfOpened{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -365,7 +369,7 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.Connections.HalfClosed{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.Connections.HalfClosed{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -402,7 +406,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.Connections.Optimized{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.Connections.Optimized{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -439,7 +443,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.Connections.Passthrough{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.Connections.Passthrough{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -475,7 +479,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"avg:snmp.Connections.Total{$Host,$SNMP_Profile,$IP}",
+                  "q":"avg:snmp.Connections.Total{$Host,$SNMP_Profile,$IP,$Sysname}",
                   "aggregator":"last"
                }
             ],
@@ -498,7 +502,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"avg:snmp.Connections.Established{$Host,$SNMP_Profile,$IP}",
+                  "q":"avg:snmp.Connections.Established{$Host,$SNMP_Profile,$IP,$Sysname}",
                   "aggregator":"last"
                }
             ],
@@ -541,7 +545,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.BandwidthIn.Optimized.LAN.rate{$Host,$SNMP_Profile,$IP,$Port} by {port}",
+                  "q":"avg:snmp.BandwidthIn.Optimized.LAN.rate{$Host,$SNMP_Profile,$IP,$Port,$Sysname} by {port}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -550,7 +554,7 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.BandwidthOut.Optimized.LAN.rate{$Host,$SNMP_Profile,$IP,$Port} by {port}",
+                  "q":"avg:snmp.BandwidthOut.Optimized.LAN.rate{$Host,$SNMP_Profile,$IP,$Port,$Sysname} by {port}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -584,7 +588,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.BandwidthIn.Optimized.WAN.rate{$Host,$SNMP_Profile,$IP,$Port} by {port}",
+                  "q":"avg:snmp.BandwidthIn.Optimized.WAN.rate{$Host,$SNMP_Profile,$IP,$Port,$Sysname} by {port}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -593,7 +597,7 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.BandwidthOut.Optimized.WAN.rate{$Host,$SNMP_Profile,$IP,$Port} by {port}",
+                  "q":"avg:snmp.BandwidthOut.Optimized.WAN.rate{$Host,$SNMP_Profile,$IP,$Port,$Sysname} by {port}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -627,11 +631,11 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.BandwidthIn.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}+avg:snmp.BandwidthIn.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.BandwidthIn.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}+avg:snmp.BandwidthIn.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                   "on_right_yaxis":false,
                   "metadata":[
                      {
-                        "expression":"avg:snmp.BandwidthIn.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}+avg:snmp.BandwidthIn.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                        "expression":"avg:snmp.BandwidthIn.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}+avg:snmp.BandwidthIn.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                         "alias_name":"WAN2LAN"
                      }
                   ],
@@ -643,11 +647,11 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.BandwidthOut.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}+avg:snmp.BandwidthOut.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.BandwidthOut.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}+avg:snmp.BandwidthOut.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
                   "on_right_yaxis":false,
                   "metadata":[
                      {
-                        "expression":"avg:snmp.BandwidthOut.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}+avg:snmp.BandwidthOut.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                        "expression":"avg:snmp.BandwidthOut.Optimized.LAN.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}+avg:snmp.BandwidthOut.Optimized.WAN.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
                         "alias_name":"LAN2WAN"
                      }
                   ],
@@ -687,7 +691,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.Bandwidth.Passthrough.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.Bandwidth.Passthrough.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -724,7 +728,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.BandwidthIn.Passthrough.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.BandwidthIn.Passthrough.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -733,7 +737,7 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.BandwidthOut.Passthrough.Total{$Host,$SNMP_Profile,$IP} by {snmp_device}",
+                  "q":"avg:snmp.BandwidthOut.Passthrough.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -788,7 +792,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"max:snmp.Interface.AdminStatus{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface}",
+                  "q":"max:snmp.ifAdminStatus{$Host,$SNMP_Profile,$IP,$interface_alias,$Interface,$Sysname}",
                   "aggregator":"last",
                   "conditional_formats":[
                      {
@@ -825,7 +829,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"max:snmp.Interface.OperStatus{$Host,$SNMP_Profile,$InterfaceDescription,$IP,$Interface}",
+                  "q":"max:snmp.ifOperStatus{$Host,$SNMP_Profile,$interface_alias,$IP,$Interface,$Sysname}",
                   "aggregator":"last",
                   "conditional_formats":[
                      {
@@ -862,7 +866,7 @@
             "type":"query_value",
             "requests":[
                {
-                  "q":"max:snmp.Interface.Speed{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP}",
+                  "q":"max:snmp.ifHighSpeed{$interface_alias,$Interface,$Host,$SNMP_Profile,$IP,$Sysname}",
                   "aggregator":"last"
                }
             ],
@@ -890,7 +894,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.Interface.InOctets.rate{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "q":"avg:snmp.ifHCInOctets.rate{$Host,$SNMP_Profile,$IP,$interface_alias,$Interface,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -899,7 +903,7 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.Interface.OutOctets.rate{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "q":"avg:snmp.ifHCOutOctets.rate{$Host,$SNMP_Profile,$IP,$interface_alias,$Interface,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -936,7 +940,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.Interface.InBroadcastPkts{$Host,$SNMP_Profile,$InterfaceDescription,$Interface,$IP} by {interface}",
+                  "q":"avg:snmp.ifHCInBroadcastPkts{$Host,$SNMP_Profile,$interface_alias,$Interface,$IP,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -945,7 +949,7 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.Interface.OutBroadcastPkts{$Host,$SNMP_Profile,$InterfaceDescription,$Interface,$IP} by {interface}",
+                  "q":"avg:snmp.ifHCOutBroadcastPkts{$Host,$SNMP_Profile,$interface_alias,$Interface,$IP,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -982,7 +986,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.Interface.InMulticastPkts{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "q":"avg:snmp.ifHCInMulticastPkts{$Host,$SNMP_Profile,$IP,$interface_alias,$Interface,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -991,7 +995,7 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.Interface.OutMulticastPkts{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "q":"avg:snmp.ifHCOutMulticastPkts{$Host,$SNMP_Profile,$IP,$interface_alias,$Interface,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -1028,7 +1032,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.Interface.InUnicastPkts{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "q":"avg:snmp.ifHCInUcastPkts{$Host,$SNMP_Profile,$IP,$interface_alias,$Interface,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -1037,7 +1041,7 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.Interface.OutUnicastPkts{$Host,$SNMP_Profile,$IP,$InterfaceDescription,$Interface} by {interface}",
+                  "q":"avg:snmp.ifHCOutUcastPkts{$Host,$SNMP_Profile,$IP,$interface_alias,$Interface,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -1073,19 +1077,19 @@
             "type":"query_table",
             "requests":[
                {
-                  "q":"avg:snmp.Interface.AdminStatus{$SNMP_Profile,$Host,$IP} by {interface,interfacedescription}",
+                  "q":"avg:snmp.ifAdminStatus{$SNMP_Profile,$Host,$IP,$Sysname} by {interface,interfacedescription}",
                   "aggregator":"last",
                   "alias":"Admin Status"
                },
                {
-                  "q":"avg:snmp.Interface.OperStatus{$SNMP_Profile,$Host,$IP} by {interface,interfacedescription}",
+                  "q":"avg:snmp.ifOperStatus{$SNMP_Profile,$Host,$IP,$Sysname} by {interface,interfacedescription}",
                   "aggregator":"last",
                   "limit":100,
                   "order":"asc",
                   "alias":"Oper Status"
                },
                {
-                  "q":"avg:snmp.Interface.Speed{$SNMP_Profile,$Host,$IP} by {interface,interfacedescription}",
+                  "q":"avg:snmp.ifHighSpeed{$SNMP_Profile,$Host,$IP,$Sysname} by {interface,interfacedescription}",
                   "aggregator":"last",
                   "alias":"Speed"
                }
@@ -1111,7 +1115,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.Interface.InOctets.rate{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP} by {interface}/avg:snmp.Interface.Speed{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP} by {interface}/10000",
+                  "q":"avg:snmp.ifBandwidthInUsage.rate{$interface_alias,$Interface,$Host,$SNMP_Profile,$IP,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -1120,7 +1124,7 @@
                   "display_type":"line"
                },
                {
-                  "q":"avg:snmp.Interface.OutOctets.rate{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP} by {interface}/avg:snmp.Interface.Speed{$InterfaceDescription,$Interface,$Host,$SNMP_Profile,$IP} by {interface}/10000",
+                  "q":"avg:snmp.ifBandwidthOutUsage.rate{$interface_alias,$Interface,$Host,$SNMP_Profile,$IP,$Sysname} by {interface}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -1157,7 +1161,7 @@
             "type":"timeseries",
             "requests":[
                {
-                  "q":"avg:snmp.HealthStatus{$SNMP_Profile,$IP,$Host} by {snmp_device}",
+                  "q":"avg:snmp.HealthStatus{$SNMP_Profile,$IP,$Host,$Sysname} by {snmp_device}",
                   "style":{
                      "palette":"dog_classic",
                      "line_type":"solid",
@@ -1211,13 +1215,13 @@
                   "cell_display_mode":[
                      "bar"
                   ],
-                  "q":"avg:snmp.HealthStatus{$SNMP_Profile,$Host,$IP} by {snmp_device,sysname,location}",
+                  "q":"avg:snmp.HealthStatus{$SNMP_Profile,$Host,$IP,$Sysname} by {snmp_device,sysname,location}",
                   "alias":"Health Status",
                   "limit":50,
                   "order":"desc"
                },
                {
-                  "q":"avg:snmp.Temperature{$SNMP_Profile,$Host,$IP} by {snmp_device,sysname,location}",
+                  "q":"avg:snmp.Temperature{$SNMP_Profile,$Host,$IP,$Sysname} by {snmp_device,sysname,location}",
                   "alias":"Temperature",
                   "cell_display_mode":[
                      "bar"
@@ -1228,43 +1232,5 @@
             "has_search_bar":"auto"
          }
       }
-   ],
-   "template_variables":[
-      {
-         "name":"InterfaceDescription",
-         "default":"*",
-         "prefix":"interfacedescription"
-      },
-      {
-         "name":"Interface",
-         "default":"*",
-         "prefix":"interface"
-      },
-      {
-         "name":"Host",
-         "default":"*",
-         "prefix":"host"
-      },
-      {
-         "name":"SNMP_Profile",
-         "default":"rd-steelhead-riverbed",
-         "prefix":"snmp_profile"
-      },
-      {
-         "name":"IP",
-         "default":"*",
-         "prefix":"snmp_device"
-      },
-      {
-         "name":"Port",
-         "default":"*",
-         "prefix":"port"
-      }
-   ],
-   "layout_type":"free",
-   "is_read_only":false,
-   "notify_list":[
-      
-   ],
-   "id":"med-qr6-py5"
+   ]
 }

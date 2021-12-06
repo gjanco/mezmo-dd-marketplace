@@ -1,1382 +1,1387 @@
 {
     "author_name": "RapDev",
-    "description": "",
-    "layout_type": "free",
-    "template_variables": [
-        {
-            "default": "*",
-            "name": "IP",
-            "prefix": "snmp_device"
-        },
-        {
-            "default": "rd-dell-idrac",
-            "name": "SNMP_Profile",
-            "prefix": "snmp_profile"
-        },
-        {
-            "default": "*",
-            "name": "Host",
-            "prefix": "host"
-        }
+      "description": "",
+      "template_variables": [
+      {
+        "default": "*",
+        "prefix": "snmp_device",
+        "name": "IP"
+      },
+      {
+        "default": "rd-dell-idrac",
+        "prefix": "snmp_profile",
+        "name": "SNMP_Profile"
+      },
+      {
+        "default": "*",
+        "prefix": "host",
+        "name": "Host"
+      },
+      {
+        "default": "*",
+        "prefix": "snmp_host",
+        "name": "Sysname"
+      }
     ],
-    "title": "RapDev iDRAC Dashboard",
+      "title": "RapDev iDRAC Dashboard",
     "widgets": [
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": "<",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_green",
-                                "value": 3
-                            }
-                        ],
-                        "q": "avg:snmp.Global.System.Status{$IP,$SNMP_Profile,$Host}"
-                    }
-                ],
-                "title": "iDRAC Overall System Health",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 2883853903854399,
-            "layout": {
-                "height": 15,
-                "width": 23,
-                "x": 0,
-                "y": 0
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": "<",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": ">=",
-                                "custom_fg_color": "#ff0000",
-                                "palette": "white_on_green",
-                                "value": 3
-                            }
-                        ],
-                        "q": "max:snmp.MemoryDevice.Status.Combined{$IP,$SNMP_Profile,$Host}"
-                    }
-                ],
-                "title": "Memory Health",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 3211307234404596,
-            "layout": {
-                "height": 15,
-                "width": 12,
-                "x": 0,
-                "y": 23
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 4.5
-                            },
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_yellow",
-                                "value": 3.5
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_green",
-                                "value": 1
-                            }
-                        ],
-                        "q": "max:snmp.ProcessorDevice.Status.Combined{$IP,$SNMP_Profile,$Host}"
-                    }
-                ],
-                "title": "Processor Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 5385499137655807,
-            "layout": {
-                "height": 15,
-                "width": 12,
-                "x": 13,
-                "y": 23
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": "<",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_green",
-                                "value": 3
-                            }
-                        ],
-                        "q": "max:snmp.RaidController.Status{$IP,$SNMP_Profile,$Host}"
-                    }
-                ],
-                "title": "Raid Controller Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 1872295584302962,
-            "layout": {
-                "height": 15,
-                "width": 12,
-                "x": 26,
-                "y": 23
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 4.5
-                            },
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_yellow",
-                                "value": 3.5
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_green",
-                                "value": 2
-                            }
-                        ],
-                        "q": "max:snmp.TempSensor.Status{$IP,$SNMP_Profile,$Host}"
-                    }
-                ],
-                "title": "Temperature Sensor Health",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 2111133749816049,
-            "layout": {
-                "height": 15,
-                "width": 12,
-                "x": 39,
-                "y": 23
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": "<",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_green",
-                                "value": 3
-                            }
-                        ],
-                        "q": "max:snmp.Fan.Status{$IP,$SNMP_Profile,$Host}"
-                    }
-                ],
-                "title": "Fans Health",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 2114649476211789,
-            "layout": {
-                "height": 15,
-                "width": 12,
-                "x": 78,
-                "y": 23
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 2
-                            },
-                            {
-                                "comparator": "<",
-                                "palette": "white_on_red",
-                                "value": 2
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_green",
-                                "value": 2
-                            }
-                        ],
-                        "q": "max:snmp.NIC.Status{$IP,$SNMP_Profile,$Host}"
-                    }
-                ],
-                "title": "Network Connection Health",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 2139351344873477,
-            "layout": {
-                "height": 15,
-                "width": 12,
-                "x": 91,
-                "y": 23
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": "<",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_green",
-                                "value": 3
-                            }
-                        ],
-                        "q": "max:snmp.Overall.System.StorageStatus{$IP,$SNMP_Profile,$Host}"
-                    }
-                ],
-                "title": "Overall System Storage Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 4582064945658453,
-            "layout": {
-                "height": 15,
-                "width": 13,
-                "x": 104,
-                "y": 23
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 2,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": "<",
-                                "palette": "white_on_red",
-                                "value": 3
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_green",
-                                "value": 3
-                            }
-                        ],
-                        "q": "max:snmp.Voltage.Status.Combined{$SNMP_Profile,$Host,$IP}"
-                    }
-                ],
-                "title": "Voltage Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 2469832945317022,
-            "layout": {
-                "height": 15,
-                "width": 12,
-                "x": 52,
-                "y": 23
-            }
-        },
-        {
-            "definition": {
-                "autoscale": true,
-                "custom_links": [],
-                "precision": 0,
-                "requests": [
-                    {
-                        "aggregator": "last",
-                        "conditional_formats": [
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 4
-                            },
-                            {
-                                "comparator": "<",
-                                "palette": "white_on_red",
-                                "value": 4
-                            },
-                            {
-                                "comparator": ">=",
-                                "palette": "white_on_green",
-                                "value": 4
-                            }
-                        ],
-                        "q": "max:snmp.Overall.System.PowerState{$IP,$SNMP_Profile,$Host}"
-                    }
-                ],
-                "title": "Power Health",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_value"
-            },
-            "id": 1378565284456023,
-            "layout": {
-                "height": 15,
-                "width": 12,
-                "x": 65,
-                "y": 23
-            }
-        },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.TempSensor.Value{$IP,$SNMP_Profile,$Host} by {tempsensor,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Temperature Sensors",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "iDRAC Overall System Health",
+          "title_align": "left",
+          "precision": 2,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "avg:snmp.Global.System.Status{$IP,$SNMP_Profile,$Host}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": "<"
+                },
+                {
+                  "palette": "white_on_green",
+                  "value": 3,
+                  "comparator": ">="
                 }
-            },
-            "id": 2585821707111040,
-            "layout": {
-                "height": 15,
-                "width": 39,
-                "x": 0,
-                "y": 46
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Fan.Speed{$IP,$SNMP_Profile,$Host} by {fan,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "iDRAC Fan Speeds",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+        "layout": {
+          "y": 0,
+          "x": 0,
+          "height": 15,
+          "width": 23
+        },
+        "id": 2883853903854399
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "Memory Health",
+          "title_align": "left",
+          "precision": 0,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "max:snmp.MemoryDevice.Status.Combined{$IP,$SNMP_Profile,$Host}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": "<"
+                },
+                {
+                  "palette": "white_on_green",
+                  "custom_fg_color": "#ff0000",
+                  "value": 3,
+                  "comparator": ">="
                 }
-            },
-            "id": 368930663877893,
-            "layout": {
-                "height": 15,
-                "width": 36,
-                "x": 40,
-                "y": 46
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Error\u00a0",
-                        "value": "y = 2"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Error\u00a0",
-                        "value": "y = 4"
-                    },
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 3"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.TempSensor.Status{$IP,$SNMP_Profile,$Host} by {tempsensor,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Temperature Sensor Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+        "layout": {
+          "y": 23,
+          "x": 0,
+          "height": 15,
+          "width": 12
+        },
+        "id": 3211307234404596
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "Processor Status",
+          "title_align": "left",
+          "precision": 2,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "max:snmp.ProcessorDevice.Status.Combined{$IP,$SNMP_Profile,$Host}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 4.5,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_yellow",
+                  "value": 3.5,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_green",
+                  "value": 1,
+                  "comparator": ">="
                 }
-            },
-            "id": 8964824738681970,
-            "layout": {
-                "height": 15,
-                "width": 40,
-                "x": 77,
-                "y": 46
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 3"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Voltage Error\u00a0",
-                        "value": "y = 4"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Voltage Error\u00a0",
-                        "value": "y = 2"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Voltage.Status.Combined{$IP,$SNMP_Profile,$Host} by {snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Overall Voltage Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+        "layout": {
+          "y": 23,
+          "x": 13,
+          "height": 15,
+          "width": 12
+        },
+        "id": 5385499137655807
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "Raid Controller Status",
+          "title_align": "left",
+          "precision": 2,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "max:snmp.RaidController.Status{$IP,$SNMP_Profile,$Host}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": "<"
+                },
+                {
+                  "palette": "white_on_green",
+                  "value": 3,
+                  "comparator": ">="
                 }
-            },
-            "id": 8657642923796845,
-            "layout": {
-                "height": 15,
-                "width": 39,
-                "x": 0,
-                "y": 69
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0Online\u00a0",
-                        "value": "y = 4"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Error\u00a0",
-                        "value": "y = 3"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Overall.System.PowerState{$IP,$SNMP_Profile,$Host} by {snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Global System Power State",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+        "layout": {
+          "y": 23,
+          "x": 26,
+          "height": 15,
+          "width": 12
+        },
+        "id": 1872295584302962
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "Temperature Sensor Health",
+          "title_align": "left",
+          "precision": 2,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "max:snmp.TempSensor.Status{$IP,$SNMP_Profile,$Host}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 4.5,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_yellow",
+                  "value": 3.5,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_green",
+                  "value": 2,
+                  "comparator": ">="
                 }
-            },
-            "id": 957269150998708,
-            "layout": {
-                "height": 15,
-                "width": 36,
-                "x": 40,
-                "y": 69
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.PowerSupply.Input.Voltage{$IP,$SNMP_Profile,$Host} by {psu,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Power Supply Input Voltage",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+        "layout": {
+          "y": 23,
+          "x": 39,
+          "height": 15,
+          "width": 12
+        },
+        "id": 2111133749816049
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "Fans Health",
+          "title_align": "left",
+          "precision": 2,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "max:snmp.Fan.Status{$IP,$SNMP_Profile,$Host}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": "<"
+                },
+                {
+                  "palette": "white_on_green",
+                  "value": 3,
+                  "comparator": ">="
                 }
-            },
-            "id": 736789011474242,
-            "layout": {
-                "height": 15,
-                "width": 40,
-                "x": 77,
-                "y": 69
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0Presence Detected\u00a0",
-                        "value": "y = 1"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0PS Failure\u00a0",
-                        "value": "y = 2"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.PowerSupply.Sensor.State{$IP,$SNMP_Profile,$Host} by {psu,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "PSU Sensor State",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+        "layout": {
+          "y": 23,
+          "x": 78,
+          "height": 15,
+          "width": 12
+        },
+        "id": 2114649476211789
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "Network Connection Health",
+          "title_align": "left",
+          "precision": 2,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "max:snmp.NIC.Status{$IP,$SNMP_Profile,$Host}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 2,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_red",
+                  "value": 2,
+                  "comparator": "<"
+                },
+                {
+                  "palette": "white_on_green",
+                  "value": 2,
+                  "comparator": ">="
                 }
-            },
-            "id": 7310410684676042,
-            "layout": {
-                "height": 15,
-                "width": 39,
-                "x": 0,
-                "y": 85
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 3"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Error\u00a0",
-                        "value": "y = 2"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.CMOSBattery.Status{$IP,$SNMP_Profile,$Host} by {snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "CMOS Battery Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+        "layout": {
+          "y": 23,
+          "x": 91,
+          "height": 15,
+          "width": 12
+        },
+        "id": 2139351344873477
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "Overall System Storage Status",
+          "title_align": "left",
+          "precision": 2,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "max:snmp.Overall.System.StorageStatus{$IP,$SNMP_Profile,$Host}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": "<"
+                },
+                {
+                  "palette": "white_on_green",
+                  "value": 3,
+                  "comparator": ">="
                 }
-            },
-            "id": 1755966273197779,
-            "layout": {
-                "height": 15,
-                "width": 36,
-                "x": 40,
-                "y": 85
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 3"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Error\u00a0",
-                        "value": "y = 2"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.PowerUsage.Sensor.Status{$IP,$SNMP_Profile,$Host} by {snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Power Usage Sensor",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+        "layout": {
+          "y": 23,
+          "x": 104,
+          "height": 15,
+          "width": 13
+        },
+        "id": 4582064945658453
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "Voltage Status",
+          "title_align": "left",
+          "precision": 2,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "max:snmp.Voltage.Status.Combined{$SNMP_Profile,$Host,$IP}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_red",
+                  "value": 3,
+                  "comparator": "<"
+                },
+                {
+                  "palette": "white_on_green",
+                  "value": 3,
+                  "comparator": ">="
                 }
-            },
-            "id": 4298984251943358,
-            "layout": {
-                "height": 15,
-                "width": 40,
-                "x": 77,
-                "y": 85
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 3"
-                    },
-                    {
-                        "display_type": "warning dashed",
-                        "label": "\u00a0Warning\u00a0",
-                        "value": "y = 4"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Critical\u00a0",
-                        "value": "y = 5"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Processor.Status{$IP,$SNMP_Profile,$Host} by {processor,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Processor Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
+        "layout": {
+          "y": 23,
+          "x": 52,
+          "height": 15,
+          "width": 12
+        },
+        "id": 2469832945317022
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "Power Health",
+          "title_align": "left",
+          "precision": 0,
+          "autoscale": true,
+          "requests": [
+            {
+              "q": "max:snmp.Overall.System.PowerState{$IP,$SNMP_Profile,$Host}",
+              "aggregator": "last",
+              "conditional_formats": [
+                {
+                  "palette": "white_on_red",
+                  "value": 4,
+                  "comparator": ">"
+                },
+                {
+                  "palette": "white_on_red",
+                  "value": 4,
+                  "comparator": "<"
+                },
+                {
+                  "palette": "white_on_green",
+                  "value": 4,
+                  "comparator": ">="
                 }
-            },
-            "id": 6188675194938765,
-            "layout": {
-                "height": 15,
-                "width": 39,
-                "x": 0,
-                "y": 108
+              ]
             }
+          ],
+          "type": "query_value"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0Online\u00a0",
-                        "value": "y = 3"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Offline\u00a0",
-                        "value": "y = 4"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Offline\u00a0",
-                        "value": "y = 2"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Overall.System.StorageStatus{$IP,$SNMP_Profile,$Host} by {snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "iDRAC RAID Controller Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 1460790951646807,
-            "layout": {
-                "height": 15,
-                "width": 39,
-                "x": 0,
-                "y": 131
-            }
+        "layout": {
+          "y": 23,
+          "x": 65,
+          "height": 15,
+          "width": 12
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0Online\u00a0",
-                        "value": "y = 3"
-                    },
-                    {
-                        "display_type": "warning dashed",
-                        "label": "\u00a0Foreign\u00a0",
-                        "value": "y = 4"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Offline\u00a0",
-                        "value": "y = 5"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Disk.State{$IP,$SNMP_Profile,$Host} by {disk,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Dell DRAC Disk State",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 1776185596757784,
-            "layout": {
-                "height": 15,
-                "width": 36,
-                "x": 40,
-                "y": 131
+        "id": 1378565284456023
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "title": "Temperature Sensors",
+          "title_align": "left",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "show_legend": false,
+          "time": {},
+          "requests": [
+            {
+              "q": "avg:snmp.TempSensor.Value{$IP,$SNMP_Profile,$Host} by {tempsensor,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
             }
+          ],
+          "type": "timeseries"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 2"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Disk.Status{$IP,$SNMP_Profile,$Host} by {disk,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Volume Disk States",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 2791270785959197,
-            "layout": {
-                "height": 15,
-                "width": 40,
-                "x": 77,
-                "y": 131
-            }
+        "layout": {
+          "y": 46,
+          "x": 0,
+          "height": 15,
+          "width": 39
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 3"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Disk.Status{$IP,$SNMP_Profile,$Host} by {disk,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Volume Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 2090924293394270,
-            "layout": {
-                "height": 15,
-                "width": 39,
-                "x": 0,
-                "y": 147
+        "id": 2585821707111040
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "title": "iDRAC Fan Speeds",
+          "title_align": "left",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "show_legend": false,
+          "time": {},
+          "requests": [
+            {
+              "q": "avg:snmp.Fan.Speed{$IP,$SNMP_Profile,$Host} by {fan,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
             }
+          ],
+          "type": "timeseries"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 3"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0NIC Error\u00a0",
-                        "value": "y = 2"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0NIC Error\u00a0",
-                        "value": "y = 4"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.NIC.Status{$IP,$SNMP_Profile,$Host} by {nicname,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "cool"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Network Port Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 6464376041888657,
-            "layout": {
-                "height": 15,
-                "width": 39,
-                "x": 0,
-                "y": 170
-            }
+        "layout": {
+          "y": 46,
+          "x": 40,
+          "height": 15,
+          "width": 36
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok dashed",
-                        "label": "\u00a0Up\u00a0",
-                        "value": "y = 2"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Down\u00a0",
-                        "value": "y = 1"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.NIC.ConnectionStatus{$IP,$SNMP_Profile,$Host} by {nicname,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Network Connection Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
+        "id": 368930663877893
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "error dashed",
+              "value": "y = 2",
+              "label": "\u00a0Error\u00a0"
             },
-            "id": 1275685638899597,
-            "layout": {
-                "height": 15,
-                "width": 36,
-                "x": 40,
-                "y": 170
+            {
+              "display_type": "error dashed",
+              "value": "y = 4",
+              "label": "\u00a0Error\u00a0"
+            },
+            {
+              "display_type": "ok dashed",
+              "value": "y = 3",
+              "label": "\u00a0OK\u00a0"
             }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Temperature Sensor Status",
+          "requests": [
+            {
+              "q": "avg:snmp.TempSensor.Status{$IP,$SNMP_Profile,$Host} by {tempsensor,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
         },
-        {
-            "definition": {
-                "markers": [
-                    {
-                        "display_type": "ok solid",
-                        "label": "\u00a0OK\u00a0",
-                        "value": "y = 3"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Problem\u00a0",
-                        "value": "y = 2"
-                    },
-                    {
-                        "display_type": "error dashed",
-                        "label": "\u00a0Problem\u00a0",
-                        "value": "y = 4"
-                    }
-                ],
-                "requests": [
-                    {
-                        "display_type": "line",
-                        "q": "avg:snmp.Memory.Status{$IP,$SNMP_Profile,$Host} by {memoryslot,snmp_device}",
-                        "style": {
-                            "line_type": "solid",
-                            "line_width": "normal",
-                            "palette": "dog_classic"
-                        }
-                    }
-                ],
-                "show_legend": false,
-                "time": {},
-                "title": "Memory Status",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "timeseries",
-                "yaxis": {
-                    "include_zero": true,
-                    "label": "",
-                    "max": "auto",
-                    "min": "auto",
-                    "scale": "linear"
-                }
-            },
-            "id": 8661987534568956,
-            "layout": {
-                "height": 15,
-                "width": 40,
-                "x": 77,
-                "y": 170
-            }
+        "layout": {
+          "y": 46,
+          "x": 77,
+          "height": 15,
+          "width": 40
         },
-        {
-            "definition": {
-                "background_color": "white",
-                "content": "Status 3 = OK\n\nStatus 4 = Non-Critical\n\nStatus 5 = Critical\n\nStatus 6 = NonRecoverable",
-                "font_size": "18",
-                "show_tick": false,
-                "text_align": "center",
-                "tick_edge": "left",
-                "tick_pos": "50%",
-                "type": "note"
+        "id": 8964824738681970
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 3",
+              "label": "\u00a0OK\u00a0"
             },
-            "id": 6784074264852670,
-            "layout": {
-                "height": 15,
-                "width": 27,
-                "x": 24,
-                "y": 0
+            {
+              "display_type": "error dashed",
+              "value": "y = 4",
+              "label": "\u00a0Voltage Error\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 2",
+              "label": "\u00a0Voltage Error\u00a0"
             }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Overall Voltage Status",
+          "requests": [
+            {
+              "q": "avg:snmp.Voltage.Status.Combined{$IP,$SNMP_Profile,$Host} by {snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
         },
-        {
-            "definition": {
-                "background_color": "white",
-                "content": "Overall iDRAC Health",
-                "font_size": "24",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
-            },
-            "id": 7989610674973266,
-            "layout": {
-                "height": 6,
-                "width": 117,
-                "x": 0,
-                "y": 16
-            }
+        "layout": {
+          "y": 69,
+          "x": 0,
+          "height": 15,
+          "width": 39
         },
-        {
-            "definition": {
-                "background_color": "white",
-                "content": "Fans & Temperature",
-                "font_size": "24",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
+        "id": 8657642923796845
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 4",
+              "label": "\u00a0Online\u00a0"
             },
-            "id": 187810020046646,
-            "layout": {
-                "height": 6,
-                "width": 117,
-                "x": 0,
-                "y": 39
+            {
+              "display_type": "error dashed",
+              "value": "y = 3",
+              "label": "\u00a0Error\u00a0"
             }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Global System Power State",
+          "requests": [
+            {
+              "q": "avg:snmp.Overall.System.PowerState{$IP,$SNMP_Profile,$Host} by {snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
         },
-        {
-            "definition": {
-                "background_color": "white",
-                "content": "Power Supplies",
-                "font_size": "24",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
-            },
-            "id": 6391681837274164,
-            "layout": {
-                "height": 6,
-                "width": 117,
-                "x": 0,
-                "y": 62
-            }
+        "layout": {
+          "y": 69,
+          "x": 40,
+          "height": 15,
+          "width": 36
         },
-        {
-            "definition": {
-                "background_color": "white",
-                "content": "Processors",
-                "font_size": "24",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
-            },
-            "id": 7689713635029358,
-            "layout": {
-                "height": 6,
-                "width": 117,
-                "x": 0,
-                "y": 101
+        "id": 957269150998708
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "title": "Power Supply Input Voltage",
+          "title_align": "left",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "show_legend": false,
+          "time": {},
+          "requests": [
+            {
+              "q": "avg:snmp.PowerSupply.Input.Voltage{$IP,$SNMP_Profile,$Host} by {psu,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
             }
+          ],
+          "type": "timeseries"
         },
-        {
-            "definition": {
-                "background_color": "white",
-                "content": "RAID & Disks",
-                "font_size": "24",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
-            },
-            "id": 6270382492180742,
-            "layout": {
-                "height": 6,
-                "width": 117,
-                "x": 0,
-                "y": 124
-            }
+        "layout": {
+          "y": 69,
+          "x": 77,
+          "height": 15,
+          "width": 40
         },
-        {
-            "definition": {
-                "background_color": "white",
-                "content": "Network Interfaces & Memory",
-                "font_size": "24",
-                "show_tick": true,
-                "text_align": "center",
-                "tick_edge": "bottom",
-                "tick_pos": "50%",
-                "type": "note"
+        "id": 736789011474242
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 1",
+              "label": "\u00a0Presence Detected\u00a0"
             },
-            "id": 7477926031060790,
-            "layout": {
-                "height": 6,
-                "width": 117,
-                "x": 0,
-                "y": 163
+            {
+              "display_type": "error dashed",
+              "value": "y = 2",
+              "label": "\u00a0PS Failure\u00a0"
             }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "PSU Sensor State",
+          "requests": [
+            {
+              "q": "avg:snmp.PowerSupply.Sensor.State{$IP,$SNMP_Profile,$Host} by {psu,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
         },
-        {
-            "definition": {
-                "custom_links": [],
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "alias": "iDRAC System State",
-                        "limit": 50,
-                        "order": "desc",
-                        "q": "avg:snmp.Global.System.Status{*} by {sysname,snmp_device,modelname,serialnumber,firmwareversion,modelname,manufacturer}"
-                    }
-                ],
-                "title": "iDRAC System Inventory",
-                "title_align": "left",
-                "title_size": "16",
-                "type": "query_table"
+        "layout": {
+          "y": 85,
+          "x": 0,
+          "height": 15,
+          "width": 39
+        },
+        "id": 7310410684676042
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 3",
+              "label": "\u00a0OK\u00a0"
             },
-            "id": 277485726176534,
-            "layout": {
-                "height": 15,
-                "width": 65,
-                "x": 52,
-                "y": 0
+            {
+              "display_type": "error dashed",
+              "value": "y = 2",
+              "label": "\u00a0Error\u00a0"
             }
-        }
-    ]
-}
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "CMOS Battery Status",
+          "requests": [
+            {
+              "q": "avg:snmp.CMOSBattery.Status{$IP,$SNMP_Profile,$Host} by {snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 85,
+          "x": 40,
+          "height": 15,
+          "width": 36
+        },
+        "id": 1755966273197779
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 3",
+              "label": "\u00a0OK\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 2",
+              "label": "\u00a0Error\u00a0"
+            }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Power Usage Sensor",
+          "requests": [
+            {
+              "q": "avg:snmp.PowerUsage.Sensor.Status{$IP,$SNMP_Profile,$Host} by {snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 85,
+          "x": 77,
+          "height": 15,
+          "width": 40
+        },
+        "id": 4298984251943358
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 3",
+              "label": "\u00a0OK\u00a0"
+            },
+            {
+              "display_type": "warning dashed",
+              "value": "y = 4",
+              "label": "\u00a0Warning\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 5",
+              "label": "\u00a0Critical\u00a0"
+            }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Processor Status",
+          "requests": [
+            {
+              "q": "avg:snmp.Processor.Status{$IP,$SNMP_Profile,$Host} by {processor,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 108,
+          "x": 0,
+          "height": 15,
+          "width": 39
+        },
+        "id": 6188675194938765
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 3",
+              "label": "\u00a0Online\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 4",
+              "label": "\u00a0Offline\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 2",
+              "label": "\u00a0Offline\u00a0"
+            }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "iDRAC RAID Controller Status",
+          "requests": [
+            {
+              "q": "avg:snmp.Overall.System.StorageStatus{$IP,$SNMP_Profile,$Host} by {snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 131,
+          "x": 0,
+          "height": 15,
+          "width": 39
+        },
+        "id": 1460790951646807
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 3",
+              "label": "\u00a0Online\u00a0"
+            },
+            {
+              "display_type": "warning dashed",
+              "value": "y = 4",
+              "label": "\u00a0Foreign\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 5",
+              "label": "\u00a0Offline\u00a0"
+            }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Dell DRAC Disk State",
+          "requests": [
+            {
+              "q": "avg:snmp.Disk.State{$IP,$SNMP_Profile,$Host} by {disk,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 131,
+          "x": 40,
+          "height": 15,
+          "width": 36
+        },
+        "id": 1776185596757784
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 2",
+              "label": "\u00a0OK\u00a0"
+            }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Volume Disk States",
+          "requests": [
+            {
+              "q": "avg:snmp.Disk.Status{$IP,$SNMP_Profile,$Host} by {disk,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 131,
+          "x": 77,
+          "height": 15,
+          "width": 40
+        },
+        "id": 2791270785959197
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 3",
+              "label": "\u00a0OK\u00a0"
+            }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Volume Status",
+          "requests": [
+            {
+              "q": "avg:snmp.Disk.Status{$IP,$SNMP_Profile,$Host} by {disk,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 147,
+          "x": 0,
+          "height": 15,
+          "width": 39
+        },
+        "id": 2090924293394270
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 3",
+              "label": "\u00a0OK\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 2",
+              "label": "\u00a0NIC Error\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 4",
+              "label": "\u00a0NIC Error\u00a0"
+            }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Network Port Status",
+          "requests": [
+            {
+              "q": "avg:snmp.NIC.Status{$IP,$SNMP_Profile,$Host} by {nicname,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "cool",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 170,
+          "x": 0,
+          "height": 15,
+          "width": 39
+        },
+        "id": 6464376041888657
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok dashed",
+              "value": "y = 2",
+              "label": "\u00a0Up\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 1",
+              "label": "\u00a0Down\u00a0"
+            }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Network Connection Status",
+          "requests": [
+            {
+              "q": "avg:snmp.NIC.ConnectionStatus{$IP,$SNMP_Profile,$Host} by {nicname,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 170,
+          "x": 40,
+          "height": 15,
+          "width": 36
+        },
+        "id": 1275685638899597
+      },
+      {
+        "definition": {
+          "title_size": "16",
+          "yaxis": {
+            "max": "auto",
+            "include_zero": true,
+            "scale": "linear",
+            "min": "auto",
+            "label": ""
+          },
+          "title_align": "left",
+          "markers": [
+            {
+              "display_type": "ok solid",
+              "value": "y = 3",
+              "label": "\u00a0OK\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 2",
+              "label": "\u00a0Problem\u00a0"
+            },
+            {
+              "display_type": "error dashed",
+              "value": "y = 4",
+              "label": "\u00a0Problem\u00a0"
+            }
+          ],
+          "show_legend": false,
+          "time": {},
+          "title": "Memory Status",
+          "requests": [
+            {
+              "q": "avg:snmp.Memory.Status{$IP,$SNMP_Profile,$Host} by {memoryslot,snmp_device}",
+              "style": {
+                "line_width": "normal",
+                "palette": "dog_classic",
+                "line_type": "solid"
+              },
+              "display_type": "line"
+            }
+          ],
+          "type": "timeseries"
+        },
+        "layout": {
+          "y": 170,
+          "x": 77,
+          "height": 15,
+          "width": 40
+        },
+        "id": 8661987534568956
+      },
+      {
+        "definition": {
+          "tick_pos": "50%",
+          "show_tick": false,
+          "type": "note",
+          "tick_edge": "left",
+          "text_align": "center",
+          "content": "Status 3 = OK\n\nStatus 4 = Non-Critical\n\nStatus 5 = Critical\n\nStatus 6 = NonRecoverable",
+          "font_size": "18",
+          "background_color": "white"
+        },
+        "layout": {
+          "y": 0,
+          "x": 24,
+          "height": 15,
+          "width": 27
+        },
+        "id": 6784074264852670
+      },
+      {
+        "definition": {
+          "tick_pos": "50%",
+          "show_tick": true,
+          "type": "note",
+          "tick_edge": "bottom",
+          "text_align": "center",
+          "content": "Overall iDRAC Health",
+          "font_size": "24",
+          "background_color": "white"
+        },
+        "layout": {
+          "y": 16,
+          "x": 0,
+          "height": 6,
+          "width": 117
+        },
+        "id": 7989610674973266
+      },
+      {
+        "definition": {
+          "tick_pos": "50%",
+          "show_tick": true,
+          "type": "note",
+          "tick_edge": "bottom",
+          "text_align": "center",
+          "content": "Fans & Temperature",
+          "font_size": "24",
+          "background_color": "white"
+        },
+        "layout": {
+          "y": 39,
+          "x": 0,
+          "height": 6,
+          "width": 117
+        },
+        "id": 187810020046646
+      },
+      {
+        "definition": {
+          "tick_pos": "50%",
+          "show_tick": true,
+          "type": "note",
+          "tick_edge": "bottom",
+          "text_align": "center",
+          "content": "Power Supplies",
+          "font_size": "24",
+          "background_color": "white"
+        },
+        "layout": {
+          "y": 62,
+          "x": 0,
+          "height": 6,
+          "width": 117
+        },
+        "id": 6391681837274164
+      },
+      {
+        "definition": {
+          "tick_pos": "50%",
+          "show_tick": true,
+          "type": "note",
+          "tick_edge": "bottom",
+          "text_align": "center",
+          "content": "Processors",
+          "font_size": "24",
+          "background_color": "white"
+        },
+        "layout": {
+          "y": 101,
+          "x": 0,
+          "height": 6,
+          "width": 117
+        },
+        "id": 7689713635029358
+      },
+      {
+        "definition": {
+          "tick_pos": "50%",
+          "show_tick": true,
+          "type": "note",
+          "tick_edge": "bottom",
+          "text_align": "center",
+          "content": "RAID & Disks",
+          "font_size": "24",
+          "background_color": "white"
+        },
+        "layout": {
+          "y": 124,
+          "x": 0,
+          "height": 6,
+          "width": 117
+        },
+        "id": 6270382492180742
+      },
+      {
+        "definition": {
+          "tick_pos": "50%",
+          "show_tick": true,
+          "type": "note",
+          "tick_edge": "bottom",
+          "text_align": "center",
+          "content": "Network Interfaces & Memory",
+          "font_size": "24",
+          "background_color": "white"
+        },
+        "layout": {
+          "y": 163,
+          "x": 0,
+          "height": 6,
+          "width": 117
+        },
+        "id": 7477926031060790
+      },
+      {
+        "definition": {
+          "custom_links": [],
+          "title_size": "16",
+          "title": "iDRAC System Inventory",
+          "title_align": "left",
+          "requests": [
+            {
+              "q": "avg:snmp.Global.System.Status{*} by {sysname,snmp_device,modelname,serialnumber,firmwareversion,modelname,manufacturer}",
+              "aggregator": "avg",
+              "limit": 50,
+              "order": "desc",
+              "alias": "iDRAC System State"
+            }
+          ],
+          "type": "query_table"
+        },
+        "layout": {
+          "y": 0,
+          "x": 52,
+          "height": 15,
+          "width": 65
+        },
+        "id": 277485726176534
+      }
+    ],
+    "layout_type": "free"
+  }

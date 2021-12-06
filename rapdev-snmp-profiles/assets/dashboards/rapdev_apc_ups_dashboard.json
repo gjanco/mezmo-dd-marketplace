@@ -17,6 +17,11 @@
             "default": "rd-apc-smart-ups",
             "name": "SNMP_Profile",
             "prefix": "snmp_profile"
+        },
+        {
+            "default": "*",
+            "prefix": "snmp_host",
+            "name": "Sysname"
         }
     ],
     "title": "RapDev APC UPS Dashboard",
@@ -30,7 +35,7 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:snmp.sysUpTimeInstance{$IP,$Host,$SNMP_Profile}/8640000"
+                        "q": "avg:snmp.sysUpTimeInstance{$IP,$Host,$SNMP_Profile,$Sysname}/8640000"
                     }
                 ],
                 "title": "System Up Time",
@@ -74,7 +79,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.TestDiagnosticsResults{$IP,$Host,$SNMP_Profile} by {snmp_device}",
+                        "q": "avg:snmp.TestDiagnosticsResults{$IP,$Host,$SNMP_Profile,$Sysname} by {snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -147,7 +152,7 @@
                                 "value": 0
                             }
                         ],
-                        "q": "max:snmp.Battery.Bad_Count{$IP,$Host,$SNMP_Profile}"
+                        "q": "max:snmp.Battery.Bad_Count{$IP,$Host,$SNMP_Profile,$Sysname}"
                     }
                 ],
                 "title": "Battery Bad Count",
@@ -183,7 +188,7 @@
                                 "value": 1
                             }
                         ],
-                        "q": "max:snmp.Battery.Needs_Replace{$IP,$Host,$SNMP_Profile}"
+                        "q": "max:snmp.Battery.Needs_Replace{$IP,$Host,$SNMP_Profile,$Sysname}"
                     }
                 ],
                 "title": "Battery Needs Replacing",
@@ -205,7 +210,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "max:snmp.Battery.Temperature{$IP,$Host,$SNMP_Profile} by {snmp_device}",
+                        "q": "max:snmp.Battery.Temperature{$IP,$Host,$SNMP_Profile,$Sysname} by {snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -243,7 +248,7 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "max:snmp.Battery.TimeOnBattery{$IP,$Host,$SNMP_Profile}/100"
+                        "q": "max:snmp.Battery.TimeOnBattery{$IP,$Host,$SNMP_Profile,$Sysname}/100"
                     }
                 ],
                 "title": "Time Spent on Battery",
@@ -309,7 +314,7 @@
                 "requests": [
                     {
                         "aggregator": "last",
-                        "q": "avg:snmp.Battery.Runtime_Remaining{$IP,$Host,$SNMP_Profile}/6000"
+                        "q": "avg:snmp.Battery.Runtime_Remaining{$IP,$Host,$SNMP_Profile,$Sysname}/6000"
                     }
                 ],
                 "title": "Battery Run Time Remaining",
@@ -401,7 +406,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Input.LineFailCause{$IP,$Host,$SNMP_Profile} by {snmp_device}",
+                        "q": "avg:snmp.Input.LineFailCause{$IP,$Host,$SNMP_Profile,$Sysname} by {snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -440,7 +445,7 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:snmp.Input.Voltage{$IP,$Host,$SNMP_Profile}/10"
+                        "q": "avg:snmp.Input.Voltage{$IP,$Host,$SNMP_Profile,$Sysname}/10"
                     }
                 ],
                 "title": "Input Voltage",
@@ -465,7 +470,7 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:snmp.Input.Frequency{$IP,$Host,$SNMP_Profile}/10"
+                        "q": "avg:snmp.Input.Frequency{$IP,$Host,$SNMP_Profile,$Sysname}/10"
                     }
                 ],
                 "title": "Input Frequency (hz)",
@@ -532,7 +537,7 @@
                                 "value": 60
                             }
                         ],
-                        "q": "avg:snmp.Output.Load{$IP,$Host,$SNMP_Profile}"
+                        "q": "avg:snmp.Output.Load{$IP,$Host,$SNMP_Profile,$Sysname}"
                     }
                 ],
                 "title": "Used Load Capacity (%)",
@@ -554,7 +559,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Battery.Runtime_Remaining{$IP,$Host,$SNMP_Profile} by {snmp_device}/6000",
+                        "q": "avg:snmp.Battery.Runtime_Remaining{$IP,$Host,$SNMP_Profile,$Sysname} by {snmp_device}/6000",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -589,7 +594,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Input.Voltage{$IP,$Host,$SNMP_Profile} by {snmp_device}/10",
+                        "q": "avg:snmp.Input.Voltage{$IP,$Host,$SNMP_Profile,$Sysname} by {snmp_device}/10",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -624,7 +629,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Output.Current{$IP,$Host,$SNMP_Profile} by {snmp_device}/10",
+                        "q": "avg:snmp.Output.Current{$IP,$Host,$SNMP_Profile,$Sysname} by {snmp_device}/10",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -659,7 +664,7 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.Output.Load{$IP,$Host,$SNMP_Profile} by {snmp_device}",
+                        "q": "avg:snmp.Output.Load{$IP,$Host,$SNMP_Profile,$Sysname} by {snmp_device}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
