@@ -107,7 +107,7 @@ Separate from this Federator.ai license, an official [Datadog Integration][9] wi
 For support or requests, contact [ProphetStor support](mailto:support@prophetstor.com).
 
 
-[1]: https://prophetstor.com/federator-ai-2/
+[1]: https://prophetstor.com/federator_ai/
 [2]: https://www.youtube.com/watch?v=IooFJnB8bb8&t=1s
 [3]: https://github.com/DataDog/watermarkpodautoscaler
 [4]: https://prophetstor.com/wp-content/uploads/documentation/Federator.ai/Latest%20Version/ProphetStor%20Federator.ai%20Installation%20Guide.pdf
