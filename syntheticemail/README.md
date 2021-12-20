@@ -6,7 +6,11 @@ This integration monitors email mailboxes and measures full send-receive synthet
 
 ### Integration Install
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-syntheticemail==1.0.0`
+Linux:
+* `sudo -u dd-agent datadog-agent integration install --third-party datadog-syntheticemail==1.1.0`
+
+Windows:
+* `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-syntheticemail==1.1.0`
 
 ### Mailbox Configuration
 
