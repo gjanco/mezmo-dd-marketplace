@@ -1,5 +1,13 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.3.0 / 2021-12-09
+
+* [Added] support disk configuration options for mount point and device include and exclude.
+* [Added] support disk configuration options for device_tag_re and mount_point_tag_re.
+* [Added] support for process checks.
+* [Added] support log tail file globs.
+* [Fixed] preinstall script user and group creation modified to avoid detection and use of LDAP based user.
+
 ## 1.2.0 / 2021-06-11
 
 * [Added] support for new "Host Info" metadata in Datadog Infrastructure List.
