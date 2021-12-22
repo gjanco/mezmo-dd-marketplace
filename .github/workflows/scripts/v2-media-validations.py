@@ -66,7 +66,7 @@ def validate_media_elements(check_name, manifest_dict):
                 output = (f'  The width for the image at `{image_path}` should be a maximum of {MAXIMUM_WIDTH}px, but '
                           f'is currently {width}px.')
                 error_output.append(output)
-        except FileNotFoundError:
+        except (FileNotFoundError, NotADirectoryError):
             output = f'  Image could not be opened at `{image_path}`.'
             error_output.append(output)
 
@@ -106,7 +106,7 @@ def main():
                 errors = validate_media_elements(current_check_name, manifest_data)
                 all_errors.extend(errors)
                 annotate_errors(manifest_path, errors)
-        except FileNotFoundError:
+        except (FileNotFoundError, NotADirectoryError):
             print(f'Could not find manifest file at this path: {manifest_path}')
 
     # Print error output in addition to annotating
