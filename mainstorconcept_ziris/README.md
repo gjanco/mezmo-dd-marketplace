@@ -30,6 +30,16 @@ With z/IRIS, mainframe observability for DevOps is a core concept. Teams can beg
 * CPU contention per system
 * CPU usage per system
 
+### Partners by region
+
+North-American based organizations can contact our partner SEA:
+* E-mail: [SEA- Software Engineering of America](mailto:support@seasoft.com)
+* Phone: (800) 272-7322 (Voice toll-free)
+* Phone: 516-328-7000
+
+EMEA and South American based organization can contact:
+* E-mail: [mainstorconcept GmbH](mailto:sales@mainstorconcept.com)
+* Phone: +49721790760
 
 ### Data Collected
 
@@ -175,3 +185,5 @@ If you have any questions about z/IRIS, please open a [support request](https://
 or contact us at [support@mainstorconcept.com](mailto:support@mainstorconcept.com).
 
 If you want to schedule a demo, please contact [sales@mainstorconcept.com](mailto:sales@mainstorconcept.com).
+
+If you are looking for local support for the North American region, contact our partner [SEA- Software Engineering of America](mailto:support@seasoft.com) per mail or call (800) 272-7322.
