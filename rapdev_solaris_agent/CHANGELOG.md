@@ -1,5 +1,9 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.3.1 / 2022-01-12
+
+* [Fixed] switched daemon user from `dd-agent` to `datadog` to avoid resolution conflict with LDAP user.
+
 ## 1.3.0 / 2021-12-09
 
 * [Added] support disk configuration options for mount point and device include and exclude.
