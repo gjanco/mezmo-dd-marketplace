@@ -121,7 +121,7 @@ For support or feature requests please contact RapDev.io through the following c
  - Chat: [RapDev.io/products](https://rapdev.io/products)
  - Phone: 855-857-0222 
 
-Tiered discounts for Office 365 users over 1,000 are available. Contact us at [datadog-engineering@rapdev.io](mailto:integration@rapdev.io).
+Tiered discounts for Office 365 users over 1,000 are available. Contact us at [datadog-engineering@rapdev.io](mailto:datadog-engineering@rapdev.io).
 
 ---
 
