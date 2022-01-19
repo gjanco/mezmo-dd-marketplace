@@ -1,5 +1,8 @@
 # CHANGELOG - rapdev-snmp-profiles
 
+## 1.0.2 / 2022-01-13
+* [Fixed] Incorrect template variables in all dashboards. Removed all cases of ifName and ifAlias.
+
 ## 1.0.1 / 2021-12-20
 
 * [Fixed] Incorrect headers in Palo Alto Nextgen Dashboard

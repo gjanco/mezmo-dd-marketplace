@@ -4,8 +4,8 @@
   "template_variables": [
     {
       "default": "*",
-      "prefix": "ifName",
-      "name": "interface"
+      "prefix": "interface",
+      "name": "Interface"
     },
     {
       "default": "*",
@@ -24,8 +24,8 @@
     },
     {
       "default": "*",
-      "prefix": "ifAlias",
-      "name": "interface_alias"
+      "prefix": "interface_alias",
+      "name": "Interface_Alias"
     },
     {
       "default": "*",
@@ -274,7 +274,7 @@
         "title": "Bytes In & Bytes Out",
         "requests": [
           {
-            "q": "avg:snmp.ifHCInOctets.rate{$Host,$SNMP_Profile,$IP,$interface,$interface_alias, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifHCInOctets.rate{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -283,7 +283,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifHCOutOctets.rate{$Host,$SNMP_Profile,$IP,$interface,$interface_alias, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifHCOutOctets.rate{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -317,7 +317,7 @@
         "title": "In & Out Broadcasts",
         "requests": [
           {
-            "q": "avg:snmp.ifHCInBroadcastPkts{$Host,$SNMP_Profile,$interface,$IP,$interface_alias, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCInBroadcastPkts{$Host,$SNMP_Profile,$Interface,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -326,7 +326,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifHCOutBroadcastPkts{$Host,$SNMP_Profile,$interface,$IP,$interface_alias, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCOutBroadcastPkts{$Host,$SNMP_Profile,$Interface,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -360,7 +360,7 @@
         "title": "In & Out Unicast Packets",
         "requests": [
           {
-            "q": "avg:snmp.ifHCInUcastPkts{$Host,$SNMP_Profile,$IP,$interface,$interface_alias, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCInUcastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -369,7 +369,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifHCOutUcastPkts{$Host,$SNMP_Profile,$IP,$interface,$interface_alias, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCOutUcastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -403,7 +403,7 @@
         "title": "In & Out MultiCastPkts",
         "requests": [
           {
-            "q": "avg:snmp.ifHCInMulticastPkts{$Host,$SNMP_Profile,$IP,$interface,$interface_alias, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCInMulticastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -412,7 +412,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifHCOutMulticastPkts{$Host,$SNMP_Profile,$IP,$interface,$interface_alias, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCOutMulticastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -446,7 +446,7 @@
         "title": "In & Out Errors",
         "requests": [
           {
-            "q": "avg:snmp.ifInErrors{$interface,$Host,$SNMP_Profile,$IP,$interface_alias, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifInErrors{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -455,7 +455,7 @@
             "display_type": "area"
           },
           {
-            "q": "avg:snmp.ifOutErrors{$interface,$Host,$SNMP_Profile,$IP,$interface_alias, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifOutErrors{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -541,19 +541,19 @@
         "title_align": "left",
         "requests": [
           {
-            "q": "avg:snmp.ifAdminStatus{$Host,$SNMP_Profile,$IP, $Sysname} by {ifName,ifAlias}",
+            "q": "avg:snmp.ifAdminStatus{$Host,$SNMP_Profile,$IP, $Sysname} by {interface,interface_alias}",
             "aggregator": "avg",
             "alias": "Admin Status"
           },
           {
-            "q": "avg:snmp.ifOperStatus{$Host,$SNMP_Profile,$IP, $Sysname} by {ifName,ifAlias}",
+            "q": "avg:snmp.ifOperStatus{$Host,$SNMP_Profile,$IP, $Sysname} by {interface,interface_alias}",
             "aggregator": "avg",
             "limit": 10,
             "order": "desc",
             "alias": "Oper Status"
           },
           {
-            "q": "avg:snmp.ifHighSpeed{$Host,$SNMP_Profile,$IP, $Sysname} by {ifName,ifAlias}",
+            "q": "avg:snmp.ifHighSpeed{$Host,$SNMP_Profile,$IP, $Sysname} by {interface,interface_alias}",
             "aggregator": "avg",
             "alias": "Speed"
           }
@@ -748,7 +748,7 @@
         "autoscale": false,
         "requests": [
           {
-            "q": "avg:snmp.ifBandwidthInUsage.rate{$interface,$Host,$SNMP_Profile,$IP,$interface_alias, $Sysname}",
+            "q": "avg:snmp.ifBandwidthInUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname}",
             "aggregator": "last"
           }
         ],
@@ -773,7 +773,7 @@
         "autoscale": false,
         "requests": [
           {
-            "q": "avg:snmp.ifBandwidthOutUsage.rate{$interface,$Host,$SNMP_Profile,$IP,$interface_alias, $Sysname}",
+            "q": "avg:snmp.ifBandwidthOutUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname}",
             "aggregator": "last"
           }
         ],
@@ -803,7 +803,7 @@
         "title": "Interface Utilization (%)",
         "requests": [
           {
-            "q": "avg:snmp.ifBandwidthInUsage.rate{$interface,$Host,$SNMP_Profile,$IP,$interface_alias, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifBandwidthInUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -812,7 +812,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifBandwidthOutUsage.rate{$interface,$Host,$SNMP_Profile,$IP,$interface_alias, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifBandwidthOutUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",

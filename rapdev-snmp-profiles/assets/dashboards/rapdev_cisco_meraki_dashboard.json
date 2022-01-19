@@ -4,13 +4,13 @@
   "template_variables": [
     {
       "default": "*",
-      "prefix": "ifName",
-      "name": "interface"
+      "prefix": "interface",
+      "name": "Interface"
     },
     {
       "default": "*",
-      "prefix": "ifAlias",
-      "name": "interface_alias"
+      "prefix": "interface_alias",
+      "name": "Interface_Alias"
     },
     {
       "default": "rd-meraki-switch",
@@ -283,7 +283,7 @@
         "title": "Interface Packets Send/Receive",
         "requests": [
           {
-            "q": "avg:snmp.Device.Interface.RecvPkts{$interface,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {ifName}",
+            "q": "avg:snmp.Device.Interface.RecvPkts{$Interface,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -292,7 +292,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.Device.Interface.SentPkts{$interface,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {ifName}",
+            "q": "avg:snmp.Device.Interface.SentPkts{$Interface,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -326,7 +326,7 @@
         "title": "Interface Bytes Send/Receive",
         "requests": [
           {
-            "q": "avg:snmp.Device.Interface.RecvBytes{$interface,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {ifName}",
+            "q": "avg:snmp.Device.Interface.RecvBytes{$Interface,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -335,7 +335,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.Device.Interface.SentBytes{$interface,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {ifName}",
+            "q": "avg:snmp.Device.Interface.SentBytes{$Interface,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -362,7 +362,7 @@
         "time": {},
         "requests": [
           {
-            "q": "top(sum:snmp.Device.Interface.RecvBytes{$DeviceName,$NetworkName,$Product,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {ifName}, 10, 'last', 'desc')"
+            "q": "top(sum:snmp.Device.Interface.RecvBytes{$DeviceName,$NetworkName,$Product,snmp_profile:rd-meraki-cloudcontroller, $Sysname} by {interface}, 10, 'last', 'desc')"
           }
         ],
         "type": "toplist"
@@ -384,7 +384,7 @@
         "time": {},
         "requests": [
           {
-            "q": "max:snmp.ifAdminStatus{$IP,$interface,$interface_alias,$SNMP_Profile, $Sysname}",
+            "q": "max:snmp.ifAdminStatus{$IP,$Interface,$Interface_Alias,$SNMP_Profile, $Sysname}",
             "aggregator": "last",
             "conditional_formats": [
               {
@@ -426,7 +426,7 @@
         "title": "Bytes In & Bytes Out",
         "requests": [
           {
-            "q": "avg:snmp.ifHCInOctets.rate{$SNMP_Profile,$IP,$interface_alias,$interface, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifHCInOctets.rate{$SNMP_Profile,$IP,$Interface_Alias,$Interface, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -435,7 +435,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifHCOutOctets.rate{$SNMP_Profile,$IP,$interface_alias,$interface, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifHCOutOctets.rate{$SNMP_Profile,$IP,$Interface_Alias,$Interface, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -470,7 +470,7 @@
         "title": "In & Out Broadcasts",
         "requests": [
           {
-            "q": "avg:snmp.ifHCInBroadcastPkts{$SNMP_Profile,$interface_alias,$interface,$IP, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifHCInBroadcastPkts{$SNMP_Profile,$Interface_Alias,$Interface,$IP, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -479,7 +479,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifHCOutBroadcastPkts{$SNMP_Profile,$interface_alias,$interface,$IP, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifHCOutBroadcastPkts{$SNMP_Profile,$Interface_Alias,$Interface,$IP, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -513,7 +513,7 @@
         "title": "In & Out Unicast Packets",
         "requests": [
           {
-            "q": "avg:snmp.ifHCInUcastPkts{$IP,$interface,$interface_alias,$SNMP_Profile, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCInUcastPkts{$IP,$Interface,$Interface_Alias,$SNMP_Profile, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -522,7 +522,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifHCOutUcastPkts{$IP,$interface,$interface_alias,$SNMP_Profile, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCOutUcastPkts{$IP,$Interface,$Interface_Alias,$SNMP_Profile, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -556,7 +556,7 @@
         "title": "In & Out MultiCastPkts",
         "requests": [
           {
-            "q": "avg:snmp.ifHCInMulticastPkts{$IP,$interface,$interface_alias,$SNMP_Profile, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCInMulticastPkts{$IP,$Interface,$Interface_Alias,$SNMP_Profile, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -565,7 +565,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifHCOutMulticastPkts{$IP,$interface,$interface_alias,$SNMP_Profile, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifHCOutMulticastPkts{$IP,$Interface,$Interface_Alias,$SNMP_Profile, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -599,7 +599,7 @@
         "title": "In & Out Errors",
         "requests": [
           {
-            "q": "avg:snmp.ifInErrors{$interface,$interface_alias,$IP,$SNMP_Profile, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifInErrors{$Interface,$Interface_Alias,$IP,$SNMP_Profile, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -608,7 +608,7 @@
             "display_type": "area"
           },
           {
-            "q": "avg:snmp.ifOutErrors{$interface,$interface_alias,$IP,$SNMP_Profile, $Sysname} by {ifName}.as_count()",
+            "q": "avg:snmp.ifOutErrors{$Interface,$Interface_Alias,$IP,$SNMP_Profile, $Sysname} by {interface}.as_count()",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -636,7 +636,7 @@
         "time": {},
         "requests": [
           {
-            "q": "max:snmp.ifOperStatus{$SNMP_Profile,$interface_alias,$IP,$interface, $Sysname}",
+            "q": "max:snmp.ifOperStatus{$SNMP_Profile,$Interface_Alias,$IP,$Interface, $Sysname}",
             "aggregator": "last",
             "conditional_formats": [
               {
@@ -672,7 +672,7 @@
         "precision": 2,
         "requests": [
           {
-            "q": "max:snmp.ifHighSpeed{$interface,$interface_alias,$IP,$SNMP_Profile, $Sysname}",
+            "q": "max:snmp.ifHighSpeed{$Interface,$Interface_Alias,$IP,$SNMP_Profile, $Sysname}",
             "aggregator": "last"
           }
         ],
@@ -694,19 +694,19 @@
         "title_align": "left",
         "requests": [
           {
-            "q": "avg:snmp.ifAdminStatus{$interface,$interface_alias,$IP,$SNMP_Profile, $Sysname} by {ifName,ifNamedescription}",
+            "q": "avg:snmp.ifAdminStatus{$Interface,$Interface_Alias,$IP,$SNMP_Profile, $Sysname} by {interface,interfacedescription}",
             "aggregator": "last",
             "alias": "Admin Status"
           },
           {
-            "q": "avg:snmp.ifOperStatus{$interface,$interface_alias,$IP,$SNMP_Profile, $Sysname} by {ifName,ifNamedescription}",
+            "q": "avg:snmp.ifOperStatus{$Interface,$Interface_Alias,$IP,$SNMP_Profile, $Sysname} by {interface,interfacedescription}",
             "aggregator": "last",
             "limit": 100,
             "order": "asc",
             "alias": "Oper Status"
           },
           {
-            "q": "avg:snmp.ifHighSpeed{$interface,$interface_alias,$IP,$SNMP_Profile, $Sysname} by {ifName,ifNamedescription}",
+            "q": "avg:snmp.ifHighSpeed{$Interface,$Interface_Alias,$IP,$SNMP_Profile, $Sysname} by {interface,interfacedescription}",
             "aggregator": "last",
             "alias": "Speed"
           }
@@ -731,7 +731,7 @@
         "precision": 3,
         "requests": [
           {
-            "q": "avg:snmp.ifBandwidthInUsage.rate{$interface_alias,$interface,$SNMP_Profile,$IP, $Sysname}",
+            "q": "avg:snmp.ifBandwidthInUsage.rate{$Interface_Alias,$Interface,$SNMP_Profile,$IP, $Sysname}",
             "aggregator": "last"
           }
         ],
@@ -755,7 +755,7 @@
         "precision": 3,
         "requests": [
           {
-            "q": "avg:snmp.ifBandwidthOutUsage.rate{$interface_alias,$interface,$SNMP_Profile,$IP, $Sysname}",
+            "q": "avg:snmp.ifBandwidthOutUsage.rate{$Interface_Alias,$Interface,$SNMP_Profile,$IP, $Sysname}",
             "aggregator": "last"
           }
         ],
@@ -785,7 +785,7 @@
         "title": "Interface Utilization (%)",
         "requests": [
           {
-            "q": "avg:snmp.ifBandwidthInUsage.rate{$interface_alias,$interface,$SNMP_Profile,$IP, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifBandwidthInUsage.rate{$Interface_Alias,$Interface,$SNMP_Profile,$IP, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
@@ -794,7 +794,7 @@
             "display_type": "line"
           },
           {
-            "q": "avg:snmp.ifBandwidthOutUsage.rate{$interface_alias,$interface,$SNMP_Profile,$IP, $Sysname} by {ifName}",
+            "q": "avg:snmp.ifBandwidthOutUsage.rate{$Interface_Alias,$Interface,$SNMP_Profile,$IP, $Sysname} by {interface}",
             "style": {
               "line_width": "normal",
               "palette": "dog_classic",
