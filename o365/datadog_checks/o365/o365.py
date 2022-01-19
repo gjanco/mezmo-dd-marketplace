@@ -2867,41 +2867,41 @@ class O365Check(AgentCheck):
     ## Office 365 Service Communications - Incident Messages
     ###############################################################################################
     def get_servicecomms_incidents(self):
-        token = self.management_token.get("access_token", None)
-        tenant_id       = self.instance.get("tenant_id", None)
-        manage_host     = self.instance.get("manage_url", "https://manage.office.com")
-        manage_path     = "api/v1.0/{}/ServiceComms/Messages".format(tenant_id)
-        manage_headers  = {
+        token = self.reports_token.get("access_token", None)
+        tenant_id = self.instance.get("tenant_id", None)
+        graph_host = self.instance.get("graph_url", "https://graph.microsoft.com")
+        graph_path = "v1.0/admin/serviceAnnouncement/issues"
+        graph_headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer {}".format(token),
         }
-        url = "{}/{}".format(manage_host, manage_path)
-        res = rq.get(url, headers=manage_headers, timeout=REQ_TIMEOUT)
+        url = "{}/{}".format(graph_host, graph_path)
+        res = rq.get(url, headers=graph_headers, timeout=REQ_TIMEOUT)
         res.raise_for_status()
         values = res.json().get("value")
 
         now = datetime.now(tz=timezone.utc)
         interval = float(self.instance.get("min_collection_interval", 300.0))
-        for incident in [v for v in values if v.get("MessageType") == "Incident"]:
-            incidentId = incident.get("Id")
-            impactDescription = incident.get("ImpactDescription")
+        for incident in values:
+            incidentId = incident.get("id")
+            impactDescription = incident.get("impactDescription")
 
             tags = self.tags.copy()
             tags.append("{}:{}".format("App", "O365"))
-            tags.append("{}:{}".format("Workload", incident.get("Workload")))
-            tags.append("{}:{}".format("Feature", incident.get("Feature")))
-            tags.append("{}:{}".format("Status", incident.get("Status")))
-            tags.append("{}:{}".format("Classification", incident.get("Classification")))
+            tags.append("{}:{}".format("workload", incident.get("workload")))
+            tags.append("{}:{}".format("feature", incident.get("feature")))
+            tags.append("{}:{}".format("status", incident.get("status")))
+            tags.append("{}:{}".format("classification", incident.get("classification")))
 
-            for message in incident.get("Messages", []):
-                messageDT = parse(message.get("PublishedTime"))
+            for message in incident.get("posts", []):
+                messageDT = parse(message.get("createdDateTime"))
                 elapsed = now - messageDT
 
                 if elapsed.total_seconds() < (interval + 10.0):
                     self.event({
                         "timestamp": messageDT.timestamp(),
                         "msg_title": "[{}] {}".format(incidentId, impactDescription),
-                        "msg_text": message.get("MessageText"), 
+                        "msg_text": message.get("description", {}).get("content", ""), 
                         "aggregation_key": incidentId,
                         "source_type_name": "o365",
                         "tags": tags,

@@ -1,5 +1,10 @@
 # CHANGELOG - o365
 
+## 2.1.1 / 2022-01-13
+
+* [Fixed] migrated ServiceCommunications from deprecated Management API to Service Health and Communications from the Microsoft Graph API.
+* [Fixed] updated README with updates to installation and known issues based on Microsoft Azure Portal UI changes.
+
 ## 2.1.0 / 2021-09-30
 
 * [Added] feature to report on top Outlook mailbox storage used and deleted dimensioned by user principal. Feature is enabled and configured with the `outlook_mailbox_topn` parameter.

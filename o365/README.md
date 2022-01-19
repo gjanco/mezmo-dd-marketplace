@@ -9,10 +9,10 @@ All integrations can be toggled on and off in the ```o365.yaml``` file as part o
 ### Datadog Integration Install
 
 Linux:
-* `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.1.0`
+* `sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.1.1`
 
 Windows:
-* `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-o365==2.1.0`
+* `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-o365==2.1.1`
 
 ### Microsoft Office 365 Configuration
 
@@ -29,30 +29,35 @@ The Microsoft Office 365 integration requires permissions managed through your o
 	3.2. Configure the DatadogIntegration application API permissions. 
 
 	- Select `Add a permission`, `Microsoft Graph`, and then `Application Permissions`. Add the following permissions:
+		
 		- Reports.Read.All
+		- ServiceHealth.Read.All
+		- ServiceMessage.Read.All
 
 	- Select `Add a permission`, `Office 365 Management APIs`, and then `Application Permissions`. Add the following permissions:
+		
 		- ActivityFeed.Read
-		- ActivityFeed.ReadDlp 
+		- ActivityFeed.ReadDlp
 		- ServiceHealth.Read
 
 	- Select `Add a permission`, `Microsoft Graph`, and then `Delegated Permissions`. Add the following permissions:
-	  - AllSites.Read
+
+		- email
+		- openid
+		- profile
+		- offline_access
 		- Calendars.ReadWrite
 		- Channel.ReadBasic.All
 		- ChannelMessage.Send
-		- email
 		- Files.ReadWrite
-		- offline_access
-		- openid
-		- profile
+		- Sites.Read.All
 		- Team.ReadBasic.All
 
 	- Select `Grant Admin Consent for {Organization}` to give consent to the app registration to consume the configured API permissions.
 
 	3.3. From the app registration `Overview`, add the `Application (client) ID` and `Directory (tenant) ID` values to the `o365.d/o365.yaml` file as `client_id` and `tenant_id`, respectively.
 
-	3.4. Select `Certificates & secrets` and `New client secret`. It's recommended to use `Never` for expiration unless you are actively managing the secret for your agent installation. Copy the client secret value promptly from the Microsoft Azure UI as the secret will be masked after a short period of time.
+	3.4. Select `Certificates & secrets` and `New client secret`. Copy the client secret value promptly from the Microsoft Azure UI as the secret will be masked after a short period of time.
 
 	3.5. Add the generated `client_secret` value to the `o365.d/o365.yaml` file.
 
@@ -87,38 +92,47 @@ tags:
 [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-status-and-information) and look for `o365` under the Checks section.
 
 ### Known Issues
-<hr>
 
-**After enabling `outlook_mailbox_topn` the `upn` and `display_name` tags are displayed as Azure Object GUIDs, masking expected user information.**
+- **After enabling `outlook_mailbox_topn` the `upn` and `display_name` tags are displayed as Azure Object GUIDs, masking expected user information.**
 
-Microsoft changed the Graph Reports data to default to GUID values as an additional privacy feature. You can switch back to using the unmasked values with the following configuration change:
+	Microsoft 365 reports show anonymous user names instead of the actual user names by default as of September 1, 2021. The display of user principal names in Microsoft Graph Reports can be enabled through Microsoft's troubleshooting [instructions](https://docs.microsoft.com/en-us/office365/troubleshoot/miscellaneous/reports-show-anonymous-user-name#resolution).
 
-*Global administrators can revert this change for their tenant and show identifiable user information if their organizations privacy practices allow. This can be achieved in the admin center by going to the Settings > Org Settings > Services page and selecting 'Reports'. Under 'choose how to show user information', select 'Show identifiable user information in reports'. Showing identifiable user information is a logged event in the Microsoft 365 Compliance Center Audit log.*
+- **Synthetic Email with Outlook data is not displayed in the Office365 dashboard. The Datadog Agent O365 integration reports successful execution and the synthetic email user mailbox shows properly forwarded emails.**
 
-<hr>
+	Microsoft M365 Exchange implements the [Sender Rewriting Scheme (SRS)](https://docs.microsoft.com/en-us/office365/troubleshoot/antispam/sender-rewriting-scheme) which targets auto-forwarding incompatability with SPF. When this feature is triggered, the Office 365 integration synthetic email probes are re-enveloped by M365 Exchange and are no longer recognized as responses to the initial synthetic email probes.
 
-**Synthetic Email with Outlook data is not displayed in the Office365 dashboard. The Datadog Agent O365 integration reports successful execution and the synthetic email user mailbox shows properly forwarded emails.**
+	As a resolution, create a user mailbox redirect rule in the synthetic user's Outlook instead of a forwarding rule.
 
-Microsoft M365 Exchange implements the [Sender Rewriting Scheme (SRS)](https://docs.microsoft.com/en-us/office365/troubleshoot/antispam/sender-rewriting-scheme) which targets auto-forwarding incompatability with SPF. When this feature is triggered, the Office 365 integration synthetic email probes are re-enveloped by M365 Exchange and are no longer recognized as responses to the initial synthetic email probes.
+		1. Log in to Outlook with the synthetic user created for the O365 integration.
+		2. Navigate to `Settings` -> `View all Outlook settings` -> `Rules` -> `Add new rule`.
+		3. Configure the following rule:
+			3.1 [Name] "Redirect Synthetic Probe"
+			3.2 [Condition] "Subject Includes" = "Synthetic Email Probe"
+			3.3 [Add an action] "Redirect to" = "probe@synth-rapdev.io"
+			3.4 (Optional) [Add an action] "Mark as read"
+			3.5 (Optional) [Add an action] "Delete"
 
-As a resolution, create a user mailbox redirect rule in the synthetic user's Outlook instead of a forwarding rule.
+	Once the rule is configured, email responses will populate Datadog metrics and dashboards within 5-10 minutes.
 
-	1. Log in to Outlook with the synthetic user created for the O365 integration.
-	2. Navigate to `Settings` -> `View all Outlook settings` -> `Rules` -> `Add new rule`.
-	3. Configure the following rule:
-		3.1 [Name] "Redirect Synthetic Probe"
-		3.2 [Condition] "Subject Includes" = "Synthetic Email Probe"
-		3.3 [Add an action] "Redirect to" = "probe@synth-rapdev.io"
-		3.4 (Optional) [Add an action] "Mark as read"
-		3.5 (Optional) [Add an action] "Delete"
+- **Office 365 Incidents are not displayed in the Office 365 Dashboard or in the Datadog Events feed.**
 
-Once the rule is configured, email responses will populate Datadog metrics and dashboards within 5-10 minutes.
+	Microsoft migrated Service Messages from the Management API to the Microsoft Graph API. Upgrade the Office 365 Integration on all Datadog Agent systems to version 2.1.1.
+
+	```bash
+	# Linux
+	sudo -u dd-agent datadog-agent integration install --third-party datadog-o365==2.1.1
+	sudo service datadog-agent restart
+
+	# Windows
+	"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-o365==2.1.1
+	"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" restart-service
+	```
 
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
 
  - Email: datadog-engineering@rapdev.io 
- - Chat: [RapDev.io/products](https://rapdev.io/products)
+ - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222 
 
 Tiered discounts for Office 365 users over 1,000 are available. Contact us at [datadog-engineering@rapdev.io](mailto:datadog-engineering@rapdev.io).
