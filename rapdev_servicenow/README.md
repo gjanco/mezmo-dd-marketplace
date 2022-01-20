@@ -66,7 +66,7 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
 For support or feature requests, contact RapDev.io through the following channels: 
 
  - Email: datadog-engineering@rapdev.io 
- - Chat: [RapDev.io/products](https://rapdev.io/products)
+ - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222 
 
 ---

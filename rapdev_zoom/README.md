@@ -137,7 +137,7 @@ For support or feature requests, contact RapDev.io through the following channel
 
 - Support: datadog-engineering@rapdev.io
 - Sales: sales@rapdev.io
-- Chat: RapDev.io/products
+- Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
 
 ---
