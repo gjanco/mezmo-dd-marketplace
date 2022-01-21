@@ -1,5 +1,9 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.3.2 / 2022-01-20
+
+* [Added] `curl_max_time` configuration option to manage `curl --maximum-timeout` for slow or locked network connections.
+
 ## 1.3.1 / 2022-01-12
 
 * [Fixed] switched daemon user from `dd-agent` to `datadog` to avoid resolution conflict with LDAP user.
