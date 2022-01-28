@@ -1,6 +1,6 @@
 ## Overview
 
-This integration monitors the performance and usage of Dell EMC Isilon cluster and nodes. It captures crucial metrics and provides insights into health and operation of the Dell EMC Isilon cluster.
+This integration monitors the performance and usage of Dell EMC Isilon clusters and nodes. It captures crucial metrics and provides insights into health and operation of the Dell EMC Isilon cluster.
 
 Dashboard Name | Description
 ---------------|------------
@@ -9,18 +9,25 @@ Node Details | This dashboard provides node level information.
 Protocol Details | This dashboard provides cluster wide protocol details.
 File System | This dashboard provides file system details at the node level.
 Quota Information | This dashboard provides quota information.
+Monitors Summary | This dashboard provides a summary of monitors, which are supported by this integration.
+
+### Monitors
+
+This integration supports monitors to alert for CPU, Memory and Disk Usage of each Node and Cluster.
 
 ## Setup
 
 ### Prerequisites
 
-1. You must have the Datadog Agent installed and running. Additionally, you need to be able to connect to the server with the Datadog Agent installed.
+You must have the Datadog Agent installed and running. Additionally, you need to be able to connect to the server with the Datadog Agent installed.
 
-### Datadog Integration Installation
+### Installation
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_dell_emc_isilon==1.0.0`
+Run the following:
 
-### Datadog Integration Configuration
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_dell_emc_isilon==2.0.0`
+
+### Configuration
 
 1. Copy the `conf.yaml.example` file.
 
@@ -28,7 +35,7 @@ Quota Information | This dashboard provides quota information.
     cp /etc/datadog/conf.d/crest_data_systems_dell_emc_isilon.d/conf.yaml.example /etc/datadog/conf.d/crest_data_systems_dell_emc_isilon.d/conf.yaml
     ```
 
-2. Edit `/etc/datadog/conf.d/crest_data_systems_dell_emc_isilon.d/conf.yaml` file. Add the configurations ip_address, username, password and port.
+2. Edit the `/etc/datadog/conf.d/crest_data_systems_dell_emc_isilon.d/conf.yaml` file. Add configurations for the IP address, username, password, and port.
 
      ```yaml
     init_config:
@@ -64,14 +71,25 @@ Quota Information | This dashboard provides quota information.
 
 ### Validation
 
-1. [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information) and look for `crest_data_systems_dell_emc_isilon` under the Checks section. Alternatively, you can get detailed information about the integration using the following command:
+[Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information) and look for `crest_data_systems_dell_emc_isilon` under the Checks section.
 
-    ```
-    sudo ‐u dd‐agent datadog‐agent check crest_data_systems_dell_emc_isilon
-    ```
+Alternatively, use the following command to obtain detailed information about the integration:
+
+```
+sudo ‐u dd‐agent datadog‐agent check crest_data_systems_dell_emc_isilon
+```
+
+### Monitor Configuration
+
+1. Go to `Monitors` tab from Integration tile.
+
+2. Select any of the monitors from the list.
+
+3. Update the monitor configuration as per requirements and then save the monitor.
 
 ## Support
 
-For support or feature requests, contact crestdatasys.com through the following channel:
+For support or feature requests, contact Crest Data Systems through the following channels:
 
  - Email: datadog.integrations@crestdatasys.com
+ - Website: [crestdatasys.com](https://www.crestdatasys.com/)

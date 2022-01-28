@@ -1,0 +1,28 @@
+{
+	"name": "[crest_data_systems_dell_emc_isilon] CPU Usage for each Node of Cluster",
+	"type": "query alert",
+	"query": "avg(last_2m):avg:cds.emc.isilon.node_details.cpu_usage_over_time{*} by {cds.emc.isilon.node,cds.emc.isilon.cluster} >= 85",
+	"message": "CPU Usage is {{value}} of Node {{[cds.emc.isilon.node].name}} of Cluster {{[cds.emc.isilon.cluster].name}}",
+	"tags": [
+		"integration:crest-data-systems-dell-emc-isilon"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 85
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"no_data_timeframe": 10,
+		"renotify_interval": 0,
+		"locked": false,
+		"silenced": {},
+		"include_tags": true,
+		"escalation_message": "",
+		"new_group_delay": 60
+	},
+	"priority": null,
+	"recommended_monitor_metadata": {
+        "description": "Notify your team when the CPU Usage reach to threshold value."
+    }
+}

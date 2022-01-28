@@ -51,8 +51,6 @@ APIS = [
                     "fsp_event_rate_by_node_ot",
                     "fsp_event_rate_by_type_ot",
                     "fsp_file_system_critical_events",
-                    "nd_temperature_details_ot",
-                    "nd_power_details_over_time",
                 ],
             },
             {
@@ -78,8 +76,8 @@ APIS = [
         ],
     },
     {
-        "api_interval": 600,
-        "interval_offset": 5,
+        "api_interval": 240,
+        "interval_offset": 4,
         "api_list": [
             {
                 "helper_module": "cds_dell_emc_nd_co_ci_helper",
@@ -102,10 +100,7 @@ APIS = [
                 "helper_class": "CDSDellEMCCiHelper",
                 "api_url": "/platform/1/statistics/current?substr=true&keys=node.disk.name,node.disk.lnum,node.disk."
                 "type,node.disk.health&devid=all",
-                "dashboard_panels": [
-                    "ci_hard_drive_details",
-                    "ci_ssd_details",
-                ],
+                "dashboard_panels": ["ci_storage_drive_details"],
             },
         ],
     },

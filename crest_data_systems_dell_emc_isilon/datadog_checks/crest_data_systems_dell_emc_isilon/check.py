@@ -32,22 +32,22 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
         if self.count > 30:
             self.count = 1
         if not self.is_authenticated or self.count % 7 == 0:
-            self.authentication(instance)
+            self.authentication()
 
         if self.is_authenticated:
-            self.set_cluster_name(instance)
+            self.set_cluster_name()
             self.gauge(
                 "datadog.marketplace.crest_data_systems.dell_emc_isilon",
                 1.0,
                 tags=self.instance.get("tags", []),
             )
-            self.ingest_data_for_dashboards(api_list, instance)
+            self.ingest_data_for_dashboards(api_list)
 
-    def set_cluster_name(self, instance):
+    def set_cluster_name(self):
         """To set the cluster name."""
         url = self.base_uri + "/platform/1/cluster/config"
         try:
-            response_json = self._make_request(url, instance)
+            response_json = self._make_request(url)
 
             if "tags" in self.instance and isinstance(self.instance["tags"], list):
                 tag_set = set(self.instance["tags"])
@@ -65,17 +65,19 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
         except ConnectionError as exception:
             self.log.error("Connection Error")
             self.log.exception(exception)
+            raise exception
         except Exception as exception:
             self.log.error("Error while setting Cluster Info")
             self.log.exception(exception)
+            raise exception
 
-    def ingest_data_for_dashboards(self, api_list, instance):
+    def ingest_data_for_dashboards(self, api_list):
         """Ingest data for Dashboard by calling API respectively."""
         for api in api_list:
             url = self.base_uri + api.get("api_url", "")
             response_json = None
             try:
-                response_json = self._make_request(url, instance)
+                response_json = self._make_request(url)
             except Exception as exception:
                 self.log.exception(exception)
                 continue
@@ -112,14 +114,19 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
 
                     self.log.info("Data for %s panel is ingested successfully.", panel)
 
-    def authentication(self, instance):
+    def authentication(self):
         """Method to do Authentication."""
         self.is_authenticated = False
 
         auth_check_name = INTEGRATION_PREFIX + "can_connect"
         event_source_type = INTEGRATION_PREFIX + "auth"
 
-        if ["ip_address", "username", "password", "port"] <= list(instance.keys()):
+        if not (
+            "ip_address" in self.instance
+            and "username" in self.instance
+            and "password" in self.instance
+            and "port" in self.instance
+        ):
 
             self.service_check(auth_check_name, 2, message="Authentication" " failed")
             self.event(
@@ -129,14 +136,14 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
                     "msg_text": "Authentication failed. Reason: Missing data in configuration file",
                 }
             )
-            self.log.error("Could not connect to EMC Server as configurations are missing" " in configuration file.")
-            return
+            self.log.error("Could not connect to EMC Server as configurations are missing in configuration file.")
+            raise Exception("Could not connect to EMC Server as configurations are missing in configuration file.")
 
-        ip_address = instance.get("ip_address")
-        username = instance.get("username")
-        password = instance.get("password")
-        port = instance.get("port")
-        verify_certificate = instance.get("certificate_path", False)
+        ip_address = self.instance.get("ip_address")
+        username = self.instance.get("username")
+        password = self.instance.get("password")
+        port = self.instance.get("port")
+        verify_certificate = self.instance.get("certificate_path", False)
 
         if isinstance(verify_certificate, str) and len(verify_certificate.strip()) == 0:
             verify_certificate = False
@@ -150,8 +157,8 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
                     "msg_text": "Authentication failed. Reason: Missing data in configuration file",
                 }
             )
-            self.log.error("Could not connect to EMC Server as configurations are missing" " in configuration file.")
-            return
+            self.log.error("Could not connect to EMC Server as configurations are missing in configuration file.")
+            raise Exception("Could not connect to EMC Server as configurations are missing in configuration file.")
 
         url = "https://%s:%s/session/1/session" % (ip_address, port)
         payload = {
@@ -167,9 +174,20 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
                 headers={"Content-Type": "application/json"},
                 verify=verify_certificate,
             )
+            if not response:
+                response.raise_for_status()
         except ConnectionError as exception:
+            self.service_check(auth_check_name, 2, message="Authentication failed")
+            self.event(
+                {
+                    "source_type_name": event_source_type,
+                    "msg_title": "Authentication",
+                    "msg_text": "Authentication failed. Could not made request reason: {}".format(str(exception)),
+                }
+            )
             self.log.error("Connection Error")
             self.log.exception(exception)
+            raise exception
         except Exception as exception:
             self.service_check(auth_check_name, 2, message="Authentication failed")
             self.event(
@@ -180,6 +198,7 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
                 }
             )
             self.log.exception(exception)
+            raise exception
 
         if response is None:
             self.service_check(auth_check_name, 2, message="Authentication failed")
@@ -187,11 +206,11 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
                 {
                     "source_type_name": event_source_type,
                     "msg_title": "Authentication",
-                    "msg_text": "Authentication failed. Reason: Missing data in configuration file",
+                    "msg_text": "Authentication failed. Reason: Could not connect to EMC Server",
                 }
             )
             self.log.error("Could not connect to EMC Server.")
-            return
+            raise Exception("Could not connect to EMC Server.")
 
         self.service_check(auth_check_name, 0, message="Authentication successful")
         self.event(
@@ -208,9 +227,9 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
         self.base_uri = "https://%s:%s" % (ip_address, port)
         return
 
-    def _make_request(self, url, instance):
+    def _make_request(self, url):
         """Make REST Calls."""
-        verify_certificate = instance.get("certificate_path", False)
+        verify_certificate = self.instance.get("certificate_path", False)
 
         if isinstance(verify_certificate, str) and len(verify_certificate.strip()) == 0:
             verify_certificate = False
@@ -220,7 +239,7 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
             raise Exception("Could not make request to API. url: {}".format(url))
 
         if response.status_code == 401:
-            self.authentication(instance)
+            self.authentication()
             if self.is_authenticated:
                 response = self.http.get(url, verify=verify_certificate)
                 if response is None:
@@ -235,6 +254,8 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
                 message = error.get("message", "Unknown Error")
                 error_list.append("status : %s, message : %s" % (status_code, message))
             raise Exception("Could not make request to API. url: %s reason: %s" % (url, ",".join(error_list)))
+        else:
+            response.raise_for_status()
         return response.json()
 
     def get_api_list(self):

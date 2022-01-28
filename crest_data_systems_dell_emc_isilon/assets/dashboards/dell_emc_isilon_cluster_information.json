@@ -35,7 +35,6 @@
                 "title": "Disk Usage (in GB)",
                 "title_size": "16",
                 "title_align": "left",
-                "time": {},
                 "type": "toplist",
                 "requests": [
                     {
@@ -48,6 +47,7 @@
                                 }
                             }
                         ],
+                        "response_format": "scalar",
                         "queries": [
                             {
                                 "query": "avg:cds.emc.isilon.cluster_overview.disk_usage{$Cluster} by {cds.emc.isilon.disk-type-with-usage}",
@@ -55,8 +55,7 @@
                                 "name": "query1",
                                 "aggregator": "last"
                             }
-                        ],
-                        "response_format": "scalar"
+                        ]
                     }
                 ]
             }
@@ -126,20 +125,33 @@
                 "height": 31
             },
             "definition": {
-                "title": "Hard Drive Details",
+                "title": "Storage Drive Details",
                 "title_size": "16",
                 "title_align": "left",
+                "time": {},
                 "type": "query_table",
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "cell_display_mode": [
-                            "number"
+                        "formulas": [
+                            {
+                                "cell_display_mode": "number",
+                                "alias": "Disk Index",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 5000,
+                                    "order": "asc"
+                                }
+                            }
                         ],
-                        "q": "avg:cds.emc.isilon.cluster_inventory.hard_drive_details{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster, cds.emc.isilon.bay, cds.emc.isilon.logical-number, cds.emc.isilon.type, cds.emc.isilon.status}",
-                        "alias": "Disk Index",
-                        "limit": 5000,
-                        "order": "asc"
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.storage_drive_details{$Cluster} by {cds.emc.isilon.node,cds.emc.isilon.cluster,cds.emc.isilon.bay,cds.emc.isilon.logical-number,cds.emc.isilon.type,cds.emc.isilon.status}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "avg"
+                            }
+                        ]
                     }
                 ],
                 "has_search_bar": "auto"
@@ -167,59 +179,10 @@
             }
         },
         {
-            "id": 4754201551443502,
-            "layout": {
-                "x": 153,
-                "y": 40,
-                "width": 66,
-                "height": 31
-            },
-            "definition": {
-                "title": "SSD Details",
-                "title_size": "16",
-                "title_align": "left",
-                "type": "query_table",
-                "requests": [
-                    {
-                        "aggregator": "avg",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "q": "avg:cds.emc.isilon.cluster_inventory.ssd_details{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster, cds.emc.isilon.bay, cds.emc.isilon.logical-number, cds.emc.isilon.type, cds.emc.isilon.status}",
-                        "alias": "Disk Index",
-                        "limit": 5000,
-                        "order": "desc"
-                    }
-                ],
-                "has_search_bar": "auto"
-            }
-        },
-        {
-            "id": 1748886822032524,
-            "layout": {
-                "x": 127,
-                "y": 40,
-                "width": 24,
-                "height": 31
-            },
-            "definition": {
-                "type": "note",
-                "content": "**Field Descriptions:**\n1. **Node**: Node that the disk belongs to\n2. **Cluster**: Cluster that the disk belongs to\n3. **Bay**: Bay number of the disk\n4. **Logical Number**: Logical Number of the disk\n5. **Type**: Type of disk\n6. **Status**: Health status of the disk\n7. **Index**: Disk index",
-                "background_color": "gray",
-                "font_size": "14",
-                "text_align": "left",
-                "vertical_align": "center",
-                "show_tick": true,
-                "tick_pos": "50%",
-                "tick_edge": "right",
-                "has_padding": true
-            }
-        },
-        {
             "id": 8047820881997758,
             "layout": {
                 "x": 127,
-                "y": 99,
+                "y": 68,
                 "width": 92,
                 "height": 25
             },
@@ -230,62 +193,92 @@
                 "type": "query_table",
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "cell_display_mode": [
-                            "number"
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "cell_display_mode": "number",
+                                "limit": {
+                                    "count": 50,
+                                    "order": "desc"
+                                },
+                                "alias": "In b/s"
+                            },
+                            {
+                                "formula": "query2",
+                                "cell_display_mode": "number",
+                                "alias": "Out b/s"
+                            },
+                            {
+                                "formula": "query3",
+                                "cell_display_mode": "number",
+                                "alias": "Total b/s"
+                            },
+                            {
+                                "formula": "query4",
+                                "cell_display_mode": "number",
+                                "alias": "HDD Size (in GB)"
+                            },
+                            {
+                                "formula": "query5",
+                                "cell_display_mode": "bar",
+                                "alias": "HDD Used(%)"
+                            },
+                            {
+                                "formula": "query6",
+                                "cell_display_mode": "number",
+                                "alias": "SSD Size (in GB)"
+                            },
+                            {
+                                "formula": "query7",
+                                "cell_display_mode": "bar",
+                                "alias": "SSD Used(%)"
+                            }
                         ],
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.in_bytes{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
-                        "alias": "In b/s",
-                        "limit": 50,
-                        "order": "desc"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.out_bytes{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
-                        "alias": "Out b/s",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.total_bytes{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
-                        "alias": "Total b/s",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.hdd_size{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
-                        "alias": "HDD Size (in GB)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.hdd_used_percentage{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
-                        "alias": "HDD Used(%)",
-                        "cell_display_mode": [
-                            "bar"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.ssd_size{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
-                        "alias": "SSD Size (in GB)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_details.ssd_used_percentage{$Cluster} by {cds.emc.isilon.node, cds.emc.isilon.cluster}",
-                        "alias": "SSD Used(%)",
-                        "cell_display_mode": [
-                            "bar"
-                        ],
-                        "aggregator": "avg"
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_details.in_bytes{$Cluster} by {cds.emc.isilon.node,cds.emc.isilon.cluster}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_details.out_bytes{$Cluster} by {cds.emc.isilon.node,cds.emc.isilon.cluster}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_details.total_bytes{$Cluster} by {cds.emc.isilon.node,cds.emc.isilon.cluster}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_details.hdd_size{$Cluster} by {cds.emc.isilon.node,cds.emc.isilon.cluster}",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_details.hdd_used_percentage{$Cluster} by {cds.emc.isilon.node,cds.emc.isilon.cluster}",
+                                "data_source": "metrics",
+                                "name": "query5",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_details.ssd_size{$Cluster} by {cds.emc.isilon.node,cds.emc.isilon.cluster}",
+                                "data_source": "metrics",
+                                "name": "query6",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_details.ssd_used_percentage{$Cluster} by {cds.emc.isilon.node,cds.emc.isilon.cluster}",
+                                "data_source": "metrics",
+                                "name": "query7",
+                                "aggregator": "avg"
+                            }
+                        ]
                     }
                 ],
                 "has_search_bar": "auto"
@@ -427,7 +420,7 @@
             "id": 3325621282090628,
             "layout": {
                 "x": 127,
-                "y": 91,
+                "y": 60,
                 "width": 92,
                 "height": 7
             },
@@ -448,7 +441,7 @@
             "id": 7382798679926512,
             "layout": {
                 "x": 127,
-                "y": 72,
+                "y": 41,
                 "width": 92,
                 "height": 17
             },
@@ -456,49 +449,76 @@
                 "title": "Storage Tiers",
                 "title_size": "16",
                 "title_align": "left",
+                "time": {
+                    "live_span": "4h"
+                },
                 "type": "query_table",
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "cell_display_mode": [
-                            "number"
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "cell_display_mode": "number",
+                                "limit": {
+                                    "count": 50,
+                                    "order": "desc"
+                                },
+                                "alias": "Disk Used%"
+                            },
+                            {
+                                "formula": "query2",
+                                "cell_display_mode": "number",
+                                "alias": "Total Disk (in GB)"
+                            },
+                            {
+                                "formula": "query3",
+                                "cell_display_mode": "number",
+                                "alias": "Virtual Hot Spare (in GB)"
+                            },
+                            {
+                                "formula": "query4",
+                                "cell_display_mode": "number",
+                                "alias": "SSD Used%"
+                            },
+                            {
+                                "formula": "query5",
+                                "cell_display_mode": "number",
+                                "alias": "Total SSD (in GB)"
+                            }
                         ],
-                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.disk_used{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
-                        "alias": "Disk Used%",
-                        "limit": 50,
-                        "order": "desc"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.total_disk{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
-                        "alias": "Total Disk (in GB)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.virtual_hot_spare{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
-                        "alias": "Virtual Hot Spare (in GB)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.ssd_used{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
-                        "alias": "SSD Used%",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.total_ssd{$Cluster} by {cds.emc.isilon.storage-tier-id, cds.emc.isilon.cluster, cds.emc.isilon.storage-tier-name}",
-                        "alias": "Total SSD (in GB)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.disk_used{$Cluster} by {cds.emc.isilon.storage-tier-id,cds.emc.isilon.cluster,cds.emc.isilon.storage-tier-name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.total_disk{$Cluster} by {cds.emc.isilon.storage-tier-id,cds.emc.isilon.cluster,cds.emc.isilon.storage-tier-name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.virtual_hot_spare{$Cluster} by {cds.emc.isilon.storage-tier-id,cds.emc.isilon.cluster,cds.emc.isilon.storage-tier-name}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.ssd_used{$Cluster} by {cds.emc.isilon.storage-tier-id,cds.emc.isilon.cluster,cds.emc.isilon.storage-tier-name}",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.storage_tiers.total_ssd{$Cluster} by {cds.emc.isilon.storage-tier-id,cds.emc.isilon.cluster,cds.emc.isilon.storage-tier-name}",
+                                "data_source": "metrics",
+                                "name": "query5",
+                                "aggregator": "avg"
+                            }
+                        ]
                     }
                 ],
                 "has_search_bar": "auto"
@@ -508,7 +528,7 @@
             "id": 620683584356256,
             "layout": {
                 "x": 127,
-                "y": 125,
+                "y": 94,
                 "width": 92,
                 "height": 18
             },
@@ -516,49 +536,76 @@
                 "title": "Node Pools",
                 "title_size": "16",
                 "title_align": "left",
+                "time": {
+                    "live_span": "4h"
+                },
                 "type": "query_table",
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "cell_display_mode": [
-                            "number"
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "cell_display_mode": "number",
+                                "limit": {
+                                    "count": 50,
+                                    "order": "desc"
+                                },
+                                "alias": "Disk Used(%)"
+                            },
+                            {
+                                "formula": "query2",
+                                "cell_display_mode": "number",
+                                "alias": "Total Disk (in GB)"
+                            },
+                            {
+                                "formula": "query3",
+                                "cell_display_mode": "number",
+                                "alias": "Virtual Hot Spare (in GB)"
+                            },
+                            {
+                                "formula": "query4",
+                                "cell_display_mode": "number",
+                                "alias": "SSD Used(%)"
+                            },
+                            {
+                                "formula": "query5",
+                                "cell_display_mode": "number",
+                                "alias": "Total SSD (in GB)"
+                            }
                         ],
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.disk_used{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
-                        "alias": "Disk Used(%)",
-                        "limit": 50,
-                        "order": "desc"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.total_disk{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
-                        "alias": "Total Disk (in GB)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.virtual_hot_spare{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
-                        "alias": "Virtual Hot Spare (in GB)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.ssd_used{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
-                        "alias": "SSD Used(%)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
-                    },
-                    {
-                        "q": "avg:cds.emc.isilon.cluster_inventory.node_pools.total_ssd{$Cluster} by {cds.emc.isilon.node-pool-id, cds.emc.isilon.cluster, cds.emc.isilon.node-pool-name, cds.emc.isilon.node-pool-l3-status}",
-                        "alias": "Total SSD (in GB)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "aggregator": "avg"
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_pools.disk_used{$Cluster} by {cds.emc.isilon.node-pool-id,cds.emc.isilon.cluster,cds.emc.isilon.node-pool-name,cds.emc.isilon.node-pool-l3-status}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_pools.total_disk{$Cluster} by {cds.emc.isilon.node-pool-id,cds.emc.isilon.cluster,cds.emc.isilon.node-pool-name,cds.emc.isilon.node-pool-l3-status}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_pools.virtual_hot_spare{$Cluster} by {cds.emc.isilon.node-pool-id,cds.emc.isilon.cluster,cds.emc.isilon.node-pool-name,cds.emc.isilon.node-pool-l3-status}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_pools.ssd_used{$Cluster} by {cds.emc.isilon.node-pool-id,cds.emc.isilon.cluster,cds.emc.isilon.node-pool-name,cds.emc.isilon.node-pool-l3-status}",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "aggregator": "avg"
+                            },
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.node_pools.total_ssd{$Cluster} by {cds.emc.isilon.node-pool-id,cds.emc.isilon.cluster,cds.emc.isilon.node-pool-name,cds.emc.isilon.node-pool-l3-status}",
+                                "data_source": "metrics",
+                                "name": "query5",
+                                "aggregator": "avg"
+                            }
+                        ]
                     }
                 ],
                 "has_search_bar": "auto"
@@ -728,17 +775,32 @@
                 "title": "License Details",
                 "title_size": "16",
                 "title_align": "left",
+                "time": {
+                    "live_span": "4h"
+                },
                 "type": "query_table",
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "cell_display_mode": [
-                            "number"
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "cell_display_mode": "number",
+                                "limit": {
+                                    "count": 100,
+                                    "order": "asc"
+                                },
+                                "alias": "index"
+                            }
                         ],
-                        "q": "avg:cds.emc.isilon.cluster_inventory.license_details{$Cluster} by {cds.emc.isilon.cluster, cds.emc.isilon.license_name, cds.emc.isilon.status, cds.emc.isilon.duration, cds.emc.isilon.expiry_date}",
-                        "alias": "index",
-                        "limit": 100,
-                        "order": "asc"
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.emc.isilon.cluster_inventory.license_details{$Cluster} by {cds.emc.isilon.cluster,cds.emc.isilon.license_name,cds.emc.isilon.status,cds.emc.isilon.duration,cds.emc.isilon.expiry_date}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "avg"
+                            }
+                        ]
                     }
                 ],
                 "has_search_bar": "auto"
@@ -832,11 +894,11 @@
                 "x": 0,
                 "y": 21,
                 "width": 31,
-                "height": 33
+                "height": 32
             },
             "definition": {
                 "type": "note",
-                "content": "## Widgets\n1. CPU Usage over Time\n2. Disk Usage (in GB)\n3. Disk Usage over Time\n4. External Network Throughput Rate over Time\n5. File System Throughput over Time\n6. Hard Drive Details\n7. SSD Details\n8. Storage Tiers\n9. Node Details\n10. Node Pools\n11. License Details\n12. Client Connections over Time",
+                "content": "## Widgets\n1. CPU Usage over Time\n2. Disk Usage (in GB)\n3. Disk Usage over Time\n4. External Network Throughput Rate over Time\n5. File System Throughput over Time\n6. Storage Drive Details\n7. Storage Tiers\n8. Node Details\n9. Node Pools\n10. License Details\n11. Client Connections over Time",
                 "background_color": "white",
                 "font_size": "14",
                 "text_align": "left",
@@ -851,13 +913,13 @@
             "id": 8539752396387256,
             "layout": {
                 "x": 0,
-                "y": 55,
+                "y": 54,
                 "width": 31,
                 "height": 60
             },
             "definition": {
                 "type": "note",
-                "content": "## Metrics\n`Note: All metrics are prefixed with 'cds.emc.isilon'.`\n\n- Below are the metric names and the corresponding interval at which they are collected.\n  - cpu_usage_over_time - 2 mins\n  - disk_usage - 10 mins\n  - cluster_disk_usage_over_time - 10 mins\n  - external_network_throughput_rate_over_time - 2 mins\n  - fileSystem_throughput_over_time - 2 mins\n  - hard_drive_details - 10 mins\n  - ssd_details - 10 mins\n  - storage_tiers.disk_used - 1 hour\n  - storage_tiers.total_disk - 1 hour\n  - storage_tiers.virtual_hot_spare - 1 hour\n  - storage_tiers.ssd_used - 1 hour\n  - storage_tiers.total_ssd - 1 hour\n  - node_details.in_bytes - 10 mins\n  - node_details.out_bytes - 10 mins\n  - node_details.total_bytes - 10 mins\n  - node_details.hdd_size - 10 mins\n  - node_details.hdd_used_percentage - 10 mins\n  - node_details.ssd_size - 10 mins\n  - node_details.ssd_used_percentage - 10 mins\n  - node_pools.disk_used - 1 hour\n  - node_pools.total_disk - 1 hour\n  - node_pools.virtual_hot_spare - 1 hour\n  - node_pools.ssd_used - 1 hour\n  -  node_pools.total_ssd - 1 hour\n  - license_details - 1 hour\n  - client_connections_over_time - 2 mins",
+                "content": "## Metrics\n`Note: All metrics are prefixed with 'cds.emc.isilon'.`\n\n- Below are the metric names and the corresponding interval at which they are collected.\n  - cpu_usage_over_time - 2 mins\n  - disk_usage - 10 mins\n  - cluster_disk_usage_over_time - 4 mins\n  - external_network_throughput_rate_over_time - 2 mins\n  - fileSystem_throughput_over_time - 2 mins\n  - storage_drive_details - 4 mins\n  - storage_tiers.disk_used - 1 hour\n  - storage_tiers.total_disk - 1 hour\n  - storage_tiers.virtual_hot_spare - 1 hour\n  - storage_tiers.ssd_used - 1 hour\n  - storage_tiers.total_ssd - 1 hour\n  - node_details.in_bytes - 4 mins\n  - node_details.out_bytes - 4 mins\n  - node_details.total_bytes - 4 mins\n  - node_details.hdd_size - 4 mins\n  - node_details.hdd_used_percentage - 4 mins\n  - node_details.ssd_size - 4 mins\n  - node_details.ssd_used_percentage - 4 mins\n  - node_pools.disk_used - 1 hour\n  - node_pools.total_disk - 1 hour\n  - node_pools.virtual_hot_spare - 1 hour\n  - node_pools.ssd_used - 1 hour\n  -  node_pools.total_ssd - 1 hour\n  - license_details - 1 hour\n  - client_connections_over_time - 2 mins",
                 "background_color": "white",
                 "font_size": "14",
                 "text_align": "left",
@@ -873,7 +935,8 @@
         {
             "name": "Cluster",
             "default": "*",
-            "prefix": "cds.emc.isilon.cluster"
+            "prefix": "cds.emc.isilon.cluster",
+            "available_values": []
         }
     ],
     "layout_type": "free",

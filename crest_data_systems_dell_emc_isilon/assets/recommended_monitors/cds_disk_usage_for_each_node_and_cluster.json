@@ -1,0 +1,28 @@
+{
+	"name": "[crest_data_systems_dell_emc_isilon] Disk Usage for each Node of Cluster",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:cds.emc.isilon.node_details.disk_usage_over_time{*} by {cds.emc.isilon.node,cds.emc.isilon.cluster} >= 80",
+	"message": "Disk Usage is {{value}} of Node {{[cds.emc.isilon.node].name}} of Cluster {{[cds.emc.isilon.cluster].name}}",
+	"tags": [
+		"integration:crest-data-systems-dell-emc-isilon"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"silenced": {},
+		"include_tags": true,
+		"thresholds": {
+			"critical": 80
+		},
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"new_group_delay": 60
+	},
+	"priority": null,
+	"classification": "metric",
+	"recommended_monitor_metadata": {
+        "description": "Notify your team when the Disk Usage reach to threshold value."
+    }
+}
