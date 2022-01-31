@@ -1,25 +1,21 @@
 ## Overview
 
-This integration monitors the performance and usage of Dell EMC Isilon clusters and nodes. It captures crucial metrics and provides insights into health and operation of the Dell EMC Isilon cluster.
+This integration monitors the performance and usage of Dell EMC Isilon cluster and nodes. It captures crucial metrics and provides insights into the health and operation of the Dell EMC Isilon cluster. This integration also supports monitors to alert for the CPU, Memory, and Disk Usage of each Node and Cluster.
 
 Dashboard Name | Description
 ---------------|------------
-Cluster Infromation | This dashboard provides cluster level information.
+Cluster Information | This dashboard provides cluster level information.
 Node Details | This dashboard provides node level information.
 Protocol Details | This dashboard provides cluster wide protocol details.
 File System | This dashboard provides file system details at the node level.
 Quota Information | This dashboard provides quota information.
 Monitors Summary | This dashboard provides a summary of monitors, which are supported by this integration.
 
-### Monitors
-
-This integration supports monitors to alert for CPU, Memory and Disk Usage of each Node and Cluster.
-
 ## Setup
 
 ### Prerequisites
 
-You must have the Datadog Agent installed and running. Additionally, you need to be able to connect to the server with the Datadog Agent installed.
+1. You must have the Datadog Agent installed and running. Additionally, you need to be able to connect to the server with the Datadog Agent installed.
 
 ### Installation
 
@@ -71,25 +67,33 @@ Run the following:
 
 ### Validation
 
-[Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information) and look for `crest_data_systems_dell_emc_isilon` under the Checks section.
+[Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information) and look for `crest_data_systems_dell_emc_isilon` under the Checks section. 
+ 
+Alternatively, you can get detailed information about the integration using the following command:
 
-Alternatively, use the following command to obtain detailed information about the integration:
-
-```
-sudo ‐u dd‐agent datadog‐agent check crest_data_systems_dell_emc_isilon
-```
+    ```
+    sudo ‐u dd‐agent datadog‐agent check crest_data_systems_dell_emc_isilon
+    ```
 
 ### Monitor Configuration
 
-1. Go to `Monitors` tab from Integration tile.
+1. Navigate to the **Monitors** tab in the Integration tile.
 
-2. Select any of the monitors from the list.
+2. Select a monitor from the list.
 
-3. Update the monitor configuration as per requirements and then save the monitor.
+3. Update the monitor configuration based on the requirements and save the monitor.
 
 ## Support
 
-For support or feature requests, contact Crest Data Systems through the following channels:
+For support or feature requests, contact Crest Data Systems through the following channel:
 
  - Email: datadog.integrations@crestdatasys.com
  - Website: [crestdatasys.com](https://www.crestdatasys.com/)
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Monitor Dell EMC Isilon with Crest Data Systems' integration in the Datadog Marketplace][1]
+
+[1]: https://www.datadoghq.com/blog/dell-emc-isilon-monitoring-crest-data-systems-datadog-marketplace/
