@@ -95,7 +95,7 @@ class ValidatorCheck(AgentCheck):
                         elif self.ignore_paas and not set(host.get("apps")).intersection(IGNORE_APPS):
                             self.validate_host(host)
                     
-                    n += 1
+                n += 1000
             
         if self.check_synthetics and self.yaml_synthetic_tag_dict:
             response = self.http.get("https://{}/api/v1/synthetics/tests".format(self.api_url), extra_headers=self.options).json()

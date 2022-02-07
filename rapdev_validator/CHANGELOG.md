@@ -1,5 +1,10 @@
 # CHANGELOG - rapdev_validator
 
+## 2.1.1 / 2022-02-02
+
+### Bugfix:
+  * Fix bug causing infinite loop in core host loop 
+
 ## 2.1.0 / 2021-11-02
 
 #### Feature Updates

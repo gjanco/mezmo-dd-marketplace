@@ -22,10 +22,10 @@ To install the Validator check on your host:
 
 - Linux
 
-`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_validator==2.1.0`
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_validator==2.1.1`
 - Windows
 
-`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_validator==2.1.0`
+`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_validator==2.1.1`
 
 ### Prepare the Validator
 
