@@ -1,5 +1,13 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.3.5 / 2022-02-07
+
+* [Fixed] ephemeral PID file location to resolve duplication of running datadog-agent process(es).
+
+## 1.3.4 / 2022-01-28
+
+* [Fixed] install and remove scripts to resolve MASK customizations in SNF caused by service deletion.
+
 ## 1.3.2 / 2022-01-20
 
 * [Added] `curl_max_time` configuration option to manage `curl --maximum-timeout` for slow or locked network connections.
