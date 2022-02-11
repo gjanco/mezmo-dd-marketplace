@@ -159,8 +159,14 @@ class TerraformCheck(AgentCheck):
                            team_attributes.get("users-count"),
                            tags=metric_tags)
 
-                users = team.get("relationships", {}).get("users", {}).get("data", [])
-                parsed_users = self.get_user_information(users, parsed_users, org_id)
+                user_relationships = team.get("relationships", {})
+                if user_relationships:
+                    users_obj = user_relationships.get("users", {})
+
+                    if users_obj:
+                        users_data = users_obj.get("data", [])
+
+                        parsed_users = self.get_user_information(users_data, parsed_users, org_id)
 
             next_page_token = org_teams_response.get("meta", {}).get("pagination", {}).get("next-page")
             if not next_page_token:
@@ -237,10 +243,18 @@ class TerraformCheck(AgentCheck):
                            1,
                            tags=metric_tags)
 
-                latest_run_id = workspace.get("relationships", {}).get("latest-run", {}).get("data", {}).get("id")
+                workspace_relationships = workspace.get("relationships", {})
+                if workspace_relationships:
+                    latest_run = workspace_relationships.get("latest-run", {})
 
-                if latest_run_id:
-                    self.get_latest_workspace_run(latest_run_id, workspace_name, workspace_id)
+                    if latest_run:
+                        run_data = latest_run.get("data", {})
+
+                        if run_data:
+                            latest_run_id = run_data.get("id")
+
+                            if latest_run_id:
+                                self.get_latest_workspace_run(latest_run_id, workspace_name, workspace_id)
 
                 # Get all the runs for this workspace
                 self.get_workspace_runs(workspace_id, workspace_name)
