@@ -1,5 +1,9 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.3.6 / 2022-02-10
+
+* [Fixed] incorrect process check metrics reported due to parsing error.
+
 ## 1.3.5 / 2022-02-07
 
 * [Fixed] ephemeral PID file location to resolve duplication of running datadog-agent process(es).
