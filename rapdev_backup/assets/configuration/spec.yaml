@@ -7,12 +7,39 @@ files:
     - template: init_config/default
   - template: instances
     options:
+    - name: dd_api_key
+      required: false
+      value:
+        type: string
+      description: |
+        The Datadog API Key used to authenticate to your Datadog organization. For more info, see link below:
+
+        https://docs.datadoghq.com/account_management/api-app-keys/#api-keys
+    - name: dd_app_key
+      required: false
+      value:
+        type: string
+      description: |
+        The Datadog APP Key used to authenticate to your Datadog organization. For more info, see link below:
+
+        hhttps://docs.datadoghq.com/account_management/api-app-keys/#application-keys
+    - name: dd_site
+      required: false
+      value:
+        type: string
+        example: com
+        default: com
+      description: |
+        The Datadog website that your account is registered to. The currently supported options are below:
+
+        com (default for US), eu, us3, us5, gov
     - name: backup_storage_platform
       required: true
       value:
         type: string
+        example: github
       description: |
-        The platform where you are uploading the backup to (AWS, Azure, or local)
+        The platform where you are uploading the backup. For example, AWS, Azure, GitHub, or your local machine.
     - name: aws_access_key
       secret: true
       required: false
@@ -83,7 +110,51 @@ files:
       value:
         type: string
       description: | 
-        If platform is Azure, the name of container that holds the blob storage. 
+        If the platform is Azure, the name of the container that holds the blob storage.
+    - name: github_access_token
+      required: false
+      value:
+        type: string
+      description: |
+        The personal access token used to authenticate to your GitHub account. For more info,
+        see the link below:
+
+        https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+    - name: github_repo
+      required: false
+      value:
+        type: string
+      description: |
+        The name of your repository in GitHub. You don't need to include the name of your account as that is
+        pulled from the GitHub access token you provide.
+    - name: github_store_path
+      required: false
+      value:
+        type: string
+        example: dd_backups
+        default: dd_backups
+      description: |
+        The path in your GitHub repository that stores the Datadog backups. The commit should create any missing folders.
+    - name: github_enterprise
+      required: false
+      value:
+        type: string
+        example: mybank_github.com
+      description: |
+        If you are using GitHub Enterprise Cloud, you may have a custom domain to use as a value.
+        For example, if your API endpoint is `https://mybank_github.com/api/v3`, provide `mybank_github.com`
+        as the value here.
+    - name: github_master_ref
+      required: false
+      value:
+        type: string
+        example: "heads/main"
+        default: "heads/main"
+      description: |
+        The name of your Github head reference. This is usually either `heads/main` or `heads/master`.
+        For more information, see the Git docs below:
+
+        https://git-scm.com/book/en/v2/Git-Internals-Git-References
     - name: timestamp_format
       required: false
       value:
@@ -110,6 +181,7 @@ files:
     - template: instances/default
       overrides:  
         min_collection_interval.value.example: 86400
+        min_collection_interval.value.default: 86400
         min_collection_interval.enabled: true
         min_collection_interval.description: |
           Backups should only need to be generated every day at most. 

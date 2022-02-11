@@ -1,10 +1,10 @@
-# Agent Check: Rapdev Backup
+# Agent Check: RapDev Backup
 
 ## Overview
 
-The purpose of this Agent check is to create a zipped backup for a Datadog account's dashboards, synthetic tests, monitors,
-and notebooks. That backup can then be stored on a local machine or in one of the supported 
-cloud service providers (e.g. AWS or Azure).
+The purpose of this Agent check is to create a zipped backup for a Datadog account's dashboards, Synthetic tests, monitors,
+and notebooks. That backup can then be stored on a local machine or in one of the other supported platforms
+(such as AWS, Azure, and GitHub).
 
 ## Setup
 
@@ -12,9 +12,9 @@ cloud service providers (e.g. AWS or Azure).
 
 This Agent check is only intended to run on Python3.X version on Agent v7. 
 Functionality for Python2.X is not guaranteed. For running python3 on Agent v6, please refer to 
-[these docs](https://docs.datadoghq.com/agent/guide/agent-v6-python-3/?tab=hostagent).
+[these docs][7].
 
-Install or upgrade the following libraries using the Agent's embedded python, otherwise the check will not be able to run:
+Install or upgrade all three libraries using the Agent's embedded python. These libraries are required for the check to run:
  
  - boto3 (aws)
 
@@ -35,35 +35,45 @@ Install or upgrade the following libraries using the Agent's embedded python, ot
    *Windows*
    %PROGRAMFILES%\Datadog\"Datadog Agent"\embedded<PYTHON_MAJOR_VERSION>\python -m pip install azure-storage-blob --upgrade
    ```
+ 
+ - github
+   
+   ```
+   *Linux*
+   sudo -Hu dd-agent /opt/datadog-agent/embedded/bin/pip install pygithub --upgrade
+
+   *Windows*
+   %PROGRAMFILES%\Datadog\"Datadog Agent"\embedded<PYTHON_MAJOR_VERSION>\python -m pip install pygithub --upgrade
+   ```
 
 ### Installation
 Run the following command to enable the Backup Integration on your Datadog Agent:
 
 ```
 *Linux*
-sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==1.1.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==2.0.0
 
 *Powershell*
-& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==1.1.0
+& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.0.0
 
 *Command Prompt*
-"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==1.1.0
+"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.0.0
 ```
 
 ### Datadog Configuration
 
-Begin by generating Datadog [APP key](https://docs.datadoghq.com/account_management/api-app-keys/). 
-and pass that value into the `init_config` section of your `conf.d/rapdev_backup.d/conf.yaml` under the field `app_key` as below:
+Begin by generating Datadog [API & Application keys][5]. 
+and pass that value into the `instances` section(s) of your `conf.d/rapdev_backup.d/conf.yaml` under the fields 
+`api_key` and `app_key` as shown below:
 
 ```
 init_config:
-  app_key: "<MY_APP_KEY>"
 
 instances:
-  - backup_storage_platform: AWS
-    aws_access_key: <MY_KEY>
-    aws_secret_key: <MY_SECRET_KEY>
-    aws_s3_bucket_name: my_bucket/my_backups_folder
+  - api_key: <my_api_key1>
+    app_key: <my_app_key1>
+    backup_storage_platform: local
+    backup_path: /etc/datadog-backups/
 ```
 
 ### Backup Configurations
@@ -72,9 +82,10 @@ Figure out where you want to store your backups locally and provide the absolute
 
 Next, decide which platform to save backups to using the `backup_storage_platform` variable in the `rapdev_backup.d/conf.yaml`. 
 Your options are below:
- - `AWS` (S3)
- - `AZURE` (Blob Storage)
- - `LOCAL` (stores locally in folder provided for `backup_path` variable). 
+ - `aws` (S3)
+ - `azure` (Blob Storage)
+ - `github` (any repos)
+ - `local` (stores locally in folder provided for `backup_path` variable). 
 
 #### AWS Environment Configuration
 
@@ -86,7 +97,7 @@ Your options are below:
   - Access Key on User with `sts:AssumeRole`: Begin by creating an IAM role in the account that you want to store your backups to with read
     and write permissions to the s3 bucket you'd like to use. Provide the ARN of that role to the `assume_role_arn`
     configuration in the `conf.yaml`. Additionally, set up a
-    [trust policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_permissions-to-switch.html) so
+    [trust policy][6] so
     this role can be assumed by the role in the next step. If desired, you can generate an external id for an extra 
     layer of security. Provide the id into the `assume_role_external_id` via the `conf.yaml`. See an example below
     an appropriate trust policy:
@@ -141,11 +152,20 @@ Your options are below:
    Paste the name of the bucket in `aws_s3_bucket_name` (no trailing `/` is required). If you'd like to include a sub path
    for your S3 bucket (e.g. `mybucket/sub_path/`) please include the subpath in the `aws_s3_sub_path`
    parameter with a trailing `/`. For example, if you add `mytesting_folder` inside the `testing123` bucket,
-   your configuration looks like this:
+   your configuration may look like this:
 
    ```
-   aws_s3_bucket_name: testing123
-   aws_s3_sub_path: mytesting_folder/
+   init_configs:
+   
+   instances:
+     - backup_storage_platform: aws
+       backup_path: /etc/datadog-backups/
+       api_key: <my_dd_api_key>
+       app_key: <my_dd_app_key>   
+       aws_access_key: <my_access_key>
+       aws_secret_key: <my_secret_key>
+       aws_s3_bucket_name: testing123
+       aws_s3_sub_path: mytesting_folder/
    ```
 
 #### Azure Environment Configuration
@@ -154,7 +174,53 @@ Your options are below:
    show your connection string and pass that value into the `azure_connection_string` variable.
 
 2) Within the new storage account, create a new Container (Data Storage > Container). 
-   Provide the name of the container for the variable `azure_container_name`.
+   Provide the name of the container for the variable `azure_container_name`. An example config looks like this:
+   
+   ```
+   init_configs:
+   
+   instances:
+     - backup_storage_platform: azure
+       backup_path: /etc/datadog-backups/
+       api_key: <my_dd_api_key>
+       app_key: <my_dd_app_key>
+       azure_connection_string: <my_connection_string>
+       azure_container_name: <my_container_name>
+   ```
+
+
+#### Github Backup Storage Configuration
+
+1) Begin by creating a GitHub repo to hold your backups (or use an existing one).
+
+2) Create a [Github Personal Access Token][4]
+and pass it into the config via the `github_access_token` param.
+   
+3) Fill in the rest of the fields. A GitHub config targeting 2 separate Datadog accounts that upload to the
+   same repo (but different folders) would look something like this:
+   
+   ```
+   init_configs:
+   
+   instances:
+     - api_key: <my_api_key1>
+       app_key: <my_app_key1>
+       backup_storage_platform: github
+       backup_path: /etc/datadog-backups/
+       github_access_token: <my_gh_token>
+       github_repo: infra_backups
+       github_store_path: datadog/account_name1
+       github_master_ref: "heads/main"
+   
+     - api_key: <my_api_key2>
+       app_key: <my_app_key2>
+       backup_storage_platform: github
+       backup_path: /etc/datadog-backups/
+       github_access_token: <my_gh_token>
+       github_repo: infra_backups
+       github_store_path: datadog/account_name2
+       github_master_ref: "heads/main"
+   ```
 
 ### Extra configs
 
@@ -163,7 +229,7 @@ leave the default `delete_local_backups` set to `true`, otherwise set it to `fal
 variable will be ignored. Please be aware that this can eventually use up all available space on your machine(s) if you don't perform a periodic manual clean up when required (resource usage is based on your run interval).
 
 
-Once all your configurations are setup, [restart the agent][1].
+Once all of your configurations are set up correctly, [restart the Agent][1].
 
 ### Validation
 
@@ -215,3 +281,7 @@ This application is made available through the Marketplace and is supported by a
 [1]: https://docs.datadoghq.com/agent/guide/agent-commands/#start-stop-and-restart-the-agent
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
 [3]: https://app.datadoghq.com/marketplace/app/rapdev-backup/pricing
+[4]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+[5]: https://docs.datadoghq.com/account_management/api-app-keys/
+[6]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_permissions-to-switch.html
+[7]: https://docs.datadoghq.com/agent/guide/agent-v6-python-3/?tab=hostagent

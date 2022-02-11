@@ -14,12 +14,17 @@ from mock import patch
 
 def test_check_invalid_configs(dd_run_check, instance):
     # Test missing access_token
-    check = BackupCheck('rapdev_backup', {}, [{}])
+    check = BackupCheck('rapdev_backup', {}, [{
+        "dd_api_key": "my_key",
+        "dd_app_key": "my_appkey"
+    }])
 
     with pytest.raises(Exception):
         dd_run_check(check)
 
     check = BackupCheck('rapdev_backup', {}, [{
+        "dd_api_key": "my_key",
+        "dd_app_key": "my_appkey",
         "backup_path": "/etc/datadog-agent/"
     }])
     with pytest.raises(Exception,
@@ -31,6 +36,8 @@ def test_check_invalid_configs(dd_run_check, instance):
         dd_run_check(check)
 
     check = BackupCheck('rapdev_backup', {}, [{
+        "dd_api_key": "my_key",
+        "dd_app_key": "my_appkey",
         "backup_storage_platform": "AWS"
     }])
     with pytest.raises(Exception,
@@ -41,16 +48,26 @@ def test_check_invalid_configs(dd_run_check, instance):
                        ):
         dd_run_check(check)
 
-    check = BackupCheck('rapdev_backup', {}, [{
-        "backup_path": "/etc/datadog-agent/",
-        "backup_storage_platform": "AWS"
-    }])
     with pytest.raises(Exception,
-                       match="datadog_checks.base.errors.ConfigurationError: A valid Datadog APP key is required."
+                       match="No key dd_app_key found"
                        ):
-        dd_run_check(check)
+        check = BackupCheck('rapdev_backup', {}, [{
+            "dd_api_key": "mykey",
+            "backup_path": "/etc/datadog-agent/",
+            "backup_storage_platform": "AWS"
+        }])
 
-    check = BackupCheck('rapdev_backup', {"app_key": "test123"}, [{
+    with pytest.raises(Exception,
+                       match="No key dd_api_key found"
+                       ):
+        check = BackupCheck('rapdev_backup', {}, [{
+            "dd_app_key": "mykey",
+            "backup_path": "/etc/datadog-agent/",
+            "backup_storage_platform": "AWS"
+        }])
+
+    check = BackupCheck('rapdev_backup', {"dd_app_key": "test123"}, [{
+        "dd_api_key": "mykey",
         "backup_path": "/etc/datadog-agent/",
         "backup_storage_platform": "test"
     }])
@@ -61,30 +78,36 @@ def test_check_invalid_configs(dd_run_check, instance):
         dd_run_check(check)
 
     # AWS
-    check = BackupCheck('rapdev_backup', {"app_key": "test123"}, [{
+    check = BackupCheck('rapdev_backup', {}, [{
+        "dd_api_key": "my_key",
+        "dd_app_key": "my_appkey",
         "backup_path": "/etc/datadog-agent/",
         "backup_storage_platform": "AWS"
     }])
     with pytest.raises(Exception,
                        match="datadog_checks.base.errors.ConfigurationError: " \
-                             + "AWS_ACCESS_KEY, AWS_SECRET_KEY, and AWS_S3_BUCKET_URL " \
+                             + "aws_access_key, aws_secret_key, and aws_s3_bucket_url " \
                              + "are all required for storing backups in AWS."
                        ):
         dd_run_check(check)
 
-    check = BackupCheck('rapdev_backup', {"app_key": "test123"}, [{
+    check = BackupCheck('rapdev_backup', {}, [{
+        "dd_api_key": "my_key",
+        "dd_app_key": "my_appkey",
         "backup_path": "/etc/datadog-agent/",
         "backup_storage_platform": "AWS",
         "AWS_ACCESS_KEY": "test"
     }])
     with pytest.raises(Exception,
                        match="datadog_checks.base.errors.ConfigurationError: " \
-                             + "AWS_ACCESS_KEY, AWS_SECRET_KEY, and AWS_S3_BUCKET_URL " \
+                             + "aws_access_key, aws_secret_key, and aws_s3_bucket_url " \
                              + "are all required for storing backups in AWS."
                        ):
         dd_run_check(check)
 
-        check = BackupCheck('rapdev_backup', {"app_key": "test123"}, [{
+        check = BackupCheck('rapdev_backup', {}, [{
+            "dd_api_key": "my_key",
+            "dd_app_key": "my_appkey",
             "backup_path": "/etc/datadog-agent/",
             "backup_storage_platform": "AWS",
             "AWS_ACCESS_KEY": "test",
@@ -92,7 +115,9 @@ def test_check_invalid_configs(dd_run_check, instance):
         }])
         dd_run_check(check)
 
-        check = BackupCheck('rapdev_backup', {"app_key": "test123"}, [{
+        check = BackupCheck('rapdev_backup', {}, [{
+            "dd_api_key": "my_key",
+            "dd_app_key": "my_appkey",
             "backup_path": "/etc/datadog-agent/",
             "backup_storage_platform": "AWS",
             "AWS_ACCESS_KEY": "test",
@@ -101,24 +126,30 @@ def test_check_invalid_configs(dd_run_check, instance):
         dd_run_check(check)
 
     # Azure
-    check = BackupCheck('rapdev_backup', {"app_key": "test123"}, [{
+    check = BackupCheck('rapdev_backup', {}, [{
+        "dd_api_key": "my_key",
+        "dd_app_key": "my_appkey",
         "backup_path": "/etc/datadog-agent/",
         "backup_storage_platform": "AZURE"
     }])
     with pytest.raises(Exception,
                        match="datadog_checks.base.errors.ConfigurationError: " \
-                             + "AZURE_CONNECTION_STRING and AZURE_CONTAINER_NAME are required for Azure authentication."
+                             + "azure_connection_string and azure_container_name are required for Azure authentication."
                        ):
         dd_run_check(check)
 
-        check = BackupCheck('rapdev_backup', {"app_key": "test123"}, [{
+        check = BackupCheck('rapdev_backup', {}, [{
+            "dd_api_key": "my_key",
+            "dd_app_key": "my_appkey",
             "backup_path": "/etc/datadog-agent/",
             "backup_storage_platform": "AZURE",
             "AZURE_CONNECTION_STRING": "myteststring/test129039012390f"
         }])
         dd_run_check(check)
 
-        check = BackupCheck('rapdev_backup', {"app_key": "test123"}, [{
+        check = BackupCheck('rapdev_backup', {}, [{
+            "dd_api_key": "my_key",
+            "dd_app_key": "my_appkey",
             "backup_path": "/etc/datadog-agent/",
             "backup_storage_platform": "AZURE",
             "AZURE_CONTAINER_NAME": "test129039012390f"
@@ -127,8 +158,8 @@ def test_check_invalid_configs(dd_run_check, instance):
 
 
 def test_check_critical_service_checks(instance, aggregator, dd_run_check):
-    check = BackupCheck('rapdev_backup', {"app_key": "test321"}, [{
-        "api_key": "test123",
+    check = BackupCheck('rapdev_backup', {"dd_app_key": "test321"}, [{
+        "dd_api_key": "test123",
         "timestamp_format": "%Y-%m-%dT%H%M%S",
         "backup_path": "/etc/datadog-agent/",
         "backup_storage_platform": "LOCAL"

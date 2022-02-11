@@ -9,6 +9,9 @@ from datetime import datetime
 import zipfile
 from .helpers import *
 from azure.storage.blob import ContentSettings
+from github import Github
+from github import InputGitTreeElement
+import base64
 import os
 
 try:
@@ -25,7 +28,25 @@ REQUIRED_TAGS = [
     "vendor:rapdev",
 ]
 
-SUPPORTED_STORAGE_PLATFORMS = {"LOCAL", "AWS", "AZURE"}
+API_URL_MAP = {
+    "com": "api.datadoghq.com",
+    "eu": "api.datadoghq.eu",
+    "us3": "api.us3.datadoghq.com",
+    "us5": "api.us5.datadoghq.com",
+    "gov": "api.ddog-gov.com"
+}
+
+BACKUP_AWS = "aws"
+BACKUP_AZURE = "azure"
+BACKUP_GITHUB = "github"
+BACKUP_LOCAL = "local"
+
+SUPPORTED_STORAGE_PLATFORMS = {
+    BACKUP_AWS,
+    BACKUP_AZURE,
+    BACKUP_GITHUB,
+    BACKUP_LOCAL
+}
 
 
 class BackupCheck(AgentCheck):
@@ -34,17 +55,21 @@ class BackupCheck(AgentCheck):
 
     def __init__(self, *args, **kwargs):
         super(BackupCheck, self).__init__(*args, **kwargs)
-        self.dd_api_key = get_config("api_key")
-        self.dd_app_key = self.init_config.get("app_key")
+        # Get the appropriate URL for datadog account
+        self.dd_site = self.instance.get("dd_site", "com")
+        self.api_url = API_URL_MAP.get(self.dd_site)
+        self.dd_api_key = self.get_key("dd_api_key")
+        self.dd_app_key = self.get_key("dd_app_key")
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
         self.billing_metric = "{}.{}".format("datadog.marketplace", self.__NAMESPACE__)
 
+        # Standard params for every run
         self.timestamp_format = self.instance.get("timestamp_format", "%Y-%m-%dT%H%M%S")
-        self.backup_storage_platform = self.instance.get("backup_storage_platform")
+        self.backup_storage_platform = self.instance.get("backup_storage_platform", "").lower()
         self.backup_path = self.instance.get("backup_path")
         self.delete_local_backups = self.instance.get("delete_local_backups")
 
-        # AWS authentication
+        # AWS authentication/params
         self.aws_access_key = self.instance.get("aws_access_key", None)
         self.aws_secret_key = self.instance.get("aws_secret_key", None)
         self.assume_role_arn = self.instance.get("assume_role_arn", None)
@@ -53,9 +78,16 @@ class BackupCheck(AgentCheck):
         self.aws_s3_bucket_name = self.instance.get("aws_s3_bucket_name", None)
         self.aws_s3_sub_path = self.instance.get("aws_s3_sub_path", "")
 
-        # Azure authentication
+        # Azure authentication/params
         self.azure_connection_string = self.instance.get("azure_connection_string", None)
         self.azure_container_name = self.instance.get("azure_container_name", None)
+
+        # Github authentication/params
+        self.github_access_token = self.instance.get("github_access_token", None)
+        self.github_repo = self.instance.get("github_repo", None)
+        self.github_store_path = self.instance.get("github_store_path", "dd_backups")
+        self.github_enterprise = self.instance.get("github_enterprise", None)
+        self.master_ref = self.instance.get("github_master_ref", "heads/main")
 
         self.check_initializations.append(self.validate_config)
 
@@ -69,10 +101,10 @@ class BackupCheck(AgentCheck):
 
         self.gauge(self.billing_metric, 1, tags=self.tags, raw=True)
 
-        if self.backup_storage_platform == "LOCAL":
+        if self.backup_storage_platform == BACKUP_LOCAL:
             return
 
-        elif self.backup_storage_platform == "AWS":
+        elif self.backup_storage_platform == BACKUP_AWS:
             # Create an s3 client using credentials
             s3_client = setup_aws_connection(
                 self.aws_access_key,
@@ -90,7 +122,7 @@ class BackupCheck(AgentCheck):
             else:
                 self.log.error("Backup to S3 failed. Will clean up the created backups or exit.")
 
-        elif self.backup_storage_platform == "AZURE":
+        elif self.backup_storage_platform == BACKUP_AZURE:
             # Generate a new blob client
             blob_client = setup_azure_connection(
                 self.azure_connection_string, self.azure_container_name, backup_file_name
@@ -100,7 +132,45 @@ class BackupCheck(AgentCheck):
                 blob_client.upload_blob(data, content_settings=ContentSettings(content_type="application/zip"))
                 self.log.info("Successfully uploaded Backup to Azure Blob.")
 
-        if self.delete_local_backups == "True":
+        elif self.backup_storage_platform == BACKUP_GITHUB:
+
+            if self.github_enterprise:
+                github_connection = Github(
+                    base_url="https://{}/api/v3".format(self.github_enterprise),
+                    login_or_token=self.github_access_token)
+            else:
+                github_connection = Github(self.github_access_token)
+
+            for repo_obj in github_connection.get_user().get_repos():
+                if repo_obj.name == self.github_repo:
+                    repo = repo_obj
+
+            # Setup the git commit for this upload
+            commit_message = "Uploading backup {}".format(backup_file_name)
+            master_ref = repo.get_git_ref(self.master_ref)
+            master_sha = master_ref.object.sha
+            base_tree = repo.get_git_tree(master_sha)
+
+            # Base64 encode the zip file and turn it into a git blob
+            data = base64.b64encode(open(backup_file_path, "rb").read())
+            blob = repo.create_git_blob(data.decode("utf-8"), "base64")
+
+            # Create Git element tree for commit
+            element = InputGitTreeElement(path="{}/{}".format(self.github_store_path, backup_file_name),
+                                          mode='100644', type='blob', sha=blob.sha)
+            # Create a list and append element to it
+            element_list = list()
+            element_list.append(element)
+
+            # Create git tree using repo
+            tree = repo.create_git_tree(element_list, base_tree)
+            # Get git commit master sha
+            parent = repo.get_git_commit(master_sha)
+            # Create git commit and "push" with backup zipped file
+            commit = repo.create_git_commit(commit_message, tree, [parent])
+            master_ref.edit(commit.sha)
+
+        if self.delete_local_backups:
             try:
                 os.remove(backup_file_path)
                 os.removedirs(self.backup_path)
@@ -126,27 +196,50 @@ class BackupCheck(AgentCheck):
             raise ConfigurationError("The backup_path variable is required.")
         if not self.backup_storage_platform:
             raise ConfigurationError("The backup_storage_platform variable is required.")
-        if not self.dd_app_key:
-            raise ConfigurationError("A valid Datadog APP key is required.")
+        if self.dd_site not in API_URL_MAP.keys():
+            raise ConfigurationError("Please provide a valid Datadog site - com, eu, us3, us5, or gov")
 
         if self.backup_storage_platform not in SUPPORTED_STORAGE_PLATFORMS:
             raise ConfigurationError("Provided storage platform is not supported: {}"
                                      .format(self.backup_storage_platform))
         else:
-            if self.backup_storage_platform == "AWS":
+            if self.backup_storage_platform == BACKUP_AWS:
                 # If aws, validate we have required creds
                 if not self.aws_access_key or not self.aws_secret_key or not self.aws_s3_bucket_name:
                     raise ConfigurationError(
-                        "AWS_ACCESS_KEY, AWS_SECRET_KEY, and AWS_S3_BUCKET_URL are all required "
+                        "aws_access_key, aws_secret_key, and aws_s3_bucket_url are all required "
                         + "for storing backups in AWS."
                     )
-            elif self.backup_storage_platform == "AZURE":
+            elif self.backup_storage_platform == BACKUP_AZURE:
                 # If azure, validate we have required creds
                 if not self.azure_connection_string or not self.azure_container_name:
                     raise ConfigurationError(
-                        "AZURE_CONNECTION_STRING and AZURE_CONTAINER_NAME are required "
+                        "azure_connection_string and azure_container_name are required "
                         + "for Azure authentication."
                     )
+            elif self.backup_storage_platform == BACKUP_GITHUB:
+                # Make sure at least repo and access token is provided
+                if not self.github_repo or not self.github_access_token:
+                    raise ConfigurationError(
+                        "github_repo and github_access_token are required to run in github mode."
+                    )
+
+    def get_key(self, key):
+        # Try to grab key from instances (1st choice)
+        config_key = self.instance.get(key, "")
+
+        if not config_key:
+            # If instance key not set, grab key from init_config (2nd choice)
+            config_key = self.init_config.get(key, "")
+
+            if not config_key and key == "api_key":
+                # If both aren't set, try to grab api_key from yaml (and anywhere else)
+                config_key = get_config(key)
+
+        if not config_key:
+            raise ConfigurationError("No key {} found".format(key))
+
+        return config_key
 
     def call_api(self, request_path, dd_api_key, dd_app_key, jsonify=True, api_version_number=1):
         """Helper function used to call the DD API
@@ -165,12 +258,12 @@ class BackupCheck(AgentCheck):
             "DD-APPLICATION-KEY": dd_app_key,
         }
 
-        api_version = f'v{str(api_version_number)}/'
+        api_version = f'v{str(api_version_number)}'
 
         try:
             # Make DD API GET request
             results = self.http.get(
-                "https://api.datadoghq.com/api/" + api_version + request_path,
+                "https://{}/api/{}/{}".format(self.api_url, api_version, request_path),
                 extra_headers=headers
             )
 
@@ -368,4 +461,5 @@ class BackupCheck(AgentCheck):
             self.fetch_notebooks(target_zip, dd_api_key, dd_app_key)
 
         return backup_file_path
+
 

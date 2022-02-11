@@ -78,6 +78,18 @@ def instance_connect_timeout(field, value):
     return get_default_field_value(field, value)
 
 
+def instance_dd_api_key(field, value):
+    return get_default_field_value(field, value)
+
+
+def instance_dd_app_key(field, value):
+    return get_default_field_value(field, value)
+
+
+def instance_dd_site(field, value):
+    return 'com'
+
+
 def instance_delete_local_backups(field, value):
     return True
 
@@ -92,6 +104,26 @@ def instance_empty_default_hostname(field, value):
 
 def instance_extra_headers(field, value):
     return get_default_field_value(field, value)
+
+
+def instance_github_access_token(field, value):
+    return get_default_field_value(field, value)
+
+
+def instance_github_enterprise(field, value):
+    return 'mybank_github.com'
+
+
+def instance_github_master_ref(field, value):
+    return 'heads/main'
+
+
+def instance_github_repo(field, value):
+    return get_default_field_value(field, value)
+
+
+def instance_github_store_path(field, value):
+    return 'dd_backups'
 
 
 def instance_headers(field, value):
@@ -191,6 +223,10 @@ def instance_tls_ignore_warning(field, value):
 
 
 def instance_tls_private_key(field, value):
+    return get_default_field_value(field, value)
+
+
+def instance_tls_protocols_allowed(field, value):
     return get_default_field_value(field, value)
 
 

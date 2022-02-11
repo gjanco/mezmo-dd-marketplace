@@ -13,10 +13,32 @@ init_config:
 #
 instances:
 
-    ## @param backup_storage_platform - string - required
-    ## The platform where you are uploading the backup to (AWS, Azure, or local)
+  -
+    ## @param dd_api_key - string - optional
+    ## The Datadog API Key used to authenticate to your Datadog organization. For more info, see link below:
+    ##
+    ## https://docs.datadoghq.com/account_management/api-app-keys/#api-keys
     #
-  - backup_storage_platform: <BACKUP_STORAGE_PLATFORM>
+    # dd_api_key: <DD_API_KEY>
+
+    ## @param dd_app_key - string - optional
+    ## The Datadog APP Key used to authenticate to your Datadog organization. For more info, see link below:
+    ##
+    ## hhttps://docs.datadoghq.com/account_management/api-app-keys/#application-keys
+    #
+    # dd_app_key: <DD_APP_KEY>
+
+    ## @param dd_site - string - optional - default: com
+    ## The Datadog website that your account is registered to. The currently supported options are below:
+    ##
+    ## com (default for US), eu, us3, us5, gov
+    #
+    # dd_site: com
+
+    ## @param backup_storage_platform - string - required
+    ## The platform where you are uploading the backup. For example, AWS, Azure, GitHub, or your local machine.
+    #
+    backup_storage_platform: github
 
     ## @param aws_access_key - string - optional
     ## If platform is AWS, the access key used to authenticate to AWS api to upload to s3.
@@ -66,9 +88,43 @@ instances:
     # azure_connection_string: <AZURE_CONNECTION_STRING>
 
     ## @param azure_container_name - string - optional
-    ## If platform is Azure, the name of container that holds the blob storage. 
+    ## If the platform is Azure, the name of the container that holds the blob storage.
     #
     # azure_container_name: <AZURE_CONTAINER_NAME>
+
+    ## @param github_access_token - string - optional
+    ## The personal access token used to authenticate to your GitHub account. For more info,
+    ## see the link below:
+    ##
+    ## https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+    #
+    # github_access_token: <GITHUB_ACCESS_TOKEN>
+
+    ## @param github_repo - string - optional
+    ## The name of your repository in GitHub. You don't need to include the name of your account as that is
+    ## pulled from the GitHub access token you provide.
+    #
+    # github_repo: <GITHUB_REPO>
+
+    ## @param github_store_path - string - optional - default: dd_backups
+    ## The path in your GitHub repository that stores the Datadog backups. The commit should create any missing folders.
+    #
+    # github_store_path: dd_backups
+
+    ## @param github_enterprise - string - optional - default: mybank_github.com
+    ## If you are using GitHub Enterprise Cloud, you may have a custom domain to use as a value.
+    ## For example, if your API endpoint is `https://mybank_github.com/api/v3`, provide `mybank_github.com`
+    ## as the value here.
+    #
+    # github_enterprise: mybank_github.com
+
+    ## @param github_master_ref - string - optional - default: heads/main
+    ## The name of your Github head reference. This is usually either `heads/main` or `heads/master`.
+    ## For more information, see the Git docs below:
+    ##
+    ## https://git-scm.com/book/en/v2/Git-Internals-Git-References
+    #
+    # github_master_ref: heads/main
 
     ## @param timestamp_format - string - optional
     ## The format for which you want the timestamp on the zipped backup file. 
@@ -352,6 +408,20 @@ instances:
     ## https://www.openssl.org/docs/manmaster/man3/SSL_CTX_load_verify_locations.html
     #
     # tls_ca_cert: <CA_CERT_PATH>
+
+    ## @param tls_protocols_allowed - list of strings - optional
+    ## The expected versions of TLS/SSL when fetching intermediate certificates.
+    ## Only `SSLv3`, `TLSv1.2`, `TLSv1.3` are allowed by default. The possible values are:
+    ##   SSLv3
+    ##   TLSv1
+    ##   TLSv1.1
+    ##   TLSv1.2
+    ##   TLSv1.3
+    #
+    # tls_protocols_allowed:
+    #   - SSLv3
+    #   - TLSv1.2
+    #   - TLSv1.3
 
     ## @param headers - mapping - optional
     ## The headers parameter allows you to send specific headers with every request.
