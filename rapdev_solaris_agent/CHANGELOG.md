@@ -1,5 +1,13 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.3.8 / 2022-02-16
+
+* [Fixed] incorrect permissions on agent.yml and agent.log during agent reinstall.
+
+## 1.3.7 / 2022-02-14
+
+* [Fixed] incorrect agent startup event on metadata refresh.
+
 ## 1.3.6 / 2022-02-10
 
 * [Fixed] incorrect process check metrics reported due to parsing error.

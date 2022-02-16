@@ -18,13 +18,13 @@ pkgadd -d http://get.opencsw.org/now
 
 2. Install the Solaris Agent using the Solaris Image Packaging System. 
 ```sh
-pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.6.pkg
+pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.8.pkg
 ```
 
 3. If you are upgrading an existing Solaris Agent installation, first remove the current Solaris Agent package. The Solaris Agent configuration and log files will be retained.
 ```sh
 pkgrm DatadogAgent
-pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.6.pkg
+pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.8.pkg
 ```
 
 4. Copy `/etc/datadog/agent.yml.example` to `/etc/datadog/agent.yml` and update the Solaris Agent configuration settings in the `/etc/datadog/agent.yml` file.
@@ -32,7 +32,7 @@ pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.6.pkg
     ```sh
     cp /etc/datadog/agent.yml.example /etc/datadog/agent.yml
     vi /etc/datadog/agent.yml
-    chown dd-agent:sys /etc/datadog/agent.yml
+    chown datadog:sys /etc/datadog/agent.yml
     ```
 
     i. (Required) Set the `api_key` value to your Datadog's API key string.
@@ -53,7 +53,7 @@ pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.6.pkg
     #  - <TAG_KEY2>:<TAG_VALUE2>
     ```
 
-    iv. (Optional) Uncomment the `logs:` section in `/etc/datadog/agent.yml` and add a configuration for desired log tail. The `dd-agent` user requires read access to all files configured for log tails.
+    iv. (Optional) Uncomment the `logs:` section in `/etc/datadog/agent.yml` and add a configuration for desired log tail. The `datadog` user requires read access to all files configured for log tails.
     ```yaml
     logs:
       - type: file
@@ -110,7 +110,7 @@ pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.6.pkg
     curl_bin: /opt/csw/bin/curl
     ```
 
-    x. (Optional) The Solaris Agent includes a recent version of the [CA extract](https://curl.se/docs/caextract.html) PEM file located at `/opt/datadog-agent/ssl/cacert.pem`. Change this setting to your organization's cacert.pem bundle when using an SSL traffic inspection proxy for egress internet access. The `dd-agent` user should have directory and file access permissions on the cacert.pem file as well as the parent directory to read the CA Bundle.
+    x. (Optional) The Solaris Agent includes a recent version of the [CA extract](https://curl.se/docs/caextract.html) PEM file located at `/opt/datadog-agent/ssl/cacert.pem`. Change this setting to your organization's cacert.pem bundle when using an SSL traffic inspection proxy for egress internet access. The `datadog` user should have directory and file access permissions on the cacert.pem file as well as the parent directory to read the CA Bundle.
     ```yaml
     cacert: /etc/ssl/cacert.pem
     ```
