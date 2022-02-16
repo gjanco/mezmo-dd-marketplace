@@ -11,10 +11,10 @@ The HP-UX Agent uses the same URLs and ports as the native agents. The HP-UX Age
 
 1. A current installation of curl is required on each HP-UX Agent host. The HP-UX Agent was built and tested with [curl-7.73.0](http://hpux.connect.org.uk/hppd/hpux/Networking/WWW/curl-7.73.0/) from the [HP-UX Porting and Archive Centre](http://hpux.connect.org.uk).
 
-2. Download the HP-UX Agent install [package](http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.3.0.tgz).
+2. Download the HP-UX Agent install [package](http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.3.2.tgz).
 ```sh
 cd /tmp
-/usr/local/bin/curl -o DatadogAgent-1.3.0.tgz http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.3.0.tgz 
+/usr/local/bin/curl -o DatadogAgent-1.3.2.tgz http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.3.2.tgz 
 ```
 
 3. Ensure that every HP-UX Agent host has a current installation of Gzip. The HP-UX Agent was built and tested with `gzip v1.3.5`, and defaults to `/usr/contrib/bin/gzip`.
@@ -22,7 +22,7 @@ cd /tmp
 4. Install the HP-UX Agent. You can run the `install.sh` script to update an existing HP-UX Agent install.
 ```sh
 cd /tmp
-gunzip -c DatadogAgent-1.3.0.tgz | tar -xvf -
+gunzip -c DatadogAgent-1.3.2.tgz | tar -xvf -
 cd /tmp/datadog-agent-install
 ./install.sh 
 ```

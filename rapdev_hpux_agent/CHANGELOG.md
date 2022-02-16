@@ -1,5 +1,13 @@
 # CHANGELOG - RapDev HP-UX Agent
 
+## 1.3.2 / 2022-02-16
+
+* [Fixed] incorrect permissions on agent.yml and agent.log during agent reinstall.
+
+## 1.3.1 / 2022-02-14
+
+* [Fixed] incorrect agent startup event on metadata refresh.
+
 ## 1.3.0 / 2022-02-10
 
 * [Added] support disk configuration options for mount point and device include and exclude.
