@@ -1,0 +1,142 @@
+{
+    "title": "RapDev SNMP Trap Logs",
+    "description": "",
+    "widgets": [
+        {
+            "id": 5043544272114604,
+            "definition": {
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-traps-logs-light.svg",
+                "url_dark_theme": "https://files.rapdev.io/images/rapdev-traps-logs-dark.svg",
+                "sizing": "fill",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            },
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 2,
+                "height": 3
+            }
+        },
+        {
+            "id": 6171598464748530,
+            "definition": {
+                "type": "note",
+                "content": "# RapDev SNMP Trap Logs\n\nThis is a high level look at all of the SNMP Trap Logs, so you can view your rate of traps, view their content, and filter to specific hosts.\n\nIf the template variable `$host` does not populate, check the following:\n\n* Ensure that you have created an enrichment table to translate IPs to hostnames\n* The enriched field is `snmphost.host`\n* The enriched field is faceted",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            },
+            "layout": {
+                "x": 2,
+                "y": 0,
+                "width": 2,
+                "height": 3
+            }
+        },
+        {
+            "id": 4222324293365712,
+            "definition": {
+                "title": "SNMP Event Count",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "@type:snmptrap $host"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "aggregation": "count"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            },
+            "layout": {
+                "x": 4,
+                "y": 0,
+                "width": 8,
+                "height": 3
+            }
+        },
+        {
+            "id": 814946936814536,
+            "definition": {
+                "title": "SNMP Trap Logs",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "log_stream",
+                "indexes": [],
+                "query": "@type:snmptrap $host",
+                "sort": {
+                    "column": "time",
+                    "order": "desc"
+                },
+                "columns": [
+                    "@host"
+                ],
+                "show_date_column": true,
+                "show_message_column": true,
+                "message_display": "expanded-lg"
+            },
+            "layout": {
+                "x": 0,
+                "y": 3,
+                "width": 12,
+                "height": 6
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "host",
+            "default": "*",
+            "prefix": "@snmphost.host",
+            "available_values": []
+        }
+    ],
+    "layout_type": "ordered",
+    "is_read_only": false,
+    "notify_list": [],
+    "reflow_type": "fixed",
+    "id": "r76-m3t-e3p"
+}
