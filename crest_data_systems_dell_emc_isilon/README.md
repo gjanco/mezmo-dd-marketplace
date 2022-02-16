@@ -72,7 +72,7 @@ Run the following:
 Alternatively, you can get detailed information about the integration using the following command:
 
     ```
-    sudo ‐u dd‐agent datadog‐agent check crest_data_systems_dell_emc_isilon
+    sudo -u dd‐agent datadog-agent check crest_data_systems_dell_emc_isilon
     ```
 
 ### Monitor Configuration
