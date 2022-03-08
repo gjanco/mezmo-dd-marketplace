@@ -1,0 +1,47 @@
+name: AVM Consulting Workday
+files:
+- name: avmconsulting_workday.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: url
+      required: true
+      description:  The Workday integrations URL. The URL consists of the server url, tenant name and `/integrations` appended.
+      value:
+        type: string
+        example: https://<WORKDAY_SERVER_ADDRESS>/<INTEGRATION>/Integrations
+    - name: user
+      required: true
+      description: Workday username.
+      value:
+        type: string
+    - name: tenant
+      required: true
+      description: Workday tenant name.
+      value:
+        type: string
+    - name: password
+      required: true
+      description: Workday password.
+      secret: true
+      value:
+        type: string
+    - name: site
+      required: true
+      description: The site of the Datadog intake to send data to.
+      example: "datadoghq.com"
+      value:
+        type: string
+    - name: api_key
+      required: true
+      description: Datadog API key.
+      value:
+        type: string
+    - template: instances/default
+      overrides:
+        min_collection_interval.value.example: 600
+
+

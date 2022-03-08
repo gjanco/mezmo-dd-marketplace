@@ -1,0 +1,30 @@
+{
+	"name": "[AVM Consulting Workday] Workday Integration Status",
+	"type": "service check",
+	"query": "\"avmconsulting.workday.integration.state\".over(\"*\").by(\"workday.integration_name\").last(2).count_by_status()",
+	"message": "{{check_message}} click on `related_logs` for current integration monitor event page to see logs about triggered event",
+	"tags": [
+		"integration:AVM Consulting Workday"
+	],
+	"options": {
+		"notify_audit": false,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"thresholds": {
+			"warning": 1,
+			"ok": 1,
+			"critical": 1
+		},
+		"new_host_delay": 0,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"no_data_timeframe": 2,
+		"escalation_message": ""
+	},
+	"priority": null,
+	"recommended_monitor_metadata": {
+		"description": "Alert when a Workday integration's last event sends `fail` or `completed with errors`. Warning when `completed with warnings`. Recovers when `completed`."
+	}
+}

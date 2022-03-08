@@ -1,0 +1,630 @@
+{
+    "title": "Workday Integrations Trends",
+    "description": "## Workday\n\nThis dashboard provides a high-level overview of your Workday integrations. Monitor job executions, duration and logs.",
+    "widgets": [
+        {
+            "id": 3382759136295452,
+            "layout": {
+                "x": 0,
+                "y": 58,
+                "width": 49,
+                "height": 20
+            },
+            "definition": {
+                "title": "Duration",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "time": {},
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "query": "avg:avmconsulting.workday.duration.max{workday.integration_name:*,$workday.integration_name} by {workday.integration_name}",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 8959600551343974,
+            "layout": {
+                "x": 0,
+                "y": 18,
+                "width": 49,
+                "height": 20
+            },
+            "definition": {
+                "title": "Processed Jobs",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "time": {},
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "on_right_yaxis": false,
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "query": "avg:avmconsulting.workday.total_jobs{$workday.integration_name} by {workday.integration_name}.as_count()",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 3591439712103055,
+            "layout": {
+                "x": 0,
+                "y": 38,
+                "width": 49,
+                "height": 20
+            },
+            "definition": {
+                "title": "Failed Jobs",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "time": {},
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "on_right_yaxis": false,
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "query": "avg:avmconsulting.workday.failed_jobs{$workday.integration_name} by {workday.integration_name}.as_count()",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "bars"
+                    }
+                ],
+                "yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                },
+                "markers": []
+            }
+        },
+        {
+            "id": 609678263191046,
+            "layout": {
+                "x": 50,
+                "y": 18,
+                "width": 42,
+                "height": 41
+            },
+            "definition": {
+                "title": "Job Duration",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:avmconsulting.workday.duration.max{workday.integration_name:*,$workday.integration_name} by {workday.integration_name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "avg"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2533299652748788,
+            "layout": {
+                "x": 0,
+                "y": 0.08333333333333333,
+                "width": 12,
+                "height": 12
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://logos-download.com/wp-content/uploads/2016/12/Workday_logo_logotype.png",
+                "sizing": "contain",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 5527871773472391,
+            "layout": {
+                "x": 0,
+                "y": 13,
+                "width": 49,
+                "height": 5
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Job Activity Metrics",
+                "background_color": "blue",
+                "font_size": "14",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "bottom",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 3550014237387168,
+            "layout": {
+                "x": 12,
+                "y": 0,
+                "width": 34,
+                "height": 12
+            },
+            "definition": {
+                "type": "note",
+                "content": "This dashboard shows the health of your Workday integrations as well as metrics and logs from job executions.\n\nAll integrations that are accessible via the provided credentials are automatically extracted. ",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 5132989917135244,
+            "layout": {
+                "x": 47,
+                "y": 0,
+                "width": 86,
+                "height": 12
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Overview",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "center",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": false
+            }
+        },
+        {
+            "id": 6208087554950490,
+            "layout": {
+                "x": 50,
+                "y": 13,
+                "width": 42,
+                "height": 5
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Job Performance Metrics",
+                "background_color": "purple",
+                "font_size": "14",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "bottom",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2814827609342161,
+            "layout": {
+                "x": 99,
+                "y": 2,
+                "width": 15,
+                "height": 9
+            },
+            "definition": {
+                "title": "Failed Jobs",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:avmconsulting.workday.failed_jobs{$workday.integration_name}.as_count()",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "sum"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2
+            }
+        },
+        {
+            "id": 5789669900410295,
+            "layout": {
+                "x": 65,
+                "y": 2,
+                "width": 15,
+                "height": 9
+            },
+            "definition": {
+                "title": "Integrations Health",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "check_status",
+                "check": "avmconsulting.workday.integration.state",
+                "grouping": "cluster",
+                "group_by": [],
+                "tags": []
+            }
+        },
+        {
+            "id": 6184663141732045,
+            "layout": {
+                "x": 82,
+                "y": 2,
+                "width": 15,
+                "height": 9
+            },
+            "definition": {
+                "title": "Processed Jobs",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:avmconsulting.workday.total_jobs{$workday.integration_name}.as_count()",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "sum"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2
+            }
+        },
+        {
+            "id": 7243869030295928,
+            "layout": {
+                "x": 116,
+                "y": 2,
+                "width": 16,
+                "height": 9
+            },
+            "definition": {
+                "title": "Failure Rate",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "(query2 / query1) * 100"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 20
+                            },
+                            {
+                                "comparator": ">",
+                                "palette": "white_on_yellow",
+                                "value": 15
+                            },
+                            {
+                                "comparator": "<=",
+                                "palette": "white_on_green",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:avmconsulting.workday.failed_jobs{$workday.integration_name}.as_count()",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "sum"
+                            },
+                            {
+                                "query": "sum:avmconsulting.workday.total_jobs{$workday.integration_name}.as_count()",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "sum"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2
+            }
+        },
+        {
+            "id": 5305679257522349,
+            "layout": {
+                "x": 93,
+                "y": 13,
+                "width": 40,
+                "height": 5
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Job Logs",
+                "background_color": "orange",
+                "font_size": "14",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "bottom",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 723601547642000,
+            "layout": {
+                "x": 93,
+                "y": 18,
+                "width": 40,
+                "height": 92
+            },
+            "definition": {
+                "title": "All Integration Logs",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "log_stream",
+                "indexes": [],
+                "query": "workday.integration_name:* $workday.integration_name",
+                "sort": {
+                    "column": "time",
+                    "order": "desc"
+                },
+                "columns": [
+                    "workday.integration_name"
+                ],
+                "show_date_column": true,
+                "show_message_column": true,
+                "message_display": "expanded-md"
+            }
+        },
+        {
+            "id": 6700075359007431,
+            "layout": {
+                "x": 50,
+                "y": 65,
+                "width": 42,
+                "height": 45
+            },
+            "definition": {
+                "title": "Events",
+                "title_size": "13",
+                "title_align": "left",
+                "type": "event_stream",
+                "query": "workday",
+                "tags_execution": "and",
+                "event_size": "s"
+            }
+        },
+        {
+            "id": 37035909822091,
+            "layout": {
+                "x": 50,
+                "y": 60,
+                "width": 42,
+                "height": 5
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Events",
+                "background_color": "yellow",
+                "font_size": "14",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "bottom",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 728255614281238,
+            "layout": {
+                "x": 0,
+                "y": 84,
+                "width": 49,
+                "height": 26
+            },
+            "definition": {
+                "title": "Monitor Summary of All Integrations",
+                "title_size": "13",
+                "title_align": "left",
+                "type": "manage_status",
+                "summary_type": "groups",
+                "display_format": "countsAndList",
+                "color_preference": "background",
+                "hide_zero_counts": true,
+                "show_last_triggered": false,
+                "show_priority": false,
+                "query": "tag:(integration:workday) group:$workday.integration_name",
+                "sort": "status,asc",
+                "count": 50,
+                "start": 0
+            }
+        },
+        {
+            "id": 812375105939688,
+            "layout": {
+                "x": 0,
+                "y": 79,
+                "width": 49,
+                "height": 5
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Monitors",
+                "background_color": "green",
+                "font_size": "14",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1579572167263180,
+            "layout": {
+                "x": 48,
+                "y": 2,
+                "width": 15,
+                "height": 9
+            },
+            "definition": {
+                "title": "Tenant Connections",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "check_status",
+                "check": "avmconsulting.workday.can_connect",
+                "grouping": "cluster",
+                "group_by": [],
+                "tags": [
+                    "*"
+                ]
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "workday.integration_name",
+            "default": "*",
+            "prefix": "workday.integration_name",
+            "available_values": []
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "sss-b8r-x3i"
+}
