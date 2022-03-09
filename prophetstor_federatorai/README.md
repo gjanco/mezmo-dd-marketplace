@@ -108,7 +108,7 @@ For support or requests, contact [ProphetStor support](mailto:support@prophetsto
 
 
 [1]: https://prophetstor.com/federator_ai/
-[2]: https://www.youtube.com/watch?v=IooFJnB8bb8&t=1s
+[2]: https://youtu.be/AeSH8yGGA3Q
 [3]: https://github.com/DataDog/watermarkpodautoscaler
 [4]: https://prophetstor.com/wp-content/uploads/documentation/Federator.ai/Latest%20Version/ProphetStor%20Federator.ai%20Installation%20Guide.pdf
 [5]: images/add_cluster_window.png
