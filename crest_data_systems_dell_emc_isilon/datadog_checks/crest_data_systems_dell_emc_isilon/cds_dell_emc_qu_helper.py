@@ -38,8 +38,9 @@ class CDSDellEMCQuHelper(object):
         for quotas in response_json.get("quotas", []):
             quota_id = quotas.get("id")
             quota_type = quotas.get("type")
+            quota_path = quotas.get("path")
 
-            if quota_id is None or quota_type is None:
+            if quota_id is None or quota_type is None or quota_path is None:
                 continue
 
             quota_usage = quotas.get("usage", {})
@@ -55,6 +56,7 @@ class CDSDellEMCQuHelper(object):
                     [
                         INTEGRATION_PREFIX + "quota-space:used",
                         INTEGRATION_PREFIX + "quota-type:%s" % quota_type,
+                        INTEGRATION_PREFIX + "quota-path:%s" % quota_path,
                         INTEGRATION_PREFIX + "quota-id:%s" % quota_id,
                     ],
                 ]
@@ -66,6 +68,7 @@ class CDSDellEMCQuHelper(object):
                     [
                         INTEGRATION_PREFIX + "quota-space:available",
                         INTEGRATION_PREFIX + "quota-type:%s" % quota_type,
+                        INTEGRATION_PREFIX + "quota-path:%s" % quota_path,
                         INTEGRATION_PREFIX + "quota-id:%s" % quota_id,
                     ],
                 ]

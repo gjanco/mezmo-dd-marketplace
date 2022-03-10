@@ -1,8 +1,8 @@
 # CHANGELOG - crest_data_systems_dell_emc_isilon
 
-## 1.0.0 / 2021-10-26
+## 2.0.1 / 2022-03-09
 
-* [Added] Initial release.
+* [Added] Directory Path information of Quota
 
 ## 2.0.0 / 2022-01-11
 
@@ -13,3 +13,7 @@
 * [Updated] The dashboard images of Cluster Information and Node Details with new Layout
 * [Updated] All widgets on the Node Details dashboard to have statistics by Node in each widget
 * [Added] Monitors to track the usage of CPU, Memory and Disk of each node and cluster
+
+## 1.0.0 / 2021-10-26
+
+* [Added] Initial release.
