@@ -30,6 +30,14 @@ def instance_min_collection_interval(field, value):
     return 15
 
 
+def instance_r7_logs_enabled(field, value):
+    return False
+
+
+def instance_r7_region(field, value):
+    return 'us'
+
+
 def instance_select(field, value):
     return get_default_field_value(field, value)
 

@@ -23,17 +23,18 @@ class InstanceConfig(BaseModel):
     class Config:
         allow_mutation = False
 
-    api_key: str
     dd_api_key: str
     dd_app_key: str
     disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]
     log_interval: Optional[str]
     min_collection_interval: Optional[float]
+    r7_api_key: str
+    r7_logs_enabled: Optional[bool]
+    r7_region: Optional[str]
     select: Optional[Sequence[str]]
     service: Optional[str]
     tags: Optional[Sequence[str]]
-    url: str
 
     @root_validator(pre=True)
     def _initial_validation(cls, values):
