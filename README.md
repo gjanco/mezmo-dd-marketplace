@@ -4,19 +4,19 @@ Please reach out to marketplace@datadoghq.com with any questions.
 <p>&nbsp;</p> 
 
 # Marketplace
-The [Datadog Marketplace](https://www.datadoghq.com/blog/datadog-marketplace/) is a digital marketplace where [Datadog partners](https://www.datadoghq.com/partner/) can sell their third-party applications to Datadog users. 
+The [Datadog Marketplace](https://www.datadoghq.com/blog/datadog-marketplace/) is a digital marketplace where [Datadog partners](https://www.datadoghq.com/partner/) can sell their third-party applications and professional services to Datadog customers. 
 
-Backed by strict vetting standards and a fully managed billing system, the Marketplace introduces new ways for developers to build and trade tools on the Datadog platform.
+Backed by strict vetting standards and a fully managed billing system, the Marketplace introduces new ways for partners to extend the Datadog platform.
 
 ![An screenshot of the Marketplace from the Datadog application with a list of integration tiles](https://imgix.datadoghq.com/img/blog/datadog-marketplace/marketplace-cover-2.png?fit=max)
 
 ### Benefits
 
 - **Increased product visibility.**
-Thousands of users who are logged into the Datadog platform will be able to see and enable your integration tile.
+Thousands of customers who are logged into the Datadog platform will be able to see and enable your integration tile. Your tile will also be discoverable to the general public on our corporate and documentation websites. 
 
 - **Co-marketing opportunities.**
-Once the integration is complete, a representative from Datadog will reach out to scope a go-to-market strategy.
+Once the pull-request for your offering is submitted and reviewed, a representative from Datadog will reach out to scope a go-to-market strategy.
 
 - **Revenue opportunities.**
 The Marketplace ecosystem opens up new sales channels for Datadog partners.
@@ -28,11 +28,11 @@ The Marketplace ecosystem opens up new sales channels for Datadog partners.
 Please follow the instructions in [the Marketplace documentation](https://docs.datadoghq.com/developers/marketplace/) to get started with creating your Marketplace listing and drafting your pull request. 
 
 ### Pull request review process
-Please create a Draft PR for any work in progress, and use regular PRs when your changes are ready for Datadog's engineering team to review. If a regular PR has already been submitted, please open a new PR for any future changes.
+Please create a *draft* PR for any work in progress, and use *regular* PRs when your changes are ready for Datadog's Engineering team to review.
 
-Datadog reviewers will add the priority of their comments. When all required changes have been addressed, your listing will be published.
+Datadog reviewers will add the priority of their comments and whether or not they are blocking. When all required changes have been addressed, your listing will be published.
 
-**Note:** For new marketplace listings, once the pull request has been merged in the marketplace repo, we are able to first enable the tile for just your sandbox account. This will allow you to validate and submit any necessary changes to the tile or documentation before it is enabled for all users. 
+**Note:** For new Marketplace listings, we can enable the tile in your partner sandbox account at your request. This will allow you to review and approve your tile before it is enabled for all users. 
 
 <p>&nbsp;</p> 
 
@@ -55,11 +55,26 @@ Example JSON:
 "pricing": [{
     "billing_type": "tag_count",
     "unit_price": 1,
-    “metric”: “datadog.marketplace.partner_name.integration_name”,
-    “tag”: ”user”
-    “unit_label”: “Integration Name User”,
+    "metric": “datadog.marketplace.partner_name.integration_name",
+    "tag": "user",
+    “unit_label": "Integration Name User",
+    "product_id": "product_name",
+    "includes_assets": true,
+    "short_description": "Short description."
 }]
 ```
+
+| Element | Description | Type | Required | Notes |
+| ---- | ---- | ---- | ---- | ---- |
+| pricing | Top level | array | Required | |
+| billing_type | The billing type for your Marketplace offering. | string | Required | Limited to "one_time", "flat_fee", or "tag_count". Only one billing type can be selected. |
+| unit_price | The default price for your offering. | number | Required | All numbers are translated to US dollars. The one time price is charged once. The flat fee price is charged monthly, regardless of usage. The tag count price is charged monthly based on the unique combination of the metering metric and tags, for example, per user. |
+| metric | The metering metric sent by the partner used to calculate a customer's usage. | string | Only Required for "tag_count" billing type | Required format: “datadog.marketplace.partner_name.integration_name”. |
+| tag | The tag added to the metering metric sent by the partner to determine unique units. | string | Only Required for "tag_count" billing type | The tag should return unique values per unit. For example, if you are charging per user, the metering metric must be tagged with a unique user ID. |
+| unit_label | The label that will display in the "Pricing" section of your Marketplace tile. | string | Required | Example: "Price per [unit_label] per month". |
+| product_id | The second half of your app_id that contains your product name. | string | Required | Kebab case (e.g., my-integration-name) is required. Comment on your pull-request or email marketplace@datadog.com with questions. |
+| includes_assets | Denotes whether your offering comes with out-of-the-box assets like dashboards. | boolean | Required | Always set to true. |
+| short_description | Briefly describes or adds color to your pricing model. | string | Required | **Note**: this element is not displayed on the front-end today, but may be in the future. |
 
 **What is the Marketplace's release cadence?**\
 Datadog Marketplace practices CI/CD. Datadog's engineering team will review pull requests as they are submitted.
