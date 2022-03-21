@@ -16,36 +16,56 @@ def generate_token(api_key, api_secret):
 
 
 def check_for_metrics(metrics):
-    if metrics["bitrate"] or metrics["avg_loss"] or metrics["jitter"] \
-            or metrics["latency"] or metrics["max_loss"]:
+    if any(
+        metrics.get("bitrate"), metrics.get("avg_loss"), metrics.get("jitter"), metrics("latency"), metrics("max_loss")
+    ):
         return True
 
     return False
 
 
 def check_for_cpu_metrics(metrics):
-    if metrics["system_max_cpu_usage"] or metrics["zoom_avg_cpu_usage"] or metrics["zoom_max_cpu_usage"] \
-            or metrics["zoom_min_cpu_usage"]:
+    if any(
+        metrics.get("system_max_cpu_usage"),
+        metrics.get("zoom_avg_cpu_usage"),
+        metrics.get("zoom_max_cpu_usage"),
+        metrics.get("zoom_min_cpu_usage"),
+    ):
         return True
 
     return False
 
 
 def get_country(location):
-    return location.split("(")[1][:-1]
+    if location:
+        return location.split("(")[1][:-1]
+    else:
+        return "not_available"
 
 
 def calculate_average(value, count):
-    return float(value / count)
+    if value and count:
+        return float(value / count)
+    else:
+        return float()
 
 
 def percentage_to_float(percentage):
-    return float(percentage.split("%")[0])
+    if percentage:
+        return float(percentage.split("%")[0])
+    else:
+        return float()
 
 
 def parse_milliseconds(value):
-    return int(value.split(" ms")[0])
+    if value:
+        return int(value.split(" ms")[0])
+    else:
+        return int()
 
 
 def parse_kbps(value):
-    return int(value.split(" kbps")[0])
+    if value:
+        return int(value.split(" kbps")[0])
+    else:
+        return int()

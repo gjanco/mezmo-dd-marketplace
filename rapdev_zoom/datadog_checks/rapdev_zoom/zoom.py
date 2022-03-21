@@ -199,23 +199,31 @@ class ZoomCheck(AgentCheck):
 
                 limit_type = headers.get("X-RateLimit-Type")
 
+                # Need to append the account name in case the service checks fail
+                api_base_tags = list(self.tags)
+                if self.is_sub_account:
+                    api_base_tags.append("zoom_account_name:{}_sub-account".format(self.account_name))
+                else:
+                    api_base_tags.append("zoom_account_name:{}".format(self.account_name))
+
                 # If we hit the queries per second limit, sleep for a sec and retry
                 if limit_type == "QPS":
                     self.log.warning("Hit Queries per Second API rate limit. Sleeping for a second then retrying...")
-                    self.service_check("can_call_api", AgentCheck.WARNING, tags=self.tags)
+                    self.service_check("can_call_api", AgentCheck.WARNING, tags=api_base_tags)
                     time.sleep(1)
                     continue
                 # If we hit the daily limit, return None
                 elif limit_type == "Daily-limit":
                     self.api_rate_limits_hit += 1
-                    self.service_check("can_call_api", AgentCheck.CRITICAL, tags=self.tags)
-                    self.log.warning("Hit Daily API rate limit. Exiting...")
-                    return {}
+                    self.service_check("can_call_api", AgentCheck.CRITICAL, tags=api_base_tags)
+                    raise Exception("Zoom daily API limit was hit. Check will successfully run again when the limit resets at the end of the day.")
             else:
                 try:
                     results.raise_for_status()
                 except HTTPError as e:
                     raise HTTPError("Non-200 response code returned from Zoom API: {}".format(e))
+                except Exception as e:
+                    raise Exception("Unknown exception was caught during Zoom API request: {}".format(e))
             
     def get_users(self, base_tags, account_id=None):
         """Gets the users from Zoom API and sends in the active count and billing metric for each"""
@@ -396,13 +404,13 @@ class ZoomCheck(AgentCheck):
         is_bandwidth_ok = 1
 
         for issue in issues:
-            if issue == "Room Controller Disconnected" or issue == "Controller disconnected":
+            if "controller disconnected" in issue.lower():
                 room_controller_is_connected = 0
-            elif issue == "Selected camera has disconnected":
+            elif "camera has disconnected" in issue.lower():
                 selected_camera_is_connected = 0
-            elif issue == "Selected microphone has disconnected":
+            elif "microphone has disconnected" in issue.lower():
                 selected_mic_is_connected = 0
-            elif issue == "Selected speaker has disconnected":
+            elif "speaker has disconnected" in issue.lower():
                 selected_speaker_is_connected = 0
             elif issue == "High CPU usage is detected":
                 is_cpu_usage_ok = 0
@@ -465,7 +473,7 @@ class ZoomCheck(AgentCheck):
                 try:
                     self.get_meeting_qos(meeting_id, host_name, metric_tags, account_id=account_id)
                 except Exception as e:
-                    self.log.error("Get Meeting QOS FAILED. Caught exception %s", e)
+                    self.log.error("Get Meeting QOS FAILED. Caught exception: {}".format(e))
 
                 # Send in a count for this meeting 
                 self.gauge("meetings.count", 1, tags=metric_tags)

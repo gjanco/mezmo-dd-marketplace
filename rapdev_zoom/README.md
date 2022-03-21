@@ -33,13 +33,13 @@ The following items are all required for this integration to run as intended:
 
 ```
 *Linux*
-sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_zoom==5.1.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_zoom==5.2.0
 
 *Powershell*
-& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_zoom==5.1.0
+& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_zoom==5.2.0
 
 *Command Prompt*
-"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_zoom==5.1.0
+"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_zoom==5.2.0
 ``` 
 
 ### Configuration

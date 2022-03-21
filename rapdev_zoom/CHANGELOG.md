@@ -1,4 +1,10 @@
 # CHANGELOG - rapdev_zoom
+## 5.2.0 / 2022-03-21
+* [Added] Better error handling
+* [Fixed] Incorrect widgets on 2 dashboards
+* [Added] Better status handling for named room components
+* [Fixed] Adding the zoom account name on service check failures
+
 ## 5.1.0 / 2021-10-27
 * [Added] Functionality to support Zoom sub-accounts
 * [Changed] Dashboards to include support for tags for sub-accounts
