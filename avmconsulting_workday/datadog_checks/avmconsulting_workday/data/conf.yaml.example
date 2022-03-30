@@ -16,7 +16,7 @@ instances:
     ## @param url - string - required
     ## The Workday integrations URL. The URL consists of the server url, tenant name and `/integrations` appended.
     #
-  - url: https://<WORKDAY_SERVER_ADDRESS>/<INTEGRATION>/Integrations
+  - url: https://<WORKDAY_SERVER_ADDRESS>/ccx/service/<TENANT>/Integrations
 
     ## @param user - string - required
     ## Workday username.
@@ -34,9 +34,9 @@ instances:
     password: <PASSWORD>
 
     ## @param site - string - required
-    ## The site of the Datadog intake to send data to.
+    ## The site of the Datadog intake to send data to. For example, datadoghq.com, datadoghq.eu, and ddog-gov.com.
     #
-    site: <SITE>
+    site: datadoghq.com
 
     ## @param api_key - string - required
     ## Datadog API key.
@@ -59,11 +59,11 @@ instances:
     #
     # service: <SERVICE>
 
-    ## @param min_collection_interval - number - optional - default: 600
+    ## @param min_collection_interval - number - required
     ## This changes the collection interval of the check. For more information, see:
     ## https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
     #
-    # min_collection_interval: 600
+    min_collection_interval: 600
 
     ## @param empty_default_hostname - boolean - optional - default: false
     ## This forces the check to send metrics with no hostname.
@@ -71,3 +71,14 @@ instances:
     ## This is useful for cluster-level checks.
     #
     # empty_default_hostname: false
+
+    ## @param metric_patterns - mapping - optional
+    ## A mapping of metrics to include or exclude, with each entry being a regular expression.
+    ##
+    ## Metrics defined in `exclude` will take precedence in case of overlap.
+    #
+    # metric_patterns:
+    #   include:
+    #   - <INCLUDE_REGEX>
+    #   exclude:
+    #   - <EXCLUDE_REGEX>

@@ -29,6 +29,7 @@ class WorkdayCheck(AgentCheck):
         self.integrations_dict = {}
         self._min_collection_interval = self.instance.get('min_collection_interval', 600)
         self._headers = {'Content-Type': 'application/soap+xml'}
+        self.response_error = ""
         if not self._url:
             raise ConfigurationError('Configuration error, Workday url is required.')
         if not self.tenant or not self.password or not self.user:
@@ -44,8 +45,9 @@ class WorkdayCheck(AgentCheck):
         }
         try:
             self.http.post('https://http-intake.logs.%s/v1/input' % datadog_site, headers=headers, json=log)
-        except Exception:
-            pass
+        except Exception as e:
+            Errmsg = "avmconsulting_workday logs:" + str(e)
+            self.log.error(Errmsg)
 
     def check(self, _):
         try:
@@ -71,6 +73,7 @@ class WorkdayCheck(AgentCheck):
             )
             Errmsg = "avmconsulting_workday: {},{}".format(self._url, e)
             self.log.error(Errmsg)
+            self.log.error(self.response_error)
             return
         content = ET.XML(integration_event_response.content)
         content = namespace_strip(content).getroot()
@@ -98,26 +101,30 @@ class WorkdayCheck(AgentCheck):
         for event in events:
             try:
                 str(event.find(XML_NODES['Integration_System_ID']).text)
-            except Exception:
+                integration_full = str(
+                    event.find(XML_NODES['Integration_System_Reference']).find(XML_NODES['Integration_System_ID']).text
+                )
+                state = str(event.find(XML_NODES['Integration_Status']).text)
+                integration = self.splitter(integration_full)
+                event_id = str(event.find(XML_NODES['Integration_Event_ID']).text)
+                event_type = "Other"
+                for key in EVENT_TYPES:
+                    if key in event_id:
+                        event_type = EVENT_TYPES[key]
+                init_date_str = str(event.find(XML_NODES['Initiated_DateTime']).text)
+                init_date = parse(init_date_str)
+                if not (state in STATES) or (
+                    (integration in self.integrations_dict)
+                    and (parse(self.integrations_dict[integration]["date"]) >= init_date)
+                ):
+                    Infomsg = "avmconsulting_workday ignored: {} {} {}".format(integration, state, init_date)
+                    self.log.info(Infomsg)
+                    continue
+                completed_date = parse(event.find(XML_NODES['Completed_DateTime']).text)
+            except Exception as e:
+                Errmsg = "avmconsulting_workday events:" + str(e)
+                self.log.error(Errmsg)
                 continue
-            integration_full = str(
-                event.find(XML_NODES['Integration_System_Reference']).find(XML_NODES['Integration_System_ID']).text
-            )
-            state = str(event.find(XML_NODES['Integration_Status']).text)
-            integration = self.splitter(integration_full)
-            event_id = str(event.find(XML_NODES['Integration_Event_ID']).text)
-            event_type = "Other"
-            for key in EVENT_TYPES:
-                if key in event_id:
-                    event_type = EVENT_TYPES[key]
-            init_date_str = str(event.find(XML_NODES['Initiated_DateTime']).text)
-            init_date = parse(init_date_str)
-            if not (state in STATES) or (
-                (integration in self.integrations_dict)
-                and (parse(self.integrations_dict[integration]["date"]) >= init_date)
-            ):
-                continue
-            completed_date = parse(event.find(XML_NODES['Completed_DateTime']).text)
             self.count(
                 "avmconsulting.workday.total_jobs",
                 1,
@@ -154,20 +161,24 @@ class WorkdayCheck(AgentCheck):
             if len(logs) > 0:
                 jsonlogs = []
                 for log in logs:
-                    timestamp = init_date.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-                    severity = str(log.find(XML_NODES['Message_Severity_Level']).text)
-                    message = str(log.find(XML_NODES['Message_Summary']).text).replace('"', '')
-                    jsonlogs.append(
-                        {
-                            'timestamp': timestamp,
-                            'level': severity,
-                            'ddtags': 'workday.integration_name:%s,source:workday,type:%s'
-                            % (integration.lower(), event_type),
-                            'event_id': event_id,
-                            'message': message,
-                            'workday_tenant': self.tenant,
-                        }
-                    )
+                    try:
+                        timestamp = init_date.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+                        severity = str(log.find(XML_NODES['Message_Severity_Level']).text)
+                        message = str(log.find(XML_NODES['Message_Summary']).text).replace('"', '')
+                        jsonlogs.append(
+                            {
+                                'timestamp': timestamp,
+                                'level': severity,
+                                'ddtags': 'workday.integration_name:%s,source:workday,type:%s'
+                                % (integration.lower(), event_type),
+                                'event_id': event_id,
+                                'message': message,
+                                'workday_tenant': self.tenant,
+                            }
+                        )
+                    except Exception as e:
+                        Errmsg = "avmconsulting_workday log preparing:" + str(e)
+                        self.log.error(Errmsg)
                 del logs
                 self.sendlogs(jsonlogs)
             self.integrations_dict.update(
@@ -267,6 +278,9 @@ class WorkdayCheck(AgentCheck):
 """
         data = data % (self.getSecurity(), Request_Criteria, Page, Count)
         r = self.http.post(self._url, headers=self._headers, data=data)
+        self.response_error = ""
+        if r.status_code == 500:
+            self.response_error = r.content
         r.raise_for_status()
         return r
 

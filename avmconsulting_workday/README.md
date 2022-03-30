@@ -38,7 +38,7 @@ This integration uses the Workday API to collect logs for integration executions
 To install this integration, follow the steps below.
 
 1. [Download and install the Datadog Agent][1].
-2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog_avmconsulting_workday==1.0.0`.
+2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-avmconsulting_workday==1.0.1`.
 
 ### Configuration
 
@@ -50,8 +50,9 @@ To install this integration, follow the steps below.
 * Navigate to `public web services` -> `...` -> `Web Services` -> `View URLs`
 * Right click on `Workday XML` -> `Copy URL`
 * Construct the Workday URL by appending`/Integrations` to the end of the base URL that you just copied, to achieve the following format: 
-      `https://<WORKDAY_SERVER_ADDRESS>/<INTEGRATION>/Integrations`
-      * Example Workday URL:`https://wd2-impl-services1.workday.com/ccx/service/alignt_tenant/Integrations`
+    * `https://<WORKDAY_SERVER_ADDRESS>/<INTEGRATION>/Integrations`
+    * Example Workday URL:`https://wd2-impl-services1.workday.com/ccx/service/alignt_tenant/Integrations`
+    
 2. [Restart the Datadog Agent][2].
 
 ### Validation
@@ -77,4 +78,4 @@ For support or feature requests, contact AVM Consulting through the following ch
 [1]: https://app.datadoghq.com/account/settings#agent/overview
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent
 [3]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
-[4]:https://docs.datadoghq.com/developers/guide/custom-python-package/?tab=linux
+[4]: https://docs.datadoghq.com/developers/guide/custom-python-package/?tab=linux
