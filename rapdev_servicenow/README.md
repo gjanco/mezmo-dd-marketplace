@@ -10,7 +10,7 @@ The ServiceNow integration monitors the health and performance of your ServiceNo
 
 ### Datadog Integration Installation
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.0.0`
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.1.0`
 
 ### Datadog Integration Configuration
 
@@ -41,15 +41,25 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
     #
     collect_itsm_metrics: true
 
-    ## @param basic_auth_username - string - optional - default: dd_agent
+    ## @param username - string - optional - default: dd_agent
     ## the basic auth user name for collecting ITSM credentials
     #
-    basic_auth_username: {servicenow-username}
+    username: {servicenow-username}
 
-    ## @param basic_auth_password - string - optional
+    ## @param password - string - optional
     ## basic auth password for collecting ITSM credentials
     #
-    basic_auth_password: {servicenow-password}
+    password: {servicenow-password}
+    ```
+    4.6 (Optional) Update `/etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml`, uncommenting and setting the following parameters for additional fields to be added as incident tags:
+    ```yaml
+    ## @param opt_fields - list of fields to be added as optional tags to incident metric - optional
+    ## Additional fields can be found in ServiceNow Incident module
+     opt_fields:
+       - subcategory
+       - knowledge
+       - sys_class_name
+
     ```
 
 5. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent).
@@ -57,17 +67,17 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
 ### Validation
 
 1. [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-information) and look for `rapdev_servicenow` under the Checks section. Alternatively, you can get detailed information about the integration using the following command:
-    
+
     ```
     sudo ‐u dd‐agent datadog‐agent check rapdev_servicenow
     ```
 
 ## Support
-For support or feature requests, contact RapDev.io through the following channels: 
+For support or feature requests, contact RapDev.io through the following channels:
 
- - Email: datadog-engineering@rapdev.io 
+ - Email: datadog-engineering@rapdev.io
  - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
- - Phone: 855-857-0222 
+ - Phone: 855-857-0222
 
 ---
 

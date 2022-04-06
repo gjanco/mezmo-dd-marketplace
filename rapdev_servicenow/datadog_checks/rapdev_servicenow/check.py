@@ -23,7 +23,7 @@ class ServicenowCheck(AgentCheck):
         self.collect_itsm_metrics = is_affirmative(
             self.instance.get("collect_itsm_metrics", False)
         )
-
+        self.opt_fields = self.instance.get('opt_fields', [])
         self.base_url = 'https://' + \
             str(self.instance_name) + '.service-now.com'
 
@@ -48,7 +48,6 @@ class ServicenowCheck(AgentCheck):
         base_tags = Constants.REQUIRED_TAGS
         base_tags = base_tags + ["instance_name:" + self.instance_name]
         self.log.debug("ServicenowCheck.check() --> instance_name " + self.instance_name)
-
         self.gauge("datadog.marketplace.rapdev.servicenow", 1.0, tags=base_tags)
 
         if self.collect_statsdo:
@@ -100,14 +99,13 @@ class ServicenowCheck(AgentCheck):
         """
 
         base_tags = Constants.REQUIRED_TAGS
-        base_tags = base_tags + ["instance_name:" + self.instance_name] 
+        base_tags = base_tags + ["instance_name:" + self.instance_name]
 
         self.log.debug("ServicenowCheck.check_itsm_connection() --> starting")
         connected = False
         single_incident_url = self.table_api_url + "/incident?sysparm_limit=1"
         try:
-            response = self.http.get(single_incident_url,
-                                     extra_headers=Constants.TABLE_API_HEADERS)
+            response = self.http.get(single_incident_url,extra_headers=Constants.TABLE_API_HEADERS)
             if response.status_code != 200:
                 raise Exception(response.status_code)
         except Exception as e:
@@ -138,14 +136,14 @@ class ServicenowCheck(AgentCheck):
 
     def gauge_http_response(self, response):
         """
-        gauge http responses from Requests.Response object 
+        gauge http responses from Requests.Response object
         """
         base_tags = Constants.REQUIRED_TAGS
         base_tags = base_tags + ["instance_name:" + self.instance_name]
         endpoint = response.url
         endpoint = endpoint[endpoint.find(".com/") + 4:endpoint.find("?")]
 
-        metric_tags = base_tags + ["endpoint:" + endpoint, 
+        metric_tags = base_tags + ["endpoint:" + endpoint,
                                    "status_code:" + str(response.status_code)
                                   ]
         time_elapsed = response.elapsed.total_seconds()
@@ -180,14 +178,11 @@ class ServicenowCheck(AgentCheck):
 
         """
         get all the incidents we will work with this check
-        essential to the check so kick back to 
+        essential to the check so kick back to
         check() if it fails
         """
         try:
-            resp = self.http.get(
-                inc_url,
-                extra_headers=Constants.TABLE_API_HEADERS,
-            )
+            resp = self.http.get(inc_url,extra_headers=Constants.TABLE_API_HEADERS)
 
             resp.raise_for_status()
 
@@ -232,15 +227,15 @@ class ServicenowCheck(AgentCheck):
         location_cache[0] = None
 
         task_sla_cache = self.build_gr_cache(
-            Tables.TASK_SLA, 
-            "task", 
+            Tables.TASK_SLA,
+            "task",
             Constants.FIELDS_TASK_SLA
         )
         task_sla_cache[0] = None
 
         sla_name_cache = self.build_gr_cache(
-            Tables.CONTRACT_SLA, 
-            "sys_id", 
+            Tables.CONTRACT_SLA,
+            "sys_id",
             Constants.FIELDS_CONTRACT_SLA
         )
         sla_name_cache = {0: None}
@@ -267,6 +262,18 @@ class ServicenowCheck(AgentCheck):
                 else:
                     assigned_to_id = 0
 
+                if self.opt_fields:
+                    opt_tags = []
+                    for field in self.opt_fields:
+                        field_name = field
+                        if incident[field]:
+                            field_value = incident[field]["value"]
+                        else:
+                             field_value = ''
+                        opt_tag = field_name + ":" + field_value
+                        if opt_tag not in opt_tags:
+                            opt_tags.append(opt_tag)
+
                 priority = "p" + incident["priority"]["value"]
                 sys_created_on = incident["sys_created_on"]["display_value"]
                 incident_id = incident["sys_id"]["value"]
@@ -280,8 +287,6 @@ class ServicenowCheck(AgentCheck):
                 time_delta_seconds = time_delta.total_seconds() / 3690
                 caller_is_vip = "false"
                 incident_sla_breached = 0
-                
-
                 assignment_group = incident["assignment_group"]["display_value"]
 
                 if not assignment_group:
@@ -313,10 +318,8 @@ class ServicenowCheck(AgentCheck):
 
                 self.log.info(
                     "ServicenowCheck.check_itsm() --> processing slas")
-                
-                if task_sla_cache.get(incident_id, False):
-                    self.log.info("Found SLA For Incident!!")
 
+                if task_sla_cache.get(incident_id, False):
                     sla = task_sla_cache[incident_id]
 
                     if sla["sla"]:
@@ -331,19 +334,19 @@ class ServicenowCheck(AgentCheck):
 
                     if sla_end_time:
                         sla_start_time_fmt = datetime.strptime(
-                            sla_start_time, 
+                            sla_start_time,
                             Constants.SNC_TIME_FORMAT
                         )
                         sla_end_time_fmt = datetime.strptime(
-                            sla_end_time, 
-                            Constants.SNC_TIME_FORMAT 
+                            sla_end_time,
+                            Constants.SNC_TIME_FORMAT
                         )
                         sla_complete_time = sla_end_time_fmt - sla_start_time_fmt
                         sla_complete_time = sla_complete_time.total_seconds() / 3690
 
                     sla_def = self.get_or_update_cache(
-                        sla_id, 
-                        "contract_sla", 
+                        sla_id,
+                        "contract_sla",
                         sla_name_cache
                     )
 
@@ -396,7 +399,7 @@ class ServicenowCheck(AgentCheck):
                     caller_name = caller["name"]
                 else:
                     caller_name = "none"
-                
+
                 # update open inc totals
                 if int(incident_state) in self.open_incident_states:
                     if caller and caller["vip"] == "true":
@@ -410,8 +413,8 @@ class ServicenowCheck(AgentCheck):
                     incident_store[assignment_group_name][priority][incident_state]["total"] += 1
 
                 assigned_to = self.get_or_update_cache(
-                    assigned_to_id, 
-                    "sys_user", 
+                    assigned_to_id,
+                    "sys_user",
                     user_cache
                 )
 
@@ -430,11 +433,12 @@ class ServicenowCheck(AgentCheck):
                     location_name = location["name"]
                 else:
                     location_name = "none"
-                
+
                 inc_opened = int(incident_state) in self.open_incident_states
 
                 # prepare individual incident metric
-                incident_tags = base_tags + [
+                if self.opt_fields:
+                    incident_tags = opt_tags + base_tags + [
                     "servicenow_assignment_group:" + assignment_group_name,
                     "servicenow_priority:" + incident["priority"]["value"],
                     "incident_number:" + incident["number"]["value"],
@@ -446,7 +450,19 @@ class ServicenowCheck(AgentCheck):
                     "state:" + incident_state,
                     "open:" + str(inc_opened)
                 ]
-
+                else:
+                    incident_tags = base_tags + [
+                        "servicenow_assignment_group:" + assignment_group_name,
+                        "servicenow_priority:" + incident["priority"]["value"],
+                        "incident_number:" + incident["number"]["value"],
+                        "caller:" + caller_name,
+                        "description:" + incident["short_description"]["value"],
+                        "opened:" + incident["sys_created_on"]["display_value"],
+                        "assigned_to:" + assigned_to_name,
+                        "location:" + location_name,
+                        "state:" + incident_state,
+                        "open:" + str(inc_opened)
+                    ]
                 # closed incidents
                 if int(incident_state) not in self.open_incident_states:
                     if not incident["closed_at"]["display_value"]:
@@ -455,11 +471,11 @@ class ServicenowCheck(AgentCheck):
                     incident_close_time = incident["closed_at"]["display_value"]
                     incident_open_time = incident["sys_created_on"]["display_value"]
                     incident_open_time_fmt = datetime.strptime(
-                        incident_open_time, 
+                        incident_open_time,
                         Constants.SNC_TIME_FORMAT
                     )
                     incident_close_time_fmt = datetime.strptime(
-                        incident_close_time, 
+                        incident_close_time,
                         Constants.SNC_TIME_FORMAT
                     )
                     incident_time_to_close = (
@@ -479,11 +495,11 @@ class ServicenowCheck(AgentCheck):
                     "rapdev.servicenow.incident",
                     time_delta_seconds,
                     tags=incident_tags)
-                
+
                 self.log.info("ServicenowCheck.check_itsm() --> finished processing")
 
             except Exception as e:
-                self.log.error("Unknown error occurred processing incident payload" 
+                self.log.error("Unknown error occurred processing incident payload"
                                + incident_id
                                + "incident metrics will not be processed"
                                + repr(e)
@@ -534,10 +550,10 @@ class ServicenowCheck(AgentCheck):
     def set_encoded_query(self):
         """
         1.) all -open- incidents
-        2.) all -closed- incidents -closed- or -resolved- in the last 
+        2.) all -closed- incidents -closed- or -resolved- in the last
             30 days
         """
-        closed_encoded_query = Constants.QUERY_CLOSED_OR_RESOLVED_LAST_30 
+        closed_encoded_query = Constants.QUERY_CLOSED_OR_RESOLVED_LAST_30
         ag_encoded_query = ""
         state_ec = "stateIN"
         open_states = self.open_incident_states
@@ -546,7 +562,7 @@ class ServicenowCheck(AgentCheck):
             state_ec = state_ec + str(open_states[x])
             if x != len(open_states) -1:
                 state_ec = state_ec + ","
-        
+
         if self.assignment_group_names:
             for ag in self.assignment_group_names:
                 encoded_ag = quote(ag)
@@ -555,7 +571,7 @@ class ServicenowCheck(AgentCheck):
                     "assignment_group.name%3D" + encoded_ag
                 else:
                     ag_encoded_query = "assignment_group.name%3D" + encoded_ag
-        
+
         open_encoded_query = state_ec
         if ag_encoded_query:
             open_encoded_query = open_encoded_query + "^" + ag_encoded_query
@@ -565,22 +581,19 @@ class ServicenowCheck(AgentCheck):
         self.log.error("EC " + encoded_query)
 
         return encoded_query
-    
+
     def build_gr_cache(self, table, key, fields):
         cache = {}
         url = (
-            self.table_api_url 
+            self.table_api_url
             + "/"
             + table
         )
 
         if fields:
             url = url + "?sysparm_fields=" + fields
-        
-        resp = self.http.get(
-            url, 
-            extra_headers=Constants.TABLE_API_HEADERS
-            )
+
+        resp = self.http.get(url,extra_headers=Constants.TABLE_API_HEADERS)
 
         self.gauge_http_response(resp)
         resp.raise_for_status()
@@ -599,10 +612,10 @@ class ServicenowCheck(AgentCheck):
                 record_key = record_key.get("value")
 
             cache[record_key] = record
-        
-        self.log.debug("ServicenowCheck.build_gr_cache() --> Cache set for " 
-                       + table 
-                       +"\n" 
+
+        self.log.debug("ServicenowCheck.build_gr_cache() --> Cache set for "
+                       + table
+                       +"\n"
                        + str(cache)
         )
         return cache
@@ -624,20 +637,17 @@ class ServicenowCheck(AgentCheck):
 
         base_tags = Constants.REQUIRED_TAGS
         base_tags = base_tags + ["instance_name:" + self.instance_name]
-        
+
         self.log.info(
             "Servicenowcheck.now_request_single_record() --> attempting to retrieve {} from {}".format(table, id))
         try:
             url = self.base_url + Constants.TABLE_API_BASE_PATH + "/" + table + "/" + id
-            resp = self.http.get(
-                url,
-                extra_headers=Constants.TABLE_API_HEADERS,
-            )
+            resp = self.http.get(url,extra_headers=Constants.TABLE_API_HEADERS)
 
             resp.raise_for_status()
 
             self.log.debug(
-                "Servicenowcheck.now_request_single_record()" 
+                "Servicenowcheck.now_request_single_record()"
                 + "--> successful response {}".format(str(resp))
             )
 
@@ -711,7 +721,6 @@ class ServicenowCheck(AgentCheck):
             try:
                 float(metric["value"])
             except ValueError:
-                self.log.error("Skipping " + metric["name"] + " is not a float")
                 continue
 
             try:
