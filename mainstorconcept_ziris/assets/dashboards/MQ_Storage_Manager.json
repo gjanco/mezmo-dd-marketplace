@@ -1,0 +1,356 @@
+{
+  "title": "z/OS MQ Storage Manager",
+  "description": "## Title\n\nDescribe this dashboard. Add links to other dashboards, monitors, wikis,  and docs to help your teammates. Markdown is supported.\n\n- [This might link to a dashboard](#)\n- [This might link to a wiki](#)",
+  "widgets": [
+    {
+      "id": 3890834575576482,
+      "definition": {
+        "type": "image",
+        "url": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Dark_Logo_512px.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "url_dark_theme": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Logo_512px_dark_background.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "sizing": "scale-down",
+        "has_background": true,
+        "has_border": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "id": 8451621731417348,
+      "definition": {
+        "title": "Storage contractions and insufficient storage events",
+        "type": "group",
+        "background_color": "vivid_orange",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 5817963662038265,
+            "definition": {
+              "title": "Monitors",
+              "title_size": "13",
+              "title_align": "left",
+              "type": "manage_status",
+              "summary_type": "monitors",
+              "display_format": "list",
+              "color_preference": "text",
+              "hide_zero_counts": true,
+              "show_last_triggered": false,
+              "show_priority": false,
+              "query": "service:mq storage con",
+              "sort": "status,asc",
+              "count": 50,
+              "start": 0
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 8,
+              "height": 2
+            }
+          },
+          {
+            "id": 7670742978961865,
+            "definition": {
+              "type": "note",
+              "content": "Both storage contractions and insufficient storage events trigger a monitor if their value is above 0.",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 2,
+              "width": 8,
+              "height": 1
+            }
+          },
+          {
+            "id": 471180469671463,
+            "definition": {
+              "title": "Storage contractions",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.storage.contractions{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": {
+                "type": "area"
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 3,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 6862371096459260,
+            "definition": {
+              "type": "note",
+              "content": "If storage contractions is non zero, it indicates that a problem was detected and recovery actions were taken. This indicates a severe problem within the queue manager.\n",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 2,
+              "y": 3,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 3608573904241838,
+            "definition": {
+              "type": "note",
+              "content": "If the value of Insufficient Storage Events is non zero, it indicates severe problems with lack of storage within the queue manager\n",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": true,
+              "tick_pos": "25%",
+              "tick_edge": "right",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 5,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 638629795685020,
+            "definition": {
+              "title": "Insufficient storage events",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.storage.insufficient_storage.events{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": {
+                "type": "area"
+              }
+            },
+            "layout": {
+              "x": 6,
+              "y": 5,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 8522041768093004,
+            "definition": {
+              "title": "Storage contractions over time",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.storage.contractions{*}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 7,
+              "width": 4,
+              "height": 2
+            }
+          },
+          {
+            "id": 4555270717291261,
+            "definition": {
+              "title": "Insufficient storage events over time",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.storage.insufficient_storage.events{*}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ]
+            },
+            "layout": {
+              "x": 4,
+              "y": 7,
+              "width": 4,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 0,
+        "width": 8,
+        "height": 10
+      }
+    },
+    {
+      "id": 8144585820225432,
+      "definition": {
+        "title": "Storage Manager Statistics by Queue Manager",
+        "type": "group",
+        "background_color": "orange",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 3933566226179736,
+            "definition": {
+              "type": "note",
+              "content": " The storage manager is responsible for managing virtual storage within the queue manager. You can use the provided metrics to detect severe problems in your queue manager. ",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 8136838495614520,
+            "definition": {
+              "type": "note",
+              "content": "The dashboard provides either an overview per queue manager or an aggregated view ( * ) over all queue managers. Choose the appropriate one in the drop down field labeled **\\$ qm** at the top of this dashboard. ",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 3,
+              "width": 4,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 2,
+        "width": 4,
+        "height": 8
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "qm",
+      "default": "csq9",
+      "prefix": "mainstorconcept.zos.mq.queue_manager",
+      "available_values": []
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed",
+  "id": "s3w-ne2-i7x"
+}

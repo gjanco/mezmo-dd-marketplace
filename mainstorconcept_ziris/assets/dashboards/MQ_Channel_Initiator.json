@@ -1,0 +1,605 @@
+{
+  "title": "z/OS MQ Channel Initiator",
+  "description": "## Title\n\nDescribe this dashboard. Add links to other dashboards, monitors, wikis, and docs to help your teammates. Markdown is supported.\n\n- [This might link to a dashboard](#)\n- [This might link to a wiki](#)",
+  "widgets": [
+    {
+      "id": 4342697317629828,
+      "definition": {
+        "type": "image",
+        "url": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Dark_Logo_512px.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "url_dark_theme": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Logo_512px_dark_background.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "sizing": "scale-down",
+        "has_background": true,
+        "has_border": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "id": 810819877458390,
+      "definition": {
+        "title": "Channel Availability",
+        "type": "group",
+        "background_color": "vivid_blue",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 8427567827454431,
+            "definition": {
+              "type": "note",
+              "content": "Remaining channels are calculated by the difference between the maximum available channels and the peak channel usage.",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "bottom",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 8,
+              "height": 1
+            }
+          },
+          {
+            "id": 122953544192772,
+            "definition": {
+              "title": "Remaining Current Channels",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Current Channels Remaining",
+                      "formula": "round(query2 - query1)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.current.max{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.current.peak{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "markers": [
+                {
+                  "label": "Low Channel Availability",
+                  "value": "15 < y < 30",
+                  "display_type": "warning solid"
+                },
+                {
+                  "label": "Critical Channel Availability",
+                  "value": "0 < y < 15",
+                  "display_type": "error dashed"
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 1,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 8347303077878158,
+            "definition": {
+              "title": "Remaining Active Channels",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Active Channels Remaining",
+                      "formula": "round(query2 - query1)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.active.max{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.active.peak{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "green",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "markers": [
+                {
+                  "label": "Low Channel Availability",
+                  "value": "15 < y < 30",
+                  "display_type": "warning solid"
+                },
+                {
+                  "label": "Critical Channel Availability",
+                  "value": "0 < y < 15",
+                  "display_type": "error solid"
+                }
+              ]
+            },
+            "layout": {
+              "x": 4,
+              "y": 1,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 2339191131667598,
+            "definition": {
+              "title": "Active Channels Available",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Active Channels Remaining",
+                      "formula": "round(query2 - query1)"
+                    },
+                    {
+                      "alias": "Active Max",
+                      "formula": "round(query2)"
+                    },
+                    {
+                      "alias": "Active Max",
+                      "formula": "round(query1)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.active.max{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.active.peak{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "green",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "markers": [
+                {
+                  "label": "Low Channel Availability",
+                  "value": "15 < y < 30",
+                  "display_type": "warning solid"
+                },
+                {
+                  "label": "Critical Channel Availability",
+                  "value": "0 < y < 15",
+                  "display_type": "error solid"
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 4,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 6738870565101538,
+            "definition": {
+              "title": "Current Channels Available",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Current Channels Remaining",
+                      "formula": "round(query2 - query1)"
+                    },
+                    {
+                      "alias": "Current Max",
+                      "formula": "round(query2)"
+                    },
+                    {
+                      "alias": "Current Peak",
+                      "formula": "round(query1)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.current.max{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.current.peak{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "markers": [
+                {
+                  "label": "Low Channel Availability",
+                  "value": "15 < y < 30",
+                  "display_type": "warning solid"
+                },
+                {
+                  "label": "Critical Channel Availability",
+                  "value": "0 < y < 15",
+                  "display_type": "error dashed"
+                }
+              ]
+            },
+            "layout": {
+              "x": 4,
+              "y": 4,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 3058314214839774,
+            "definition": {
+              "title": "5 QMGRs with Least Current Channels Available",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "toplist",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Current Channels Remaining",
+                      "limit": {
+                        "count": 5,
+                        "order": "asc"
+                      },
+                      "formula": "query2 - query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.current.max{$qm} by {mainstorconcept.zos.mq.queue_manager}",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "avg"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.current.peak{$qm} by {mainstorconcept.zos.mq.queue_manager}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "avg"
+                    }
+                  ]
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 7,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 7627867803531058,
+            "definition": {
+              "title": "5 QMGRs with Least Active Channels Available",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "toplist",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Active Channels Remaining",
+                      "limit": {
+                        "count": 5,
+                        "order": "asc"
+                      },
+                      "formula": "query2 - query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.active.max{$qm} by {mainstorconcept.zos.mq.queue_manager}",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "last"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.active.peak{$qm} by {mainstorconcept.zos.mq.queue_manager}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ]
+            },
+            "layout": {
+              "x": 4,
+              "y": 7,
+              "width": 4,
+              "height": 3
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 0,
+        "width": 8,
+        "height": 11
+      }
+    },
+    {
+      "id": 317098968765138,
+      "definition": {
+        "title": "Channel Initiator Statistics by Queue Manager",
+        "type": "group",
+        "background_color": "green",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 4115301199758568,
+            "definition": {
+              "type": "note",
+              "content": "\nThe dashboard provides you with basic information about remaining and available current and active channels. You can see if the number of active channels is approaching the configured maximum value. It can help you to determine whether you might\nneed to increase the maximum number of channels.\n",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "25%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 4,
+              "height": 4
+            }
+          },
+          {
+            "id": 592342120517420,
+            "definition": {
+              "type": "note",
+              "content": "The dashboard provides either an overview per queue manager or an aggregated view ( * ) over all queue managers. Choose the appropriate one in the drop down field labeled **\\$ qm** at the top of this dashboard. ",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 4,
+              "width": 4,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 2,
+        "width": 4,
+        "height": 9
+      }
+    },
+    {
+      "id": 548837295628470,
+      "definition": {
+        "title": "Used storage ",
+        "type": "group",
+        "background_color": "vivid_blue",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 445892734458460,
+            "definition": {
+              "title": "Used per interval",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Mean",
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.used_storage_bytes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 8,
+              "height": 2
+            }
+          },
+          {
+            "id": 3749802447022347,
+            "definition": {
+              "title": "Mean used",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.channel.used_storage_bytes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "avg"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "custom_unit": "B",
+              "precision": 0,
+              "timeseries_background": {
+                "type": "area"
+              }
+            },
+            "layout": {
+              "x": 8,
+              "y": 0,
+              "width": 4,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 11,
+        "width": 12,
+        "height": 3,
+        "is_column_break": true
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "qm",
+      "default": "*",
+      "prefix": "mainstorconcept.zos.mq.queue_manager",
+      "available_values": []
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed",
+  "id": "s3w-ne2-i7x"
+}

@@ -1,0 +1,29 @@
+{
+	"name": "[mainstorconcept-ziris] Value of checkpoints is too high qmgr:{{mainstorconcept.zos.mq.queue_manager}} @ host:{{host.name}}",
+	"type": "query alert",
+	"query": "max(last_1h):sum:mainstorconcept.zos.mq.log.checkpoints{*} > 10",
+	"message": "Busy MQ queue managers will have about 10 checkpoints per hour. Higher rate of checkpoints may indicate a queue manager setup problem.\n\nMQ Administrator Recommendations:\nConsider increasing the number of log records written by MQ between the start of one checkpoint and the next (i.e. CSQ6SYSP LOGLOAD parameter). Alternatively, increasing the size of active log datasets will reduce the checkpoint rate (i.e. CSQ6SYSP OUTBUFF parameter).",
+	"tags": [
+		"integration:mainstorconcept-ziris",
+		"status:error",
+		"service:mq"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 1
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"timeout_h": 1,
+		"silenced": {},
+		"include_tags": true,
+		"new_host_delay": 300,
+		"escalation_message": ""
+	},
+	"priority": 3,
+	"recommended_monitor_metadata": {
+		"description": "Triggers an alert when the value of checkpoints is too high on a queue manager."
+    }
+}

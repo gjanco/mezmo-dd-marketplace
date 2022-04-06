@@ -1,0 +1,597 @@
+{
+  "title": "z/OS MQ Data Manager",
+  "description": "## Title\n\nDescribe this dashboard. Add links to other dashboards, monitors, wikis,  and docs to help your teammates. Markdown is supported.\n\n- [This might link to a dashboard](#)\n- [This might link to a wiki](#)",
+  "widgets": [
+    {
+      "id": 5379491211055336,
+      "definition": {
+        "type": "image",
+        "url": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Dark_Logo_512px.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "url_dark_theme": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Logo_512px_dark_background.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "sizing": "scale-down",
+        "has_background": true,
+        "has_border": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "id": 1660255569239964,
+      "definition": {
+        "title": "Activity",
+        "type": "group",
+        "background_color": "vivid_pink",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 6792416236867243,
+            "definition": {
+              "title": "Activity",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Gets",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "Puts",
+                      "formula": "query2"
+                    },
+                    {
+                      "alias": "Object Gets",
+                      "formula": "query3"
+                    },
+                    {
+                      "alias": "Object Puts",
+                      "formula": "query4"
+                    },
+                    {
+                      "alias": "Object Creates",
+                      "formula": "query5"
+                    },
+                    {
+                      "alias": "Object Deletes",
+                      "formula": "query6"
+                    },
+                    {
+                      "alias": "Object Locates",
+                      "formula": "query7"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.gets{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.puts{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.object.gets{$qm}",
+                      "data_source": "metrics",
+                      "name": "query3"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.object.puts{$qm}",
+                      "data_source": "metrics",
+                      "name": "query4"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.object.creates{$qm}",
+                      "data_source": "metrics",
+                      "name": "query5"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.object.deletes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query6"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.object.locates{$qm}",
+                      "data_source": "metrics",
+                      "name": "query7"
+                    }
+                  ],
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 8,
+              "height": 5
+            }
+          },
+          {
+            "id": 2710340657962974,
+            "definition": {
+              "title": "Disk Read Aheads and Gets",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Disk Gets",
+                      "formula": "query3"
+                    },
+                    {
+                      "alias": "Disk Read Aheads",
+                      "formula": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "on_right_yaxis": false,
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.data.disk.gets{$qm}",
+                      "data_source": "metrics",
+                      "name": "query3"
+                    },
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.data.disk.read_aheads{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "style": {
+                    "palette": "green",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 5,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 1039730373123004,
+            "definition": {
+              "title": "Buffer Read Aheads and Gets",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Buffer Read Aheads",
+                      "formula": "query0"
+                    },
+                    {
+                      "alias": "Buffer Gets",
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "on_right_yaxis": false,
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.data.buffer.read_aheads{$qm}",
+                      "data_source": "metrics",
+                      "name": "query0"
+                    },
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.data.buffer.gets{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "blue",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ]
+            },
+            "layout": {
+              "x": 4,
+              "y": 5,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 1455139291020152,
+            "definition": {
+              "title": "Messages locks and deletes",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Locks",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "Deletes",
+                      "formula": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.marked_messages.locks{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.marked_messages.deletes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto"
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 8,
+              "width": 4,
+              "height": 4
+            }
+          },
+          {
+            "id": 5540781498723618,
+            "definition": {
+              "title": "Messages locks and deletes",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Locks",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "Deletes",
+                      "formula": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.marked_messages.locks{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.data.marked_messages.deletes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto"
+              }
+            },
+            "layout": {
+              "x": 4,
+              "y": 8,
+              "width": 4,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 0,
+        "width": 8,
+        "height": 13
+      }
+    },
+    {
+      "id": 178087121802402,
+      "definition": {
+        "title": "Data Manager Statistics by Queue Manager",
+        "type": "group",
+        "background_color": "purple",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 7790020155321386,
+            "definition": {
+              "type": "note",
+              "content": "The data manager manages the links between messages and queues. It calls the buffer manager to process pages\nwith messages on them. This dashboard provides information that can help determine if a buffer pool is filling up. ",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 7875788175197366,
+            "definition": {
+              "type": "note",
+              "content": "The dashboard provides either an overview per queue manager or an aggregated view ( * ) over all queue managers. Choose the appropriate one in the drop down field labeled **\\$ qm** at the top of this dashboard. ",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 3,
+              "width": 4,
+              "height": 3
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 2,
+        "width": 4,
+        "height": 7
+      }
+    },
+    {
+      "id": 1457834389195976,
+      "definition": {
+        "title": "Storage Activity",
+        "type": "group",
+        "background_color": "pink",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 3284686917403626,
+            "definition": {
+              "title": "Data Finds",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.data.finds{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 1,
+              "timeseries_background": {
+                "type": "bars"
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 2,
+              "height": 1
+            }
+          },
+          {
+            "id": 2496846711412378,
+            "definition": {
+              "title": "Storage Class Changes",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.data.storage_class_changes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": {
+                "type": "bars"
+              }
+            },
+            "layout": {
+              "x": 2,
+              "y": 0,
+              "width": 2,
+              "height": 1
+            }
+          },
+          {
+            "id": 3390507809825722,
+            "definition": {
+              "title": "Data Finds per second",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Data Finds",
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.data.finds{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 1,
+              "width": 4,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 9,
+        "width": 4,
+        "height": 4
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "qm",
+      "default": "*",
+      "prefix": "mainstorconcept.zos.mq.queue_manager",
+      "available_values": []
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed",
+  "id": "s3w-ne2-i7x"
+}

@@ -1,0 +1,29 @@
+{
+	"name": "[mainstorconcept-ziris] MQ reading log data from archive log datasets on QMGR:{{mainstorconcept.zos.mq.queue_manager}}  from host:{{host.name}}",
+	"type": "query alert",
+	"query": "max(last_1h):sum:mainstorconcept.zos.mq.log.archive_dataset.reads{*} >= 1",
+	"message": "MQ should not read log data from archive dataset.\n\nMQ Administrator recommendation:\nExamine anomalies in MQ client transactions, e.g. high load transactions and  higher than average latency and rolled back transactions. Additionally, increasing the number of active log data sets  or increasing the size of active log data sets may be required.",
+	"tags": [
+		"integration:mainstorconcept-ziris",
+		"status:error",
+		"service:mq"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 1
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"timeout_h": 1,
+		"silenced": {},
+		"include_tags": true,
+		"new_host_delay": 300,
+		"escalation_message": ""
+	},
+	"priority": 3,
+	"recommended_monitor_metadata": {
+		"description": "Triggers an alert when the amount of MQ archive dataset reads is too high on a queue manager."
+    }
+}

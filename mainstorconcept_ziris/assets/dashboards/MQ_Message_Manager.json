@@ -1,0 +1,416 @@
+{
+  "title": "z/OS MQ Message Manager",
+  "description": "## Title\n\nDescribe this dashboard. Add links to other dashboards, monitors, wikis,  and docs to help your teammates. Markdown is supported.\n\n- [This might link to a dashboard](#)\n- [This might link to a wiki](#)",
+  "widgets": [
+    {
+      "id": 480958276065796,
+      "definition": {
+        "type": "image",
+        "url": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Dark_Logo_512px.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "url_dark_theme": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Logo_512px_dark_background.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "sizing": "scale-down",
+        "has_background": true,
+        "has_border": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "id": 2113065739296110,
+      "definition": {
+        "title": "MQ Put Activity",
+        "type": "group",
+        "background_color": "vivid_purple",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 8402391793317272,
+            "definition": {
+              "title": "Persistent Puts",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.message_manager.persistent.puts{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": {
+                "type": "bars"
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 2,
+              "height": 4
+            }
+          },
+          {
+            "id": 7102812269711732,
+            "definition": {
+              "title": "Persistent Puts",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Persistent Puts",
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.persistent.puts{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ]
+            },
+            "layout": {
+              "x": 2,
+              "y": 0,
+              "width": 6,
+              "height": 4
+            }
+          },
+          {
+            "id": 419747054752282,
+            "definition": {
+              "title": "Non-Persistent Puts",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.message_manager.nonpersistent.puts{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": {
+                "type": "bars"
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 4,
+              "width": 2,
+              "height": 4
+            }
+          },
+          {
+            "id": 668933489655486,
+            "definition": {
+              "title": "Non-Persistent Puts",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Non-Persistent Puts",
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.nonpersistent.puts{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "purple",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ]
+            },
+            "layout": {
+              "x": 2,
+              "y": 4,
+              "width": 6,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 0,
+        "width": 8,
+        "height": 9
+      }
+    },
+    {
+      "id": 6101807083873312,
+      "definition": {
+        "title": "MQ Dashboards",
+        "type": "group",
+        "background_color": "purple",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 3034960128535974,
+            "definition": {
+              "type": "note",
+              "content": "The message manager statistics give information on how many API requests there were in the period.",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "25%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 4589783910975466,
+            "definition": {
+              "type": "note",
+              "content": "The dashboard provides either an overview per queue manager or an aggregated view ( * ) over all queue managers. Choose the appropriate one in the drop down field labeled **\\$ qm** at the top of this dashboard. ",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "25%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 3,
+              "width": 4,
+              "height": 3
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 2,
+        "width": 4,
+        "height": 7
+      }
+    },
+    {
+      "id": 2556422466262596,
+      "definition": {
+        "title": "Activity",
+        "type": "group",
+        "background_color": "vivid_blue",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 6875580616395402,
+            "definition": {
+              "title": "Actions",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Opens ",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "Closes",
+                      "formula": "query2"
+                    },
+                    {
+                      "alias": "Gets",
+                      "formula": "query3"
+                    },
+                    {
+                      "alias": "Puts",
+                      "formula": "query4"
+                    },
+                    {
+                      "alias": "Put1s",
+                      "formula": "query5"
+                    },
+                    {
+                      "alias": "Inqs",
+                      "formula": "query6"
+                    },
+                    {
+                      "alias": "Sets",
+                      "formula": "query7"
+                    },
+                    {
+                      "alias": "Publishes",
+                      "formula": "query8"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.opens{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.closes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.gets{$qm}",
+                      "data_source": "metrics",
+                      "name": "query3"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.puts{$qm}",
+                      "data_source": "metrics",
+                      "name": "query4"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.put1s{$qm}",
+                      "data_source": "metrics",
+                      "name": "query5"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.inqs{$qm}",
+                      "data_source": "metrics",
+                      "name": "query6"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.sets{$qm}",
+                      "data_source": "metrics",
+                      "name": "query7"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.message_manager.publishes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query8"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 12,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 9,
+        "width": 12,
+        "height": 5,
+        "is_column_break": true
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "qm",
+      "default": "*",
+      "prefix": "mainstorconcept.zos.mq.queue_manager",
+      "available_values": []
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed",
+  "id": "s3w-ne2-i7x"
+}

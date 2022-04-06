@@ -25,11 +25,6 @@ With z/IRIS, mainframe observability for DevOps is a core concept. Teams can beg
 * Address spaces and subsystem monitoring
 * TSO user activity tracing
 
-### z/OS RMF Metrics
-* Current in-ready work unit queue distribution per system
-* CPU contention per system
-* CPU usage per system
-
 ### Partners by region
 
 North-American based organizations can contact our partner SEA:
@@ -142,6 +137,9 @@ EMEA and South American based organization can contact:
 
 * [z/OS Connect Metrics](https://public.mainstorconcept.com/home/z%2FOS-Connect-Metrics-Streaming.641040425.html)
 	* z/IRIS streams metrics created using data from IBM's z/OS Connect SMF type 123 version 1 and 2 records. 
+
+* [MQ Metrics](https://public.mainstorconcept.com/home/MQ-Metrics-Streaming.1424359429.html)
+	* MQ statistics records (SMF Type 115) contain a multitude of statistics from various resources within the system. z/IRIS introduces z/OS MQ Metrics, focusing on the most vital performance indicators for monitoring, analysis, and alerting purposes.
 
 This isn't the metric you're looking for? Missing a critical feature for your organization? Send us a feature request to [info@mainstorconcept.com](mailto:info@mainstorconcept.com).
 

@@ -1,0 +1,28 @@
+{
+	"name": "[mainstorconcept-ziris] MQ active dataset reads is too high on qmgr:{{mainstorconcept.zos.mq.queue_manager}} @ host:{{host.name}}",
+	"type": "query alert",
+	"query": "max(last_1h):sum:mainstorconcept.zos.mq.log.active_dataset.reads{*} >= 1",
+	"message": "If MQ data is not in memory it will be read from a log data set. MQ should not read data from the active log data sets.\n\nMQ Administrator recommendations:\nAn increase in transaction workload, transactions with higher latency or an increase in rolled back long-running transactions may cause data to be read from active log datasets.",
+	"tags": [
+		"integration:mainstorconcept-ziris",
+		"status:error",
+		"service:mq"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 1
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"silenced": {},
+		"include_tags": true,
+		"new_host_delay": 300,
+		"escalation_message": ""
+	},
+	"priority": 3,
+	"recommended_monitor_metadata": {
+		"description": "Triggers an alert when the amount of MQ active dataset reads is too high on a queue manager."
+    }
+}

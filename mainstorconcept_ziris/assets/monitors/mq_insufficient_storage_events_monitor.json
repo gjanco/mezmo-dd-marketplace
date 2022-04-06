@@ -1,0 +1,28 @@
+{
+	"name": "[mainstorconcept-ziris] Insufficient storage events is too high on QMGR {{zos.mainstorconcept.mq.queue.manager}} LPAR {{host.name}}",
+	"type": "query alert",
+	"query": "max(last_1h):sum:mainstorconcept.zos.mq.storage.insufficient_storage.events{*} >= 1",
+	"message": "When MQ contracts storage, it indicates that the queue manager lacks sufficient storage, problems with lack of storage within the queue manager.  The queue manager compresses storage pools to reclaim unused capacity. Insufficient storage events occur when there is not enough storage available to satisfy a request after this compression occurred.\n\nMQ Administrator Recommendation:\nTo resolve critical virtual storage shortages, either reduce the size of 31 bit buffer pools or move to 64 bit buffer pools.",
+	"tags": [
+		"integration:mainstorconcept-ziris",
+		"status:error",
+		"service:mq"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 1
+		},	
+		"notify_audit": false,
+		"silenced": {},
+		"include_tags": true,
+		"require_full_window": false,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": ""
+	},
+	"priority": 3,
+	"recommended_monitor_metadata": {
+		"description": "Triggers an alert when the number of insufficient storage events is too high on a queue manager."
+    }
+}

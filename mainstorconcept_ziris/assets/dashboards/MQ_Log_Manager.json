@@ -1,0 +1,924 @@
+{
+  "title": "z/OS MQ Log Manager",
+  "description": "## MQ z/OS Log Manager Statistics by Queue Manager \n\nEvents related to MQ logging can have an adverse affect on MQ's ability to guarantee delivery of persistent messages, recover resources and performance. This dashboard provides an overview of the key performance indicators related to MQ logging.\n\n[>> Go to list of z/OS MQ Dashboards](https://app.datadoghq.eu/dashboard/lists?q=z/OS%20MQ)\n\nUsers can add links to related dashboards below or directly in the dashboard: \n\n- [z/OS MQ Storage Manager]()\n- [z/OS MQ Channel Initiator]()\n- [z/OS MQ Buffer Pool Manager]() \n- [z/OS MQ Message Manager]()\n- [z/OS MQ Data Manager]()\n",
+  "widgets": [
+    {
+      "id": 6044925140148970,
+      "definition": {
+        "type": "image",
+        "url": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Dark_Logo_512px.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "url_dark_theme": "https://public.mainstorconcept.com/home/1291124737/zIRIS_Logo_512px_dark_background.png?inst-v=8bed5c2d-1b43-4cb3-b2ed-9574aead8537",
+        "sizing": "scale-down",
+        "has_background": true,
+        "has_border": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "id": 8193872380958040,
+      "definition": {
+        "title": "Log Manager Stats ",
+        "type": "group",
+        "background_color": "orange",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 3873921259750858,
+            "definition": {
+              "title": "Monitors",
+              "title_size": "13",
+              "title_align": "left",
+              "type": "manage_status",
+              "summary_type": "monitors",
+              "display_format": "list",
+              "color_preference": "text",
+              "hide_zero_counts": true,
+              "show_last_triggered": false,
+              "show_priority": false,
+              "query": "service:mq log",
+              "sort": "status,asc",
+              "count": 50,
+              "start": 0
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 8,
+              "height": 3
+            }
+          },
+          {
+            "id": 4510606886762733,
+            "definition": {
+              "type": "note",
+              "content": "The subsequent measurements have to be zero.\nIf you have an elevated value something is going wrong and you need to investigate the cause.",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 3,
+              "width": 8,
+              "height": 1
+            }
+          },
+          {
+            "id": 3770636891698146,
+            "definition": {
+              "title": "Active dataset reads",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_red",
+                      "value": 1
+                    },
+                    {
+                      "comparator": "<=",
+                      "palette": "green_on_white",
+                      "value": 0
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.active_dataset.reads{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 0,
+              "timeseries_background": {
+                "type": "bars"
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 4,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 8523521954047502,
+            "definition": {
+              "type": "note",
+              "content": "If > 0, log data was read from an archive log data set, which should not happen. ",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 2,
+              "y": 4,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 8168239885582856,
+            "definition": {
+              "type": "note",
+              "content": " In normal operation you do not expect messages to be read from the active log data sets. ",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 6,
+              "width": 6,
+              "height": 2
+            }
+          },
+          {
+            "id": 1647091218944137,
+            "definition": {
+              "title": "Archive dataset reads",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_red",
+                      "value": 1
+                    },
+                    {
+                      "comparator": "<=",
+                      "palette": "green_on_white",
+                      "value": 0
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.archive_dataset.reads{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 0,
+              "timeseries_background": {
+                "type": "bars"
+              }
+            },
+            "layout": {
+              "x": 6,
+              "y": 6,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 268674096030467,
+            "definition": {
+              "title": "Log Waits",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_red",
+                      "value": 1
+                    },
+                    {
+                      "comparator": "<=",
+                      "palette": "green_on_white",
+                      "value": 0
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.waits{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 0,
+              "timeseries_background": {
+                "type": "bars"
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 8,
+              "width": 2,
+              "height": 2
+            }
+          },
+          {
+            "id": 2619233276410218,
+            "definition": {
+              "type": "note",
+              "content": "If log waits are nonzero, tasks are being suspended while the in-storage buffer is being written to the activelog. This may indicate that there is a problem writing to the activelog.",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 2,
+              "y": 8,
+              "width": 6,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 0,
+        "width": 8,
+        "height": 11
+      }
+    },
+    {
+      "id": 1603038969558346,
+      "definition": {
+        "title": "MQ z/OS Log Manager Statistics by Queue Manager",
+        "type": "group",
+        "background_color": "vivid_yellow",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 4134864002799190,
+            "definition": {
+              "type": "note",
+              "content": "Events related to MQ logging can have an adverse affect on MQ's ability to guarantee delivery of persistent messages, recover resources and performance. This dashboard provides an overview of the key performance indicators related to MQ logging.",
+              "background_color": "transparent",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 4,
+              "height": 4
+            }
+          },
+          {
+            "id": 7706399532736568,
+            "definition": {
+              "type": "note",
+              "content": "The dashboard provides either an overview per queue manager or an aggregated view ( * ) over all queue managers. Choose the appropriate one in the drop down field labeled **\\$ qm** at the top of this dashboard. ",
+              "background_color": "transparent",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 4,
+              "width": 4,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 2,
+        "width": 4,
+        "height": 9
+      }
+    },
+    {
+      "id": 2861193187880826,
+      "definition": {
+        "title": "Activity",
+        "type": "group",
+        "background_color": "vivid_orange",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 3504192691952123,
+            "definition": {
+              "title": "Overall",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "horizontal",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Reads",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "Waits",
+                      "formula": "query2"
+                    },
+                    {
+                      "alias": "Checkpoints",
+                      "formula": "query3"
+                    },
+                    {
+                      "alias": "Writes",
+                      "formula": "query4"
+                    },
+                    {
+                      "alias": "Active Reads",
+                      "formula": "query5"
+                    },
+                    {
+                      "alias": "Archive Reads",
+                      "formula": "query6"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.reads{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.waits{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.checkpoints{$qm}",
+                      "data_source": "metrics",
+                      "name": "query3"
+                    },
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.writes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query4"
+                    },
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.active_dataset.reads{$qm}",
+                      "data_source": "metrics",
+                      "name": "query5"
+                    },
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.archive_dataset.reads{$qm}",
+                      "data_source": "metrics",
+                      "name": "query6"
+                    }
+                  ],
+                  "style": {
+                    "palette": "green",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ]
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 12,
+              "height": 3
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 11,
+        "width": 12,
+        "height": 4
+      }
+    },
+    {
+      "id": 5667130244671230,
+      "definition": {
+        "title": "Compression Failure Rate and Checkpoints",
+        "type": "group",
+        "background_color": "yellow",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 4923328681011848,
+            "definition": {
+              "type": "note",
+              "content": "Compression Failure Rate",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 5,
+              "height": 1
+            }
+          },
+          {
+            "id": 4221554124673170,
+            "definition": {
+              "type": "note",
+              "content": "Checkpoints",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 5,
+              "y": 0,
+              "width": 7,
+              "height": 1
+            }
+          },
+          {
+            "id": 8564117023670427,
+            "definition": {
+              "title": "Mean compression failure rate",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1 * 100"
+                    }
+                  ],
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_red",
+                      "value": 10
+                    },
+                    {
+                      "comparator": "<=",
+                      "palette": "green_on_white",
+                      "value": 10
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.log.compression.failed_rate{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "avg"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": false,
+              "custom_unit": "%",
+              "text_align": "center",
+              "precision": 0,
+              "timeseries_background": {
+                "type": "area"
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 1,
+              "width": 2,
+              "height": 3
+            }
+          },
+          {
+            "id": 6203519424626353,
+            "definition": {
+              "type": "note",
+              "content": "Compression request rate in comparison to failure rate. Compares the number to number of compression requests to see if the number of failures is significant.",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 2,
+              "y": 1,
+              "width": 3,
+              "height": 3
+            }
+          },
+          {
+            "id": 3895629856603725,
+            "definition": {
+              "title": "Checkpoints in last hour",
+              "title_size": "16",
+              "title_align": "left",
+              "time": {
+                "live_span": "1h"
+              },
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "palette": "white_on_red",
+                      "value": 10
+                    },
+                    {
+                      "comparator": "<=",
+                      "palette": "green_on_white",
+                      "value": 10
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.checkpoints{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": {
+                "type": "bars"
+              }
+            },
+            "layout": {
+              "x": 5,
+              "y": 1,
+              "width": 2,
+              "height": 3
+            }
+          },
+          {
+            "id": 3293005762858976,
+            "definition": {
+              "type": "note",
+              "content": "More than 10 checkpoints an hour indicates problematic queue manager setup, most likely the LOGLOAD parameter is too small.",
+              "background_color": "white",
+              "font_size": "18",
+              "text_align": "center",
+              "vertical_align": "center",
+              "show_tick": true,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 7,
+              "y": 1,
+              "width": 5,
+              "height": 1
+            }
+          },
+          {
+            "id": 8661014106993308,
+            "definition": {
+              "title": "Checkpoints",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:mainstorconcept.zos.mq.log.checkpoints{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ]
+            },
+            "layout": {
+              "x": 7,
+              "y": 2,
+              "width": 5,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 15,
+        "width": 12,
+        "height": 5,
+        "is_column_break": true
+      }
+    },
+    {
+      "id": 2495317678325308,
+      "definition": {
+        "title": "I/O",
+        "type": "group",
+        "background_color": "vivid_yellow",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 1361192364659024,
+            "definition": {
+              "title": "Reads and writes",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Writes",
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "Reads",
+                      "formula": "query2"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.log.writes{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.log.reads{$qm}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    }
+                  ],
+                  "style": {
+                    "palette": "orange",
+                    "line_type": "solid"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "yaxis": {
+                "include_zero": false
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 12,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 20,
+        "width": 12,
+        "height": 5
+      }
+    },
+    {
+      "id": 3154645565290224,
+      "definition": {
+        "title": "Log Rate",
+        "type": "group",
+        "background_color": "orange",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 5724612919582956,
+            "definition": {
+              "title": "Rate",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Rate",
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.log.rate{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "orange",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": false
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 10,
+              "height": 4
+            }
+          },
+          {
+            "id": 5269572045315334,
+            "definition": {
+              "title": "Mean Log Rate",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:mainstorconcept.zos.mq.log.rate{$qm}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "avg"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "custom_unit": "wr/s",
+              "precision": 2,
+              "timeseries_background": {
+                "type": "area"
+              }
+            },
+            "layout": {
+              "x": 10,
+              "y": 0,
+              "width": 2,
+              "height": 4
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 25,
+        "width": 12,
+        "height": 5
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "qm",
+      "default": "*",
+      "prefix": "mainstorconcept.zos.mq.queue_manager",
+      "available_values": []
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed",
+  "id": "s3w-ne2-i7x"
+}

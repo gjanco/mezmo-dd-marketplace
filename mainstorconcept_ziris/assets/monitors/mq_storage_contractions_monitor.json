@@ -1,0 +1,29 @@
+{
+	"name": "[mainstorconcept-ziris] Number of storage contractions is too high qmgr:{{mainstorconcept.zos.mq.queue.manager}} on host:{{host.name}}",
+	"type": "query alert",
+	"query": "max(last_1h):sum:mainstorconcept.zos.mq.storage.contractions{*} >= 1",
+	"message": "MQ detected a problem and recovery actions were taken and indicates a severe problem within the queue manager.\nWhen MQ contracts storage, it indicates that the queue manager lacks sufficient storage and  had to compress storage pools to reclaim unused capacity.\n\nMQ Administrator Recommendation:\nTo resolve virtual storage shortages, either reduce the size of  31 bit buffer pools or move to 64 bit buffer pools.",
+	"tags": [
+		"integration:mainstorconcept-ziris",
+		"status:error",
+		"service:mq"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 1
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"timeout_h": 1,
+		"silenced": {},
+		"include_tags": true,
+		"new_host_delay": 300,
+		"escalation_message": ""
+	},
+	"priority": 3,
+	"recommended_monitor_metadata": {
+		"description": "Triggers an alert when the number of storage contractions is too high on a queue manager."
+    }
+}
