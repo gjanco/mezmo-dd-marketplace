@@ -21,7 +21,7 @@ Monitors Summary | This dashboard provides a summary of monitors, which are supp
 
 Run the following:
 
-`sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_dell_emc_isilon==2.0.0`
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_dell_emc_isilon==2.0.1`
 
 ### Configuration
 
@@ -95,5 +95,7 @@ For support or feature requests, contact Crest Data Systems through the followin
 Additional helpful documentation, links, and articles:
 
 - [Monitor Dell EMC Isilon with Crest Data Systems' integration in the Datadog Marketplace][1]
+- [Setup Guide: Dell EMC Isilon Monitors in Datadog Platform][2]
 
 [1]: https://www.datadoghq.com/blog/dell-emc-isilon-monitoring-crest-data-systems-datadog-marketplace/
+[2]: https://www.crestdatasys.com/data_sheet/datadog-setup-monitor/
