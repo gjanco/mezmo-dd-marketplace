@@ -7,6 +7,9 @@ The Solaris Agent provides the host metadata required to support the Datadog Inf
 
 The Solaris Agent uses the same URLs and ports as the native agents. The Solaris Agent supports core infrastructure metrics, process checks and log tails. It does not support Agent checks, integrations, or service checks. 
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 1. A current installation of curl is required on each Solaris Agent host system. The Solaris Agent was built and tested with curl from the [OpenCSW](https://www.opencsw.org/about/) project.
@@ -151,6 +154,9 @@ For support or feature requests, contact RapDev.io through the following channel
  - Email: datadog-engineering@rapdev.io 
  - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222 
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
  
 ---
 Made with ❤️ in Boston

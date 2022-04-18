@@ -12,6 +12,9 @@ This Datadog application includes three custom widgets that you can use on any d
 
 3. Radar Chart
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 No setup is required for the RapDev Widgets Pack. After you make the purchase, the widgets are available in your account.
@@ -29,6 +32,9 @@ For support or feature requests, contact RapDev.io through the following channel
 - Email: datadog-engineering@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston

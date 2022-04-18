@@ -2,6 +2,9 @@
 
 This integration monitors email mailboxes and measures full send-receive synthetic messages deliveries. The integration uses three geographical source locations for the synthetic email deliveries: Virginia (US), Frankfurt (EU) and Sydney (AP). The check works by sending a test email from the address `probe@synth-rapdev.io` and then waiting for a auto-reply from your mailbox back to us.  The integration measures the number of hops, round-trip-time, and the test results (pass/fail).
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 ### Integration Install
@@ -29,6 +32,9 @@ For support or feature requests please contact RapDev.io through the following c
  - Email: datadog-engineering@rapdev.io 
  - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222 
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston

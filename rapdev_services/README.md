@@ -25,6 +25,9 @@ This proposal includes a fixed-cost (4) four-week Datadog advisory engagement st
 Also includes:
 - 30 day access to the RapDev.io Slack channel for instant responses to any Datadog question
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 Please refer to the Overview section for setup information. 
@@ -35,6 +38,9 @@ For support or feature requests, contact RapDev.io through the following channel
 - Email: datadog-engineering@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston

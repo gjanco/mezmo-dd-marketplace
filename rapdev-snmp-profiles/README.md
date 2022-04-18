@@ -8,6 +8,17 @@ The RapDev SNMP Profiles package supports over 150 device profiles natively, and
 The integration will give you access to hundreds of YAML profiles, and will auto-deploy a number of new dashboards on your instance. It will then use the native Datadog SNMP Autodiscovery to automatically detect any supported hardware, and start polling the OIDs using the native Datadog SNMP integration.
 There is no need for you to manage, edit, modify, or update any SNMP profiles on your Datadog agent or YAML. All of that is taken care of with this integration, and you can simply start monitoring and alerting.
 
+### Pricing
+##### *Volume pricing is only available upon request through a private offer*
+| Units | Discount % | Cost/Unit |
+|---|---|---|
+| 1 - 99 | 0% | $6 |
+| 100 - 499 | 10% | $5.40 |
+| 500 - 999 | 25% | $4.50 |
+| 1000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
+### Supported Devices
 Below is a list of the currently supported devices, please visit our [website](https://www.rapdev.io/products/datadog-snmp-profiles) for a full updated list of all devices.
 
 | Manufacturer | Model                 | Version       |
@@ -75,6 +86,16 @@ For support or feature requests please contact RapDev.io through the following c
  - Email: datadog-engineering@rapdev.io 
  - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222 
+
+### Pricing
+##### *Volume pricing is only available upon request through a private offer*
+| Units | Discount % | Cost/Unit |
+|---|---|---|
+| 1 - 99 | 0% | $6 |
+| 100 - 499 | 10% | $5.40 |
+| 500 - 999 | 25% | $4.50 |
+| 1000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️  in Boston

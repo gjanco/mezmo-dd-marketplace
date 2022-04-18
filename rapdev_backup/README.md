@@ -6,6 +6,9 @@ The purpose of this Agent check is to create a zipped backup for a Datadog accou
 and notebooks. That backup can then be stored on a local machine or in one of the other supported platforms
 (such as AWS, Azure, and GitHub).
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 ### Prerequisites
@@ -269,6 +272,9 @@ For support or feature requests, contact RapDev.io through the following channel
 - Sales: sales@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston

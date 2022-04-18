@@ -8,6 +8,9 @@ The Terraform integration allows organizations to actively monitor their Terrafo
 
 1. RapDev Terraform Dashboard
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 Follow the step-by-step instructions below to install and configure this check for an Agent running on a host. 
@@ -65,6 +68,9 @@ For support or feature requests, contact RapDev.io through the following channel
 - Sales: sales@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston

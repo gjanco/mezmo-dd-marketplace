@@ -8,6 +8,9 @@ and MIB files to translate your messages, allowing you to alert on network event
 
 For a list of all MIBs that are included with this package, [see here][5].
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 1. On the host machine that will receive traps, run `wget https://files.rapdev.io/datadog/scripts/install_snmp_traps.sh`.
@@ -53,6 +56,9 @@ For support or feature requests, contact RapDev.io through the following channel
 - Email: datadog-engineering@rapdev.io
 - Chat: [rapdev.io][3]
 - Phone: 855-857-0222
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston

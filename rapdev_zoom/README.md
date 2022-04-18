@@ -17,6 +17,15 @@ The Zoom Integration has the capability of monitoring Meetings, Rooms, Users, Ne
 4. RapDev Zoom User Details
 5. RapDev Zoom Geo Overview
 
+### Pricing
+##### *Volume pricing is only available upon request through a private offer*
+| Units | Discount % | Cost/Unit |
+|---|---|---|
+| 1 - 2499 | 0% | $1 |
+| 2500 - 4999 | 25% | $0.75 |
+| 5000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 Follow the step-by-step instructions below to install and configure this check for an Agent running on a host. 
@@ -139,6 +148,15 @@ For support or feature requests, contact RapDev.io through the following channel
 - Sales: sales@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
+
+### Pricing
+##### *Volume pricing is only available upon request through a private offer*
+| Units | Discount % | Cost/Unit |
+|---|---|---|
+| 1 - 2499 | 0% | $1 |
+| 2500 - 4999 | 25% | $0.75 |
+| 5000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston

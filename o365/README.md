@@ -4,6 +4,15 @@ The Microsoft Office 365 integration monitors product activity, usage and licens
 
 All integrations can be toggled on and off in the ```o365.yaml``` file as part of the integration.  Its recommended to disable any products you dont want to monitor to avoid usage of additional metrics.
 
+### Pricing
+##### *Volume pricing is only available upon request through a private offer*
+| Units | Discount % | Cost/Unit |
+|---|---|---|
+| 1 - 2499 | 0% | $1 |
+| 2500 - 4999 | 25% | $0.75 |
+| 5000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 ### Datadog Integration Install
@@ -135,7 +144,14 @@ For support or feature requests please contact RapDev.io through the following c
  - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222 
 
-Tiered discounts for Office 365 users over 1,000 are available. Contact us at [datadog-engineering@rapdev.io](mailto:datadog-engineering@rapdev.io).
+### Pricing
+##### *Volume pricing is only available upon request through a private offer*
+| Units | Discount % | Cost/Unit |
+|---|---|---|
+| 1 - 2499 | 0% | $1 |
+| 2500 - 4999 | 25% | $0.75 |
+| 5000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 

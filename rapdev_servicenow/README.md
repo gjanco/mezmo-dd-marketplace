@@ -2,6 +2,9 @@
 
 The ServiceNow integration monitors the health and performance of your ServiceNow instances with rich insights into transactions, jobs, database, and cache metrics. The integration also tracks open ITSM incidents, providing actionable data points on both SLAs and the age of business impacting incidents.
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 
 ### Prerequisites
@@ -78,6 +81,9 @@ For support or feature requests, contact RapDev.io through the following channel
  - Email: datadog-engineering@rapdev.io
  - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 

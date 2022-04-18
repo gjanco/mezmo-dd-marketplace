@@ -10,6 +10,9 @@ The RapDev validator solves the problem for monitoring tag and Agent compliance 
 1. Host is missing required tag key
 2. Host has non-compliant value for tag key
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 Find specific step-by-step configuration instructions for this integration.
 
@@ -82,6 +85,9 @@ For support or feature requests, contact RapDev.io through the following channel
 - Email: datadog-engineering@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston

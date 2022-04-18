@@ -4,7 +4,10 @@
 
 The Oracle TimesTen integration enables you to monitor your TimesTen in-memory databases. This integration covers over 200 metrics and provides details about your top queries, database status, execution times, and much more.
 
-Below are some screenshots of the dashboard that is included with the integration.
+Above are some screenshots of the dashboard that is included with the integration.
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ## Setup
 
@@ -76,6 +79,9 @@ For support or feature requests please contact RapDev.io through the following c
  - Email: datadog-engineering@rapdev.io 
  - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️  in Boston

@@ -19,6 +19,9 @@ The count of logs processed per check is reported as a metric.
 Log collection is optional and disabled by default.
 This integration calls to Rapid7 logs API to query all logs available in the last time interval. The default time interval is the last minute. You can specify specific [Log Sets][5] as detailed in Rapid7 insightIDR [Log Search Documentation][6] to get only those logs.
 
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+
 ## Setup
 Follow the step-by-step instructions below to install and configure this check for an Agent running on a host. 
 
@@ -63,6 +66,9 @@ For support or feature requests, contact RapDev.io through the following channel
 - Sales: sales@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
+
+### Pricing
+Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston
