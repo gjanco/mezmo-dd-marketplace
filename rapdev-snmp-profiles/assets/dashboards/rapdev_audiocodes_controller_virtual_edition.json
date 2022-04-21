@@ -1,0 +1,1107 @@
+{
+    "author_name": "RapDev",
+    "description": "## RapDev AudioCodes Controller Virtual Edition Dashboard\n\nThis dashboard shows the information collected from your AudioCodes Virtual Devices\n+ MIBS currently support the channel status and performance metrics\n+ Host level resource metrics, CPU, Memory\n\n",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "Host",
+            "prefix": "host"
+        },
+        {
+            "available_values": [],
+            "default": "rd-audiocodes-ve",
+            "name": "SNMP_Profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "Sysname",
+            "prefix": "snmp_host"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "channel",
+            "prefix": "channel"
+        }
+    ],
+    "title": "RapDev AudioCodes Controller Virtual Edition",
+    "widgets": [
+        {
+            "definition": {
+                "custom_unit": "Days",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP,$Sysname,$channel} / 8640000"
+                    }
+                ],
+                "title": "System Up Time",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1653432602520160,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 80,
+                "y": 24
+            }
+        },
+        {
+            "definition": {
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "aggregator": "last",
+                        "q": "avg:snmp.CPU.Utilization{$Host,$SNMP_Profile,$IP,$Sysname,$channel}"
+                    }
+                ],
+                "title": "CPU Usage",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4812011963878828,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 1,
+                "y": 24
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Channel Status",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 7365757007043640,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 1,
+                "y": 40
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.rTPActive{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "RTP Active",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 790168749965488,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 1,
+                "y": 47
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Transmitted & Received",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 476684321290678,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 1,
+                "y": 79
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.bypassNIC{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Bypass NIC",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4072107668593028,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 40,
+                "y": 47
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.pendingIdle{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Pending Idle",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4208974107518102,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 80,
+                "y": 47
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.txSilencePeriod{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "TX Silence Period",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6948754014017434,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 1,
+                "y": 86
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.rxSilencePeriod{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "RX Silence Period",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3960856673257528,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 1,
+                "y": 102
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.txFaxMode{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "TX Fax Mode",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2394734171768916,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 40,
+                "y": 86
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.txFaxMode{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "RX Fax Mode",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 3761942741669522,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 40,
+                "y": 102
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.txDTMFPeriod{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "TX DTMF Period",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4619324200886490,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 80,
+                "y": 86
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.txDTMFPeriod{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "RX DTMF Period",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 6075825496762648,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 80,
+                "y": 102
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "Jitter",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 6871323157147658,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 1,
+                "y": 118
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.jitterBufErrorCnt{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Jitter Buffer Error Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2840046839749912,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 1,
+                "y": 125
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.jitterBufForcedPacketLost{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Jitter Buffer Forced Packet Lost",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 4525323643320116,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 40,
+                "y": 125
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.jitterBufForcedPacketAddition{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Jitter Buffer Forced Packet Addition",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 964137682160782,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 80,
+                "y": 125
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.jitterBufUnderRunCnt{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Jitter Buffer Under-Run Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 2315663328617396,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 1,
+                "y": 141
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.jitterBufOverRunCnt{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Jitter Buffer Over-Run Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 477003534413976,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 40,
+                "y": 141
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.jitterBufAccumDelay{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Jitter Buffer Accume Delay",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries",
+                "yaxis": {
+                    "include_zero": true,
+                    "label": "",
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 5816301877645666,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 80,
+                "y": 141
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Channel Hook State",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.channel.channelHookState{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {snmp_device,snmp_host,channel}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Channel Hook State",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 4857931094995832,
+            "layout": {
+                "height": 15,
+                "width": 117,
+                "x": 1,
+                "y": 63
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "(query2 / query1) * 100",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:snmp.Device.Used{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {device,snmp_host}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Device.Size{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {device,snmp_host}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Device Utilization",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 5661858856035126,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 40,
+                "y": 24
+            }
+        },
+        {
+            "definition": {
+                "background_color": "white",
+                "content": "System Resources",
+                "font_size": "24",
+                "show_tick": true,
+                "text_align": "center",
+                "tick_edge": "bottom",
+                "tick_pos": "50%",
+                "type": "note"
+            },
+            "id": 650327757502390,
+            "layout": {
+                "height": 6,
+                "width": 117,
+                "x": 1.083333333333333,
+                "y": 17
+            }
+        },
+        {
+            "definition": {
+                "has_background": true,
+                "has_border": true,
+                "horizontal_align": "center",
+                "sizing": "cover",
+                "type": "image",
+                "url": "https://s3.amazonaws.com/files.rapdev.io/images/rapdev-dash-logo.png",
+                "vertical_align": "center"
+            },
+            "id": 1471346948215266,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 1,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "has_background": true,
+                "has_border": true,
+                "horizontal_align": "center",
+                "sizing": "cover",
+                "type": "image",
+                "url": "https://www.audiocodes.com/media/12479/audiocodes-new-logo-version-2.jpg?anchor=center&mode=crop&width=332&rnd=132441261158200000",
+                "vertical_align": "center"
+            },
+            "id": 1413357203570068,
+            "layout": {
+                "height": 15,
+                "width": 38,
+                "x": 80,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "has_background": true,
+                "has_border": true,
+                "horizontal_align": "center",
+                "sizing": "contain",
+                "type": "image",
+                "url": "https://s3.amazonaws.com/files.rapdev.io/images/RD_Integrations_SNMP_Profiles_Light.svg",
+                "vertical_align": "center"
+            },
+            "id": 972473934815194,
+            "layout": {
+                "height": 15,
+                "width": 39,
+                "x": 40,
+                "y": 1
+            }
+        }
+    ]
+}
