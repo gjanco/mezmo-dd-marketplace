@@ -1,5 +1,11 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.3.9 / 2022-04-22
+
+* [Added] buffered metric submits to address Datadog API maximum limits.
+* [Added] `enable_system_io_check: no` configuration flag to disable system.io.* metrics in environments with very large counts of disk devices.
+* [Fixed] installation permissions on `datadog-agent.pid` file.
+
 ## 1.3.8 / 2022-02-16
 
 * [Fixed] incorrect permissions on agent.yml and agent.log during agent reinstall.
