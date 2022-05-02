@@ -170,7 +170,7 @@ This isn't the metric you're looking for? Missing a critical feature for your or
 
 ### License application 
 
-After starting your trail period, we will provide your z/IRIS trial license via email within 24 hours. 
+After starting your trial period, we will provide your z/IRIS trial license via email within 24 hours. 
  	
 ### Validation
 
