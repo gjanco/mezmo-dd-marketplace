@@ -4,28 +4,41 @@
     "layout_type": "free",
     "template_variables": [
         {
+            "available_values": [],
             "default": "*",
             "name": "nutanix_host",
             "prefix": "nutanix_host"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "nutanix_cluster",
             "prefix": "nutanix_cluster"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "nutanix_cvm",
             "prefix": "nutanix_cvm"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "license_id",
+            "prefix": "license_id"
         }
     ],
     "title": "RapDev Nutanix Clusters Dashboard",
     "widgets": [
         {
             "definition": {
-                "sizing": "zoom",
+                "has_background": false,
+                "has_border": true,
+                "horizontal_align": "center",
+                "sizing": "contain",
                 "type": "image",
-                "url": "https://1000logos.net/wp-content/uploads/2019/07/Nutanix.jpg"
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Nutanix_Logo.svg/2560px-Nutanix_Logo.svg.png",
+                "vertical_align": "center"
             },
             "id": 2415710644270042,
             "layout": {
@@ -42,7 +55,6 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
                                 "comparator": ">=",
@@ -55,7 +67,20 @@
                                 "value": 60
                             }
                         ],
-                        "q": "min:rapdev.nutanix.license.clusterExpiryUsecs{$nutanix_cvm,$nutanix_cluster}/86400000000"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "min:rapdev.nutanix.license.days_left{$nutanix_cvm,$nutanix_cluster,$license_id}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "License Expiry",
@@ -77,7 +102,6 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
                                 "comparator": "<",
@@ -90,7 +114,20 @@
                                 "value": 1
                             }
                         ],
-                        "q": "sum:rapdev.nutanix.clusters.currentRedundancyFactor{$nutanix_cluster,$nutanix_cvm}.rollup(avg)"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.currentRedundancyFactor{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Redundancy Factor",
@@ -115,7 +152,6 @@
                         "q": "sum:rapdev.nutanix.hosts.num_cores{$nutanix_host,$nutanix_cluster,$nutanix_cvm}"
                     }
                 ],
-                "time": {},
                 "title": "Number of CPU Cores",
                 "title_align": "left",
                 "title_size": "16",
@@ -135,12 +171,23 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.nutanix.clusters.storage.capacity_bytes{$nutanix_host,$nutanix_cvm,$nutanix_cluster}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.clusters.storage.capacity_bytes{$nutanix_cvm,$nutanix_cluster}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
-                "time": {},
-                "title": "Total Cluster Storage Capacity",
+                "title": "Total Cluster Physical Storage Capacity",
                 "title_align": "left",
                 "title_size": "16",
                 "type": "query_value"
@@ -159,11 +206,22 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.nutanix.hosts.count{$nutanix_cluster}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.hosts.count{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
-                "time": {},
                 "title": "Host Count",
                 "title_align": "left",
                 "title_size": "16",
@@ -182,11 +240,22 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.nutanix.clusters.nodeCount{$nutanix_cluster}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.clusters.blockCount{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
-                "time": {},
                 "title": "Block Count",
                 "title_align": "left",
                 "title_size": "16",
@@ -207,11 +276,23 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:rapdev.nutanix.clusters.data_reduction.compression.saving_ratio{$nutanix_cluster,$nutanix_cvm}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.data_reduction.compression.saving_ratio{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
-                "title": "Compression Savings Ratio",
+                "title": "Avg. Compression Savings Ratio",
                 "title_align": "left",
                 "title_size": "16",
                 "type": "query_value"
@@ -231,11 +312,23 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:rapdev.nutanix.clusters.data_reduction.dedup.saving_ratio{$nutanix_cluster,$nutanix_cvm}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.data_reduction.dedup.saving_ratio{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
-                "title": "Deduplication Savings Ratio",
+                "title": "Avg. Deduplication Savings Ratio",
                 "title_align": "left",
                 "title_size": "16",
                 "type": "query_value"
@@ -254,11 +347,22 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.nutanix.storage_pools.count{$nutanix_cvm,$nutanix_cluster}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.storage_pools.count{$nutanix_cvm,$nutanix_cluster}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
-                "time": {},
                 "title": "Storage Pool Count",
                 "title_align": "left",
                 "title_size": "16",
@@ -278,11 +382,22 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.nutanix.containers.count{$nutanix_cvm,$nutanix_cluster}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.containers.count{$nutanix_cvm,$nutanix_cluster}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
-                "time": {},
                 "title": "Storage Container Count",
                 "title_align": "left",
                 "title_size": "16",
@@ -303,8 +418,20 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:rapdev.nutanix.clusters.hypervisor_memory_usage{$nutanix_host,$nutanix_cluster,$nutanix_cvm}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.hypervisor_cpu_usage{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "CPU Utilization",
@@ -327,8 +454,20 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:rapdev.nutanix.clusters.hypervisor_cpu_usage{$nutanix_cluster,$nutanix_cvm}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.hypervisor_memory_usage{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Memory Utilization",
@@ -367,12 +506,32 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "area",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.hypervisor_cpu_usage{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster_name,nutanix_cvm}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.hypervisor_cpu_usage{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster_name,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -403,12 +562,32 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.data_reduction.dedup.saving_ratio{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.data_reduction.dedup.saving_ratio{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -439,12 +618,37 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "(avg:rapdev.nutanix.clusters.storage.usage_bytes{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}/avg:rapdev.nutanix.clusters.storage.capacity_bytes{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm})*100",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.storage.usage_bytes{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            },
+                            {
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:rapdev.nutanix.clusters.storage.capacity_bytes{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -475,12 +679,32 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.storage.logical_usage_bytes{$nutanix_host,$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.storage.logical_usage_bytes{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -511,12 +735,40 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "area",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            },
+                            {
+                                "formula": "query2"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.num_write_iops{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}, avg:rapdev.nutanix.clusters.num_read_iops{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.num_write_iops{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            },
+                            {
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:rapdev.nutanix.clusters.num_read_iops{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -547,12 +799,40 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "area",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            },
+                            {
+                                "formula": "query2"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.read_io_bandwidth_kBps{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}, avg:rapdev.nutanix.clusters.write_io_bandwidth_kBps{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.read_io_bandwidth_kBps{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            },
+                            {
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:rapdev.nutanix.clusters.write_io_bandwidth_kBps{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -583,12 +863,32 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "area",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "sum:rapdev.nutanix.clusters.avg_io_latency_usecs{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.avg_io_latency_usecs{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -619,12 +919,32 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.content_cache_hit{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.content_cache_hit{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -655,12 +975,32 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.content_cache_logical_memory_usage_bytes{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster}, avg:rapdev.nutanix.clusters.content_cache_physical_memory_usage_bytes{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.content_cache_logical_memory_usage_bytes{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -669,7 +1009,7 @@
                     }
                 ],
                 "show_legend": false,
-                "title": "Cache Memory Usage",
+                "title": "Cache Logical Memory Usage",
                 "title_align": "left",
                 "title_size": "16",
                 "type": "timeseries",
@@ -712,12 +1052,32 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.data_reduction.compression.saving_ratio{$nutanix_host,$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.data_reduction.compression.saving_ratio{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -751,38 +1111,59 @@
                 "has_search_bar": "auto",
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "alias": "CPU Usage (%)",
-                        "cell_display_mode": [
-                            "number"
+                        "formulas": [
+                            {
+                                "alias": "CPU Usage (%)",
+                                "cell_display_mode": "number",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            },
+                            {
+                                "alias": "Memory Usage (%)",
+                                "cell_display_mode": "number",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Physical Storage Free",
+                                "cell_display_mode": "number",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Deduplication Savings  (%)",
+                                "cell_display_mode": "number",
+                                "formula": "query4"
+                            }
                         ],
-                        "limit": 50,
-                        "order": "desc",
-                        "q": "avg:rapdev.nutanix.clusters.hypervisor_cpu_usage{$nutanix_cluster} by {nutanix_cluster,nutanix_cluster_name,nutanix_cluster_version,nutanix_cvm}"
-                    },
-                    {
-                        "aggregator": "avg",
-                        "alias": "Memory Usage (%)",
-                        "cell_display_mode": [
-                            "number"
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.hypervisor_cpu_usage{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cluster_version,nutanix_cvm}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:rapdev.nutanix.clusters.hypervisor_memory_usage{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cluster_version,nutanix_cvm}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "query": "avg:rapdev.nutanix.clusters.storage.free_bytes{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cluster_version,nutanix_cvm}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "query": "avg:rapdev.nutanix.clusters.data_reduction.dedup.saving_ratio{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cluster_version,nutanix_cvm}"
+                            }
                         ],
-                        "q": "avg:rapdev.nutanix.clusters.hypervisor_memory_usage{$nutanix_cluster} by {nutanix_cluster,nutanix_cluster_name,nutanix_cluster_version,nutanix_cvm}"
-                    },
-                    {
-                        "aggregator": "avg",
-                        "alias": "Storage Free",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "q": "avg:rapdev.nutanix.clusters.storage.free_bytes{$nutanix_cluster} by {nutanix_cluster,nutanix_cluster_name,nutanix_cluster_version,nutanix_cvm}"
-                    },
-                    {
-                        "aggregator": "avg",
-                        "alias": "Deduplication Savings  (%)",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "q": "avg:rapdev.nutanix.clusters.data_reduction.dedup.saving_ratio{$nutanix_cluster} by {nutanix_cluster,nutanix_cluster_name,nutanix_cluster_version,nutanix_cvm}"
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Clusters Summary",
@@ -800,12 +1181,32 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "area",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.hypervisor_memory_usage{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster_name,nutanix_cvm}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.hypervisor_memory_usage{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster_name,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -836,12 +1237,40 @@
         },
         {
             "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "markers": [],
                 "requests": [
                     {
                         "display_type": "area",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            },
+                            {
+                                "formula": "query2"
+                            }
+                        ],
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.clusters.replication_received_bandwidth_kBps{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}, avg:rapdev.nutanix.clusters.replication_transmitted_bandwidth_kBps{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.replication_received_bandwidth_kBps{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            },
+                            {
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:rapdev.nutanix.clusters.replication_transmitted_bandwidth_kBps{$nutanix_cluster,$nutanix_cvm} by {nutanix_cluster,nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -876,11 +1305,22 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.nutanix.disks.count{$nutanix_cluster,$nutanix_host}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.disks.count{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
-                "time": {},
                 "title": "Disk Count",
                 "title_align": "left",
                 "title_size": "16",
@@ -892,6 +1332,97 @@
                 "width": 16,
                 "x": 17,
                 "y": 40
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [
+                    {
+                        "label": "{{host.value}} Nutanix Host Dashboard",
+                        "link": "https://app.datadoghq.com/screen/integration/RapDev Nutanix Hosts and Disks Dashboard?tpl_var_host={{host.value}}&tpl_var_nutanix_cluster={{$nutanix_cluster.value}}&tpl_var_nutanix_cvm={{$nutanix_cvm.value}}&tpl_var_nutanix_host={{$nutanix_host.value}}&from_ts={{timestamp_start}}&to_ts={{timestamp_end}}"
+                    }
+                ],
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Memory Usage (%)",
+                                "cell_display_mode": "number",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            },
+                            {
+                                "alias": "CPU Usage (%)",
+                                "cell_display_mode": "number",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Physical Storage Usage",
+                                "cell_display_mode": "number",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Physical Storage Capacity",
+                                "cell_display_mode": "number",
+                                "formula": "query4"
+                            },
+                            {
+                                "alias": "Average I/O Latency",
+                                "cell_display_mode": "number",
+                                "formula": "query5"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.hypervisor_memory_usage{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster} by {host,nutanix_cluster}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster} by {host,nutanix_cluster}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "query": "avg:rapdev.nutanix.storage.usage_bytes{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster} by {host,nutanix_cluster}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "query": "avg:rapdev.nutanix.storage.capacity_bytes{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster} by {host,nutanix_cluster}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query5",
+                                "query": "avg:rapdev.nutanix.avg_io_latency_usecs{nutanix_type:host,$nutanix_host,$nutanix_cvm,$nutanix_cluster} by {host,nutanix_cluster}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Cluster: Host Summary Table",
+                "title_align": "left",
+                "title_size": "20",
+                "type": "query_table"
+            },
+            "id": 7645379723150962,
+            "layout": {
+                "height": 34,
+                "width": 69,
+                "x": 34,
+                "y": 49
             }
         }
     ]

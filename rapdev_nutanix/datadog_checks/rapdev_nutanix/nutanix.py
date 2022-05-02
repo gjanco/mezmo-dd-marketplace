@@ -64,8 +64,8 @@ class NutanixCheck(AgentCheck):
         self.metric_prefix = "rapdev.nutanix"
 
     def check(self, instance):
-        self.test_cvm_connection()
         self.validate_config()
+        self.test_cvm_connection()
         self.cluster_name = self.retrieve_cluster_name()
         self.tags.append("nutanix_cluster:{}".format(self.cluster_name))
         self.tags = list(set(self.tags))
@@ -100,8 +100,12 @@ class NutanixCheck(AgentCheck):
             raise ConfigurationError("Nutanix Controller VM ip address and port is needed")
 
     def call_api(self, entity):
-        results = self.http.get("https://{}/PrismGateway/services/rest/v1/{}".format(self.cvm_host, entity)).json()
-        return results
+        results = self.http.get("https://{}/PrismGateway/services/rest/v1/{}".format(self.cvm_host, entity))
+        if results.status_code == 200:
+            return results.json()
+        else:
+            self.log.error("Error making Nutanix API call: {}".format(results.text))
+            return {}
 
     def get_clusters(self):
         entity = "clusters"

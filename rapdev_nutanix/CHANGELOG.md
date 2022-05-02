@@ -1,5 +1,11 @@
 # CHANGELOG - Nutanix
 
+## 1.3.3 / 2022-04-27
+* [BugFix] Better error handling for calling the Nutanix API
+* [BugFix] Added metric units and descriptions to metric metadata
+* [Added] Added Dashboard for Protection Domains
+* [Updated] Updated out of the box dashboards with links, new widgets and layout
+
 ## 1.3.2 / 2021-09-13
 * [BugFix] Swap use_vm_fqdn to use gethostbyname_ex instead of getfqdn due to this method only checking first DNS server
 

@@ -30,10 +30,10 @@ Find specific step-by-step configuration instructions for this integration.
 To install the Nutanix check on your host:
 
 - Linux\
-`sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_nutanix==1.3.2`
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_nutanix==1.3.3`
 
 - Windows\
-`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_nutanix==1.3.2`
+`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_nutanix==1.3.3`
 
 ### Prepare the Nutanix CVM
 To make REST API calls to the Nutanix CVM, make sure your monitoring user account has the appropriate level of permissions. For more information, see [User Permissions](https://portal.nutanix.com/page/documents/details?targetId=Web-Console-Guide-Prism-v55:wc-user-create-wc-t.html)
@@ -66,7 +66,7 @@ To make REST API calls to the Nutanix CVM, make sure your monitoring user accoun
 Alternatively, you can get detailed information about the integration using the following command.
 
 - Linux\
-`sudo ‐u dd‐agent datadog‐agent check rapdev_nutanix`
+`sudo -u dd-agent datadog-agent check rapdev_nutanix`
 - Windows\
 `C:\Program Files\Datadog\Datadog Agent\bin\agent.exe check rapdev_nutanix`
 

@@ -4,26 +4,25 @@
     "layout_type": "free",
     "template_variables": [
         {
+            "available_values": [],
             "default": "*",
             "name": "nutanix_cluster",
             "prefix": "nutanix_cluster"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "nutanix_host",
             "prefix": "nutanix_host"
         },
         {
-            "default": "*",
-            "name": "hypervisor",
-            "prefix": "hypervisor"
-        },
-        {
+            "available_values": [],
             "default": "*",
             "name": "vm_description",
             "prefix": "vm_description"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "nutanix_cvm",
             "prefix": "nutanix_cvm"
@@ -33,9 +32,13 @@
     "widgets": [
         {
             "definition": {
-                "sizing": "zoom",
+                "has_background": false,
+                "has_border": true,
+                "horizontal_align": "center",
+                "sizing": "contain",
                 "type": "image",
-                "url": "https://1000logos.net/wp-content/uploads/2019/07/Nutanix.jpg"
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Nutanix_Logo.svg/2560px-Nutanix_Logo.svg.png",
+                "vertical_align": "center"
             },
             "id": 7480045821955258,
             "layout": {
@@ -51,8 +54,20 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.nutanix.vms.count{$hypervisor,$vm_description,$nutanix_cvm}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.vms.count{$vm_description,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "VM Count",
@@ -73,8 +88,20 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "sum:rapdev.nutanix.virtual_disks.count{$hypervisor,$vm_description,$nutanix_cvm}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.virtual_disks.count{$nutanix_cvm,$nutanix_cluster}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Virtual Disk Count",
@@ -95,41 +122,61 @@
                 "has_search_bar": "auto",
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "alias": "Memory Usage (%)",
-                        "cell_display_mode": [
-                            "number"
+                        "formulas": [
+                            {
+                                "alias": "Memory Usage (%)",
+                                "cell_display_mode": "number",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "CPU Usage (%)",
+                                "cell_display_mode": "number",
+                                "formula": "query2",
+                                "limit": {
+                                    "count": 50,
+                                    "order": "desc"
+                                }
+                            },
+                            {
+                                "alias": "Average IO Latency",
+                                "cell_display_mode": "number",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "IO Bandwidth",
+                                "cell_display_mode": "number",
+                                "formula": "query4"
+                            }
                         ],
-                        "q": "avg:rapdev.nutanix.memory_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
-                    },
-                    {
-                        "aggregator": "last",
-                        "alias": "CPU Usage (%)",
-                        "cell_display_mode": [
-                            "number"
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.memory_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "query": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "query": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
+                            }
                         ],
-                        "limit": 50,
-                        "order": "desc",
-                        "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
-                    },
-                    {
-                        "aggregator": "last",
-                        "alias": "Average IO Latency",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
-                    },
-                    {
-                        "aggregator": "last",
-                        "alias": "IO Bandwidth",
-                        "cell_display_mode": [
-                            "number"
-                        ],
-                        "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,vm_description,nutanix_host,hypervisor}"
+                        "response_format": "scalar"
                     }
                 ],
-                "time": {},
                 "title": "VM Summary",
                 "title_align": "left",
                 "title_size": "20",
@@ -171,7 +218,7 @@
                     {
                         "display_type": "line",
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{$nutanix_cluster,nutanix_type:vm,$hypervisor,$vm_description,$nutanix_cvm} by {vm_description,guest_os,nutanix_cluster,host}",
+                        "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{$nutanix_cluster,nutanix_type:vm,$vm_description,$nutanix_cvm} by {vm_description,guest_os,nutanix_cluster,host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -207,7 +254,7 @@
                     {
                         "display_type": "line",
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.memory_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {vm_description,nutanix_cluster,guest_os,host}",
+                        "q": "avg:rapdev.nutanix.memory_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm} by {vm_description,nutanix_cluster,guest_os,host}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -243,7 +290,7 @@
                     {
                         "display_type": "line",
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {nutanix_cluster,vm_description,host,guest_os}",
+                        "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm} by {nutanix_cluster,vm_description,host,guest_os}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -279,7 +326,7 @@
                     {
                         "display_type": "line",
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.controller_num_iops{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,nutanix_cluster,vm_description,guest_os}",
+                        "q": "avg:rapdev.nutanix.controller_num_iops{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm} by {host,nutanix_cluster,vm_description,guest_os}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -315,7 +362,7 @@
                     {
                         "display_type": "line",
                         "on_right_yaxis": false,
-                        "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm} by {host,nutanix_cluster,vm_description,guest_os}",
+                        "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm} by {host,nutanix_cluster,vm_description,guest_os}",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -388,10 +435,9 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm,nutanix_type:vm}"
+                        "q": "avg:rapdev.nutanix.hypervisor_cpu_usage{$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm,nutanix_type:vm}"
                     }
                 ],
-                "time": {},
                 "title": "Avg CPU Utilization",
                 "title_align": "left",
                 "title_size": "16",
@@ -413,10 +459,9 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.nutanix.memory_usage{$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm,nutanix_type:vm}"
+                        "q": "avg:rapdev.nutanix.memory_usage{$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm,nutanix_type:vm}"
                     }
                 ],
-                "time": {},
                 "title": "Avg Memory Utilization",
                 "title_align": "left",
                 "title_size": "16",
@@ -438,10 +483,9 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm}"
+                        "q": "avg:rapdev.nutanix.controller_io_bandwidth_kBps{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm}"
                     }
                 ],
-                "time": {},
                 "title": "Avg IO Bandwidth",
                 "title_align": "left",
                 "title_size": "16",
@@ -462,10 +506,9 @@
                 "requests": [
                     {
                         "aggregator": "avg",
-                        "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$hypervisor,$vm_description,$nutanix_cvm}"
+                        "q": "avg:rapdev.nutanix.controller_avg_io_latency_usecs{nutanix_type:vm,$nutanix_cluster,$nutanix_host,$vm_description,$nutanix_cvm}"
                     }
                 ],
-                "time": {},
                 "title": "Avg IO Latency",
                 "title_align": "left",
                 "title_size": "16",
