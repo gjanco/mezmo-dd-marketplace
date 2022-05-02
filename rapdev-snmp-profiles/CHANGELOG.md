@@ -1,5 +1,9 @@
 # CHANGELOG - rapdev-snmp-profiles
 
+# 1.0.4 / 2022-04-25
+* [Added] Netapp NAS Dashboard
+* [Changed] Added/Updated logos on most dashboards
+
 # 1.0.3 / 2022-04-21
 * [Added] AudioCodes Virtual Dashboard
 * [Changed] Updated logos

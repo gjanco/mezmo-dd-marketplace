@@ -1,60 +1,116 @@
 {
-  "author_name": "RapDev",
-  "description": null,
-  "template_variables": [
-    {
-      "default": "*",
-      "prefix": "location",
-      "name": "Datacenter"
-    },
-    {
-      "default": "*",
-      "prefix": "manufacturer",
-      "name": "Manufacturer"
-    },
-    {
-      "default": "*",
-      "prefix": "snmp_host",
-      "name": "SystemName"
-    },
-    {
-      "default": "*",
-      "prefix": "modelname",
-      "name": "ModelName"
-    },
-    {
-      "default": "*",
-      "prefix": "snmp_device",
-      "name": "IP"
-    }
-  ],
-  "title": "RapDev SNMP Device Inventory",
-  "widgets": [
-    {
-      "definition": {
-        "custom_links": [],
-        "title_size": "16",
-        "title": "SNMP Device Inventory",
-        "title_align": "left",
-        "requests": [
-          {
-            "q": "avg:snmp.sysUpTimeInstance{$Datacenter,$Manufacturer,$IP,$SystemName,$ModelName, $Sysname} by {snmp_device,snmp_host,manufacturer,chassisversion,softwareversion,serialnumber,modelname}",
-            "aggregator": "avg",
-            "limit": 50,
-            "order": "desc",
-            "alias": "Uptime"
-          }
-        ],
-        "type": "query_table"
-      },
-      "layout": {
-        "y": 0,
-        "x": 0,
-        "width": 118,
-        "height": 72
-      },
-      "id": 752631267578176
-    }
-  ],
-  "layout_type": "free"
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "free",
+    "template_variables": [
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "Datacenter",
+            "prefix": "location"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "Manufacturer",
+            "prefix": "manufacturer"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "SystemName",
+            "prefix": "snmp_host"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "ModelName",
+            "prefix": "modelname"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        }
+    ],
+    "title": "RapDev SNMP Device Inventory",
+    "widgets": [
+        {
+            "definition": {
+                "custom_links": [],
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Uptime",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.sysUpTimeInstance{$Datacenter,$Manufacturer,$IP,$SystemName,$ModelName} by {snmp_device,snmp_host,manufacturer,chassisversion,softwareversion,serialnumber,modelname}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "SNMP Device Inventory",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 752631267578176,
+            "layout": {
+                "height": 72,
+                "width": 118,
+                "x": 1,
+                "y": 17
+            }
+        },
+        {
+            "definition": {
+                "has_background": true,
+                "has_border": true,
+                "horizontal_align": "center",
+                "sizing": "cover",
+                "type": "image",
+                "url": "https://s3.amazonaws.com/files.rapdev.io/images/rapdev-dash-logo.png",
+                "vertical_align": "center"
+            },
+            "id": 3996224038919192,
+            "layout": {
+                "height": 15,
+                "width": 59,
+                "x": 1,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "has_background": true,
+                "has_border": true,
+                "horizontal_align": "center",
+                "sizing": "contain",
+                "type": "image",
+                "url": "https://s3.amazonaws.com/files.rapdev.io/images/RD_Integrations_SNMP_Profiles_Light.svg",
+                "vertical_align": "center"
+            },
+            "id": 4080436744048014,
+            "layout": {
+                "height": 15,
+                "width": 59,
+                "x": 60,
+                "y": 1
+            }
+        }
+    ]
 }
