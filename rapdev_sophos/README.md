@@ -27,7 +27,7 @@ You must have the Datadog Agent installed and running. Additionally, you need to
 To install the Sophos Integration on your host:
 
 - Linux\
-`sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog-rapdev_sophos==1.0.1`
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_sophos==1.0.1`
 
 - Windows\
 `C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_sophos==1.0.1`
@@ -49,7 +49,7 @@ To install the Sophos Integration on your host:
 Alternatively, you can get detailed information about the integration using the following commands:
 
 - Linux\
-`sudo ‐u dd‐agent datadog‐agent check rapdev_sophos`
+`sudo -u dd-agent datadog-agent check rapdev_sophos`
 
 - Windows\
 `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" check rapdev_sophos`

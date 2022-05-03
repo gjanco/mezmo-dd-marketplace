@@ -4,46 +4,55 @@
     "layout_type": "free",
     "template_variables": [
         {
+            "available_values": [],
             "default": "*",
             "name": "Type",
             "prefix": "endpoint_type"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "Endpoint",
             "prefix": "endpoint_name"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "OS",
             "prefix": "endpoint_os"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "Platform",
             "prefix": "endpoint_platform"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "Owner",
             "prefix": "endpoint_owner"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "HealthStatus",
             "prefix": "health_status"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "ThreatStatus",
             "prefix": "threat_status"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "ServiceSummaryStatus",
             "prefix": "service_summary_status"
         },
         {
+            "available_values": [],
             "default": "*",
             "name": "ServiceStatus",
             "prefix": "service_status"
@@ -55,7 +64,7 @@
             "definition": {
                 "requests": [
                     {
-                        "q": "top(sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner,$HealthStatus,$ThreatStatus,$ServiceSummaryStatus,$ServiceStatus} by {endpoint_os}, 25, \"mean\", \"desc\")"
+                        "q": "top(sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner,$HealthStatus,$ThreatStatus,$ServiceSummaryStatus,$ServiceStatus} by {endpoint_os}, 25, 'last', 'desc')"
                     }
                 ],
                 "title": "Registered Endpoints by OS",
@@ -101,25 +110,43 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
                                 "comparator": ">=",
                                 "palette": "white_on_green",
-                                "value": 90
+                                "value": 95
                             },
                             {
-                                "comparator": ">",
+                                "comparator": ">=",
                                 "palette": "white_on_yellow",
-                                "value": 80
+                                "value": 75
                             },
                             {
                                 "comparator": "<",
                                 "palette": "white_on_red",
-                                "value": 80
+                                "value": 75
                             }
                         ],
-                        "q": "(sum:rapdev.sophos.endpoint.overall_health{health_status:good,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.sophos.endpoint.registered{health_status:good,$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Endpoints in Good Health",
@@ -142,7 +169,6 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
                                 "comparator": "<",
@@ -160,7 +186,26 @@
                                 "value": 20
                             }
                         ],
-                        "q": "(sum:rapdev.sophos.endpoint.overall_health{health_status:bad,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.sophos.endpoint.registered{health_status:bad,$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Endpoints in Bad Health",
@@ -183,7 +228,6 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
                                 "comparator": "<=",
@@ -201,7 +245,26 @@
                                 "value": 30
                             }
                         ],
-                        "q": "(sum:rapdev.sophos.endpoint.overall_health{health_status:suspicious,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.sophos.endpoint.registered{health_status:suspicious,$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Endpoints in Suspicious Health",
@@ -224,25 +287,43 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
-                                "comparator": ">",
+                                "comparator": ">=",
                                 "palette": "white_on_green",
                                 "value": 95
                             },
                             {
-                                "comparator": "<",
+                                "comparator": ">=",
                                 "palette": "white_on_yellow",
-                                "value": 95
+                                "value": 75
                             },
                             {
                                 "comparator": "<",
                                 "palette": "white_on_red",
-                                "value": 80
+                                "value": 75
                             }
                         ],
-                        "q": "(sum:rapdev.sophos.endpoint.threat_health{threat_status:good,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.health_found{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.sophos.endpoint.registered{threat_status:good,$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Endpoints with No Threats",
@@ -265,12 +346,11 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
-                                "comparator": "<",
-                                "palette": "white_on_green",
-                                "value": 5
+                                "comparator": ">",
+                                "palette": "white_on_red",
+                                "value": 10
                             },
                             {
                                 "comparator": ">",
@@ -278,12 +358,31 @@
                                 "value": 5
                             },
                             {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 10
+                                "comparator": "<",
+                                "palette": "white_on_green",
+                                "value": 5
                             }
                         ],
-                        "q": "(sum:rapdev.sophos.endpoint.threat_health{threat_status:bad,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.health_found{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.sophos.endpoint.registered{threat_status:bad,$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Endpoints with Threats",
@@ -306,10 +405,9 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
-                                "comparator": ">",
+                                "comparator": ">=",
                                 "palette": "white_on_green",
                                 "value": 95
                             },
@@ -324,7 +422,26 @@
                                 "value": 75
                             }
                         ],
-                        "q": "(sum:rapdev.sophos.endpoint.overall_services_health{service_summary_status:good,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.sophos.endpoint.registered{service_summary_status:good,$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Endpoints in Good Service State",
@@ -347,7 +464,6 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
                                 "comparator": ">",
@@ -365,7 +481,26 @@
                                 "value": 3
                             }
                         ],
-                        "q": "(sum:rapdev.sophos.endpoint.overall_services_health{service_summary_status:bad,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{health:true,$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.sophos.endpoint.registered{service_summary_status:bad,$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            },
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Endpoints in Bad Service State",
@@ -404,14 +539,14 @@
                 "columns": [],
                 "indexes": [],
                 "message_display": "expanded-md",
-                "query": "source:sophos $Type $Endpoint $OS $Platform $Owner",
+                "query": "source:sophos",
                 "show_date_column": true,
                 "show_message_column": true,
                 "sort": {
                     "column": "time",
                     "order": "desc"
                 },
-                "title": "",
+                "title": "Sophos Alert Logs",
                 "title_align": "left",
                 "title_size": "16",
                 "type": "log_stream"
@@ -449,7 +584,7 @@
                                 "value": 75
                             }
                         ],
-                        "q": "(sum:rapdev.sophos.endpoint.tamper_protection_health{tamper_status:true,$Type,$Endpoint,$OS,$Platform,$Owner} / sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner}) * 100"
+                        "q": "(sum:rapdev.sophos.endpoint.registered{tamper_status:true,$Type,$Endpoint,$OS,$Platform,$Owner}/sum:rapdev.sophos.endpoint.registered{$Type,$Endpoint,$OS,$Platform,$Owner})*100"
                     }
                 ],
                 "title": "Endpoints with Tamper Protection",
@@ -655,10 +790,9 @@
                         "increase_good": true,
                         "order_by": "change",
                         "order_dir": "desc",
-                        "q": "sum:rapdev.sophos.endpoint.overall_health{health_status:good} by {endpoint_os,endpoint_platform,endpoint_type}"
+                        "q": "sum:rapdev.sophos.endpoint.registered{health_status:good} by {endpoint_os,endpoint_platform,endpoint_type}"
                     }
                 ],
-                "time": {},
                 "title": "Endpoint Overall Health (vs Yesterday)",
                 "title_align": "left",
                 "title_size": "16",
