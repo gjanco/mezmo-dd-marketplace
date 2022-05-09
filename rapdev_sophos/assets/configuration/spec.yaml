@@ -30,13 +30,49 @@ files:
         The Client Secret for your service principal.
         https://developer.sophos.com/getting-started
     - name: collect_alert_logs
-      required: true
+      required: false
       value:
         type: boolean
         example: false
         default: false
       description: |
         Change to true to collect alert logs from your Sophos instance's Alert API.
+    - name: collect_siem_alerts
+      required: false
+      value:
+        type: boolean
+        example: false
+        default: false
+      description: |
+        Change to true to collect SIEM alert logs from your Sophos instance's SIEM Alert API.
+    - name: collect_siem_events
+      required: false
+      value:
+        type: boolean
+        example: false
+        default: false
+      description: |
+        Change to true to collect SIEM event logs from your Sophos instance's SIEM Event API.
+    - name: endpoint_types_to_monitor
+      required: false
+      value:
+        type: array
+        example: [computer, server]
+        items:
+          type: string
+        default: []
+      description: |
+        List of endpoint types to monitor. Valid values: computer, server, or securityVm. Defaults to all.
+    - name: endpoint_types_to_log
+      required: false
+      value:
+        type: array
+        example: [mobile, computer, server, securityVm, utm, accessPoint, wirelessNetwork, mailbox, slec, xgFirewall]
+        items:
+          type: string
+        default: []
+      description: |
+        List of endpoint types to collect logs for. Leave blank for all.
     - name: log_url
       required: true
       value:

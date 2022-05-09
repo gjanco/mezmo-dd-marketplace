@@ -1,9 +1,6 @@
 from datetime import datetime, timezone, timedelta
 import time
-import os
-import yaml
 import socket
-import traceback
 
 
 def get_next_page_token(value):
@@ -12,9 +9,18 @@ def get_next_page_token(value):
     except (KeyError, IndexError, TypeError):
         return ""
 
+def get_next_page_token_siem(value):
+    try:
+        return value["next_cursor"]
+    except (KeyError, IndexError, TypeError):
+        return ""
+
 
 def get_query_time(interval):
     return (datetime.now(timezone.utc) - timedelta(seconds=interval)).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]+"Z"
+
+def get_query_time_siem(interval):
+    return int(time.time()) - interval
 
 
 def calculate_last_seen(last_seen):

@@ -38,6 +38,18 @@ def instance_aws_service(field, value):
     return get_default_field_value(field, value)
 
 
+def instance_collect_alert_logs(field, value):
+    return False
+
+
+def instance_collect_siem_alerts(field, value):
+    return False
+
+
+def instance_collect_siem_events(field, value):
+    return False
+
+
 def instance_connect_timeout(field, value):
     return get_default_field_value(field, value)
 
@@ -48,6 +60,14 @@ def instance_disable_generic_tags(field, value):
 
 def instance_empty_default_hostname(field, value):
     return False
+
+
+def instance_endpoint_types_to_log(field, value):
+    return []
+
+
+def instance_endpoint_types_to_monitor(field, value):
+    return []
 
 
 def instance_extra_headers(field, value):

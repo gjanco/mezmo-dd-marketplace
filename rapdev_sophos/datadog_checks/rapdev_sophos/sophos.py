@@ -2,6 +2,7 @@ try:
     from datadog_checks.base import AgentCheck, ConfigurationError, is_affirmative
 except ImportError:
     from checks import AgentCheck
+import re
 import requests
 from .helpers import *
 from requests.auth import HTTPBasicAuth
@@ -19,12 +20,12 @@ REQUIRED_TAGS = [
 
 ENDPOINTS = [
     "/common/v1/alerts",
-    "/endpoint/v1/endpoints"
+    "/endpoint/v1/endpoints",
+    "/siem/v1/alerts",
+    "/siem/v1/events"
 ]
 
 DD_SOURCE = "?ddsource=sophos"
-DD_SERVICE = "&service=sophos"
-
 
 class BearerAuth(requests.auth.AuthBase):
     def __init__(self, token):
@@ -45,12 +46,15 @@ class SophosCheck(AgentCheck):
         self.client_id = self.instance.get("client_id")
         self.client_secret = self.instance.get("client_secret")
         self.log_url = self.instance.get("log_url")
+        self.endpoint_types_monitored = self.instance.get("endpoint_types_to_monitor", [])
+        self.endpoint_types_to_log = self.instance.get("endpoint_types_to_log", [])
         self.alert_logs_enabled = is_affirmative(self.instance.get("collect_alert_logs", False))
+        self.siem_alerts_enabled = is_affirmative(self.instance.get("collect_siem_alerts", False))
+        self.siem_events_enabled = is_affirmative(self.instance.get("collect_siem_events", False))
         self.interval = self.instance.get("min_collection_interval", 15)
         self.oauth_token_data = "grant_type=client_credentials&client_id={}&client_secret={}&scope=token".format(self.client_id, self.client_secret)
         self.billing_metric = "{}.{}".format("datadog.marketplace", self.__NAMESPACE__)
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
-
         self.api_key = self.get_config("api_key")
 
         dd_host = get_host_name()
@@ -139,6 +143,10 @@ class SophosCheck(AgentCheck):
         self.test_api_connection()
         if self.alert_logs_enabled:
             self.get_alerts()
+        if self.siem_alerts_enabled:
+            self.get_siem_alerts()
+        if self.siem_events_enabled:
+            self.get_siem_events()
         self.get_endpoints()
         
     def validate_config(self):
@@ -185,15 +193,29 @@ class SophosCheck(AgentCheck):
                 self.log.debug("Connection to Sophos API Successful")
                 self.service_check("can_connect", AgentCheck.OK, tags = api_tags)
 
-    def call_api(self, request_path, next_page_token="", from_date="", page_size=500):
-        if page_size:
-            request_path = request_path + "?pageSize={}".format(page_size)
+    def call_api(self, request_path, endpoint_type, next_page_token="", from_date="", page_size=500):
+        if endpoint_type == "common":
+            if page_size:
+                request_path = request_path + "?pageSize={}".format(page_size)
 
-        if next_page_token:
-            request_path = request_path + "&pageFromKey={}".format(next_page_token)
+            if next_page_token:
+                request_path = request_path + "&pageFromKey={}".format(next_page_token)
 
-        if from_date and page_size:
-            request_path = request_path + "&from={}".format(from_date)
+            if from_date and page_size:
+                request_path = request_path + "&from={}".format(from_date)
+
+            if "endpoint" in request_path and self.endpoint_types_monitored:
+                request_path = request_path + "&type={}".format(",".join(self.endpoint_types_monitored))
+        
+        if endpoint_type == "siem":
+            if page_size:
+                request_path = request_path + "?limit={}".format(page_size)
+
+            if next_page_token:
+                request_path = request_path + "&cursor={}".format(next_page_token)
+
+            if from_date and page_size:
+                request_path = request_path + "&from_date={}".format(from_date)
 
         while True:
             results = self.http.get("{}{}".format(self.org_api_url, request_path), auth=BearerAuth(self.oauth_token), headers=self.api_header)
@@ -208,25 +230,79 @@ class SophosCheck(AgentCheck):
     
     def get_alerts(self):
         query_time = get_query_time(self.interval)
+        dd_service = "&service=common_alert"
         log_headers = {
             "Content-Type": "application/json",
             "DD-API-KEY": self.api_key
         }
         request_path = "/common/v1/alerts"
-        response = self.call_api(request_path, "", query_time)
+        response = self.call_api(request_path, "common", "", query_time)
         while True:
             logs = response["items"]
             for log in logs:
-                self.http.post("{}{}{}{}".format(self.log_url, DD_SOURCE, DD_SERVICE, self.DD_HOST), headers=log_headers, json=log)
+                if self.endpoint_types_to_log:
+                    if log.get("managedAgent", {}).get("type") in self.endpoint_types_to_log:
+                        self.http.post("{}{}{}{}".format(self.log_url, DD_SOURCE, dd_service, self.DD_HOST), headers=log_headers, json=log)
+                else:
+                    self.http.post("{}{}{}{}".format(self.log_url, DD_SOURCE, dd_service, self.DD_HOST), headers=log_headers, json=log)
+
             page_token = get_next_page_token(response)
             if page_token == "":
                 break
             else:
-                response = self.call_api(request_path, page_token, query_time)
+                response = self.call_api(request_path, "common", page_token, query_time)
+
+    def get_siem_alerts(self):
+        query_time = get_query_time_siem(self.interval)
+        dd_service = "&service=siem_alert"
+        log_headers = {
+            "Content-Type": "application/json",
+            "DD-API-KEY": self.api_key
+        }
+        request_path = "/siem/v1/alerts"
+        response = self.call_api(request_path, "siem", "", query_time)
+        while True:
+            logs = response["items"]
+            for log in logs:
+                if self.endpoint_types_to_log:
+                    if log.get("endpoint_type", "") in self.endpoint_types_to_log: 
+                        self.http.post("{}{}{}{}".format(self.log_url, DD_SOURCE, dd_service, self.DD_HOST), headers=log_headers, json=log)
+                else:
+                    self.http.post("{}{}{}{}".format(self.log_url, DD_SOURCE, dd_service, self.DD_HOST), headers=log_headers, json=log)
+            
+            if response.get("has_more") == True:
+                page_token = get_next_page_token_siem(response)
+                response = self.call_api(request_path, "siem", page_token, query_time)
+            else:
+                break
+
+    def get_siem_events(self):
+        query_time = get_query_time_siem(self.interval)
+        dd_service = "&service=siem_event"
+        log_headers = {
+            "Content-Type": "application/json",
+            "DD-API-KEY": self.api_key
+        }
+        request_path = "/siem/v1/events"
+        response = self.call_api(request_path, "siem", "", query_time)
+        while True:
+            logs = response["items"]
+            for log in logs:
+                if self.endpoint_types_to_log:
+                    if log.get("endpoint_type", "") in self.endpoint_types_to_log: 
+                        self.http.post("{}{}{}{}".format(self.log_url, DD_SOURCE, dd_service, self.DD_HOST), headers=log_headers, json=log)
+                else:
+                    self.http.post("{}{}{}{}".format(self.log_url, DD_SOURCE, dd_service, self.DD_HOST), headers=log_headers, json=log)
+            
+            if response.get("has_more") == True:
+                page_token = get_next_page_token_siem(response)
+                response = self.call_api(request_path, "siem", page_token, query_time)
+            else:
+                break
         
     def get_endpoints(self):
         request_path = "/endpoint/v1/endpoints"
-        response = self.call_api(request_path)
+        response = self.call_api(request_path, "common")
         while True:
             endpoints = response["items"]
             for endpoint in endpoints:
@@ -299,6 +375,6 @@ class SophosCheck(AgentCheck):
             if page_token == "":
                 break
             else:
-                response = self.call_api(request_path, page_token)
+                response = self.call_api(request_path, "common", page_token)
 
 

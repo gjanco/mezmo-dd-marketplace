@@ -57,10 +57,14 @@ class InstanceConfig(BaseModel):
     base_api_url: str
     client_id: str
     client_secret: str
-    collect_alert_logs: bool
+    collect_alert_logs: Optional[bool]
+    collect_siem_alerts: Optional[bool]
+    collect_siem_events: Optional[bool]
     connect_timeout: Optional[float]
     disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]
+    endpoint_types_to_log: Optional[Sequence[str]]
+    endpoint_types_to_monitor: Optional[Sequence[str]]
     extra_headers: Optional[Mapping[str, Any]]
     headers: Optional[Mapping[str, Any]]
     kerberos_auth: Optional[str]
