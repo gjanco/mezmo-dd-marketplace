@@ -7,6 +7,9 @@ import requests
 from .helpers import *
 from requests.auth import HTTPBasicAuth
 from sys import platform
+import os
+import yaml
+import traceback
 
 REQUIRED_SETTINGS = [
     "base_api_url",
