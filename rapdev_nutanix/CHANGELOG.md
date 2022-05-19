@@ -1,5 +1,9 @@
 # CHANGELOG - Nutanix
 
+## 1.3.4 / 2022-05-13
+* [BugFix] Fix bug in reporting days left in node licenses
+* [BugFix] Fix titles and widget names in dashboards due to inconsistency and wrong metric names
+
 ## 1.3.3 / 2022-04-27
 * [BugFix] Better error handling for calling the Nutanix API
 * [BugFix] Added metric units and descriptions to metric metadata

@@ -283,7 +283,6 @@
                         "response_format": "scalar"
                     }
                 ],
-                "time": {},
                 "title": "Hosts",
                 "title_align": "left",
                 "title_size": "16",
@@ -316,12 +315,17 @@
                                 "value": 60
                             }
                         ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
                         "queries": [
                             {
                                 "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query1",
-                                "query": "avg:rapdev.nutanix.license.days_left{$nutanix_cvm,$nutanix_cluster}"
+                                "query": "min:rapdev.nutanix.license.days_left{$nutanix_cvm,$nutanix_cluster}"
                             }
                         ],
                         "response_format": "scalar"
@@ -375,10 +379,23 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:rapdev.nutanix.containers.count{$nutanix_cvm,$nutanix_cluster}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.containers.count{$nutanix_cvm,$nutanix_cluster}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "Storage Container Count",
                 "title_align": "left",
                 "title_size": "16",
@@ -467,7 +484,9 @@
             "definition": {
                 "check": "rapdev.nutanix.disks.disk_status",
                 "group_by": [
-                    "$nutanix_host"
+                    "$nutanix_host",
+                    "$nutanix_cluster",
+                    "$nutanix_cvm"
                 ],
                 "grouping": "cluster",
                 "tags": [
@@ -492,8 +511,20 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:rapdev.nutanix.hosts.num_cores{$nutanix_host,$nutanix_cluster,$nutanix_cvm}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.hosts.num_cores{$nutanix_host,$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Number of CPU Cores",
@@ -539,10 +570,23 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:rapdev.nutanix.hosts.count{$nutanix_cluster}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.hosts.count{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "Host Count",
                 "title_align": "left",
                 "title_size": "16",
@@ -562,10 +606,23 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "q": "avg:rapdev.nutanix.clusters.nodeCount{$nutanix_cluster}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.clusters.blockCount{$nutanix_cluster}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "Block Count",
                 "title_align": "left",
                 "title_size": "16",
@@ -665,8 +722,20 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:rapdev.nutanix.clusters.hypervisor_cpu_usage{$nutanix_cluster}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.nutanix.clusters.hypervisor_cpu_usage{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Cluster CPU Utilization",
@@ -712,10 +781,23 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:rapdev.nutanix.disks.count{*}"
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.nutanix.disks.count{$nutanix_cluster,$nutanix_cvm}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "Disk Count",
                 "title_align": "left",
                 "title_size": "16",

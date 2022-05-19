@@ -340,14 +340,17 @@ class NutanixCheck(AgentCheck):
         self.gauge("{}.{}.clusterExpiryUsecs".format(self.metric_prefix, entity), cluster_license, tags=metric_tags)
         if nodes is not None:
             for node in nodes:
-                num_days_remaining = node["numDaysRemaining"]
-                current = datetime.datetime.now().timestamp()
-                diff = num_days_remaining - current
-                days_left = diff // 86400
+                node_tags = metric_tags.copy()
+                num_days_remaining = node.get("numDaysRemaining", 0)
+                license_id = node.get("licenseId", "")
+                model = node.get("model", "")
 
-                metric_tags.append("license_id:{}".format(node["licenseId"]))
-                metric_tags.append("license_model:{}".format(node["model"]))
-                self.gauge("{}.{}.days_left".format(self.metric_prefix, entity), days_left, tags=metric_tags)
+                if license_id:
+                    metric_tags.append("license_id:{}".format(license_id))
+                if model:
+                    metric_tags.append("license_model:{}".format(model))
+
+                self.gauge("{}.{}.days_left".format(self.metric_prefix, entity), num_days_remaining, tags=node_tags)
 
     def get_events(self):
         entity = "events"
