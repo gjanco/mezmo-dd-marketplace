@@ -42,7 +42,9 @@ Datadog reviewers will add the priority of their comments and whether or not the
 The [Marketplace](https://app.datadoghq.com/marketplace) can be accessed from the Integrations tab in the Datadog app.
 
 **How does pricing work?**\
-Datadog Partners can list their integration in the Marketplace using one of the following pricing options. **Note**: All integration purchases begin with a 14-day free trial. 
+Datadog Partners can list their integration in the Marketplace using one of the following pricing options. **Note**: Only Pro, Enterprise, and Developer Sandbox Datadog accounts can purchase Marketplace listings. If you have a potential customer interested in your offering that's currently in a Datadog trial or free account, please contact marketplace@datadog.com.
+
+All Marketplace purchases begin with a 14-day free trial.
 
 - **one_time:** Charges a single fee at the time of purchase, and no additional charges in the future. No metering/usage metric is required.
 
