@@ -275,7 +275,23 @@ class ZoomCheck(AgentCheck):
         else:
             request_path = "metrics/zoomrooms"
 
+        #call to get location hierarchy
+        if account_id:
+            locations_request_path = "accounts/{}/rooms/locations/".format(account_id)
+        else:
+            locations_request_path = "rooms/locations/"
+
         response = self.call_api(request_path)
+        location_response = self.call_api(locations_request_path)
+        locations = []
+        while True:
+            locations += location_response.get("locations", [])
+            page_token = response.get("next_page_token", "")
+
+            if page_token == "":
+                break
+            else:
+                location_response = self.call_api(locations_request_path, next_page_token=page_token)
 
         # Rooms Health counts
         critical_rooms = 0
@@ -300,9 +316,15 @@ class ZoomCheck(AgentCheck):
                 camera = room.get("camera", "")
                 microphone = room.get("microphone", "")
                 speaker = room.get("speaker", "")
+                location_id = room.get("location_id", "")
 
                 # If tags provided (running in sub account mode), copy those instead
                 metric_tags = base_tags.copy()
+
+                if location_id:
+                    location_tags = get_room_location_tags(location_id, locations)
+                    for tag in location_tags:
+                        metric_tags.append(tag)
                 
                 if room_name:
                     metric_tags.append("zoom_room_name:{}".format(room_name))
@@ -352,8 +374,8 @@ class ZoomCheck(AgentCheck):
                     self.gauge("room.status", status, tags=metric_tags)
 
                 room_issues = room.get("issues", [])
-
-                self.parse_and_send_issues(room_issues, room_name, room_id, base_tags)
+                component_tags = base_tags.copy() + location_tags
+                self.parse_and_send_issues(room_issues, room_name, room_id, component_tags)
 
             page_token = response.get("next_page_token", "")
 
@@ -805,3 +827,4 @@ class ZoomCheck(AgentCheck):
         self.successful_api_calls = 0
         self.failed_api_calls = 0
         self.api_rate_limits_hit = 0
+

@@ -69,3 +69,18 @@ def parse_kbps(value):
         return int(value.split(" kbps")[0])
     else:
         return int()
+
+def get_room_location_tags(location_id, locations):
+    tags = []
+    locationtype = ""
+    while locationtype != "country":
+        for i in locations:
+            if location_id == i.get("id"):
+                tags.append("zoom_room_{}:{}".format(i.get("type", ""), i.get("name", "")))
+
+                if i.get("type") != "country":
+                    location_id = i.get("parent_location_id", "")
+                else:
+                    locationtype = "country"
+                    break
+    return tags

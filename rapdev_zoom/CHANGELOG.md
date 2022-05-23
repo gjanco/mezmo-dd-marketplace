@@ -1,4 +1,8 @@
 # CHANGELOG - rapdev_zoom
+## 5.2.1 / 2022-03-21
+* [Added] Room and room component location hierarchy metric tags
+
+
 ## 5.2.0 / 2022-03-21
 * [Added] Better error handling
 * [Fixed] Incorrect widgets on 2 dashboards
