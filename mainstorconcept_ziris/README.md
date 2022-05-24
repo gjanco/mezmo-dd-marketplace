@@ -2,41 +2,57 @@
 
 ## Overview
 
-
 [z/IRIS](https://www.mainstorconcept.com/mainframe/z-iris-mainframe-observability/z-iris-datadog/?lang=en) is a plug-in software solution, built to provide mainframe-inclusive performance monitoring for the non-mainframe world. 
 
 DevOps teams want to understand how mainframe performs for their business applications and how peak performance can be maintained or achieved.
-With z/IRIS, mainframe observability for DevOps is a core concept. Teams can begin assessing the use of mainframe resources, continuously analyze performance, and compare metrics and data across applications using Datadog. 
+With z/IRIS, mainframe observability for DevOps is a core concept. Teams can assess the usage of mainframe resources, continuously analyze performance, and compare metrics and data across applications using Datadog.
 
-### Distributed Db2 for z/OS
-* Tracing enables JDBC observability with Db2 for z/OS:
-	* Smart deadlock alerting and detection
-	* Performance monitoring
-	* JDBC performance analytics
+After activating z/IRIS, Datadog users can do the following:
+* Identify applications that depend on mainframe-hosted services and applications.
+* Monitor latencies in mainframe services down to a single request level.
+* Create monitors that react to anomalies and exceeded thresholds relevant to your organization’s SLIs.
+* Analyze mainframe application performance from end to end within the context of the business service.
 
-### z/OS Connect Observability
-* Trace REST API requests processed on mainframe:
-	* Identify latencies within mainframe systems
-	* Perform sophisticated application analysis enabled by metadata
-* Additional metrics streaming enables enriched user experience
+### Pricing
 
-### z/OS Work observability
-* Mainframe batch job observability
-* Address spaces and subsystem monitoring
-* TSO user activity tracing
+The minimum starting price (Tier Level 1) is covered by the amount stipulated in the pricing tab. Monthly price scales by the aggregated upper limit of licensed logical partition (LPAR) capacity, measured in Million Service Units (MSU).
 
-### Partners by region
+##### *Volume pricing as listed below is only available upon request through a private offer. Contact [mainstorconcept GmbH](mailto:sales@mainstorconcept.com) for more information.*
 
-North-American based organizations can contact our partner SEA:
-* E-mail: [SEA- Software Engineering of America](mailto:support@seasoft.com)
-* Phone: (800) 272-7322 (Voice toll-free)
-* Phone: 516-328-7000
+|Tier Level             |MSU Upper Limit        |Discount               |Cost/MSU/Month         |
+|-----------------------|-----------------------|-----------------------|-----------------------|
+|1               (up to)|50                     |0%                     |$96                    |
+|2               (up to)|100                    |50%                    |$48                    |
+|3               (up to)|250                    |75%                    |$24                    |
+|4               (up to)|500                    |84%                    |$15                    |
+|5               (up to)|1000                   |89%                    |$11                    |
+|6               (up to)|2500                   |93%                    |$7                     |
+|7               (up to)|5000                   |96%                    |$4                     |
+|8               (up to)|10000                  |97%                    |$3                     |
+|9                (from)|10000                  |98%                    |$2                     |
 
-EMEA and South American based organization can contact:
-* E-mail: [mainstorconcept GmbH](mailto:sales@mainstorconcept.com)
-* Phone: +49721790760
+
+### Integration Methods
+
+z/IRIS integrates with Datadog in two ways:
+
+* **OpenTelemetry (OTEL):** This observability framework standardizes APM integrations and is fully supported by Datadog. You can easily configure z/IRIS to stream traces and metrics to an OpenTelemetry Collector that is configured to export Traces and Metrics to your Datadog environment.
+* **Datadog APIs (BETA):** Users can also elect to stream Traces and Events via the Datadog Agent API and the HTTP REST API, respectively. This integration method can help accelerate proofs of concepts if OpenTelemetry is not yet available in your organization.
+
+More detailed information about the integration possibilities of z/IRIS can be found in our [documentation](https://public.mainstorconcept.com/home/Observability-with-Datadog.1383596033.html).
 
 ### Data Collected
+
+### Traces
+
+APM traces indicate when a request was received and processed by a service. They also enable the depiction of application relationships across services tiers and infrastructure. Traces created by z/IRIS provide these insights for mainframe-hosted applications. By integrating industry standards and using Datadog’s powerful correlation and unification capabilities, users get a consistent experience across all interfaces.
+
+The following mainframe systems are supported by z/IRIS tracing. Our linked documentation provides details on each tracing feature, including tags and trace structures:
+
+* [Distributed Db2 for z/OS](https://public.mainstorconcept.com/home/Distributed-Db2-for-z%2FOS-Observability.1121746973.html)
+* [z/OS Connect](https://public.mainstorconcept.com/home/z%2FOS-Connect-Observability.641040548.html)
+* [Batch Jobs and TSO User Session](https://public.mainstorconcept.com/home/z%2FOS-Work-observability.1148813324.html)
+
 
 ### Trace Tags
 
@@ -143,6 +159,16 @@ EMEA and South American based organization can contact:
 
 This isn't the metric you're looking for? Missing a critical feature for your organization? Send us a feature request to [info@mainstorconcept.com](mailto:info@mainstorconcept.com).
 
+### Partners by region
+
+North-American based organizations can contact our partner SEA:
+* E-mail: [SEA- Software Engineering of America](mailto:support@seasoft.com)
+* Phone: (800) 272-7322 (Voice toll-free)
+* Phone: 516-328-7000
+
+All other regions can contact:
+* E-mail: [mainstorconcept GmbH](mailto:sales@mainstorconcept.com)
+* Phone: +49 721 7907610
 
 ## Setup
 
