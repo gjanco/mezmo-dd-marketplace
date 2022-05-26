@@ -1,5 +1,8 @@
 # CHANGELOG - rapdev
 
+## 2.1.0 / 2022-05-17
+ * [Added] Increased flexibility for dependency installation
+
 ## 2.0.0 / 2022-01-25
  * [Added] Support for GitHub storing
  * [Added] Support for all Datadog domains (such as EU, gov, US3, and more)

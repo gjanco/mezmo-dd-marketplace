@@ -1,5 +1,13 @@
-import boto3
-from azure.storage.blob import BlobServiceClient
+try:
+    import boto3
+except ImportError:
+    pass
+
+try:
+    from azure.storage.blob import BlobServiceClient
+except ImportError:
+    pass
+
 import copy
 
 DASHBOARD_EXTRA_CONFIGS = [

@@ -17,7 +17,7 @@ This Agent check is only intended to run on Python3.X version on Agent v7.
 Functionality for Python2.X is not guaranteed. For running python3 on Agent v6, please refer to 
 [these docs][7].
 
-Install or upgrade all three libraries using the Agent's embedded python. These libraries are required for the check to run:
+Choose a library to install or upgrade through the Agent's embedded Python. In order for the check to run in non-`local` mode, at least one of the following libraries is required.
  
  - boto3 (aws)
 
@@ -54,13 +54,13 @@ Run the following command to enable the Backup Integration on your Datadog Agent
 
 ```
 *Linux*
-sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==2.0.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==2.1.0
 
 *Powershell*
-& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.0.0
+& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.1.0
 
 *Command Prompt*
-"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.0.0
+"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.1.0
 ```
 
 ### Datadog Configuration

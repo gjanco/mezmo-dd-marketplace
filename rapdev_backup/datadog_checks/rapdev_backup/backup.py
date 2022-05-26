@@ -7,10 +7,19 @@ import datetime
 from requests.exceptions import HTTPError
 from datetime import datetime
 import zipfile
+import sys
 from .helpers import *
-from azure.storage.blob import ContentSettings
-from github import Github
-from github import InputGitTreeElement
+try:
+    from azure.storage.blob import ContentSettings
+except ImportError:
+    pass
+
+try:
+    from github import Github
+    from github import InputGitTreeElement
+except ImportError:
+    pass
+
 import base64
 import os
 
@@ -210,6 +219,11 @@ class BackupCheck(AgentCheck):
                         "aws_access_key, aws_secret_key, and aws_s3_bucket_url are all required "
                         + "for storing backups in AWS."
                     )
+
+                # Validate that boto3 has been installed and imported
+                if not sys.modules.get('boto3'):
+                    raise ImportError("Please install/update the AWS Boto3 Python library.")
+
             elif self.backup_storage_platform == BACKUP_AZURE:
                 # If azure, validate we have required creds
                 if not self.azure_connection_string or not self.azure_container_name:
@@ -217,12 +231,21 @@ class BackupCheck(AgentCheck):
                         "azure_connection_string and azure_container_name are required "
                         + "for Azure authentication."
                     )
+
+                # Validate that azure library has been installed and imported
+                if not sys.modules.get('azure.storage.blob'):
+                    raise ImportError("Please install/update the Azure Blob Python library")
+
             elif self.backup_storage_platform == BACKUP_GITHUB:
                 # Make sure at least repo and access token is provided
                 if not self.github_repo or not self.github_access_token:
                     raise ConfigurationError(
                         "github_repo and github_access_token are required to run in github mode."
                     )
+
+                # Validate that github library have been installed and imported
+                if not sys.modules.get('github'):
+                    raise ImportError("Please install/update the Github Python library.")
 
     def get_key(self, key):
         # Try to grab key from instances (1st choice)
