@@ -1,0 +1,2933 @@
+{
+    "author_name": "RapDev",
+    "description": "",
+    "layout_type": "ordered",
+    "template_variables": [
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "interface_alias",
+            "prefix": "interface_alias"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "interface",
+            "prefix": "interface"
+        },
+        {
+            "available_values": [],
+            "default": "rd-sophos-xg-firewall",
+            "name": "snmp_profile",
+            "prefix": "snmp_profile"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "IP",
+            "prefix": "snmp_device"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "Sysname",
+            "prefix": "snmp_host"
+        }
+    ],
+    "title": "RapDev Sophos XG Firewall Dashboard",
+    "widgets": [
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.CPU.Utilization{$snmp_profile,$IP,$Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "timeseries_background": {
+                    "type": "area"
+                },
+                "title": "CPU Utilization",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6462616146771210,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Memory.Utilization{$snmp_profile,$IP,$Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "timeseries_background": {
+                    "type": "area"
+                },
+                "title": "Memory Utilization",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 452925943475484,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 3,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "%",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Disk.Utilization{$snmp_profile,$IP,$Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "timeseries_background": {
+                    "type": "area"
+                },
+                "title": "Disk Utilization",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5410938704419804,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 6,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "Days",
+                "precision": 2,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1 / 8640000"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.sysUpTimeInstance{$snmp_profile,$IP,$Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "timeseries_background": {
+                    "type": "area"
+                },
+                "title": "System Uptime",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4964238589762224,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 9,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Service Statuses and HA",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "background_color": "white",
+                            "content": "Service Status Mapping:\n\n- 0: Untouched\n- 1: Stopped\n- 2:  Initializing\n- 3:  Running\n- 4:  Exiting\n- 5:  Dead\n- 6:  Frozen\n- 7:  Unregistered",
+                            "font_size": "16",
+                            "has_padding": true,
+                            "show_tick": false,
+                            "text_align": "left",
+                            "tick_edge": "left",
+                            "tick_pos": "50%",
+                            "type": "note",
+                            "vertical_align": "top"
+                        },
+                        "id": 4197355180814624,
+                        "layout": {
+                            "height": 4,
+                            "width": 2,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "has_search_bar": "auto",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "POP3",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query1",
+                                            "limit": {
+                                                "count": 500,
+                                                "order": "desc"
+                                            }
+                                        },
+                                        {
+                                            "alias": "Imap4",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query2"
+                                        },
+                                        {
+                                            "alias": "SMTP",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query3"
+                                        },
+                                        {
+                                            "alias": "FTP",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query4"
+                                        },
+                                        {
+                                            "alias": "HTTP",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query5"
+                                        },
+                                        {
+                                            "alias": "AV",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query6"
+                                        },
+                                        {
+                                            "alias": "AS",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query7"
+                                        },
+                                        {
+                                            "alias": "DNS",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query8"
+                                        },
+                                        {
+                                            "alias": "HA",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query9"
+                                        },
+                                        {
+                                            "alias": "IPS",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query10"
+                                        },
+                                        {
+                                            "alias": "Apache",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query11"
+                                        },
+                                        {
+                                            "alias": "NTP",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query12"
+                                        },
+                                        {
+                                            "alias": "Tomcat",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query13"
+                                        },
+                                        {
+                                            "alias": "SSLVPN",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query14"
+                                        },
+                                        {
+                                            "alias": "IPSecVPN",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query15"
+                                        },
+                                        {
+                                            "alias": "Database",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query16"
+                                        },
+                                        {
+                                            "alias": "Network",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query17"
+                                        },
+                                        {
+                                            "alias": "Garner",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query18"
+                                        },
+                                        {
+                                            "alias": "DRouting",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query19"
+                                        },
+                                        {
+                                            "alias": "SSHd",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query20"
+                                        },
+                                        {
+                                            "alias": "DGd",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [
+                                                {
+                                                    "comparator": "<=",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 1
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_yellow",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_green",
+                                                    "value": 3
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 4
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 5
+                                                },
+                                                {
+                                                    "comparator": "<=",
+                                                    "palette": "white_on_red",
+                                                    "value": 6
+                                                },
+                                                {
+                                                    "comparator": ">",
+                                                    "custom_bg_color": "#595959",
+                                                    "palette": "custom_bg",
+                                                    "value": 6
+                                                }
+                                            ],
+                                            "formula": "query21"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.POP3.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:snmp.Imap4.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:snmp.SMTP.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "avg:snmp.FTP.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "avg:snmp.HTTP.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query6",
+                                            "query": "avg:snmp.AntiVirus.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query7",
+                                            "query": "avg:snmp.AS.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query8",
+                                            "query": "avg:snmp.DNS.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query9",
+                                            "query": "avg:snmp.HA.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query10",
+                                            "query": "avg:snmp.IPS.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query11",
+                                            "query": "avg:snmp.Apache.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query12",
+                                            "query": "avg:snmp.NTP.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query13",
+                                            "query": "avg:snmp.Tomcat.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query14",
+                                            "query": "avg:snmp.SSLVPN.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query15",
+                                            "query": "avg:snmp.IPSecVPN.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query16",
+                                            "query": "avg:snmp.Database.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query17",
+                                            "query": "avg:snmp.Network.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query18",
+                                            "query": "avg:snmp.Garner.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query19",
+                                            "query": "avg:snmp.DRouting.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query20",
+                                            "query": "avg:snmp.SSHd.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query21",
+                                            "query": "avg:snmp.DGd.ServiceStatus{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Service Statuses",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_table"
+                        },
+                        "id": 2160725190678246,
+                        "layout": {
+                            "height": 4,
+                            "width": 10,
+                            "x": 2,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "background_color": "white",
+                            "content": "HA State Mapping:\n- 0: Not Applicable\n- 1: Axiliary\n- 2: StandAlone\n- 3: Primary\n- 4: Faulty\n- 5: Ready",
+                            "font_size": "14",
+                            "has_padding": true,
+                            "show_tick": false,
+                            "text_align": "left",
+                            "tick_edge": "left",
+                            "tick_pos": "50%",
+                            "type": "note",
+                            "vertical_align": "top"
+                        },
+                        "id": 4173221643003424,
+                        "layout": {
+                            "height": 3,
+                            "width": 2,
+                            "x": 0,
+                            "y": 4
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": "<=",
+                                            "custom_bg_color": "#595959",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "white_on_green",
+                                            "value": 1
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "white_on_green",
+                                            "value": 2
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "white_on_green",
+                                            "value": 3
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "white_on_red",
+                                            "value": 4
+                                        },
+                                        {
+                                            "comparator": ">",
+                                            "palette": "white_on_green",
+                                            "value": 4
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.HA.State{$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area"
+                            },
+                            "title": "HA State",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 8289051866422632,
+                        "layout": {
+                            "height": 3,
+                            "width": 2,
+                            "x": 2,
+                            "y": 4
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": "<=",
+                                            "custom_bg_color": "#595959",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "white_on_green",
+                                            "value": 1
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "white_on_green",
+                                            "value": 2
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "white_on_green",
+                                            "value": 3
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "white_on_red",
+                                            "value": 4
+                                        },
+                                        {
+                                            "comparator": ">",
+                                            "palette": "white_on_green",
+                                            "value": 4
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.HA.PeerState{$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "HA Peer State",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 3420411599661610,
+                        "layout": {
+                            "height": 3,
+                            "width": 2,
+                            "x": 4,
+                            "y": 4
+                        }
+                    },
+                    {
+                        "definition": {
+                            "background_color": "white",
+                            "content": "HA Status Mapping:\n- 0: Disabled\n- 1: Enabled",
+                            "font_size": "14",
+                            "has_padding": true,
+                            "show_tick": false,
+                            "text_align": "left",
+                            "tick_edge": "left",
+                            "tick_pos": "50%",
+                            "type": "note",
+                            "vertical_align": "top"
+                        },
+                        "id": 148405171055344,
+                        "layout": {
+                            "height": 3,
+                            "width": 2,
+                            "x": 6,
+                            "y": 4
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.HA.Status{$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area"
+                            },
+                            "title": "HA Status",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 592522939083366,
+                        "layout": {
+                            "height": 3,
+                            "width": 2,
+                            "x": 8,
+                            "y": 4
+                        }
+                    }
+                ]
+            },
+            "id": 205733494015898,
+            "layout": {
+                "height": 1,
+                "width": 12,
+                "x": 0,
+                "y": 2
+            }
+        },
+        {
+            "definition": {
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Activity",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.LiveUserCount{$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "Live User Count Logins",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 2976871846378724,
+                        "layout": {
+                            "height": 2,
+                            "width": 6,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "bars",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "formula": "query2"
+                                        },
+                                        {
+                                            "formula": "query3"
+                                        },
+                                        {
+                                            "formula": "query4"
+                                        },
+                                        {
+                                            "formula": "query5"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.HTTP.Hits{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:snmp.FTP.Hits{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:snmp.POP3.Hits{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "avg:snmp.Imap.Hits{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "avg:snmp.SMTP.Hits{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "cool"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "Service Hits",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 361165706903558,
+                        "layout": {
+                            "height": 2,
+                            "width": 6,
+                            "x": 6,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "Hits",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.HTTP.Hits{$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area",
+                                "yaxis": {}
+                            },
+                            "title": "HTTP Hits",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 1662726092809502,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 0,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "Hits",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.FTP.Hits{$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area",
+                                "yaxis": {}
+                            },
+                            "title": "FTP Hits",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 4067838027843932,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 2,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "Hits",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.POP3.Hits{$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area",
+                                "yaxis": {}
+                            },
+                            "title": "POP3 Hits",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 413311707815286,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 4,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "Hits",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.Imap.Hits{$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area",
+                                "yaxis": {}
+                            },
+                            "title": "Imap Hits",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 3872059651866030,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 6,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "Hits",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.SMTP.Hits{$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area",
+                                "yaxis": {}
+                            },
+                            "title": "SMTP Hits",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 8134037116207684,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 8,
+                            "y": 2
+                        }
+                    }
+                ]
+            },
+            "id": 8306962775351786,
+            "layout": {
+                "height": 5,
+                "width": 12,
+                "x": 0,
+                "y": 3
+            }
+        },
+        {
+            "definition": {
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "IPSec",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.IPSec.Connection.ActiveTunnels{$snmp_profile,$IP,$Sysname} by {snmp_device,snmp_host,ipsec_connection_name,ipsec_connection_mode}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Active IPSec Tunnels",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 3854712508170060,
+                        "layout": {
+                            "height": 4,
+                            "width": 4,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "background_color": "white",
+                            "content": "IPSec Connection Type Mapping:\n- 0: N/A\n- 1: Host-to-Host\n- 2: Site-to-Site",
+                            "font_size": "14",
+                            "has_padding": true,
+                            "show_tick": false,
+                            "text_align": "left",
+                            "tick_edge": "left",
+                            "tick_pos": "50%",
+                            "type": "note",
+                            "vertical_align": "top"
+                        },
+                        "id": 2468292772523668,
+                        "layout": {
+                            "height": 4,
+                            "width": 2,
+                            "x": 4,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "has_search_bar": "auto",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Connection Type",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [],
+                                            "formula": "query1",
+                                            "limit": {
+                                                "count": 500,
+                                                "order": "desc"
+                                            }
+                                        },
+                                        {
+                                            "alias": "ActiveTunnels",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [],
+                                            "formula": "query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.IPSec.Connection.Type{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,ipsec_connection_name,ipsec_connection_mode}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:snmp.IPSec.Connection.ActiveTunnels{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,ipsec_connection_name,ipsec_connection_mode}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "IPSec Connections",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_table"
+                        },
+                        "id": 5723453694074720,
+                        "layout": {
+                            "height": 4,
+                            "width": 6,
+                            "x": 6,
+                            "y": 0
+                        }
+                    }
+                ]
+            },
+            "id": 178529839061500,
+            "layout": {
+                "height": 1,
+                "width": 12,
+                "x": 0,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Interfaces",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "precision": 0,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">=",
+                                            "palette": "white_on_red",
+                                            "value": 2
+                                        },
+                                        {
+                                            "comparator": ">=",
+                                            "palette": "white_on_green",
+                                            "value": 1
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "max:snmp.ifAdminStatus{$interface_alias,$interface,$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Admin Status",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 4564510067433878,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "precision": 0,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">=",
+                                            "palette": "white_on_red",
+                                            "value": 2
+                                        },
+                                        {
+                                            "comparator": ">=",
+                                            "palette": "white_on_green",
+                                            "value": 1
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "max:snmp.ifOperStatus{$interface_alias,$interface,$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Operation Status",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 1163234213373696,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 2,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "b/s",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "max:snmp.ifHighSpeed{$interface_alias,$interface,$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Interface Speed",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 2056943324539440,
+                        "layout": {
+                            "height": 2,
+                            "width": 1,
+                            "x": 4,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.ifHCInOctets.rate{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                },
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.ifHCOutOctets.rate{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "Bytes In & Out Rates",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries",
+                            "yaxis": {
+                                "include_zero": true,
+                                "label": "",
+                                "max": "auto",
+                                "min": "auto",
+                                "scale": "linear"
+                            }
+                        },
+                        "id": 2707601418288060,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 5,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "bars",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "formula": "query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.ifHCInBroadcastPkts{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:snmp.ifHCOutBroadcastPkts{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}.as_count()"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "In & Out Broadcasts",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 4967258510123290,
+                        "layout": {
+                            "height": 2,
+                            "width": 3,
+                            "x": 9,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.ifBandwidthInUsage.rate{$interface_alias,$interface,$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area"
+                            },
+                            "title": "% Utilization In",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 232895405308990,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 0,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.ifBandwidthOutUsage.rate{$interface_alias,$interface,$snmp_profile,$IP,$Sysname}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area"
+                            },
+                            "title": "% Utilization Out",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 3212832148387018,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 2,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.ifHCInMulticastPkts{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                },
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.ifHCOutMulticastPkts{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "In & Out MultiCastPkts",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries",
+                            "yaxis": {
+                                "include_zero": true,
+                                "label": "",
+                                "max": "auto",
+                                "min": "auto",
+                                "scale": "linear"
+                            }
+                        },
+                        "id": 7952185034284976,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 4,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "bars",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "formula": "query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:snmp.ifInErrors{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:snmp.ifOutErrors{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}.as_count()"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "red"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "In & Out Errors",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 7614836330602256,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 8,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "formula": "query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.ifBandwidthInUsage.rate{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:snmp.ifBandwidthOutUsage.rate{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "Interface Utilization (%)",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 2786581923066412,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 0,
+                            "y": 4
+                        }
+                    },
+                    {
+                        "definition": {
+                            "has_search_bar": "auto",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Admin Status",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [],
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "Oper Status",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [],
+                                            "formula": "query2"
+                                        },
+                                        {
+                                            "alias": "Speed",
+                                            "cell_display_mode": "number",
+                                            "conditional_formats": [],
+                                            "formula": "query3",
+                                            "limit": {
+                                                "count": 500,
+                                                "order": "desc"
+                                            }
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.ifAdminStatus{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface,interface_alias}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:snmp.ifOperStatus{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface,interface_alias}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:snmp.ifHighSpeed{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface,interface_alias}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Local Interfaces",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_table"
+                        },
+                        "id": 6061267135076250,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 4,
+                            "y": 4
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "bars",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "formula": "query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:snmp.ifHCInUcastPkts{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:snmp.ifHCOutUcastPkts{$interface_alias,$interface,$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device,interface}.as_count()"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "In & Out Unicast Packets",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 4538636836870082,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 8,
+                            "y": 4
+                        }
+                    }
+                ]
+            },
+            "id": 6221725336162338,
+            "layout": {
+                "height": 7,
+                "is_column_break": true,
+                "width": 12,
+                "x": 0,
+                "y": 9
+            }
+        },
+        {
+            "definition": {
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "System Resources",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.CPU.Utilization{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "CPU Utilization (%)",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 547070950447564,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.Memory.Utilization{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "Memory Utilization (%)",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 8886894761535272,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 4,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "legend_layout": "auto",
+                            "requests": [
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:snmp.Swap.Utilization{$snmp_profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": true,
+                            "title": "Swap Utilization (%)",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries"
+                        },
+                        "id": 3814858464797318,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 8,
+                            "y": 0
+                        }
+                    }
+                ]
+            },
+            "id": 2272219405899708,
+            "layout": {
+                "height": 3,
+                "width": 12,
+                "x": 0,
+                "y": 16
+            }
+        }
+    ]
+}

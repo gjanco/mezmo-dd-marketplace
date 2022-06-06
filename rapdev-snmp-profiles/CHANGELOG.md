@@ -1,5 +1,8 @@
 # CHANGELOG - rapdev-snmp-profiles
 
+# 1.0.5 / 2022-05-24
+* [Added] Sophos XG Firewall Dashboard
+
 # 1.0.4 / 2022-04-25
 * [Added] Netapp NAS Dashboard
 * [Changed] Added/Updated logos on most dashboards
