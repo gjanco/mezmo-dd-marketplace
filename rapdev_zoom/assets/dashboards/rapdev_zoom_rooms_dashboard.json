@@ -14,6 +14,24 @@
             "default": "*",
             "name": "zoom_account_name",
             "prefix": "zoom_account_name"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "zoom_room_country",
+            "prefix": "zoom_room_country"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "zoom_room_building",
+            "prefix": "zoom_room_building"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "zoom_room_floor",
+            "prefix": "zoom_room_floor"
         }
     ],
     "title": "RapDev Zoom Rooms Dashboard",
@@ -101,7 +119,6 @@
                         "response_format": "scalar"
                     }
                 ],
-                "time": {},
                 "title": "Rooms Under Construction (Status)",
                 "title_align": "left",
                 "title_size": "16",
@@ -149,7 +166,6 @@
                         "response_format": "scalar"
                     }
                 ],
-                "time": {},
                 "title": "Rooms Offline (Status)",
                 "title_align": "left",
                 "title_size": "16",
@@ -479,49 +495,49 @@
                                 "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query1",
-                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:microphone,$room_name,$zoom_account_name} by {zoom_room_name}"
+                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:microphone,$room_name,$zoom_account_name,$zoom_room_country,$zoom_room_building,$zoom_room_floor} by {zoom_room_name,zoom_room_country}"
                             },
                             {
                                 "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query2",
-                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:speaker,$room_name,$zoom_account_name} by {zoom_room_name}"
+                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:speaker,$room_name,$zoom_account_name,$zoom_room_country,$zoom_room_building,$zoom_room_floor} by {zoom_room_name,zoom_room_country}"
                             },
                             {
                                 "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query3",
-                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:camera,$room_name,$zoom_account_name} by {zoom_room_name}"
+                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:camera,$room_name,$zoom_account_name,$zoom_room_country,$zoom_room_building,$zoom_room_floor} by {zoom_room_name,zoom_room_country}"
                             },
                             {
                                 "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query4",
-                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:controller,$room_name,$zoom_account_name} by {zoom_room_name}"
+                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:controller,$room_name,$zoom_account_name,$zoom_room_country,$zoom_room_building,$zoom_room_floor} by {zoom_room_name,zoom_room_country}"
                             },
                             {
                                 "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query5",
-                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:bandwidth,$room_name,$zoom_account_name} by {zoom_room_name}"
+                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:bandwidth,$room_name,$zoom_account_name,$zoom_room_country,$zoom_room_building,$zoom_room_floor} by {zoom_room_name,zoom_room_country}"
                             },
                             {
                                 "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query6",
-                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:cpu,$room_name,$zoom_account_name} by {zoom_room_name}"
+                                "query": "max:rapdev.zoom.room.component.status{zoom_room_component:cpu,$room_name,$zoom_account_name,$zoom_room_country,$zoom_room_building,$zoom_room_floor} by {zoom_room_name,zoom_room_country}"
                             },
                             {
                                 "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query7",
-                                "query": "max:rapdev.zoom.room.status{$room_name,$zoom_account_name} by {zoom_room_name}"
+                                "query": "max:rapdev.zoom.room.status{$room_name,$zoom_account_name,$zoom_room_country,$zoom_room_building,$zoom_room_floor} by {zoom_room_name,zoom_room_country}"
                             },
                             {
                                 "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query8",
-                                "query": "max:rapdev.zoom.room.health{$room_name,$zoom_account_name} by {zoom_room_name}"
+                                "query": "max:rapdev.zoom.room.health{$room_name,$zoom_account_name,$zoom_room_country,$zoom_room_building,$zoom_room_floor} by {zoom_room_name,zoom_room_country}"
                             }
                         ],
                         "response_format": "scalar"
@@ -611,9 +627,11 @@
                 "hide_zero_counts": true,
                 "query": "tag:(service:zoom) $zoom_account_name",
                 "show_last_triggered": true,
+                "show_priority": false,
                 "sort": "status,asc",
                 "start": 0,
                 "summary_type": "groups",
+                "title": "",
                 "title_align": "left",
                 "title_size": "13",
                 "type": "manage_status"

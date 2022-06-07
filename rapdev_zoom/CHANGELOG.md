@@ -1,4 +1,9 @@
 # CHANGELOG - rapdev_zoom
+
+## 5.2.2 / 2022-06-02
+* [Added] Room and room component location hierarchy template variables in Rooms dashboard
+* [Added] Fix for when location hierarchy is not defined
+
 ## 5.2.1 / 2022-03-21
 * [Added] Room and room component location hierarchy metric tags
 

@@ -308,6 +308,7 @@ class ZoomCheck(AgentCheck):
             rooms = response.get("zoom_rooms", [])
 
             for room in rooms:
+                location_tags = []
                 room_name = room.get("room_name", "")
                 room_id = room.get("id", "")
                 room_status = room.get("status", "")
