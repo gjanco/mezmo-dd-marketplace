@@ -1,0 +1,58 @@
+name: RapDev Box
+files:
+- name: rapdev_box.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: dd_site
+      description: |
+        The Datadog site where logs are submitted. The URL mappings use the following formats:
+        "com: "datadoghq.com"
+        "eu": "datadoghq.eu"
+        "us3": "us3.datadoghq.com"
+        "us5": "us5.datadoghq.com"
+        "gov": "ddog-gov.com"
+      value:
+        type: string
+        example: "com"
+        enum:
+        - com
+        - eu
+        - us3
+        - us5
+        - gov
+    - name: dd_api_key
+      description: |
+        The API key of the Datadog organization you are submitting data to.
+      value:
+        type: string
+      required: true
+    - name: enterprise_id
+      description: |
+        The Box Enterprise ID of the enterprise you are configuring the integration to collect data from.
+      value:
+        type: string
+      required: true
+    - name: client_id
+      description: |
+        The Client ID given from the Box Custom App Client Credential Grant.
+      value: 
+        type: string
+      required: true
+    - name: client_secret
+      description: |
+        The Client Secret given from the Box Custom App Client Credential Grant.
+      value:
+        type: string
+      required: true
+    - name: admin_logs_enabled
+      description: |
+        A boolean that determines whether or not Box Admin Logs are collected and submitted. 
+        If set to true, logs need to be enabled at the Agent level.
+      value:
+        type: boolean
+        example: false
+    - template: instances/default
