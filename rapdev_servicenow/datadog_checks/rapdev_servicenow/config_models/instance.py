@@ -85,6 +85,7 @@ class InstanceConfig(BaseModel):
     skip_proxy: Optional[bool]
     stats_title: Optional[str]
     tags: Optional[Sequence[str]]
+    time_format: Optional[str]
     timeout: Optional[float]
     tls_ca_cert: Optional[str]
     tls_cert: Optional[str]

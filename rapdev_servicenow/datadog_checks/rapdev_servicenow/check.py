@@ -3,14 +3,15 @@ try:
 except ImportError:
     from checks import AgentCheck
 
-from datetime import datetime
+from datetime import datetime, timezone
+
 from six.moves.urllib.parse import quote
 
 from .constants import Constants, Tables
 from .stats import StatsDo
 
-from requests import HTTPError
-
+from requests.exceptions import HTTPError # Import exceptions
+from json import JSONDecodeError
 
 class ServicenowCheck(AgentCheck):
     def __init__(self, *args, **kwargs):
@@ -24,6 +25,7 @@ class ServicenowCheck(AgentCheck):
             self.instance.get("collect_itsm_metrics", False)
         )
         self.opt_fields = self.instance.get('opt_fields', [])
+        
         self.base_url = 'https://' + \
             str(self.instance_name) + '.service-now.com'
 
@@ -39,15 +41,16 @@ class ServicenowCheck(AgentCheck):
             self.assignment_group_names = self.instance.get(
                 "assignment_groups", False)
             self.table_api_url = self.base_url + Constants.TABLE_API_BASE_PATH
+            self.agg_api_url = self.base_url + Constants.AGG_API_BASE_PATH
             self.encoded_query = ""
             self.open_incident_states = self.instance.get("incident_open_states", [1, 2, 3])
             self.closed_incident_states = self.instance.get("incident_closed_states", [6, 7, 8])
+            self.time_format = self.instance.get("time_format", Constants.SNC_TIME_FORMAT)
         self.check_initializations.append(self.validate_config)
 
     def check(self, instance):
         base_tags = Constants.REQUIRED_TAGS
         base_tags = base_tags + ["instance_name:" + self.instance_name]
-        self.log.debug("ServicenowCheck.check() --> instance_name " + self.instance_name)
         self.gauge("datadog.marketplace.rapdev.servicenow", 1.0, tags=base_tags)
 
         if self.collect_statsdo:
@@ -63,6 +66,7 @@ class ServicenowCheck(AgentCheck):
                         self.OK,
                         tags=base_tags
                     )
+                    self.get_inc_this_year()
                 except Exception as e:
                     self.log.error("unknown exception running itsm check\n"
                                    + repr(e)
@@ -101,7 +105,6 @@ class ServicenowCheck(AgentCheck):
         base_tags = Constants.REQUIRED_TAGS
         base_tags = base_tags + ["instance_name:" + self.instance_name]
 
-        self.log.debug("ServicenowCheck.check_itsm_connection() --> starting")
         connected = False
         single_incident_url = self.table_api_url + "/incident?sysparm_limit=1"
         try:
@@ -119,8 +122,6 @@ class ServicenowCheck(AgentCheck):
                 tags=base_tags
             )
         else:
-            self.log.debug(
-                "ServicenowCheck.check_itsm_connection() --> ITSM Connection successful ")
             self.service_check(
                 "{}.table_api_connection".format(
                     Constants.METRIC_PREFIX
@@ -164,15 +165,10 @@ class ServicenowCheck(AgentCheck):
         )
 
     def check_itsm(self, instance):
-        self.log.debug("Servicenowcheck.check_itsm() --> starting")
-
         base_tags = Constants.REQUIRED_TAGS
         base_tags = base_tags + ["instance_name:" + self.instance_name]
-
         encoded_query = self.set_encoded_query()
-
         inc_url = self.table_api_url + "/incident"
-
         if encoded_query:
             inc_url = inc_url + "?sysparm_query=" + encoded_query + "&sysparm_display_value=all"
 
@@ -277,14 +273,14 @@ class ServicenowCheck(AgentCheck):
                 priority = "p" + incident["priority"]["value"]
                 sys_created_on = incident["sys_created_on"]["display_value"]
                 incident_id = incident["sys_id"]["value"]
-                incident_state = incident["state"]["value"]
+                incident_state = incident["state"]["value"]           
                 now = datetime.now()
                 sco_date = datetime.strptime(
                     sys_created_on,
-                    Constants.SNC_TIME_FORMAT
-                )
+                    self.time_format
+                ).replace(tzinfo=timezone.utc)
                 time_delta = now - sco_date
-                time_delta_seconds = time_delta.total_seconds() / 3690
+                time_delta_seconds = time_delta.total_seconds() / 3600
                 caller_is_vip = "false"
                 incident_sla_breached = 0
                 assignment_group = incident["assignment_group"]["display_value"]
@@ -335,14 +331,14 @@ class ServicenowCheck(AgentCheck):
                     if sla_end_time:
                         sla_start_time_fmt = datetime.strptime(
                             sla_start_time,
-                            Constants.SNC_TIME_FORMAT
+                            self.time_format
                         )
                         sla_end_time_fmt = datetime.strptime(
                             sla_end_time,
-                            Constants.SNC_TIME_FORMAT
+                            self.time_format
                         )
                         sla_complete_time = sla_end_time_fmt - sla_start_time_fmt
-                        sla_complete_time = sla_complete_time.total_seconds() / 3690
+                        sla_complete_time = sla_complete_time.total_seconds() / 3600
 
                     sla_def = self.get_or_update_cache(
                         sla_id,
@@ -472,18 +468,18 @@ class ServicenowCheck(AgentCheck):
                     incident_open_time = incident["sys_created_on"]["display_value"]
                     incident_open_time_fmt = datetime.strptime(
                         incident_open_time,
-                        Constants.SNC_TIME_FORMAT
-                    )
+                        self.time_format
+                    ).replace(tzinfo=timezone.utc)
                     incident_close_time_fmt = datetime.strptime(
                         incident_close_time,
-                        Constants.SNC_TIME_FORMAT
-                    )
+                        self.time_format
+                    ).replace(tzinfo=timezone.utc)
                     incident_time_to_close = (
                         incident_close_time_fmt - incident_open_time_fmt
                     ).total_seconds()
 
                     # seconds --> hours
-                    incident_time_to_close = incident_time_to_close / 3690
+                    incident_time_to_close = incident_time_to_close / 3600
 
                     self.gauge(
                         "rapdev.servicenow.incident_resolution_time",
@@ -496,8 +492,6 @@ class ServicenowCheck(AgentCheck):
                     time_delta_seconds,
                     tags=incident_tags)
 
-                self.log.info("ServicenowCheck.check_itsm() --> finished processing")
-
             except Exception as e:
                 self.log.error("Unknown error occurred processing incident payload"
                                + incident_id
@@ -506,10 +500,6 @@ class ServicenowCheck(AgentCheck):
                                )
                 continue
 
-        self.log.debug(
-            "Finished processing incidents - store is {}".format(
-                str(incident_store)
-            ))
 
         # Print Totals
         for ag in incident_store:
@@ -578,7 +568,7 @@ class ServicenowCheck(AgentCheck):
             closed_encoded_query = closed_encoded_query + "^" + ag_encoded_query
 
         encoded_query = open_encoded_query + "^NQ" + closed_encoded_query
-        self.log.error("EC " + encoded_query)
+       
 
         return encoded_query
 
@@ -629,6 +619,43 @@ class ServicenowCheck(AgentCheck):
             + float(split[2]) * 1000
         )
 
+    def get_inc_this_year(self):
+        base_tags = Constants.REQUIRED_TAGS
+        base_tags = base_tags + ["instance_name:" + self.instance_name]
+        try:
+            response = self.http.get(
+                self.agg_api_url + Constants.YEAR_SLUG,
+                headers=Constants.TABLE_API_HEADERS  
+            )
+
+            response.raise_for_status()
+
+            resp = response.json()
+
+            result = resp.get("result")
+          
+        except (HTTPError, JSONDecodeError) as e:
+            self.log.error(
+                "failed to get incidents for current year" + repr(e))
+            raise Exception(e)
+
+        if not result:
+            return
+        
+ 
+        
+        stats = result.get("stats")
+
+        if not stats:
+            return
+        
+        count = stats.get("count") 
+
+        if count:
+          self.gauge(
+              "rapdev.servicenow.incident_total_year",
+              count, tags=base_tags)
+    
     def now_request_single_record(self, table, id):
         """
         request a single record from the /now/table api
@@ -638,18 +665,11 @@ class ServicenowCheck(AgentCheck):
         base_tags = Constants.REQUIRED_TAGS
         base_tags = base_tags + ["instance_name:" + self.instance_name]
 
-        self.log.info(
-            "Servicenowcheck.now_request_single_record() --> attempting to retrieve {} from {}".format(table, id))
         try:
             url = self.base_url + Constants.TABLE_API_BASE_PATH + "/" + table + "/" + id
             resp = self.http.get(url,extra_headers=Constants.TABLE_API_HEADERS)
 
             resp.raise_for_status()
-
-            self.log.debug(
-                "Servicenowcheck.now_request_single_record()"
-                + "--> successful response {}".format(str(resp))
-            )
 
             return resp
 

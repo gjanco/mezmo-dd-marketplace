@@ -170,6 +170,10 @@ def instance_tags(field, value):
     return get_default_field_value(field, value)
 
 
+def instance_time_format(field, value):
+    return '%Y-%m-%d %H:%M:%S'
+
+
 def instance_timeout(field, value):
     return 10
 

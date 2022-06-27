@@ -8,7 +8,7 @@ from .constants import Config
 
 URL = "http://{}:8000".format(get_docker_hostname())
 STATS_TITLE = "Servlet statistics"
-config = Config.ONLY_STATSDO.copy()
+config = Config.STATSDO_AND_ITSM.copy()
 config['url'] = URL
 
 @pytest.fixture(scope="session")

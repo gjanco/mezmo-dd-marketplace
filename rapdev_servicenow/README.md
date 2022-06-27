@@ -2,9 +2,6 @@
 
 The ServiceNow integration monitors the health and performance of your ServiceNow instances with rich insights into transactions, jobs, database, and cache metrics. The integration also tracks open ITSM incidents, providing actionable data points on both SLAs and the age of business impacting incidents.
 
-### Pricing
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
-
 ## Setup
 
 ### Prerequisites
@@ -13,7 +10,7 @@ Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](ma
 
 ### Datadog Integration Installation
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.1.0`
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.2.0`
 
 ### Datadog Integration Configuration
 
@@ -62,8 +59,14 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
        - subcategory
        - knowledge
        - sys_class_name
-
+    
+     ```
+    4.7 (Optional) Update `/etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml`, uncommenting and setting the time format to match the ServiceNow settings:
+    ```yaml
+    ## @param time_format
+    time_format: "%Y-%m-%d %H:%M:%S"
     ```
+5. [Install optional Custom Python Packages to the Agent](https://docs.datadoghq.com/developers/guide/custom-python-package/?tab=linux). Optional packages include beautifulsoup and lxml.
 
 5. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent).
 

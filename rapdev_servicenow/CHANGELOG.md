@@ -1,5 +1,13 @@
 # CHANGELOG - rapdev_servicenow
 
+## 1.2.0 / 2022-06-03
+
+ [Added] configurable datetime string format to yaml
+ [Added] support for datetime string configuration to match ServiceNow
+ [Added] metric: `rapdev.servicenow.incident_total_year`
+ [Removed] extraneous debug logging
+ [Removed] support for python 2
+
 ## 1.1.0 / 2022-03-31
 
  [Added] auth parameter to service-now endpoints

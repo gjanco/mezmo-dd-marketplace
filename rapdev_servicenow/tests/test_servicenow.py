@@ -1,7 +1,20 @@
-import pytest
+from typing import Any, Callable, Dict
 
-from datadog_checks.base import ConfigurationError
+from datadog_checks.base import AgentCheck
+from datadog_checks.base.errors import CheckException, ConfigurationError
+
+from datadog_checks.base.stubs.aggregator import AggregatorStub
+from datadog_checks.dev.utils import get_metadata_metrics
 from datadog_checks.rapdev_servicenow import ServicenowCheck
+from requests.exceptions import HTTPError
+
+
+import pytest
+import mock
+import requests
+import json
+
+
 
 from .constants import Config
 
@@ -110,4 +123,15 @@ def test_statsdo(aggregator, instance):
     print(aggregator._metrics)
     print("AG")
     aggregator.assert_service_check("rapdev.servicenow.statsdo_connection", ServicenowCheck.OK)
-    
+
+
+@pytest.mark.integration
+def test_get_inc_this_year(aggregator, instance):
+    c = ServicenowCheck("servicenow", {}, [instance])
+    c.data = {"stats": {"count": 1}}
+    # import pdb; pdb.set_trace()
+    with mock.patch('requests.get', autospec=True) as get:
+        c.agg_api_url = instance['url'] + "/api/now/stats"
+        c.get_inc_this_year()
+        aggregator.assert_metric("rapdev.servicenow.incident_total_year")
+
