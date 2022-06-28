@@ -70,6 +70,10 @@ def instance_connect_timeout(field, value):
     return get_default_field_value(field, value)
 
 
+def instance_dd_org_name(field, value):
+    return 'example_org'
+
+
 def instance_dd_site(field, value):
     return 'com'
 

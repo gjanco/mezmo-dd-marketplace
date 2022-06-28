@@ -6,8 +6,8 @@ from datadog_checks.rapdev_validator import ValidatorCheck
 import pytest
 from mock import patch
 
-def test_unauthorized_config(instance, aggregator, dd_run_check):
-    with pytest.raises(Exception, match="403 Client Error: Forbidden for url: https://api.datadoghq.com/api/v1/org"):
+def test_missing_config(instance, aggregator, dd_run_check):
+    with pytest.raises(Exception, match="Please provide a list of required tag keys and values"):
         check = ValidatorCheck('rapdev_validator', {"app_key": "test321"}, [{
         "api_key": "test123"
         }])

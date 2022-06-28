@@ -57,6 +57,7 @@ class InstanceConfig(BaseModel):
     aws_region: Optional[str]
     aws_service: Optional[str]
     connect_timeout: Optional[float]
+    dd_org_name: Optional[str]
     dd_site: Optional[str]
     disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]

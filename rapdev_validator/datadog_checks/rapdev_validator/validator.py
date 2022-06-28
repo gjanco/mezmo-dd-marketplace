@@ -55,9 +55,14 @@ class ValidatorCheck(AgentCheck):
         self.dd_site = self.instance.get("dd_site", "com")
         self.api_url = API_URL_MAP.get(self.dd_site)
         self.options = self.get_keys()
-        self.check_initializations.append(self.validate_config) 
-        self.org = self.get_org(self.options)
+        self.check_initializations.append(self.validate_config)
+        self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
+        self.org = self.instance.get("dd_org_name", "")
+        
+        if not self.org:
+            self.org = self.options.get("DD-APPLICATION-KEY")[-4:]
 
+        self.tags.append("org:{}".format(self.org))
         self.check_hosts = self.instance.get("validate_hosts", True)
         self.check_synthetics = self.instance.get("validate_synthetics", False)
         self.ignore_paas = is_affirmative(self.instance.get("ignore_paas", False))
@@ -65,7 +70,7 @@ class ValidatorCheck(AgentCheck):
         self.yaml_host_tag_dict = self.instance.get("required_tags", {})
         self.yaml_synthetic_tag_dict = self.instance.get("synthetic_tags", {})
         self.ignore_hosts = set(self.instance.get("hosts_to_ignore", []))
-        self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
+        
 
     def check(self, _):
         """
@@ -74,34 +79,54 @@ class ValidatorCheck(AgentCheck):
         """
 
         self.tags = list(set(self.tags))
-        self.tags.append("org:{}".format(self.org))
+        
 
         if self.check_hosts and self.yaml_host_tag_dict:
             self.log.debug("Attempting to grab the total number of active hosts from your Datadog account....")
+        
+            results = self.http.get("https://{}/api/v1/hosts/totals".format(self.api_url), extra_headers = self.options)
 
-            response = self.http.get("https://{}/api/v1/hosts/totals".format(self.api_url), extra_headers = self.options).json()
-            total_hosts = response.get("total_active")
-            
-            n = 0
-            count = 1000
-            while n < total_hosts:
-                response = self.http.get("https://{}/api/v1/hosts?start={}&count={}".format(self.api_url, n, count), extra_headers=self.options).json()
-                host_list = response.get("host_list", [])
-                for host in host_list:
-                    if not self.is_ignored_host(host.get("name")):
-                        self.validate_agent(host)
-                        if not self.ignore_paas:
-                            self.validate_host(host)
-                        elif self.ignore_paas and not set(host.get("apps")).intersection(IGNORE_APPS):
-                            self.validate_host(host)
-                    
-                n += 1000
+            if results.status_code == 200:
+                response = results.json()
+                total_hosts = response.get("total_active")
+                
+                n = 0
+                count = 1000
+                while n < total_hosts:
+                    response = self.http.get("https://{}/api/v1/hosts?start={}&count={}".format(self.api_url, n, count), extra_headers=self.options).json()
+                    host_list = response.get("host_list", [])
+                    for host in host_list:
+                        if not self.is_ignored_host(host.get("name")):
+                            self.validate_agent(host)
+                            if not self.ignore_paas:
+                                self.validate_host(host)
+                            elif self.ignore_paas and not set(host.get("apps")).intersection(IGNORE_APPS):
+                                self.validate_host(host)
+                        
+                    n += 1000
+            else:
+                try:
+                    results.raise_for_status()
+                except HTTPError as e:
+                    raise HTTPError("Non-200 response code returned from Datadog API: {}".format(e))
+                except Exception as e:
+                    raise Exception("Unknown exception was caught during Datadog API request: {}".format(e))
             
         if self.check_synthetics and self.yaml_synthetic_tag_dict:
-            response = self.http.get("https://{}/api/v1/synthetics/tests".format(self.api_url), extra_headers=self.options).json()
-            synthetic_list = response.get("tests")
-            for synthetic in synthetic_list:
-                self.validate_synthetics(synthetic)
+
+            results = self.http.get("https://{}/api/v1/synthetics/tests".format(self.api_url), extra_headers=self.options)
+            if results.status_code == 200:
+                response = results.json()
+                synthetic_list = response.get("tests")
+                for synthetic in synthetic_list:
+                    self.validate_synthetics(synthetic)
+            else:
+                try:
+                    results.raise_for_status()
+                except HTTPError as e:
+                    raise HTTPError("Non-200 response code returned from Datadog API: {}".format(e))
+                except Exception as e:
+                    raise Exception("Unknown exception was caught during Datadog API request: {}".format(e))
         
     def get_keys(self):
         """
@@ -199,48 +224,6 @@ class ValidatorCheck(AgentCheck):
             return ''.join('*' * text_len)
         else:
             return ''.join('*' * (text_len - 4)) + secret_text[-4:]
-    
-    def get_org(self, options, retries=3):
-        """
-        recursive function to retrieve the org name related to the current api/app key being used.
-        timeout for each request is hardcoded to 10 seconds. it only needs to retrieve the org name on
-        initialization, and is necessary for tagging metrics by org, therefor if this fails all retries
-        it throws an uncaught exception, halting the integration
-        
-        args:
-            options (dict): dictionary containing the current instance's api and app key
-            retries (int): default 3, number of times to retry getting the org name
-            
-        returns:
-            org_name (str): name of the org associate with the current api/app key. in multi org accounts
-                            it will choose the first account it finds marked 'parent_billing' in its billing type
-        """
-        
-        try:
-            response = self.http.get("https://{}/api/v1/org".format(self.api_url), extra_headers=self.options, timeout=10)
-            response.raise_for_status()
-            
-            orgs = response.json().get("orgs", [])
-            org_name = ""
-            
-            # use parent_billing for name from multi org accounts
-            if len(orgs) > 1:
-                for org in orgs:
-                    if org.get("billing", {}).get("type", "") == "parent_billing":
-                        org_name = org.get("name", "")
-                        break
-            else:
-                org_name = orgs[0].get("name", "")
-                
-            return org_name
-            
-        except HTTPError as e:
-            self.log.error("Failed retrieving org for api key: {}, retries left: {}".format(self.obf_text(options.get("api_key", "")), retries))
-            if retries > 0:
-                return self.get_org(options, retries-1)
-            else:
-                self.log.error("Failed final retry while retrieving org. traceback: {}".format(traceback.format_exc()))
-                raise e
                 
     def validate_agent(self, host):
         """
