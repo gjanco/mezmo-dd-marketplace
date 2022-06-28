@@ -1,5 +1,9 @@
 # CHANGELOG - rapdev
 
+## 2.2.0 / 2022-06-24
+ * [Added] Support for AWS Instance Profile authentication
+ * [Added] Better documentation for all AWS authentication methods
+
 ## 2.1.0 / 2022-05-17
  * [Added] Increased flexibility for dependency installation
 

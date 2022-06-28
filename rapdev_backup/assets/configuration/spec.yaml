@@ -23,16 +23,6 @@ files:
         The Datadog APP Key used to authenticate to your Datadog organization. For more info, see link below:
 
         hhttps://docs.datadoghq.com/account_management/api-app-keys/#application-keys
-    - name: dd_site
-      required: false
-      value:
-        type: string
-        example: com
-        default: com
-      description: |
-        The Datadog website that your account is registered to. The currently supported options are below:
-
-        com (default for US), eu, us3, us5, gov
     - name: backup_storage_platform
       required: true
       value:
@@ -40,6 +30,23 @@ files:
         example: github
       description: |
         The platform where you are uploading the backup. For example, AWS, Azure, GitHub, or your local machine.
+    - name: backup_path
+      required: true
+      value:
+        type: string
+      description: |
+        The absolute path for where to store backups. Set `delete_local_backups` to `True` to delete folder when done.
+
+        Note: Users need write permissions to this directory and should also not manually add any files to this folder.
+    - name: use_instance_profile
+      required: false
+      value:
+        type: boolean
+        default: false
+        example: false
+      description: |
+        If using AWS, set to True to use the Instance Profile assigned to the EC2 instance. 
+        No other authentication information is required when using this option. 
     - name: aws_access_key
       secret: true
       required: false
@@ -162,14 +169,16 @@ files:
         default: "%Y-%m-%dT%H%M%S"
       description: | 
         The format for which you want the timestamp on the zipped backup file. 
-    - name: backup_path
-      required: true
+    - name: dd_site
+      required: false
       value:
         type: string
+        example: com
+        default: com
       description: |
-        The absolute path for where to store backups. Set `delete_local_backups` to `True` to delete folder when done.
+        The Datadog website that your account is registered to. The currently supported options are below:
 
-        Note: Users will need write permissions to this directory and should also not manually add any files to this.
+        com (default for US), eu, us3, us5, gov
     - name: delete_local_backups
       required: false
       value:

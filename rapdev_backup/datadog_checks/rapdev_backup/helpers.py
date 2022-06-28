@@ -79,7 +79,7 @@ def upload_blob(blob_client, file_name):
 # AWS Functions
 ##################
 
-def setup_aws_connection(aws_access_key, aws_secret_key, assume_role_arn=None, assume_session_name=None, external_id=None):
+def setup_aws_connection(aws_access_key, aws_secret_key, assume_role_arn=None, assume_session_name=None, external_id=None, use_instance_profile=False):
     """Setup an AWS authenticated client to communicate with S3
 
     :param string aws_access_key: the access key used to authenticate to aws
@@ -87,9 +87,12 @@ def setup_aws_connection(aws_access_key, aws_secret_key, assume_role_arn=None, a
     :param string assume_role_arn: the arn of the role to assume (if assuming role)
     :param string assume_session_name: the name of the session for assuming a role (if assuming role)
     :param string external_id: the external_id to assume role for authentication (if required and assuming role)
+    :param boolean use_instance_profile: whether to use instance profile assigned to ec2 as auth method
     :return: AWS boto3 s3 client
     """
-    if assume_role_arn:
+    if use_instance_profile:
+        return boto3.client("s3")
+    elif assume_role_arn:
         sts_client = boto3.client(
             'sts',
             aws_access_key_id=aws_access_key,

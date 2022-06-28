@@ -107,6 +107,7 @@ class InstanceConfig(BaseModel):
     tls_protocols_allowed: Optional[Sequence[str]]
     tls_use_host_header: Optional[bool]
     tls_verify: Optional[bool]
+    use_instance_profile: Optional[bool]
     use_legacy_auth_encoding: Optional[bool]
     username: Optional[str]
 

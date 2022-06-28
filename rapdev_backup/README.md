@@ -54,13 +54,13 @@ Run the following command to enable the Backup Integration on your Datadog Agent
 
 ```
 *Linux*
-sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==2.1.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==2.2.0
 
 *Powershell*
-& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.1.0
+& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.2.0
 
 *Command Prompt*
-"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.1.0
+"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.2.0
 ```
 
 ### Datadog Configuration
@@ -92,12 +92,19 @@ Your options are below:
 
 #### AWS Environment Configuration
 
-1) In order to authenticate to AWS, you have two options:
-  - Access Key on User (no assume role): Generate an AWS Access ID and Secret with permission to read and upload to S3. 
+1) In order to authenticate to AWS, you have three options:
+  - [Instance Profile Assigned To an EC2 (Recommended)][8]: In the `conf.yaml`, set `use_instance_profile` to `True`.
+    Next, generate a new IAM Role and attach it to your EC2 Instance. Make sure this role
+    has access to write to the S3 bucket that you want to store backups to. 
+    See the permissions at the bottom of the next section to understand what S3 permissions are required.
+
+    <b>Note:</b> Setting this to `True` means that it uses the [boto3 credential chain][11], which can support more than instance profiles, such as AWS environment variables and shared credential files.
+
+  - [Access Key on User (no assume role)][9]: Generate an AWS Access ID and Secret with permission to read and upload to S3. 
     Pass in the access key id to `aws_access_key` and the secret access key to `aws_secret_key` via the `conf.yaml`. 
     Please refer to the permissions at the bottom of the next section to understand what s3 permissions are needed.    
 
-  - Access Key on User with `sts:AssumeRole`: Begin by creating an IAM role in the account that you want to store your backups to with read
+  - [Access Key on User with `sts:AssumeRole`][10]: Begin by creating an IAM role in the account that you want to store your backups to with read
     and write permissions to the s3 bucket you'd like to use. Provide the ARN of that role to the `assume_role_arn`
     configuration in the `conf.yaml`. Additionally, set up a
     [trust policy][6] so
@@ -291,3 +298,7 @@ This application is made available through the Marketplace and is supported by a
 [5]: https://docs.datadoghq.com/account_management/api-app-keys/
 [6]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_permissions-to-switch.html
 [7]: https://docs.datadoghq.com/agent/guide/agent-v6-python-3/?tab=hostagent
+[8]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html
+[9]: https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys
+[10]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use.html
+[11]: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html

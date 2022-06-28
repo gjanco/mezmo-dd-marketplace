@@ -242,6 +242,10 @@ def instance_tls_verify(field, value):
     return True
 
 
+def instance_use_instance_profile(field, value):
+    return False
+
+
 def instance_use_legacy_auth_encoding(field, value):
     return True
 

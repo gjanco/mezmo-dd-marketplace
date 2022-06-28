@@ -28,17 +28,23 @@ instances:
     #
     # dd_app_key: <DD_APP_KEY>
 
-    ## @param dd_site - string - optional - default: com
-    ## The Datadog website that your account is registered to. The currently supported options are below:
-    ##
-    ## com (default for US), eu, us3, us5, gov
-    #
-    # dd_site: com
-
     ## @param backup_storage_platform - string - required
     ## The platform where you are uploading the backup. For example, AWS, Azure, GitHub, or your local machine.
     #
     backup_storage_platform: github
+
+    ## @param backup_path - string - required
+    ## The absolute path for where to store backups. Set `delete_local_backups` to `True` to delete folder when done.
+    ##
+    ## Note: Users need write permissions to this directory and should also not manually add any files to this folder.
+    #
+    backup_path: <BACKUP_PATH>
+
+    ## @param use_instance_profile - boolean - optional - default: false
+    ## If using AWS, set to True to use the Instance Profile assigned to the EC2 instance. 
+    ## No other authentication information is required when using this option. 
+    #
+    # use_instance_profile: false
 
     ## @param aws_access_key - string - optional
     ## If platform is AWS, the access key used to authenticate to AWS api to upload to s3.
@@ -131,12 +137,12 @@ instances:
     #
     # timestamp_format: <TIMESTAMP_FORMAT>
 
-    ## @param backup_path - string - required
-    ## The absolute path for where to store backups. Set `delete_local_backups` to `True` to delete folder when done.
+    ## @param dd_site - string - optional - default: com
+    ## The Datadog website that your account is registered to. The currently supported options are below:
     ##
-    ## Note: Users will need write permissions to this directory and should also not manually add any files to this.
+    ## com (default for US), eu, us3, us5, gov
     #
-    backup_path: <BACKUP_PATH>
+    # dd_site: com
 
     ## @param delete_local_backups - boolean - optional - default: true
     ## Whether to delete or keep local backups after each run. This will delete the folder for the "backup_path".

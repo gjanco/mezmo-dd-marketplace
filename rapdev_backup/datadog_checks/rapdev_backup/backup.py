@@ -86,6 +86,7 @@ class BackupCheck(AgentCheck):
         self.assume_role_external_id = self.instance.get("assume_role_external_id")
         self.aws_s3_bucket_name = self.instance.get("aws_s3_bucket_name", None)
         self.aws_s3_sub_path = self.instance.get("aws_s3_sub_path", "")
+        self.use_instance_profile = self.instance.get("use_instance_profile", False)
 
         # Azure authentication/params
         self.azure_connection_string = self.instance.get("azure_connection_string", None)
@@ -120,7 +121,8 @@ class BackupCheck(AgentCheck):
                 self.aws_secret_key,
                 self.assume_role_arn,
                 self.assume_session_name,
-                self.assume_role_external_id
+                self.assume_role_external_id,
+                self.use_instance_profile
             )
 
             if self.aws_s3_sub_path:
@@ -213,11 +215,22 @@ class BackupCheck(AgentCheck):
                                      .format(self.backup_storage_platform))
         else:
             if self.backup_storage_platform == BACKUP_AWS:
-                # If aws, validate we have required creds
-                if not self.aws_access_key or not self.aws_secret_key or not self.aws_s3_bucket_name:
+                # If AWS and using instance profile, validate creds aren't set
+                if self.use_instance_profile:
+                    if self.aws_access_key or self.aws_secret_key:
+                        raise ConfigurationError(
+                            "Integration is setup to run via Instance Profile. Access Key and Secret Key should not be set!"
+                        )
+                # If AWS and using hardcoded creds, validate we have required creds
+                elif not self.aws_access_key or not self.aws_secret_key:
                     raise ConfigurationError(
                         "aws_access_key, aws_secret_key, and aws_s3_bucket_url are all required "
                         + "for storing backups in AWS."
+                    )
+
+                if not self.aws_s3_bucket_name:
+                    raise ConfigurationError(
+                        "An S3 Bucket name is required to store backups to AWS S3."
                     )
 
                 # Validate that boto3 has been installed and imported
