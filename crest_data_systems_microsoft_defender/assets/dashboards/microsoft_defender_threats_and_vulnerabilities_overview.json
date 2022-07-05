@@ -1,0 +1,317 @@
+{
+    "title": "Microsoft Defender - Threat and Vulnerabilities Overview",
+    "description": "",
+    "widgets": [
+        {
+            "id": 3370480521725670,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 15
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Threat and Vulnerabilities Overview\n- This dashboard provides information on the organization's exposure level and the top vulnerabilities found. ",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4532613894413332,
+            "layout": {
+                "x": 0,
+                "y": 25,
+                "width": 31,
+                "height": 15
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. Organization Exposure Level\n2. Organization Exposure Level over Time\n2. Vulnerabilities by Severity\n3. Top Vulnerabilities by Endpoint",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6457886333544960,
+            "layout": {
+                "x": 0,
+                "y": 5.2981906467013886e-8,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "sizing": "contain",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 2721652127221386,
+            "layout": {
+                "x": 63,
+                "y": 0,
+                "width": 77,
+                "height": 35
+            },
+            "definition": {
+                "title": "Organization Exposure Level over Time",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Organization Exposure Score",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "sum:cds.ms.defender.endpoint.organization_exposure_level{*}",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6328218162965106,
+            "layout": {
+                "x": 32,
+                "y": 36,
+                "width": 53,
+                "height": 35
+            },
+            "definition": {
+                "title": "Vulnerabilities by Severity",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Severity",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoint-software.vulns"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@vulnerability-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@vuln-severity",
+                                        "sort": {
+                                            "metric": "@vulnerability-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 1000
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "custom_links": [
+                    {
+                        "link": "/screen/integration/Crest%20Microsoft%20Defender%20-%20Vulnerabilities%20Details?from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&live=false&tpl_var_Vulnerability-Severity={{@vuln-severity.value}}",
+                        "label": "View Vulnerabilities by '{{@vuln-severity.value}}' Severity"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7465146341077894,
+            "layout": {
+                "x": 87,
+                "y": 36,
+                "width": 53,
+                "height": 35
+            },
+            "definition": {
+                "title": "Top Vulnerabilities by Endpoint",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoint-software.vulns"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@endpoint-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@vulnerability-id",
+                                        "sort": {
+                                            "metric": "@endpoint-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "custom_links": [
+                    {
+                        "link": "/screen/integration/Crest%20Microsoft%20Defender%20-%20Vulnerabilities%20Details?from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&live=false&tpl_var_Vulnerability-Id={{@vulnerability-id.value}}",
+                        "label": "View Endpoints of Vulnerability Id {{@vulnerability-id.value}}"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 110634675448458,
+            "layout": {
+                "x": 32,
+                "y": 0,
+                "width": 30,
+                "height": 26
+            },
+            "definition": {
+                "title": "Organization Exposure Level",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "custom_bg_color": "#1964d4",
+                                "hide_value": false,
+                                "custom_fg_color": "#1964d4",
+                                "comparator": ">",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.ms.defender.endpoint.organization_exposure_level{*}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2,
+                "timeseries_background": {
+                    "type": "area"
+                }
+            }
+        },
+        {
+            "id": 4870039071373900,
+            "layout": {
+                "x": 32,
+                "y": 26,
+                "width": 30,
+                "height": 9
+            },
+            "definition": {
+                "type": "note",
+                "content": "Exposure Score",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        }
+    ],
+    "template_variables": [],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "uz2-f3r-pyw"
+}

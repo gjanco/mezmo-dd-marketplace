@@ -1,0 +1,57 @@
+name: crest_data_systems_microsoft_defender
+files:
+- name: crest_data_systems_microsoft_defender.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: client_id
+      required: true
+      description: "Client ID of registered Application in Azure"
+      value: 
+        type: string
+        example: "<CLIENT_ID>"
+    - name: client_secret
+      required: true
+      description: "Client Secret of registered Application in Azure"
+      value: 
+        type: string
+        example: "<CLIENT_SECRET>"
+    - name: tenant_id
+      required: true
+      description: "Tenant Id of your organization in Azure"
+      value: 
+        type: string
+        example: "<TENANT_ID>"
+    - name: api_key
+      required: true
+      description: "API Key of Datadog Platform"
+      value: 
+        type: string
+        example: "<API_KEY>"
+    - name: app_key
+      required: true
+      description: "App Key of Datadog Platform"
+      value: 
+        type: string
+        example: "<APP_KEY>"
+    - name: is_recover
+      required: false
+      description: "If true then it will recover data in case of 429 status code."
+      value: 
+        type: boolean
+        example: true
+    - name: log_index
+      required: true
+      description: "Index of Log in Datadog platform"
+      value: 
+        type: string
+        example: "main"
+        default: "main"
+    - template: instances/default
+      overrides:
+        min_collection_interval.value.display_default: 15
+        min_collection_interval.value.example: 7200
+        min_collection_interval.required: true

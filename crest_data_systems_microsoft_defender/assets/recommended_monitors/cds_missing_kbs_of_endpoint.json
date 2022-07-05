@@ -1,0 +1,23 @@
+{
+	"name": "[crest_data_systems_microsoft_defender] Missing KBs of Endpoint",
+	"type": "query alert",
+	"query": "avg(last_1h):avg:cds.ms.defender.endpoint.missing_kbs{*} by {cds_ms_defender_endpoint_endpoint_id, cds_ms_defender_endpoint_endpoint_name} > 100",
+	"message": "Total {{value}} Missing KBs for Endpoint {{cds_ms_defender_endpoint_endpoint_id.name}}. Endpoint ID: {{cds_ms_defender_endpoint_endpoint_name.name}}",
+	"tags": [
+		"integration:crest-data-systems-microsoft-defender"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 1009
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"new_group_delay": 60
+	},
+	"recommended_monitor_metadata": {
+        "description": "Notify your team when the Missing KBs for an Endpoint reaches a threshold value."
+    }
+}

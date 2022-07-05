@@ -1,0 +1,320 @@
+{
+    "title": "Microsoft Defender - Endpoints Details",
+    "description": "",
+    "widgets": [
+        {
+            "id": 7570977548353280,
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "sizing": "contain",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 6396600418924168,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 16
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Endpoints Details\n- This dashboard provides alerts, vulnerabilities, and missing KBs information for endpoints. Users can use the provided date field to view the latest information for a specific alert or endpoint.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1199265805033436,
+            "layout": {
+                "x": 0,
+                "y": 26,
+                "width": 31,
+                "height": 15
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. Endpoint Alerts\n2. Endpoint Missing KBs\n3. Endpoint Vulnerabilities\n4. Endpoint Details",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 527965469422688,
+            "layout": {
+                "x": 32,
+                "y": 0,
+                "width": 156,
+                "height": 34
+            },
+            "definition": {
+                "title": "Endpoint Details",
+                "title_size": "16",
+                "title_align": "left",
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoints @endpoint-name:$Endpoint-Name.value @endpoint-id:$Endpoint-Id.value",
+                            "sort": {
+                                "column": "@endpoint-seen-time",
+                                "order": "desc"
+                            },
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "response_format": "event_list",
+                        "columns": [
+                            {
+                                "field": "@lastSeen",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@endpoint-id",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@endpoint-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@endpoint-health-status",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@endpoint-risk",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@endpoint-seen-time",
+                                "width": "auto"
+                            }
+                        ]
+                    }
+                ],
+                "type": "list_stream"
+            }
+        },
+        {
+            "id": 2569899962339974,
+            "layout": {
+                "x": 109,
+                "y": 37,
+                "width": 44,
+                "height": 36
+            },
+            "definition": {
+                "title": "Endpoint Vulnerabilities",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Count",
+                                "limit": {
+                                    "count": 900,
+                                    "order": "desc"
+                                },
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoint-software.vulns @endpoint-name:$Endpoint-Name.value @endpoint-id:$Endpoint-Id.value"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@vulnerability-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@vuln-severity",
+                                        "sort": {
+                                            "metric": "@vulnerability-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 30
+                                    },
+                                    {
+                                        "facet": "@vulnerability-id",
+                                        "sort": {
+                                            "metric": "@vulnerability-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 30
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 150040825217076,
+            "layout": {
+                "x": 154,
+                "y": 37,
+                "width": 34,
+                "height": 36
+            },
+            "definition": {
+                "title": "Endpoint Missing KBs",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Count",
+                                "limit": {
+                                    "count": 1000,
+                                    "order": "desc"
+                                },
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoints.missing_kbs @endpoint-name:$Endpoint-Name.value @endpoint-id:$Endpoint-Id.value"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@missing-kb-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@missing-kb-id",
+                                        "sort": {
+                                            "metric": "@missing-kb-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 1000
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3486513625539760,
+            "layout": {
+                "x": 32,
+                "y": 37,
+                "width": 76,
+                "height": 34
+            },
+            "definition": {
+                "title": "Endpoint Alerts",
+                "title_size": "16",
+                "title_align": "left",
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts @endpoint-name:$Endpoint-Name.value @endpoint-id:$Endpoint-Id.value",
+                            "sort": {
+                                "column": "@alert-update-time",
+                                "order": "desc"
+                            },
+                            "data_source": "logs_stream",
+                            "indexes": [
+                                "*"
+                            ]
+                        },
+                        "columns": [
+                            {
+                                "field": "@lastUpdateTime",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@alert-status",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@title",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@alert-severity",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@alert-id",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@alert-update-time",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Endpoint-Name",
+            "default": "*",
+            "prefix": "@endpoint-name",
+            "available_values": []
+        },
+        {
+            "name": "Endpoint-Id",
+            "default": "*",
+            "prefix": "@endpoint-id",
+            "available_values": []
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "8xf-vwq-428"
+}

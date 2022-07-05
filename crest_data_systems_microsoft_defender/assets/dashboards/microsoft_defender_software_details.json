@@ -1,0 +1,144 @@
+{
+    "title": "Microsoft Defender - Software Details",
+    "description": "",
+    "widgets": [
+        {
+            "id": 7570977548353280,
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "sizing": "contain",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 6396600418924168,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 12
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Software Details\n- This dashboard provides information on software vulnerabilities and the endpoints on which the software is installed.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1199265805033436,
+            "layout": {
+                "x": 0,
+                "y": 22,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. Vulnerabilities by Softwares and Endpoints",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 527965469422688,
+            "layout": {
+                "x": 32,
+                "y": 0,
+                "width": 99,
+                "height": 34
+            },
+            "definition": {
+                "title": "Vulnerabilities by Softwares and Endpoints",
+                "title_size": "16",
+                "title_align": "left",
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoint-software.vulns @software-id:$Software-Id.value @software-version:$Software-Version.value",
+                            "sort": {
+                                "column": "timestamp",
+                                "order": "desc"
+                            },
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "columns": [
+                            {
+                                "field": "timestamp",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@software-id",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@software-version",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@vulnerability-id",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@vuln-severity",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@endpoint-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@endpoint-id",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Software-Id",
+            "default": "*",
+            "prefix": "@software-id",
+            "available_values": []
+        },
+        {
+            "name": "Software-Version",
+            "default": "*",
+            "prefix": "@software-version",
+            "available_values": []
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "dwq-fy8-tdt"
+}

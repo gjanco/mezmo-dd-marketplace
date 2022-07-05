@@ -1,0 +1,356 @@
+{
+    "title": "Microsoft Defender - Alerts Overview",
+    "description": "",
+    "widgets": [
+        {
+            "id": 8219944812990550,
+            "layout": {
+                "x": 0.0769675925925926,
+                "y": 0.07638893745563649,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "sizing": "contain",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 2229871810717316,
+            "layout": {
+                "x": 0.07638888888888888,
+                "y": 9,
+                "width": 31,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Alerts Overview\n- This dashboard provides detailed information on the alerts reported.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4773357224610868,
+            "layout": {
+                "x": 0,
+                "y": 21,
+                "width": 31,
+                "height": 15
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. Alerts by Severity\n2. Alerts by Status\n3. Alerts by Category\n4. Alerts Details\n",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 8429772182056768,
+            "layout": {
+                "x": 32,
+                "y": 0,
+                "width": 50,
+                "height": 39
+            },
+            "definition": {
+                "title": "Alerts by Severity",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Severity",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts @alert-id:$AlertId.value @alert-severity:$AlertSeverity.value @alert-status:$AlertStatus.value @alert-category:$AlertCategory.value"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@alert-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@alert-severity",
+                                        "sort": {
+                                            "metric": "@alert-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8629623243892200,
+            "layout": {
+                "x": 138,
+                "y": 0,
+                "width": 50,
+                "height": 39
+            },
+            "definition": {
+                "title": "Alerts by Category",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Category",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts @alert-id:$AlertId.value @alert-severity:$AlertSeverity.value @alert-status:$AlertStatus.value @alert-category:$AlertCategory.value"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@alert-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@alert-category",
+                                        "sort": {
+                                            "metric": "@alert-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5150920177456998,
+            "layout": {
+                "x": 85,
+                "y": 0,
+                "width": 50,
+                "height": 39
+            },
+            "definition": {
+                "title": "Alerts by Status",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Status",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts @alert-id:$AlertId.value @alert-severity:$AlertSeverity.value @alert-status:$AlertStatus.value @alert-category:$AlertCategory.value"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@alert-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@alert-status",
+                                        "sort": {
+                                            "metric": "@alert-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7496646871995406,
+            "layout": {
+                "x": 32,
+                "y": 40,
+                "width": 156,
+                "height": 37
+            },
+            "definition": {
+                "title": "Alerts Details",
+                "title_size": "16",
+                "title_align": "left",
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts @alert-id:$AlertId.value @alert-severity:$AlertSeverity.value @alert-status:$AlertStatus.value @alert-category:$AlertCategory.value",
+                            "sort": {
+                                "column": "@alert-update-time",
+                                "order": "desc"
+                            },
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "columns": [
+                            {
+                                "field": "@lastUpdateTime",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@title",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@alert-status",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@alert-severity",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@alert-id",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@threatName",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@alert-category",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@threatFamilyName",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@alert-update-time",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "AlertSeverity",
+            "default": "*",
+            "prefix": "@alert-severity",
+            "available_values": []
+        },
+        {
+            "name": "AlertStatus",
+            "default": "*",
+            "prefix": "@alert-status",
+            "available_values": []
+        },
+        {
+            "name": "AlertCategory",
+            "default": "*",
+            "prefix": "@alert-category",
+            "available_values": []
+        },
+        {
+            "name": "AlertId",
+            "default": "*",
+            "prefix": "@alert-id",
+            "available_values": []
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "cpi-3mj-ze9"
+}

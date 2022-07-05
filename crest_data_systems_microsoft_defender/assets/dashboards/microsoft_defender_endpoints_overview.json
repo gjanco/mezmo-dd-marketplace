@@ -1,0 +1,615 @@
+{
+    "title": "Microsoft Defender - Endpoints Overview",
+    "description": "",
+    "widgets": [
+        {
+            "id": 7570977548353280,
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "sizing": "contain",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 6396600418924168,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 14
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Endpoints Overview\n- This dashboard provides endpoint details and a list of the top vulnerable endpoints based on vulnerabilities and alerts reported.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1199265805033436,
+            "layout": {
+                "x": 0,
+                "y": 24,
+                "width": 31,
+                "height": 21
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. Total Endpoints\n2. Endpoints by Risk\n3. Endpoints with Sensor Issues\n4. Top Endpoints by Alerts\n5. Top Endpoints by Vulnerabilities\n6. Top Endpoints by Missing KBs\n7. Endpoints Details",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 3451292453641128,
+            "layout": {
+                "x": 153,
+                "y": 0,
+                "width": 59,
+                "height": 36
+            },
+            "definition": {
+                "title": "Endpoints by Risk",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Risk Score",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoints"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@endpoint-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-risk",
+                                        "sort": {
+                                            "metric": "@endpoint-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 427886875955386,
+            "layout": {
+                "x": 153,
+                "y": 37,
+                "width": 59,
+                "height": 36
+            },
+            "definition": {
+                "title": "Endpoints with Sensor Issues",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Endpoints",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoints @endpoint-health-status:(Inactive OR Misconfigured)"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@endpoint-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-health-status",
+                                        "sort": {
+                                            "metric": "@endpoint-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 527965469422688,
+            "layout": {
+                "x": 33,
+                "y": 74,
+                "width": 179,
+                "height": 35
+            },
+            "definition": {
+                "title": "Endpoints Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Alerts",
+                                "conditional_formats": [],
+                                "cell_display_mode": "number",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Missing KBs",
+                                "conditional_formats": [],
+                                "cell_display_mode": "number",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Vulnerabilities",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 900,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "number",
+                                "formula": "query3"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@alert-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-id",
+                                        "sort": {
+                                            "metric": "@alert-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 30
+                                    },
+                                    {
+                                        "facet": "@endpoint-name",
+                                        "sort": {
+                                            "metric": "@alert-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 30
+                                    }
+                                ]
+                            },
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoints.missing_kbs"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@missing-kb-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query2",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-id",
+                                        "sort": {
+                                            "metric": "@missing-kb-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 30
+                                    },
+                                    {
+                                        "facet": "@endpoint-name",
+                                        "sort": {
+                                            "metric": "@missing-kb-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 30
+                                    }
+                                ]
+                            },
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoint-software.vulns"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "vulnerability-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query3",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-id",
+                                        "sort": {
+                                            "metric": "vulnerability-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 30
+                                    },
+                                    {
+                                        "facet": "@endpoint-name",
+                                        "sort": {
+                                            "metric": "vulnerability-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 30
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "always",
+                "custom_links": [
+                    {
+                        "link": "/screen/integration/Crest%20Microsoft%20Defender%20-%20Endpoints%20Details?from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&live=false&tpl_var_Endpoint-Name={{@endpoint-name.value}}",
+                        "label": "View Endpoint Details of '{{@endpoint-name.value}}'"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4274609525354904,
+            "layout": {
+                "x": 33,
+                "y": 0,
+                "width": 33,
+                "height": 26
+            },
+            "definition": {
+                "title": "Total Endpoints",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "custom_bg_color": "#1964d4",
+                                "comparator": ">",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoints"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@endpoint-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "text_align": "center",
+                "precision": 0
+            }
+        },
+        {
+            "id": 2569899962339974,
+            "layout": {
+                "x": 33,
+                "y": 37.0000000529819,
+                "width": 59,
+                "height": 36
+            },
+            "definition": {
+                "title": "Top Endpoints by Vulnerabilities",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoint-software.vulns"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@vulnerability-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-id",
+                                        "sort": {
+                                            "metric": "@vulnerability-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "custom_links": [
+                    {
+                        "link": "/screen/integration/Crest%20Microsoft%20Defender%20-%20Endpoints%20Details?from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&live=false&tpl_var_Endpoint-Id={{@endpoint-id.value}}",
+                        "label": "View Vulnerabilities of Endpoint '{{@endpoint-id.value}}'"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 150040825217076,
+            "layout": {
+                "x": 93,
+                "y": 37.0000000529819,
+                "width": 59,
+                "height": 36
+            },
+            "definition": {
+                "title": "Top Endpoints by Missing KBs",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoints.missing_kbs"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@missing-kb-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-name",
+                                        "sort": {
+                                            "metric": "@missing-kb-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "custom_links": [
+                    {
+                        "link": "/screen/integration/Crest%20Microsoft%20Defender%20-%20Endpoints%20Details?from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&live=false&tpl_var_Endpoint-Name={{@endpoint-name.value}}",
+                        "label": "View Missing KBs of Endpoint '{{@endpoint-name.value}}'"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3486513625539760,
+            "layout": {
+                "x": 67,
+                "y": 0,
+                "width": 85,
+                "height": 36
+            },
+            "definition": {
+                "title": "Top Endpoints by Alerts",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@alert-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-name",
+                                        "sort": {
+                                            "metric": "@alert-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "custom_links": [
+                    {
+                        "link": "/screen/integration/Crest%20Microsoft%20Defender%20-%20Endpoints%20Details?from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&live=false&tpl_var_Endpoint-Name={{@endpoint-name.value}}",
+                        "label": "View Alerts of Endpoint '{{@endpoint-name.value}}'"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5699046326332934,
+            "layout": {
+                "x": 33,
+                "y": 26,
+                "width": 33,
+                "height": 10
+            },
+            "definition": {
+                "type": "note",
+                "content": "Endpoints",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        }
+    ],
+    "template_variables": [],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "dkb-728-24g"
+}

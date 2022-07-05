@@ -1,0 +1,334 @@
+{
+    "title": "Microsoft Defender - Incidents Overview",
+    "description": "",
+    "widgets": [
+        {
+            "id": 7570977548353280,
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "sizing": "contain",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 6396600418924168,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Incidents Overview\n- This dashboard provides information on reported incidents.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1199265805033436,
+            "layout": {
+                "x": 0,
+                "y": 21,
+                "width": 31,
+                "height": 15
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. Total Incidents\n2. Incidents by Severity\n3. Incidents by Status\n4. Incidents Details",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 3451292453641128,
+            "layout": {
+                "x": 66,
+                "y": 0.08333333333333326,
+                "width": 59,
+                "height": 36
+            },
+            "definition": {
+                "title": "Incidents by Severity",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Severity",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.incidents"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@incidentId",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@incident-severity",
+                                        "sort": {
+                                            "metric": "@incidentId",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 1000
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 427886875955386,
+            "layout": {
+                "x": 126,
+                "y": 0.08333332487094547,
+                "width": 59,
+                "height": 36
+            },
+            "definition": {
+                "title": "Incidents by Status",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Status",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.incidents"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@incidentId",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@incident-status",
+                                        "sort": {
+                                            "metric": "@incidentId",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4274609525354904,
+            "layout": {
+                "x": 32,
+                "y": 9.750142540257104e-8,
+                "width": 33,
+                "height": 26
+            },
+            "definition": {
+                "title": "Total Incidents",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "custom_bg_color": "#1964d4",
+                                "comparator": ">",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.incidents"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@incidentId",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": []
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "text_align": "center",
+                "precision": 0,
+                "timeseries_background": {
+                    "type": "bars"
+                }
+            }
+        },
+        {
+            "id": 5699046326332934,
+            "layout": {
+                "x": 32,
+                "y": 26,
+                "width": 33,
+                "height": 10
+            },
+            "definition": {
+                "type": "note",
+                "content": "Incidents",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2346240489964534,
+            "layout": {
+                "x": 32,
+                "y": 37,
+                "width": 153,
+                "height": 34
+            },
+            "definition": {
+                "title": "Incidents Details",
+                "title_size": "16",
+                "title_align": "left",
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.incidents",
+                            "sort": {
+                                "column": "@incident-update-time",
+                                "order": "desc"
+                            },
+                            "data_source": "logs_stream",
+                            "indexes": [
+                                "*"
+                            ]
+                        },
+                        "response_format": "event_list",
+                        "columns": [
+                            {
+                                "field": "@lastUpdateTime",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@incidentId",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@incidentName",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@incident-severity",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@incident-status",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "@incident-update-time",
+                                "width": "auto"
+                            }
+                        ]
+                    }
+                ],
+                "type": "list_stream"
+            }
+        }
+    ],
+    "template_variables": [],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "hya-2bx-zid"
+}

@@ -1,0 +1,732 @@
+{
+    "title": "Microsoft Defender - Microsoft Defender Integration Overview",
+    "description": "",
+    "widgets": [
+        {
+            "id": 8219944812990550,
+            "layout": {
+                "x": 0.0769675925925926,
+                "y": 0.07638893745563649,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "sizing": "contain",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 2229871810717316,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 15
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Microsoft Defender Integration Overview\n- This dashboard provides a high-level overview of endpoints, alerts, vulnerabilities, and reported incidents.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4773357224610868,
+            "layout": {
+                "x": 0,
+                "y": 25,
+                "width": 31,
+                "height": 25
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. Incidents by Severity\n2. Incidents by status\n3. Alerts by Severity\n4. Alerts by Status\n5. Alerts by Category \n6. Automated Investigations by Status\n7. Vulnerabilities by Severity\n8. Endpoints by Risk\n9. Endpoints with Sensor Issues",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 3354114146326626,
+            "layout": {
+                "x": 32,
+                "y": 0,
+                "width": 108,
+                "height": 8
+            },
+            "definition": {
+                "type": "note",
+                "content": "Incidents Summary",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1958573479882378,
+            "layout": {
+                "x": 32,
+                "y": 89,
+                "width": 108,
+                "height": 8
+            },
+            "definition": {
+                "type": "note",
+                "content": "Alerts Summary",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2010209052505174,
+            "layout": {
+                "x": 142,
+                "y": 0,
+                "width": 108,
+                "height": 8
+            },
+            "definition": {
+                "type": "note",
+                "content": "Endpoints Summary",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 5682744737081034,
+            "layout": {
+                "x": 32,
+                "y": 98,
+                "width": 53,
+                "height": 39
+            },
+            "definition": {
+                "title": "Alerts by Severity",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Severity",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@alert-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@alert-severity",
+                                        "sort": {
+                                            "metric": "@alert-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3042690375875024,
+            "layout": {
+                "x": 32,
+                "y": 138,
+                "width": 108,
+                "height": 39
+            },
+            "definition": {
+                "title": "Alerts by Category",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Category",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@alert-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@alert-category",
+                                        "sort": {
+                                            "metric": "@alert-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3882451463329182,
+            "layout": {
+                "x": 142,
+                "y": 98,
+                "width": 108,
+                "height": 39
+            },
+            "definition": {
+                "title": "Automated Investigations by Status",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Status",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.investigations"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@investigation-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@investigation-status",
+                                        "sort": {
+                                            "metric": "@investigation-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 1286838517224070,
+            "layout": {
+                "x": 142,
+                "y": 138,
+                "width": 108,
+                "height": 39
+            },
+            "definition": {
+                "title": "Vulnerabilities by Severity",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Severity",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoint-software.vulns"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@vulnerability-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@vuln-severity",
+                                        "sort": {
+                                            "metric": "@vulnerability-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 1030538208678736,
+            "layout": {
+                "x": 142,
+                "y": 9,
+                "width": 108,
+                "height": 39
+            },
+            "definition": {
+                "title": "Endpoints by Risk",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Risk-Score",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoints"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@endpoint-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-risk",
+                                        "sort": {
+                                            "metric": "@endpoint-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4298116976487764,
+            "layout": {
+                "x": 142,
+                "y": 49,
+                "width": 108,
+                "height": 39
+            },
+            "definition": {
+                "title": "Endpoints with Sensor Issues",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Endpoints",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.endpoints @endpoint-health-status:(Inactive OR Misconfigured)"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@endpoint-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@endpoint-health-status",
+                                        "sort": {
+                                            "metric": "@endpoint-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8621597743421790,
+            "layout": {
+                "x": 32,
+                "y": 9,
+                "width": 108,
+                "height": 39
+            },
+            "definition": {
+                "title": "Incidents by Severity",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Severity",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.incidents"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@incidentId",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@incident-severity",
+                                        "sort": {
+                                            "metric": "@incidentId",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 1000
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2238927492410492,
+            "layout": {
+                "x": 32,
+                "y": 49,
+                "width": 108,
+                "height": 39
+            },
+            "definition": {
+                "title": "Incidents by Status",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Status",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.incidents"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@incidentId",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@incident-status",
+                                        "sort": {
+                                            "metric": "@incidentId",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3082600107812820,
+            "layout": {
+                "x": 87,
+                "y": 98,
+                "width": 53,
+                "height": 39
+            },
+            "definition": {
+                "title": "Alerts by Status",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Status",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.alerts"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@alert-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@alert-status",
+                                        "sort": {
+                                            "metric": "@alert-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8218842923677576,
+            "layout": {
+                "x": 142,
+                "y": 89,
+                "width": 108,
+                "height": 8
+            },
+            "definition": {
+                "type": "note",
+                "content": "Other Information",
+                "background_color": "vivid_blue",
+                "font_size": "36",
+                "text_align": "center",
+                "vertical_align": "center",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        }
+    ],
+    "template_variables": [],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "xvt-mpz-y74"
+}

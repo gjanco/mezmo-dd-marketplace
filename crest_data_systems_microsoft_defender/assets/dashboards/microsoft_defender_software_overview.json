@@ -1,0 +1,252 @@
+{
+    "title": "Microsoft Defender - Software Overview",
+    "description": "",
+    "widgets": [
+        {
+            "id": 3370480521725670,
+            "layout": {
+                "x": 0,
+                "y": 9,
+                "width": 31,
+                "height": 16
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Software Overview\n- This dashboard provides information on software vulnerabilities. Click on a table row to see more information on an endpoint that has a particular software installed.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4532613894413332,
+            "layout": {
+                "x": 0,
+                "y": 26,
+                "width": 31,
+                "height": 13
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. Software Ranked by Number of Vulnerabilities\n2. Software Vulnerabilities by Severity\n3. Software Version Details\n",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6457886333544960,
+            "layout": {
+                "x": 0,
+                "y": 5.2981906467013886e-8,
+                "width": 31,
+                "height": 8
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "url_dark_theme": "https://download.logo.wine/logo/Windows_Defender/Windows_Defender-Logo.wine.png",
+                "sizing": "contain",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 7465146341077894,
+            "layout": {
+                "x": 32,
+                "y": 0,
+                "width": 58,
+                "height": 37
+            },
+            "definition": {
+                "title": "Software Ranked by Number of Vulnerabilities",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "toplist",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.software.vulns"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@vulnerability-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@software-id",
+                                        "sort": {
+                                            "metric": "@vulnerability-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "custom_links": []
+            }
+        },
+        {
+            "id": 3234305017289368,
+            "layout": {
+                "x": 91,
+                "y": 5.2981906467013886e-8,
+                "width": 58,
+                "height": 37
+            },
+            "definition": {
+                "title": "Software Vulnerabilities by Severity",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "value"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Severity",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "search": {
+                                    "query": "source:crest_data_systems_microsoft_defender service:ms.defender.endpoint.software.vulns"
+                                },
+                                "data_source": "logs",
+                                "compute": {
+                                    "metric": "@vulnerability-id",
+                                    "aggregation": "cardinality"
+                                },
+                                "name": "query1",
+                                "indexes": [
+                                    "*"
+                                ],
+                                "group_by": [
+                                    {
+                                        "facet": "@vuln-severity",
+                                        "sort": {
+                                            "metric": "@vulnerability-id",
+                                            "aggregation": "cardinality",
+                                            "order": "desc"
+                                        },
+                                        "limit": 10
+                                    }
+                                ]
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2745289931748542,
+            "layout": {
+                "x": 32,
+                "y": 38,
+                "width": 117,
+                "height": 74
+            },
+            "definition": {
+                "title": "Software Version Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "No of Vulnerabilities",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "number",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "No of Installations",
+                                "conditional_formats": [],
+                                "cell_display_mode": "number",
+                                "formula": "query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.ms.defender.endpoint.software_version_vulnerabilities{*} by {cds_ms_defender_endpoint_software_id,cds_ms_defender_endpoint_software_version}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "sum:cds.ms.defender.endpoint.software_version_installations{*} by {cds_ms_defender_endpoint_software_id,cds_ms_defender_endpoint_software_version}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "always",
+                "custom_links": [
+                    {
+                        "link": "/screen/integration/Crest%20Microsoft%20Defender%20-%20Software%20Details?from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&live=false&tpl_var_Software-Id={{cds_ms_defender_endpoint_software_id.value}}&tpl_var_Software-Version={{cds_ms_defender_endpoint_softwar_version.value}}",
+                        "label": "View Software Details of '{{cds_ms_defender_endpoint_software_id.value}}' with version '{{cds_ms_defender_endpoint_software_version.value}}'"
+                    }
+                ]
+            }
+        }
+    ],
+    "template_variables": [],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "wth-45v-ese"
+}
