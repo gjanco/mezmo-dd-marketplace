@@ -1,0 +1,27 @@
+{
+	"name": "[Hardware Sentry] Predicted failure for {{[hw.type].name}} {{name.name}}",
+	"type": "query alert",
+	"query": "max(last_5m):max:hw.status{state:predicted_failure} by {site,hw.type,id,name,info,host} >= 999999",
+	"message": "{{#is_warning}}\n## Predicted {{[hw.type].name}} failure\n\n**{{name.name}}** is predicted to fail soon on [**{{host.name}}** in **{{site.name}}**](/dash/integration/Hardware%20Sentry%20-%20Host?tpl_var_host={{host.name}}&tpl_var_site={{site.name}}&from_ts={{eval \"last_triggered_at_epoch-2*3600*1000\"}}&to_ts={{eval \"last_triggered_at_epoch+1*3600*1000\"}}&live=false).\n\n## Consequence\n\n{{#is_exact_match \"[hw.type].name\" \"cpu\"}}A system crash is very likely to occur soon.{{/is_exact_match}}\n{{#is_exact_match \"[hw.type].name\" \"gpu\"}}GPU-specific features are likely to crash soon, potentially causing an entire system failure.{{/is_exact_match}}\n{{#is_exact_match \"[hw.type].name\" \"memory\"}}Replace this memory module as soon as possible to prevent a system crash.{{/is_exact_match}}\n{{#is_exact_match \"[hw.type].name\" \"physical_disk\"}}A disk crash or data corruption is very likely to occur soon.{{/is_exact_match}}\n\n## Recommended action\n\n{{#is_exact_match \"[hw.type].name\" \"cpu\"}}Replace this processor or disable it as soon as possible, if disabling it will not affect the performance of the system.{{/is_exact_match}}\n{{#is_exact_match \"[hw.type].name\" \"gpu\"}}Replace this GPU or disable it as soon as possible, if disabling it will not affect the performance of the system.{{/is_exact_match}}\n{{#is_exact_match \"[hw.type].name\" \"memory\"}}Replace this memory module as soon as possible to prevent a system crash.{{/is_exact_match}}\n{{#is_exact_match \"[hw.type].name\" \"physical_disk\"}}Replace this physical disk as soon as possible to prevent a disk crash or data corruption.{{/is_exact_match}}\n{{/is_warning}} \n\n{{#is_warning_recovery}}\nFailure is no longer predicted for {{[hw.type].name}} **{{name.name}}**.\n{{/is_warning_recovery}}\n\n## Device details\n\n| Property | Value |\n|---|---|\n| Type | {{[hw.type].name}} |\n| Name | {{name.name}} |\n| ID | {{id.name}} |\n| More information | {{info.name}} |",
+	"tags": [
+		"integration:hardware-sentry"
+	],
+	"recommended_monitor_metadata": {
+		"description": "Warn when an imminent hardware failure is predicted"
+	},
+	"options": {
+		"thresholds": {
+			"critical": 999999,
+			"warning": 1
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"silenced": {},
+		"include_tags": false,
+		"new_group_delay": 60
+	},
+	"priority": 4,
+	"restricted_roles": null
+}

@@ -1,0 +1,28 @@
+{
+	"name": "[Hardware Sentry] Low fan speed",
+	"type": "query alert",
+	"query": "max(last_5m):avg:hw.fan.speed{*} by {id,host,site,sensor_location,info,name} - avg:hw.fan.speed.limit{limit_type:low.degraded} by {id,host,site,sensor_location,info,name} <= -99999",
+	"message": "{{#is_warning}}\n## Low fan speed\n\nFan speed is low for **{{name.name}}** on [**{{host.name}}** in **{{site.name}}**](/dash/integration/Hardware%20Sentry%20-%20Host?tpl_var_host={{host.name}}&tpl_var_site={{site.name}}&from_ts={{eval \"last_triggered_at_epoch-2*3600*1000\"}}&to_ts={{eval \"last_triggered_at_epoch+1*3600*1000\"}}&live=false).\n\n## Consequence\n\nThe temperature of the chip, component or device that was cooled down by this fan, may increase slightly. This could lead to system crashes.\n\n## Recommended action\n\nCheck why the fan is running slow. This may be caused by dust or wear and tear. Replace the fan if needed.\n{{/is_warning}}\n\n{{#is_recovery}}\nRecovered fan speed.\n{{/is_recovery}}\n\n## Device details\n\n| Property | Value |\n|---|---|\n| Name | {{name.name}} |\n| ID | {{id.name}} |\n| Sensor location | {{sensor_location.name}} |\n| More information | {{info.name}} |",
+	"tags": [
+		"integration:hardware-sentry"
+	],
+	"recommended_monitor_metadata": {
+		"description": "Warn when the fan speed goes below the threshold defined by the vendor"
+	},
+	"options": {
+		"notify_audit": false,
+		"silenced": {},
+		"include_tags": false,
+		"thresholds": {
+			"critical": -99999,
+			"warning": 0
+		},
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": ""
+	},
+	"priority": 4,
+	"restricted_roles": null
+}

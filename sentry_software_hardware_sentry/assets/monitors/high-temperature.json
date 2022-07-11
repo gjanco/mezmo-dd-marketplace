@@ -1,0 +1,28 @@
+{
+	"name": "[Hardware Sentry] High temperature on {{name.name}}",
+	"type": "query alert",
+	"query": "max(last_5m):avg:hw.temperature{*} by {id,host,site,sensor_location,info,name} - avg:hw.temperature.limit{limit_type:high.degraded} by {id,host,site,sensor_location,info,name} >= 50",
+	"message": "{{#is_warning}}\n## High temperature\n\nTemperature is high for **{{name.name}}** on [**{{host.name}}** in **{{site.name}}**](/dash/integration/Hardware%20Sentry%20-%20Host?tpl_var_host={{host.name}}&tpl_var_site={{site.name}}&from_ts={{eval \"last_triggered_at_epoch-2*3600*1000\"}}&to_ts={{eval \"last_triggered_at_epoch+1*3600*1000\"}}&live=false).\n\n## Consequence\n\nAn out-of-range temperature may lead to a system crash or even damaged hardware.\n\n## Recommended action\n\nCheck why the temperature is out of the normal range (it may be due to a fan failure, a severe system overload or a failure in the data center cooling system).\n{{/is_warning}}\n\n{{#is_recovery}}\nRecovered temperature level.\n{{/is_recovery}}\n\n## Device details\n\n| Property | Value |\n|---|---|\n| Name | {{name.name}} |\n| ID | {{id.name}} |\n| Sensor location | {{sensor_location.name}} |\n| More information | {{info.name}} |",
+	"tags": [
+		"integration:hardware-sentry"
+	],
+	"recommended_monitor_metadata": {
+		"description": "Warn when the temperature goes above the threshold defined by the vendor"
+	},
+	"options": {
+		"notify_audit": false,
+		"silenced": {},
+		"include_tags": false,
+		"thresholds": {
+			"critical": 50,
+			"warning": 0
+		},
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": ""
+	},
+	"priority": 3,
+	"restricted_roles": null
+}

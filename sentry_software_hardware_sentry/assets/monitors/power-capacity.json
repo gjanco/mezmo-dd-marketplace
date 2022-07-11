@@ -1,0 +1,28 @@
+{
+	"name": "[Hardware Sentry] Power capacity",
+	"type": "query alert",
+	"query": "max(last_5m):avg:hw.power_supply.utilization{*} by {id,host,site,power_supply_type,info,name} * 100 >= 99",
+	"message": "{{#is_warning}}\n## High power usage\n\nSystem is drawing {{value}}% of the capacity of the power supply **{{name.name}}** on [**{{host.name}}** in **{{site.name}}**](/dash/integration/Hardware%20Sentry%20-%20Host?tpl_var_host={{host.name}}&tpl_var_site={{site.name}}&from_ts={{eval \"last_triggered_at_epoch-2*3600*1000\"}}&to_ts={{eval \"last_triggered_at_epoch+1*3600*1000\"}}&live=false).\n\n## Consequence\n\nOverloading a power supply may lead to voltage instability and system crashes. It can also cause severe damage to the power supply.\n\n## Recommended Action\n\nFind out why the power used by the system has increased this much (typically: new hard-drives). Upgrade to a power supply that can support such a power demand.\n{{/is_warning}}\n\n{{#is_alert}}\n## High power usage\n\nThe capacity of the power supply **{{name.name}}** is maxed-out on [**{{host.name}}** in **{{site.name}}**](/dash/integration/Hardware%20Sentry%20-%20Host?tpl_var_host={{host.name}}&tpl_var_site={{site.name}}&from_ts={{eval \"last_triggered_at_epoch-2*3600*1000\"}}&to_ts={{eval \"last_triggered_at_epoch+1*3600*1000\"}}&live=false).\n\n## Consequence\n\nOverloading a power supply may lead to voltage instability and system crashes. It can also cause severe damage to the power supply.\n\n## Recommended Action\n\nFind out why the power used by the system has increased this much (typically: new hard-drives). Upgrade to a power supply that can support such a power demand.\n{{/is_alert}}\n{{#is_recovery}}\nThe power utlization has decreased and the power supply should now be able to support the power demand.\n{{/is_recovery}}\n\n## Device details\n\n| Property | Value |\n|---|---|\n| Name | {{name.name}} |\n| ID | {{id.name}} |\n| Type | {{power_supply_type.name}} |\n| More information | {{info.name}} |",
+	"tags": [
+		"integration:hardware-sentry"
+	],
+	"recommended_monitor_metadata": {
+		"description": "Alert when a power supply is nearing its capacity"
+	},
+	"options": {
+		"notify_audit": false,
+		"silenced": {},
+		"include_tags": false,
+		"thresholds": {
+			"critical": 99,
+			"warning": 90
+		},
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": ""
+	},
+	"priority": 3,
+	"restricted_roles": null
+}

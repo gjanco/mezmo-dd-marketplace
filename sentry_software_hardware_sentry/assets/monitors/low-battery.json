@@ -1,0 +1,28 @@
+{
+	"name": "[Hardware Sentry] Low battery {{name.name}}",
+	"type": "query alert",
+	"query": "max(last_5m):avg:hw.battery.charge{*} by {id,host,site,model,vendor,type,name,chemistry,info} * 100 <= 30",
+	"message": "{{#is_warning}}\n## Low Battery\n\nBattery **{{name.name}}** is low (**{{value}}%**) on [**{{host.name}}** in **{{site.name}}**](/dash/integration/Hardware%20Sentry%20-%20Host?tpl_var_host={{host.name}}&tpl_var_site={{site.name}}&from_ts={{eval \"last_triggered_at_epoch-2*3600*1000\"}}&to_ts={{eval \"last_triggered_at_epoch+1*3600*1000\"}}&live=false).\n\n## Consequence\n\nA low charge battery may lead to data loss in case of a power outage.\n\n## Recommended Action\n\nCheck why the battery is not fully charged (it may be due to a power outage or an unplugged power cable) and fully recharge the battery when possible.\n{{/is_warning}}\n{{#is_alert}}\n## Low Battery\n\nBattery **{{name.name}}** is **critically low** (**{{value}}%**) on [**{{host.name}}** in **{{site.name}}**](/dash/integration/Hardware%20Sentry%20-%20Host?tpl_var_host={{host.name}}&tpl_var_site={{site.name}}&from_ts={{eval \"last_triggered_at_epoch-2*3600*1000\"}}&to_ts={{eval \"last_triggered_at_epoch+1*3600*1000\"}}&live=false).\n\n## Consequence\n\nA low charge battery may lead to data loss in case of a power outage.\n\n## Recommended Action\n\nReplace the battery.\n{{/is_alert}}\n{{#is_recovery}}\nThe battery charge is back within the normal operational range.\n{{/is_recovery}}\n\n## Device details\n\n| Property | Value |\n|---|---|\n| Type | {{type.name}} |\n| Name | {{name.name}} |\n| Vendor | {{vendor.name}} |\n| Model | {{model.name}} |\n| Chemistry | {{chemistry.name}} |\n| ID | {{id.name}} |\n| Serial Number | {{serial_number.name}} |\n| More information | {{info.name}} |",
+	"tags": [
+		"integration:hardware-sentry"
+	],
+	"recommended_monitor_metadata": {
+		"description": "Alert when remaining battery charge is low"
+	},
+	"options": {
+		"notify_audit": false,
+		"silenced": {},
+		"include_tags": false,
+		"thresholds": {
+			"critical": 30,
+			"warning": 50
+		},
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": ""
+	},
+	"priority": 2,
+	"restricted_roles": null
+}

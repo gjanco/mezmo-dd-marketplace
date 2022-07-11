@@ -1,0 +1,2294 @@
+{
+    "author_name": "Sentry Software",
+    "description": "This collection of dashboards (**Hardware Sentry**) leverages the [`hw.*` metrics](/metric/summary?filter=hw.) collected by [Hardware Sentry OpenTelemetry Collector](https://www.sentrysoftware.com/products/hardware-sentry-opentelemetry-collector.html).\n\n| Dashboard | Description |\n|---|---|\n| [Hardware Sentry - Observability & Sustainability](/dash/integration/Hardware%20Sentry%20-%20Main) | Overview of all monitored hosts, with a focus on sustainability |\n| **Hardware Sentry - Site** (this dashboard) | Metrics associated to one *site* (a data center or a server room) and its monitored *hosts* |\n| [Hardware Sentry - Host](/dash/integration/Hardware%20Sentry%20-%20Host) | Metrics associated to one *host* and its internal devices |\n\n## Site\n\nA *site* represents a data center or a server room. Select a site with the `$site` dashboard variable. \n\nThis dashboard is split in 5 sections:\n\n* Summary of what is monitored in the selected *site*\n* Power consumption, electricity cost and carbon emissions\n* Temperature optimization and potential reduction in carbon emissions\n* List of hosts in the *site* -- **Click on a host > View hardware dashboard** to go to the *Hardware Sentry - Host* dashboard of the selected host\n* Inventory\n\n## How to configure *sites*?\n\n*Sites* are determined from the `site` label in the `hw.*` metrics that are displayed in this dashboard. The `site` label is added by **Hardware Sentry OpenTelemetry Collector** when collecting hardware metrics.\n\nInstall an instance of [Hardware Sentry OpenTelemetry Collector](https://www.sentrysoftware.com/products/hardware-sentry-opentelemetry-collector.html) in each data center or server room. For each, [configure **hws-config.yaml**](https://www.sentrysoftware.com/docs/hws-otel-collector/latest/configuration/configure-agent.html) to specify the characteristics of the *site* as in the example below:\n\n```yaml\nextraLabels:\n  site: Datacenter 1 # Customize with your own site naming\n\nextraMetrics:\n  hw.site.carbon_density_grams: 350 # in g/kWh\n  hw.site.electricity_cost_dollars: 0.12 # in $/kWh\n  hw.site.pue_ratio: 1.8\n```\n",
+    "layout_type": "ordered",
+    "template_variables": [
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "site",
+            "prefix": "site"
+        }
+    ],
+    "title": "Hardware Sentry - Site",
+    "widgets": [
+        {
+            "definition": {
+                "background_color": "vivid_blue",
+                "content": "[Hardware Sentry](/dash/integration/Hardware%20Sentry%20-%20Main) > **$site.value**",
+                "font_size": "24",
+                "has_padding": true,
+                "show_tick": false,
+                "text_align": "left",
+                "tick_edge": "left",
+                "tick_pos": "50%",
+                "type": "note",
+                "vertical_align": "center"
+            },
+            "id": 5315334239620634,
+            "layout": {
+                "height": 1,
+                "width": 10,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "has_background": false,
+                "has_border": false,
+                "horizontal_align": "center",
+                "sizing": "scale-down",
+                "type": "image",
+                "url": "https://dl.sentrysoftware.com/public/logo.png",
+                "url_dark_theme": "https://dl.sentrysoftware.com/public/logo-dark.png",
+                "vertical_align": "center"
+            },
+            "id": 5990577765836592,
+            "layout": {
+                "height": 1,
+                "width": 2,
+                "x": 10,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "custom_links": [
+                    {
+                        "is_hidden": true,
+                        "override_label": "containers"
+                    },
+                    {
+                        "is_hidden": false,
+                        "link": "/infrastructure/map?filter={{$host}}",
+                        "override_label": "hosts"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "logs"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "traces"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "profiles"
+                    }
+                ],
+                "precision": 0,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "custom_bg_color": "#808383",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:hw.host.configured{$site}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Hosts",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 241002808920790,
+            "layout": {
+                "height": 1,
+                "width": 1,
+                "x": 0,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "max",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:hw.status{$site,state:present,hw.type:cpu}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "CPUs",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4074026895921150,
+            "layout": {
+                "height": 1,
+                "width": 1,
+                "x": 1,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "B",
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:hw.physical_disk.size{$site}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Disks",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3057766832827844,
+            "layout": {
+                "height": 1,
+                "width": 1,
+                "x": 2,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query2"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:hw.network.up{$site}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Connected NICs",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 4900193878166788,
+            "layout": {
+                "height": 1,
+                "width": 1,
+                "x": 3,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_unit": "B",
+                "precision": 1,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query2"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:hw.network.io.transmit{$site}.as_count()"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Network Tx",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 5289049721284074,
+            "layout": {
+                "height": 1,
+                "width": 1,
+                "x": 4,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "hide_percent": false,
+                    "type": "inline"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:hw.host.configured{$site} by {host.type}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Host Types",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 5616563739412724,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 5,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "hide_total": true,
+                "legend": {
+                    "hide_percent": false,
+                    "hide_value": true,
+                    "type": "inline"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:hw.status{$site,state:present,hw.type:enclosure} by {vendor}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Host Vendors",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 4246421872160910,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 8,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [
+                    {
+                        "is_hidden": true,
+                        "override_label": "containers"
+                    },
+                    {
+                        "is_hidden": false,
+                        "link": "/infrastructure/map?filter={{$host}}",
+                        "override_label": "hosts"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "logs"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "traces"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "profiles"
+                    }
+                ],
+                "precision": 2,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "custom_bg_color": "#ebeaea",
+                                "palette": "white_on_green",
+                                "value": 1.5
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 2
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_yellow",
+                                "value": 1.8
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:hw.site.pue_ratio{$site}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "PUE",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1553363859264876,
+            "layout": {
+                "height": 1,
+                "width": 1,
+                "x": 11,
+                "y": 1
+            }
+        },
+        {
+            "definition": {
+                "color_preference": "background",
+                "count": 50,
+                "display_format": "counts",
+                "hide_zero_counts": false,
+                "query": "tag:(integration:hardware-sentry) group_status:(alert OR warn OR \"no data\") group:$site",
+                "show_last_triggered": true,
+                "show_priority": false,
+                "sort": "triggered,desc",
+                "start": 0,
+                "summary_type": "groups",
+                "title": "Current Hardware Issues",
+                "title_align": "left",
+                "title_size": "13",
+                "type": "manage_status"
+            },
+            "id": 7459300896666636,
+            "layout": {
+                "height": 2,
+                "width": 5,
+                "x": 0,
+                "y": 2
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [
+                    {
+                        "is_hidden": true,
+                        "override_label": "containers"
+                    },
+                    {
+                        "is_hidden": false,
+                        "link": "/infrastructure/map?filter={{$host}}",
+                        "override_label": "hosts"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "logs"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "traces"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "profiles"
+                    }
+                ],
+                "custom_unit": "$/kWh",
+                "precision": 3,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": ">=",
+                                "custom_bg_color": "#ebeaea",
+                                "palette": "red_on_white",
+                                "value": 0.3
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "yellow_on_white",
+                                "value": 0.15
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:hw.site.electricity_cost_dollars{$site}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Electricity Cost",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 8283155038297356,
+            "layout": {
+                "height": 1,
+                "width": 1,
+                "x": 11,
+                "y": 2
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "custom_links": [
+                    {
+                        "is_hidden": true,
+                        "override_label": "containers"
+                    },
+                    {
+                        "is_hidden": false,
+                        "link": "/infrastructure/map?filter={{$host}}",
+                        "override_label": "hosts"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "logs"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "traces"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "profiles"
+                    }
+                ],
+                "custom_unit": "g/kWh",
+                "precision": 3,
+                "requests": [
+                    {
+                        "conditional_formats": [
+                            {
+                                "comparator": "<",
+                                "custom_bg_color": "#ebeaea",
+                                "palette": "green_on_white",
+                                "value": 100
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "white_on_red",
+                                "value": 400
+                            },
+                            {
+                                "comparator": ">=",
+                                "palette": "yellow_on_white",
+                                "value": 250
+                            }
+                        ],
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:hw.site.carbon_density_grams{$site}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "CO\u2082 Density",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3163977622962232,
+            "layout": {
+                "height": 1,
+                "width": 1,
+                "x": 11,
+                "y": 3
+            }
+        },
+        {
+            "definition": {
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Estimated Consumption and Emissions",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_links": [
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "containers"
+                                },
+                                {
+                                    "is_hidden": false,
+                                    "link": "/infrastructure/map?filter={{$host}}",
+                                    "override_label": "hosts"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "logs"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "traces"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "profiles"
+                                }
+                            ],
+                            "custom_unit": "W",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#107be0",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.power{$site}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Current Power * PUE",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 4183805403194320,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value"
+                            ],
+                            "legend_layout": "vertical",
+                            "markers": [],
+                            "requests": [
+                                {
+                                    "display_type": "area",
+                                    "formulas": [
+                                        {
+                                            "alias": "Power * P.U.E. (W)",
+                                            "formula": "query1 * query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.power{$site}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site} by {site}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "normal",
+                                        "palette": "cool"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Electric Power * PUE (W)",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries",
+                            "yaxis": {
+                                "include_zero": true,
+                                "label": "",
+                                "max": "auto",
+                                "min": "auto",
+                                "scale": "linear"
+                            }
+                        },
+                        "id": 2546514432432370,
+                        "layout": {
+                            "height": 3,
+                            "width": 4,
+                            "x": 2,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "Wh",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#2864f0",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2 * 24"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {
+                                "live_span": "1d"
+                            },
+                            "title": "Daily Consumption",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 1770446070272846,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 6,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "$",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#3db33f",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2 * query3 * 24 / 1000"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:hw.site.electricity_cost_dollars{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {
+                                "live_span": "1d"
+                            },
+                            "title": "Daily Cost",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 3183758201998666,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 8,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "t",
+                            "precision": 2,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#545454",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2 * query3 * 24 / 1000 / 1000000"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:hw.site.carbon_density_grams{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {
+                                "live_span": "1d"
+                            },
+                            "title": "Daily CO\u2082 Emissions",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 7242794018772358,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 10,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_links": [
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "containers"
+                                },
+                                {
+                                    "is_hidden": false,
+                                    "link": "/infrastructure/map?filter={{$host}}",
+                                    "override_label": "hosts"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "logs"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "traces"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "profiles"
+                                }
+                            ],
+                            "custom_unit": "W",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#107be0",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.power{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Current Power",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 8219298540949682,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 0,
+                            "y": 1
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "Wh",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#1f54d1",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2 * 24 * 30"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {
+                                "live_span": "1mo"
+                            },
+                            "title": "Monthly Consumption",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 2400324795335248,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 6,
+                            "y": 1
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "$",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#32a434",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2 * query3 * 24 * 30 / 1000"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:hw.site.electricity_cost_dollars{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {
+                                "live_span": "1mo"
+                            },
+                            "title": "Monthly Cost",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 1398691136621596,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 8,
+                            "y": 1
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "t",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#333333",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2 * query3 * 24 * 30 / 1000 / 1000000"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:hw.site.carbon_density_grams{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {
+                                "live_span": "1mo"
+                            },
+                            "title": "Monthly CO\u2082 Emissions",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 5615364548188086,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 10,
+                            "y": 1
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": false,
+                            "custom_links": [
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "containers"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "link": "/infrastructure/map?filter={{$host}}",
+                                    "override_label": "hosts"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "logs"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "traces"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "profiles"
+                                }
+                            ],
+                            "custom_unit": "%",
+                            "precision": 0,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": "<=",
+                                            "custom_bg_color": "#107be0",
+                                            "palette": "black_on_light_green",
+                                            "value": 10
+                                        },
+                                        {
+                                            "comparator": ">=",
+                                            "palette": "black_on_light_yellow",
+                                            "value": 15
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "(query2 * 5 + query1 * 15 + 10000 * (count_nonzero(query4) - count_nonzero(query5))) / (query2 + query1 + 100 * (count_nonzero(query4) - count_nonzero(query5)))"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:hw.host.power{quality:measured,$site}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.power{quality:estimated,$site}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "max:hardware_sentry.host.configured{$site} by {host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "max:hardware_sentry.connector.status{state:ok,$site} by {host}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "sum:hw.host.power{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {},
+                            "title": "Margin of Error",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 773299779487980,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 0,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "Wh",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#1b48b1",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2 * 24 * 365"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {
+                                "live_span": "1y"
+                            },
+                            "title": "Yearly Consumption",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 3018400347789156,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 6,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "$",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#2c902e",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2 * query3 * 24 * 365 / 1000"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:hw.site.electricity_cost_dollars{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {
+                                "live_span": "1y"
+                            },
+                            "title": "Yearly Cost",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 2298555594429512,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 8,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": false,
+                            "custom_unit": "t",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#000000",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * query2 * query3 * 24 * 365 / 1000 / 1000000"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:hw.site.carbon_density_grams{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "time": {
+                                "live_span": "1y"
+                            },
+                            "title": "Yearly CO\u2082 Emissions",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 4721084324796734,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 10,
+                            "y": 2
+                        }
+                    }
+                ]
+            },
+            "id": 6508917075363290,
+            "layout": {
+                "height": 4,
+                "width": 12,
+                "x": 0,
+                "y": 4
+            }
+        },
+        {
+            "definition": {
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Site Temperature Optimization",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "autoscale": false,
+                            "custom_links": [
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "containers"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "link": "/infrastructure/map?filter={{$host}}",
+                                    "override_label": "hosts"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "logs"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "traces"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "profiles"
+                                }
+                            ],
+                            "custom_unit": "\u00b0C",
+                            "precision": 0,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": "<=",
+                                            "custom_bg_color": "#107be0",
+                                            "palette": "white_on_red",
+                                            "value": 5
+                                        },
+                                        {
+                                            "comparator": ">=",
+                                            "custom_bg_color": "#bcd2e6",
+                                            "palette": "black_on_light_yellow",
+                                            "value": 15
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "min",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "min:hw.host.heating_margin{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "timeseries_background": {
+                                "type": "area"
+                            },
+                            "title": "Heating Margin",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 1933414642868110,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": false,
+                            "custom_unit": "%",
+                            "precision": 0,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": "<",
+                                            "palette": "white_on_red",
+                                            "value": 50
+                                        },
+                                        {
+                                            "comparator": "<",
+                                            "palette": "white_on_yellow",
+                                            "value": 75
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query2 / query1 / query3 * 100"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:hw.host.ambient_temperature{$site}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        },
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "sum:hw.host.configured{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Monitoring Confidence",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 3486192409702464,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 2,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value"
+                            ],
+                            "legend_layout": "vertical",
+                            "markers": [
+                                {
+                                    "display_type": "error dashed",
+                                    "label": "Danger",
+                                    "value": "0 < y < 5"
+                                },
+                                {
+                                    "display_type": "ok dashed",
+                                    "label": "Optimal",
+                                    "value": "5 < y < 10"
+                                },
+                                {
+                                    "display_type": "warning dashed",
+                                    "label": "Sub-optimal",
+                                    "value": "y > 10"
+                                }
+                            ],
+                            "requests": [
+                                {
+                                    "display_type": "line",
+                                    "formulas": [
+                                        {
+                                            "alias": "Heating Margin (\u00b0C)",
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "min:hw.host.heating_margin{$site}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "line_type": "solid",
+                                        "line_width": "thick",
+                                        "palette": "red"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Site Heating Margin (\u00b0C)",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "timeseries",
+                            "yaxis": {
+                                "include_zero": true,
+                                "label": "",
+                                "max": "auto",
+                                "min": "auto",
+                                "scale": "linear"
+                            }
+                        },
+                        "id": 7461945970291008,
+                        "layout": {
+                            "height": 3,
+                            "width": 4,
+                            "x": 4,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": false,
+                            "custom_links": [
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "containers"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "link": "/infrastructure/map?filter={{$host}}",
+                                    "override_label": "hosts"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "logs"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "traces"
+                                },
+                                {
+                                    "is_hidden": true,
+                                    "override_label": "profiles"
+                                }
+                            ],
+                            "custom_unit": "\u00b0C",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": "<",
+                                            "custom_bg_color": "#4e9ee9",
+                                            "palette": "custom_bg",
+                                            "value": 20
+                                        },
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#bcd2e6",
+                                            "palette": "white_on_yellow",
+                                            "value": 29
+                                        },
+                                        {
+                                            "comparator": ">=",
+                                            "custom_bg_color": "#4e9ee9",
+                                            "palette": "white_on_red",
+                                            "value": 32
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "last",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Current Site Temperature",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 1484856395500664,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 8,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "Wh",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#1b48b1",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "black_on_light_red",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * (query2 - 1.15) * 24 * 365 * (clamp_max(query3 + query5 - (query4 - query3), 29) - query3) * 0.05"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        },
+                                        {
+                                            "aggregator": "min",
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "min:hw.host.heating_margin{$site}"
+                                        },
+                                        {
+                                            "aggregator": "max",
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Potential Yearly Energy Savings",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 4020126384030342,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 10,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "min:hw.host.heating_margin{$site} by {host}",
+                                    "style": {
+                                        "palette": "warm"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Heating Margin Host Distribution",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "distribution",
+                            "xaxis": {
+                                "include_zero": true,
+                                "max": "auto",
+                                "min": "auto",
+                                "scale": "linear"
+                            },
+                            "yaxis": {
+                                "include_zero": true,
+                                "max": "auto",
+                                "min": "auto",
+                                "scale": "linear"
+                            }
+                        },
+                        "id": 7871988482656032,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 0,
+                            "y": 1
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": false,
+                            "custom_unit": "\u00b0C",
+                            "precision": 0,
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "clamp_max(query1 + (query3 - 5) - (query2 - query1), 29)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        },
+                                        {
+                                            "aggregator": "min",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "min:hw.host.heating_margin{$site}"
+                                        },
+                                        {
+                                            "aggregator": "max",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Recommended Site Temperature",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 4383422061064572,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 8,
+                            "y": 1
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": true,
+                            "custom_unit": "$",
+                            "precision": 0,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#2c902e",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "black_on_light_red",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * (query2 - 1.15) * 24 * 365 * (clamp_max(query3 + query5 - (query4 - query3), 29) - query3) * 0.05 * query6 / 1000"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        },
+                                        {
+                                            "aggregator": "min",
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "min:hw.host.heating_margin{$site}"
+                                        },
+                                        {
+                                            "aggregator": "max",
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        },
+                                        {
+                                            "aggregator": "max",
+                                            "data_source": "metrics",
+                                            "name": "query6",
+                                            "query": "avg:hw.site.electricity_cost_dollars{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Potential Yearly Saving",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 2926838172374990,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 10,
+                            "y": 1
+                        }
+                    },
+                    {
+                        "definition": {
+                            "background_color": "yellow",
+                            "content": "Estimation of the savings and CO\u2082 reduction by increasing the temperature of the site to the above recommendation.",
+                            "font_size": "12",
+                            "has_padding": false,
+                            "show_tick": true,
+                            "text_align": "left",
+                            "tick_edge": "right",
+                            "tick_pos": "25%",
+                            "type": "note",
+                            "vertical_align": "center"
+                        },
+                        "id": 6701695660006414,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 8,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "autoscale": false,
+                            "custom_unit": "t",
+                            "precision": 1,
+                            "requests": [
+                                {
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": ">",
+                                            "custom_bg_color": "#000000",
+                                            "palette": "custom_bg",
+                                            "value": 0
+                                        },
+                                        {
+                                            "comparator": "<=",
+                                            "palette": "black_on_light_red",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "formulas": [
+                                        {
+                                            "formula": "query1 * (query2 - 1.15) * 24 * 365 * (clamp_max(query3 + query5 - (query4 - query3), 29) - query3) * 0.05 * query6 / 1000 / 1000000"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:hw.host.energy{$site}.as_rate()"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:hw.site.pue_ratio{$site}"
+                                        },
+                                        {
+                                            "aggregator": "avg",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        },
+                                        {
+                                            "aggregator": "min",
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "min:hw.host.heating_margin{$site}"
+                                        },
+                                        {
+                                            "aggregator": "max",
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "avg:hw.host.ambient_temperature{$site}"
+                                        },
+                                        {
+                                            "aggregator": "max",
+                                            "data_source": "metrics",
+                                            "name": "query6",
+                                            "query": "avg:hw.site.carbon_density_grams{$site}"
+                                        }
+                                    ],
+                                    "response_format": "scalar"
+                                }
+                            ],
+                            "title": "Potential Yearly CO\u2082 Reduction",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "query_value"
+                        },
+                        "id": 7270353407026694,
+                        "layout": {
+                            "height": 1,
+                            "width": 2,
+                            "x": 10,
+                            "y": 2
+                        }
+                    }
+                ]
+            },
+            "id": 2727277094083344,
+            "layout": {
+                "height": 4,
+                "width": 12,
+                "x": 0,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [
+                    {
+                        "is_hidden": true,
+                        "override_label": "hosts"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "logs"
+                    },
+                    {
+                        "is_hidden": false,
+                        "link": "/event/explorer?live=false&from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&query=integration:hw {{$site}} status:(error OR warn OR \"no data\" OR info) {{host}}",
+                        "override_label": "events"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "containers"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "traces"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "profiles"
+                    },
+                    {
+                        "label": "View hardware dashboard: {{host.value}}",
+                        "link": "/dash/integration/Hardware%20Sentry%20-%20Host?from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&tpl_var_site={{$site.value}}&tpl_var_host={{host.value}}"
+                    }
+                ],
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Power (W)",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [],
+                                "formula": "query6"
+                            },
+                            {
+                                "alias": "Heating Margin (\u00b0C)",
+                                "cell_display_mode": "number",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": "<=",
+                                        "palette": "white_on_red",
+                                        "value": 0
+                                    },
+                                    {
+                                        "comparator": "<=",
+                                        "palette": "white_on_yellow",
+                                        "value": 5
+                                    }
+                                ],
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Warning Events",
+                                "cell_display_mode": "number",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": ">",
+                                        "palette": "white_on_yellow",
+                                        "value": 0
+                                    }
+                                ],
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Alert Events",
+                                "cell_display_mode": "number",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": ">",
+                                        "palette": "white_on_red",
+                                        "value": 0
+                                    }
+                                ],
+                                "formula": "query3",
+                                "limit": {
+                                    "count": 1000,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query6",
+                                "query": "avg:hw.host.power{$site} by {host}"
+                            },
+                            {
+                                "aggregator": "min",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:hw.host.heating_margin{$site} by {host}"
+                            },
+                            {
+                                "compute": {
+                                    "aggregation": "cardinality",
+                                    "metric": "@evt.id"
+                                },
+                                "data_source": "events",
+                                "group_by": [
+                                    {
+                                        "facet": "host",
+                                        "limit": 1000,
+                                        "sort": {
+                                            "aggregation": "cardinality",
+                                            "metric": "@evt.id",
+                                            "order": "desc"
+                                        }
+                                    }
+                                ],
+                                "indexes": [
+                                    "*"
+                                ],
+                                "name": "query2",
+                                "search": {
+                                    "query": "integration:hardware-sentry status:warn $site"
+                                }
+                            },
+                            {
+                                "compute": {
+                                    "aggregation": "cardinality",
+                                    "metric": "@evt.id"
+                                },
+                                "data_source": "events",
+                                "group_by": [
+                                    {
+                                        "facet": "host",
+                                        "limit": 1000,
+                                        "sort": {
+                                            "aggregation": "cardinality",
+                                            "metric": "@evt.id",
+                                            "order": "desc"
+                                        }
+                                    }
+                                ],
+                                "indexes": [
+                                    "*"
+                                ],
+                                "name": "query3",
+                                "search": {
+                                    "query": "integration:hardware-sentry status:error $site"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Hosts Monitored in $site.value (Click on a host to view its dashboard)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 266244700118308,
+            "layout": {
+                "height": 9,
+                "is_column_break": true,
+                "width": 12,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "custom_links": [
+                    {
+                        "is_hidden": false,
+                        "link": "/infrastructure/map?filter={{host}}",
+                        "override_label": "hosts"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "logs"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "containers"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "traces"
+                    },
+                    {
+                        "is_hidden": true,
+                        "override_label": "profiles"
+                    }
+                ],
+                "has_search_bar": "never",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Present",
+                                "cell_display_mode": "number",
+                                "conditional_formats": [],
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:hardware_sentry.agent.info{$site} by {name,version,hc_version,build_number,build_date,host}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Hardware Sentry Agents Information",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 7822660626273042,
+            "layout": {
+                "height": 2,
+                "width": 12,
+                "x": 0,
+                "y": 9
+            }
+        }
+    ]
+}

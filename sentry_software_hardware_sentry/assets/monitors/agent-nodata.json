@@ -1,0 +1,28 @@
+{
+	"name": "[Hardware Sentry] Agent {{[agent.host.name].name}} in {{site.name}} is no longer sending metrics",
+	"type": "query alert",
+	"query": "max(last_5m):min:hardware_sentry.agent.info{*} by {agent.host.name,site} < 1",
+	"message": "{{#is_no_data}}\n## No Data\n\nAgent **{{[agent.host.name].name}}** in *{{site.name}}* is no longer sending metrics.\n\n## Consequence\n\nThe hosts that were monitored with this agent are no longer monitored. Events, including recovery ones, will not be triggered until the Hardware Sentry agent is sending data again.\n \n## Recommended Action\n\nMake sure the agent is still running and able to connect to the Datadog platform.\n{{/is_no_data}}\n{{#is_recovery}}\nThe Hardware Sentry agent is collecting and sending data to the Datadog platform again.\n{{/is_recovery}}",
+	"tags": [
+		"integration:hardware-sentry"
+	],
+	"recommended_monitor_metadata": {
+		"description": "Detect Hardware Sentry agents that stop sending data"
+	},
+	"options": {
+		"notify_audit": false,
+		"silenced": {},
+		"include_tags": false,
+		"thresholds": {
+			"critical": 1
+		},
+		"require_full_window": false,
+		"new_host_delay": 300,
+		"notify_no_data": true,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"no_data_timeframe": 10
+	},
+	"priority": 3,
+	"restricted_roles": null
+}

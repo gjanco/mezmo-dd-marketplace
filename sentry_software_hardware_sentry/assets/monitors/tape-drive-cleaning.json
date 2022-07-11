@@ -1,0 +1,29 @@
+{
+	"name": "[Hardware Sentry] Tape drive {{name.name}} needs cleaning",
+	"type": "query alert",
+	"query": "min(last_5m):max:hw.status{hw.type:tape_drive,state:needs_cleaning} by {id,host,site,serial_number,name,info} >= 10",
+	"message": "{{#is_warning}}\n## Cleaning needed\n\nTape drive **{{name.name}}** needs cleaning on [**{{host.name}}** in **{{site.name}}**](/dash/integration/Hardware%20Sentry%20-%20Host?tpl_var_host={{host.name}}&tpl_var_site={{site.name}}&from_ts={{eval \"last_triggered_at_epoch-2*3600*1000\"}}&to_ts={{eval \"last_triggered_at_epoch+1*3600*1000\"}}&live=false).\n\n## Consequence\n\nRegular tape drive cleaning helps in long-term reliability, prevents read/write errors and should be conducted on a scheduled cycle as well as when requested by the drive.\n\n## Recommended action\n\nWait for any running operation to finish, eject the tape and clean the drive.\n\n{{/is_warning}}\n\n{{#is_recovery}}\nTape drive no longer needs cleaning.\n{{/is_recovery}}\n\n## Device details\n\n| Property | Value |\n|---|---|\n| Name | {{name.name}} |\n| Vendor | {{vendor.name}} |\n| Model | {{model.name}} |\n| ID | {{id.name}} |\n| Serial Number | {{serial_number.name}} |\n| More information | {{info.name}} |",
+	"tags": [
+		"integration:hardware-sentry"
+	],
+	"recommended_monitor_metadata": {
+		"description": "Report tape drives that need cleaning"
+	},
+	"options": {
+		"notify_audit": false,
+		"silenced": {},
+		"include_tags": false,
+		"thresholds": {
+			"critical": 10,
+			"warning": 1,
+			"warning_recovery": 0
+		},
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"escalation_message": ""
+	},
+	"priority": 4,
+	"restricted_roles": null
+}
