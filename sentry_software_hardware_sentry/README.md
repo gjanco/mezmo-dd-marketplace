@@ -27,7 +27,7 @@ This integration comes with a set of dashboards that leverage the metrics collec
 
 | Dashboard | Description |
 |---|---|
-| Hardware Sentry - Observability & Sustainability | Overview of all monitored hosts, with a focus on sustainability |
+| Hardware Sentry - Main | Overview of all monitored hosts, with a focus on sustainability |
 | Hardware Sentry - Site | Metrics associated to one *site* (a data center or a server room) and its monitored *hosts* |
 | Hardware Sentry - Host | Metrics associated to one *host* and its internal devices |
 
@@ -37,15 +37,14 @@ You need to run the **Hardware Sentry OpenTelemetry Collector** on-prem to colle
 
 1. [Download](https://www.sentrysoftware.com/downloads/products-for-opentelemetry.html) the latest version of the [Hardware Sentry OpenTelemetry Collector](https://www.sentrysoftware.com/products/hardware-sentry-opentelemetry-collector.html).
 2. Follow the [installation instructions](https://www.sentrysoftware.com/docs/hws-otel-collector/latest/install.html). (It is recommended that you install one collector on each site &mdash; that is, each data center, each server room, etc.).
-3. Configure the OpenTelemetry Collector to push metrics to Datadog by [editing `config/otel-config.yaml`](https://www.sentrysoftware.com/docs/hws-otel-collector/latest/configuration/configure-otel.html), as in the example below:
+3. Configure the [Datadog exporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/datadogexporter) in the OpenTelemetry Collector to push metrics to Datadog by [editing `config/otel-config.yaml`](https://www.sentrysoftware.com/docs/hws-otel-collector/latest/integration/datadog.html), as in the example below:
 
     ```yaml
     exporters:
       # Datadog
-      # <https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/datadogexporter>
       datadog/api:
         api:
-          key: <apikey> # Check your Datadog organization's settings
+          key: <apikey> # API key in your Datadog organization's settings
           # site: datadoghq.eu # Uncomment for Europe only
         metrics:
           resource_attributes_as_tags: true # IMPORTANT
