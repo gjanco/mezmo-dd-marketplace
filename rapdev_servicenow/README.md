@@ -10,7 +10,7 @@ The ServiceNow integration monitors the health and performance of your ServiceNo
 
 ### Datadog Integration Installation
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.2.0`
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.2.1`
 
 ### Datadog Integration Configuration
 

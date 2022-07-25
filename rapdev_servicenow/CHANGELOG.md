@@ -1,5 +1,9 @@
 # CHANGELOG - rapdev_servicenow
 
+## 1.2.1 / 2022-07-19
+
+ [Fixed] missing timezone definition on datetime calculation resulting in TypeError
+ 
 ## 1.2.0 / 2022-06-03
 
  [Added] configurable datetime string format to yaml

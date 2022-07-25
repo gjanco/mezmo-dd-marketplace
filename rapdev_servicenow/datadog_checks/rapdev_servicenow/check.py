@@ -274,7 +274,7 @@ class ServicenowCheck(AgentCheck):
                 sys_created_on = incident["sys_created_on"]["display_value"]
                 incident_id = incident["sys_id"]["value"]
                 incident_state = incident["state"]["value"]           
-                now = datetime.now()
+                now = datetime.now(timezone.utc)
                 sco_date = datetime.strptime(
                     sys_created_on,
                     self.time_format
