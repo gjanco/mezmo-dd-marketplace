@@ -1,0 +1,68 @@
+name: RapDev GitHub
+files:
+- name: rapdev_github.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: base_url
+      required: true
+      description: The base URL
+      value:
+        type: string
+        example: https://api.github.com/
+    - name: org
+      required: true
+      description: The name of the organization/enterprise
+      value:
+        type: string
+        example: org
+    - name: github_mode
+      required: true
+      description: Whether or not it is an 'enterprise' or an 'organization'
+      value:
+        type: string
+        example: organization
+    - name: key_path
+      required: true
+      description: The path to the key file from GitHub
+      value:
+        type: string
+        example: ~/users/user/Documents/keys/key.pem
+    - name: org_app_id
+      required: true
+      description: The AppID associated with the organization
+      value:
+        type: integer
+        example: 12345678
+    - name: gh_app_id
+      required: true
+      description: The AppID associated with the original app
+      value:
+        type: integer
+        example: 123456
+    - name: repo_list
+      required: false
+      description: A list of repos in the specified organization or enterprise to be monitored specifically
+      value:
+        type: array
+        items:
+          type: string
+        example:
+          - <REPO1>
+          - <REPO2>
+          - <REPO3>
+    - name: workflow_repo_list
+      required: false
+      description: A list of repos to look at workflows from
+      value:
+        type: array
+        items:
+          type: string
+        example:
+          - <WORKFLOW_REPO1>
+          - <WORKFLOW_REPO2>
+    - template: instances/default
+    - template: instances/http
