@@ -244,23 +244,18 @@ For support or feature requests, contact www.oz-code.com through the following c
 
 You can also get more information at one of the following links:
 
-[Documentation][5]
-[Q&A][6]
-[Release Notes][7]
+[Documentation][4]
+[Q&A][5]
+[Release Notes][6]
 
 
 ---
 Made with ❤️ in Israel
 
----
-
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][4] to purchase this application.
-
 [1a]: https://docs.datadoghq.com/tracing/setup_overview/setup/dotnet-core/?tab=windows
 [1b]: https://docs.datadoghq.com/tracing/setup_overview/setup/dotnet-core/?tab=windows
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/#start-stop-and-restart-the-agent
 [3]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
-[4]: https://app.datadoghq.com/marketplace/app/ozcode/pricing
-[5]: https://oz-code.com/knowledge-base/production-debugger/documentation 
-[6]: https://oz-code.com/knowledge-base/production-debugger/pd-q-and-a
-[7]: https://oz-code.com/knowledge-base/production-debugger/pd-release-notes
+[4]: https://oz-code.com/knowledge-base/production-debugger/documentation 
+[5]: https://oz-code.com/knowledge-base/production-debugger/pd-q-and-a
+[6]: https://oz-code.com/knowledge-base/production-debugger/pd-release-notes

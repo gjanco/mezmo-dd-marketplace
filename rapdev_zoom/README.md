@@ -163,10 +163,7 @@ Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:datadog-engineering@rapdev.io), and we'll build it!!*
 
----
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][4] to purchase this application.
-
 [1]: https://marketplace.zoom.us/
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/#start-stop-and-restart-the-agent
 [3]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
-[4]: https://app.datadoghq.com/marketplace/app/rapdev-zoom/pricing
+

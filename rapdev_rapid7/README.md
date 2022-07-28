@@ -17,7 +17,8 @@ The count of logs processed per check is reported as a metric.
 
 ### Log Collection
 Log collection is optional and disabled by default.
-This integration calls to Rapid7 logs API to query all logs available in the last time interval. The default time interval is the last minute. You can specify specific [Log Sets][5] as detailed in Rapid7 insightIDR [Log Search Documentation][6] to get only those logs.
+This integration calls to Rapid7 logs API to query all logs available in the last time interval. The default time interval is the last minute. You can specify 
+specific [Log Sets][4] as detailed in Rapid7 insightIDR [Log Search Documentation][5] to get only those logs.
 
 ### Pricing
 Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
@@ -75,12 +76,8 @@ Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:datadog-engineering@rapdev.io), and we'll build it!!*
 
----
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][4] to purchase this application.
-
 [1]: https://insight.rapid7.com/platform#/apiKeyManagement/organization
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/#start-stop-and-restart-the-agent
 [3]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
-[4]: https://app.datadoghq.com/marketplace/app/rapdev-rapid7/pricing
-[5]: https://us.idr.insight.rapid7.com/op/D8A1412BEA86A11F15E5#/search
-[6]: https://docs.rapid7.com/insightidr/log-search/
+[4]: https://us.idr.insight.rapid7.com/op/D8A1412BEA86A11F15E5#/search
+[5]: https://docs.rapid7.com/insightidr/log-search/

@@ -6,7 +6,7 @@ the translation of SNMP traps into human-readable log messages.
 This package comes with an install script to setup Logstash as an SNMP trap receiver, with the proper configurations
 and MIB files to translate your messages, allowing you to alert on network events within Datadog.
 
-For a list of all MIBs that are included with this package, [see here][5].
+For a list of all MIBs that are included with this package, [see here][4].
 
 ### Pricing
 Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
@@ -33,7 +33,7 @@ Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](ma
   To replace `public`, simply replace that value. To add additional strings to listen for, append to the list: `['public', 'my_community']`.
 - Due to the amount of MIB files provided, Logstash may take several minutes to start. If you wish to reduce this startup time, you may want
   to remove the MIB files that you do not need. These can be found in `/opt/logstash/yamlmibs/yamls`. For a list of all MIBs that are included
-  with this package, [see here][5].
+  with this package, [see here][4].
     - Exercise caution when removing MIB files, as there is a hierarchy within MIBs, and full translations may not occur if some of the base
       MIBs are removed. These include items like `IF-*`, `INET-*`, `IP-*`, and `SNMP-*`. The full list of dependencies can be found by using MIB
       browsers such as the [Observium MIB Database](https://mibs.observium.org).
@@ -65,10 +65,7 @@ Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:datadog-engineering@rapdev.io), and we'll build it!!*
 
----
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][4] to purchase this application.
 [1]: https://docs.datadoghq.com/logs/guide/enrichment-tables
 [2]: https://docs.datadoghq.com/logs/log_configuration/processors/?tab=ui#log-message-remapper
 [3]: https://www.rapdev.io/#Get-in-touch
-[4]: https://app.datadoghq.com/marketplace/app/rapdev_snmp_trap_logs/pricing
-[5]: https://files.rapdev.io/datadog/configs/mib_yamls.txt
+[4]: https://files.rapdev.io/datadog/configs/mib_yamls.txt

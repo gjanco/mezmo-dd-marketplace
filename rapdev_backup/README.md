@@ -15,7 +15,7 @@ Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](ma
 
 This Agent check is only intended to run on Python3.X version on Agent v7. 
 Functionality for Python2.X is not guaranteed. For running python3 on Agent v6, please refer to 
-[these docs][7].
+[these docs][6].
 
 Choose a library to install or upgrade through the Agent's embedded Python. In order for the check to run in non-`local` mode, at least one of the following libraries is required.
  
@@ -65,7 +65,7 @@ sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_
 
 ### Datadog Configuration
 
-Begin by generating Datadog [API & Application keys][5]. 
+Begin by generating Datadog [API & Application keys][4]. 
 and pass that value into the `instances` section(s) of your `conf.d/rapdev_backup.d/conf.yaml` under the fields 
 `api_key` and `app_key` as shown below:
 
@@ -93,21 +93,22 @@ Your options are below:
 #### AWS Environment Configuration
 
 1) In order to authenticate to AWS, you have three options:
-  - [Instance Profile Assigned To an EC2 (Recommended)][8]: In the `conf.yaml`, set `use_instance_profile` to `True`.
+  - [Instance Profile Assigned To an EC2 (Recommended)][7]: In the `conf.yaml`, set `use_instance_profile` to `True`.
     Next, generate a new IAM Role and attach it to your EC2 Instance. Make sure this role
     has access to write to the S3 bucket that you want to store backups to. 
     See the permissions at the bottom of the next section to understand what S3 permissions are required.
 
-    <b>Note:</b> Setting this to `True` means that it uses the [boto3 credential chain][11], which can support more than instance profiles, such as AWS environment variables and shared credential files.
+    <b>Note:</b> Setting this to `True` means that it uses the [boto3 credential chain][10], which can support more than instance profiles, such as AWS 
+environment variables and shared credential files.
 
-  - [Access Key on User (no assume role)][9]: Generate an AWS Access ID and Secret with permission to read and upload to S3. 
+  - [Access Key on User (no assume role)][8]: Generate an AWS Access ID and Secret with permission to read and upload to S3. 
     Pass in the access key id to `aws_access_key` and the secret access key to `aws_secret_key` via the `conf.yaml`. 
     Please refer to the permissions at the bottom of the next section to understand what s3 permissions are needed.    
 
-  - [Access Key on User with `sts:AssumeRole`][10]: Begin by creating an IAM role in the account that you want to store your backups to with read
+  - [Access Key on User with `sts:AssumeRole`][9]: Begin by creating an IAM role in the account that you want to store your backups to with read
     and write permissions to the s3 bucket you'd like to use. Provide the ARN of that role to the `assume_role_arn`
     configuration in the `conf.yaml`. Additionally, set up a
-    [trust policy][6] so
+    [trust policy][5] so
     this role can be assumed by the role in the next step. If desired, you can generate an external id for an extra 
     layer of security. Provide the id into the `assume_role_external_id` via the `conf.yaml`. See an example below
     an appropriate trust policy:
@@ -203,7 +204,7 @@ Your options are below:
 
 1) Begin by creating a GitHub repo to hold your backups (or use an existing one).
 
-2) Create a [Github Personal Access Token][4]
+2) Create a [Github Personal Access Token][3]
 and pass it into the config via the `github_access_token` param.
    
 3) Fill in the rest of the fields. A GitHub config targeting 2 separate Datadog accounts that upload to the
@@ -288,17 +289,13 @@ Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:datadog-engineering@rapdev.io), and we'll build it!!*
 
----
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][3] to purchase this application.
-
 [1]: https://docs.datadoghq.com/agent/guide/agent-commands/#start-stop-and-restart-the-agent
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
-[3]: https://app.datadoghq.com/marketplace/app/rapdev-backup/pricing
-[4]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
-[5]: https://docs.datadoghq.com/account_management/api-app-keys/
-[6]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_permissions-to-switch.html
-[7]: https://docs.datadoghq.com/agent/guide/agent-v6-python-3/?tab=hostagent
-[8]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html
-[9]: https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys
-[10]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use.html
-[11]: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
+[3]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+[4]: https://docs.datadoghq.com/account_management/api-app-keys/
+[5]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_permissions-to-switch.html
+[6]: https://docs.datadoghq.com/agent/guide/agent-v6-python-3/?tab=hostagent
+[7]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html
+[8]: https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys
+[9]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use.html
+[10]: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html

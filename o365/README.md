@@ -158,7 +158,3 @@ Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](ma
 Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:datadog-engineering@rapdev.io) and we'll build it!!*
-
----
-
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/rapdev-o365/pricing) to purchase this application.

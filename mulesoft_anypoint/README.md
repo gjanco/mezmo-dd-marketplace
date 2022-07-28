@@ -313,10 +313,6 @@ The Datadog Mule® Integration does not include any events.
 
 For any support inquiry, contact IO Connect Services support at [support_ddp@ioconnectservices.com][9].
 
----
-
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][11] to purchase this application.
-
 ## About IO Connect Services
 
 IO Connect Services is a company specializing in Information Technology Consultancy Services. Our practices are Cloud Technologies, Systems Integration, Big Data, Cybersecurity, and Software Engineering. We provide services in all North America, Europe and Latin America. Our headquarters are located in the NYC metropolitan area and we also have offices in Guadalajara, Mexico and Madrid, Spain.
@@ -333,4 +329,3 @@ Visit [https://www.ioconnectservices.com][10]
 [8]: https://docs.datadoghq.com/developers/guide/custom-python-package/?tab=linux
 [9]: mailto:support_ddp@ioconnectservices.com
 [10]: https://www.ioconnectservices.com
-[11]: https://app.datadoghq.com/marketplace/app/ioconnect-mulesoft-anypoint/pricing

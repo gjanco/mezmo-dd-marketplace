@@ -70,11 +70,7 @@ Made with ❤️ in Boston
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:datadog-engineering@rapdev.io), and we'll build it!!*
 
----
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][5] to purchase this application.
-
 [1]: https://docs.datadoghq.com/agent/kubernetes/integrations/
 [2]: https://github.com/DataDog/integrations-core/blob/master/rapdev_sophos/datadog_checks/rapdev_sophos/data/conf.yaml.example
 [3]: https://docs.datadoghq.com/agent/guide/agent-commands/#start-stop-and-restart-the-agent
 [4]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
-[5]: https://app.datadoghq.com/marketplace/app/rapdev-zoom/pricing

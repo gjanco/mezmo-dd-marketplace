@@ -50,9 +50,6 @@ No big setup required!
     * email (other questions): info@trek10.com
     * website: https://www.trek10.com/contact
 
----
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here](https://app.datadoghq.com/marketplace/app/trek10-coverage-advisor/pricing) to purchase this application.
-
 
 
 

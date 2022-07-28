@@ -190,9 +190,6 @@ Made with Industrial 💪 Strength
 
 *This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note][15], and we'll build it!!*
 
----
-This application is made available through the Datadog Marketplace and is supported by a Datadog Technology Partner. [Purchase this application here][18].
-
 ## Further Reading
 
 Additional helpful documentation, links, and articles:
@@ -216,4 +213,3 @@ Additional helpful documentation, links, and articles:
 [15]: mailto:support@scadamods.com
 [16]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent
 [17]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-information
-[18]: https://app.datadoghq.com/marketplace/app/scadamods-kepserver/pricing

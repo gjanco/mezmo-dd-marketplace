@@ -35,8 +35,4 @@ Then, for the bi-directional integration from Moogsoft to Datadog, create an out
 ## Support
 Contact Moogsoft Support at [https://support.moogsoft.com][1].
 
----
-This application is made available through the Marketplace and is supported by a Datadog Technology Partner. [Click here][2] to purchase this application.
-
 [1]: https://support.moogsoft.com
-[2]: https://app.datadoghq.com/marketplace/app/moogsoft/pricing
