@@ -144,42 +144,49 @@ class BackupCheck(AgentCheck):
                 self.log.info("Successfully uploaded Backup to Azure Blob.")
 
         elif self.backup_storage_platform == BACKUP_GITHUB:
+            try:
+                # Connect using custom name if github enterprise
+                if self.github_enterprise:
+                    github_connection = Github(
+                        base_url="https://{}/api/v3".format(self.github_enterprise),
+                        login_or_token=self.github_access_token
+                    )
+                # Otherwise use normal github connection
+                else:
+                    github_connection = Github(self.github_access_token)
 
-            if self.github_enterprise:
-                github_connection = Github(
-                    base_url="https://{}/api/v3".format(self.github_enterprise),
-                    login_or_token=self.github_access_token)
-            else:
-                github_connection = Github(self.github_access_token)
+                # Get the repo we care about (will fail if no access)
+                repo = github_connection.get_repo(self.github_repo)
 
-            for repo_obj in github_connection.get_user().get_repos():
-                if repo_obj.name == self.github_repo:
-                    repo = repo_obj
+                # validate repo
+                if not repo:
+                    raise Exception("Repo not found: {}".format(self.github_repo))
 
-            # Setup the git commit for this upload
-            commit_message = "Uploading backup {}".format(backup_file_name)
-            master_ref = repo.get_git_ref(self.master_ref)
-            master_sha = master_ref.object.sha
-            base_tree = repo.get_git_tree(master_sha)
+                # build commit with backup and push
+                commit_message = "Uploading backup {} to Github".format(backup_file_name) 
+                master_ref = repo.get_git_ref(self.master_ref)
+                master_sha = master_ref.object.sha
+                base_tree = repo.get_git_tree(master_sha)
+                data = base64.b64encode(open(backup_file_path, "rb").read())
+                blob = repo.create_git_blob(data.decode("utf-8"), "base64")
+                element = InputGitTreeElement(
+                        path="{}/{}".format(
+                            self.github_store_path, 
+                            backup_file_name
+                        ),
+                        mode='100644', 
+                        type='blob', 
+                        sha=blob.sha
+                )
+                element_list = list()
+                element_list.append(element)
+                tree = repo.create_git_tree(element_list, base_tree)
+                parent = repo.get_git_commit(master_sha)
+                commit = repo.create_git_commit(commit_message, tree, [parent])
+                master_ref.edit(commit.sha)
 
-            # Base64 encode the zip file and turn it into a git blob
-            data = base64.b64encode(open(backup_file_path, "rb").read())
-            blob = repo.create_git_blob(data.decode("utf-8"), "base64")
-
-            # Create Git element tree for commit
-            element = InputGitTreeElement(path="{}/{}".format(self.github_store_path, backup_file_name),
-                                          mode='100644', type='blob', sha=blob.sha)
-            # Create a list and append element to it
-            element_list = list()
-            element_list.append(element)
-
-            # Create git tree using repo
-            tree = repo.create_git_tree(element_list, base_tree)
-            # Get git commit master sha
-            parent = repo.get_git_commit(master_sha)
-            # Create git commit and "push" with backup zipped file
-            commit = repo.create_git_commit(commit_message, tree, [parent])
-            master_ref.edit(commit.sha)
+            except Exception as e:
+                raise Exception("Unable to upload backup to github: {}".format(e))
 
         if self.delete_local_backups:
             try:

@@ -1,5 +1,9 @@
 # CHANGELOG - rapdev
 
+## 2.3.0 / 2022-07-26
+ * [Added] Support for specifying Github repos with different org names
+ * [Added] Added more detail into documentation
+
 ## 2.2.0 / 2022-06-24
  * [Added] Support for AWS Instance Profile authentication
  * [Added] Better documentation for all AWS authentication methods

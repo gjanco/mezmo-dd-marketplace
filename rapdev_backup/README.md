@@ -54,13 +54,13 @@ Run the following command to enable the Backup Integration on your Datadog Agent
 
 ```
 *Linux*
-sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==2.2.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==2.3.0
 
 *Powershell*
-& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.2.0
+& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.3.0
 
 *Command Prompt*
-"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.2.0
+"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.3.0
 ```
 
 ### Datadog Configuration
@@ -73,8 +73,8 @@ and pass that value into the `instances` section(s) of your `conf.d/rapdev_backu
 init_config:
 
 instances:
-  - api_key: <my_api_key1>
-    app_key: <my_app_key1>
+  - dd_api_key: <my_api_key1>
+    dd_app_key: <my_app_key1>
     backup_storage_platform: local
     backup_path: /etc/datadog-backups/
 ```
@@ -169,10 +169,10 @@ environment variables and shared credential files.
    init_configs:
    
    instances:
-     - backup_storage_platform: aws
-       backup_path: /etc/datadog-backups/
-       api_key: <my_dd_api_key>
-       app_key: <my_dd_app_key>   
+     - dd_api_key: <my_dd_api_key>
+       dd_app_key: <my_dd_app_key> 
+       backup_storage_platform: aws
+       backup_path: /etc/datadog-backups/  
        aws_access_key: <my_access_key>
        aws_secret_key: <my_secret_key>
        aws_s3_bucket_name: testing123
@@ -191,10 +191,10 @@ environment variables and shared credential files.
    init_configs:
    
    instances:
-     - backup_storage_platform: azure
+     - dd_api_key: <my_dd_api_key>
+       dd_app_key: <my_dd_app_key>
+       backup_storage_platform: azure
        backup_path: /etc/datadog-backups/
-       api_key: <my_dd_api_key>
-       app_key: <my_dd_app_key>
        azure_connection_string: <my_connection_string>
        azure_container_name: <my_container_name>
    ```
@@ -204,34 +204,24 @@ environment variables and shared credential files.
 
 1) Begin by creating a GitHub repo to hold your backups (or use an existing one).
 
-2) Create a [Github Personal Access Token][3]
-and pass it into the config via the `github_access_token` param.
+2) Create a [Github Personal Access Token][3] with full `repo` access and pass it into the config via the `github_access_token` param.
    
-3) Fill in the rest of the fields. A GitHub config targeting 2 separate Datadog accounts that upload to the
-   same repo (but different folders) would look something like this:
+3) Fill in the rest of the fields. Below is an example of a valid GitHub configuration:
    
    ```
    init_configs:
    
    instances:
-     - api_key: <my_api_key1>
-       app_key: <my_app_key1>
+     - dd_api_key: <my_api_key1>
+       dd_app_key: <my_app_key1>
        backup_storage_platform: github
        backup_path: /etc/datadog-backups/
        github_access_token: <my_gh_token>
-       github_repo: infra_backups
-       github_store_path: datadog/account_name1
-       github_master_ref: "heads/main"
-   
-     - api_key: <my_api_key2>
-       app_key: <my_app_key2>
-       backup_storage_platform: github
-       backup_path: /etc/datadog-backups/
-       github_access_token: <my_gh_token>
-       github_repo: infra_backups
-       github_store_path: datadog/account_name2
+       github_repo: <github_account>/<repo_name> # the "/" is required
        github_master_ref: "heads/main"
    ```
+
+   *note*: `github_store_path` allows you to specify a sub-path within the repo.
 
 ### Extra configs
 
