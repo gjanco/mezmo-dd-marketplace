@@ -2,7 +2,7 @@
 
 ### What is Skykit
 
-Skykit is a leading digital signage and workplace experience solution provider. We offer a comprehensive content management system to allow you to bring your real-time Datadog dashboards to your TVs, screens or digital displays. Doing so turns your dashboards into engaging, large format displays that bring real-time data to employees and other stakeholders.
+Skykit is a leading digital signage and workplace experience solution provider. We offer a comprehensive content management system that allows you to bring your real-time Datadog dashboards to your TVs, screens, or digital displays.
 
 ### Connecting Datadog Dashboards to Skykit
 
@@ -12,7 +12,7 @@ When connected to Skykit’s CMS, the webview tool connects your Datadog dashboa
 
 $30/month per screen (up to 10 screens).
 
-Volume discounts are available for orders over 10 screens. For custom pricing terms contract length and companies outside North America, reach out to Skykit at sales@skykit.com.
+Volume discounts are available for orders over 10 screens. For custom pricing terms, contract length, and companies outside North America, reach out to Skykit at sales@skykit.com.
 
 This partner accepts private offers.
 
