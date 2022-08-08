@@ -6,7 +6,7 @@ Skykit is a leading digital signage and workplace experience solution provider. 
 
 ### Connecting Datadog Dashboards to Skykit
 
-When connected to Skykit’s CMS, the webview tool connects your Datadog dashboards to your screens.
+When connected to Skykit’s CMS, the webview tool connects your Datadog dashboards to your screens. Skykit also offers secure authentication through [Dashboard Connections](https://www.skykit.com/products/dashboards/) if “static public data sharing” is disabled in your Datadog account. Dashboard Connections allows you to share your Datadog dashboards securely on your digital signage displays throughout your operations. If you're interested in purchasing this specialized license, please contact [Skykit sales](mailto:sales@skykit.com) to discuss a private offer.
 
 ### Pricing
 
