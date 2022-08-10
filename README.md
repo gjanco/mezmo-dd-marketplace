@@ -50,7 +50,7 @@ All Marketplace purchases begin with a 14-day free trial.
 
 - **flat_fee:** Charges a recurring flat fee per month regardless of a customer's usage. For example, a partner may charge a customer $100/month. No metering/usage metric is required.
 
-- **Tag_count:** Allows partners to charge based on a customer's usage. For example, vendors can charge per unique user, device, or database. A metering metric is required for tracking usage. The `tag_count` metering metric must be in the manifest.json to appear in a partner's Marketplace tile, and in the metadata.csv to register the metric in Datadog's backend. For `tag_count`, Datadog calculates the top 99% of hourly usage for the billing cycle.
+- **Tag_count:** Allows partners to charge based on a customer's usage. For example, vendors can charge per unique user, device, or database. A metering metric is required for tracking usage. The `tag_count` metering metric must be in the manifest.json to appear in a partner's Marketplace tile. For `tag_count`, Datadog calculates the top 99% of hourly usage for the billing cycle.
 
 Example JSON:
 ```
