@@ -21,16 +21,22 @@ class ServicenowCheck(AgentCheck):
         self.collect_statsdo = is_affirmative(
             self.instance.get("collect_statsdo", True)
         )
+        self.statsdo_auth = is_affirmative(
+            self.instance.get("statsdo_auth", False)
+        )
         self.collect_itsm_metrics = is_affirmative(
             self.instance.get("collect_itsm_metrics", False)
         )
         self.opt_fields = self.instance.get('opt_fields', [])
-        
+        self.stats_auth_url = self.instance.get('stats_auth_url', None)
         self.base_url = 'https://' + \
             str(self.instance_name) + '.service-now.com'
 
         if self.collect_statsdo:
-            self.stats_url = self.base_url + "/stats.do"
+            if self.statsdo_auth:
+                self.stats_url = self.stats_auth_url 
+            else:
+                self.stats_url = self.base_url + Constants.STATSDO_PATH
             self.stats_title = (
                 self.instance.get(
                     "stats_title") or Constants.DEFAULT_STATS_TITLE
@@ -80,7 +86,7 @@ class ServicenowCheck(AgentCheck):
     def validate_config(self):
         """
         check for a valid config, e.g. at least one check,
-        basic auth creds if itsm check enabled
+        basic auth creds if statsdo_auth or itsm check enabled
         """
         if not self.instance_name:
             self.log.warning(
@@ -94,6 +100,32 @@ class ServicenowCheck(AgentCheck):
 
         if not self.collect_itsm_metrics:
             return
+        
+        if not self.collect_statsdo and self.statsdo_auth:
+            self.log.warning(
+                'ServicenowCheck.validate_config() --> Stats.do must be enabled')
+            raise ConfigurationError(Constants.ERROR_REQUIRES_STATS_DO)
+
+        if self.statsdo_auth and not self.status_auth_url:
+            self.log.warning(
+                'ServicenowCheck.validate_config() --> stats_auth_url must be configured')
+            raise ConfigurationError(Constants.ERROR_REQUIRES_AUTH_URL)
+        
+        if self.statsdo_auth and not self.username:
+            self.log.warning(
+                'ServicenowCheck.validate_config() --> Required username is missing')
+            raise ConfigurationError(Constants.ERROR_REQUIRES_CREDS)
+
+        if self.statsdo_auth and not self.password:
+            self.log.warning(
+                'ServicenowCheck.validate_config() --> Required password is missing')
+            raise ConfigurationError(Constants.ERROR_REQUIRES_CREDS)
+
+        if not self.statsdo_auth:
+            return
+ 
+        
+
 
 
     def check_itsm_connection(self):

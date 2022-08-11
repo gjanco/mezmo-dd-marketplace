@@ -8,11 +8,11 @@ The ServiceNow integration monitors the health and performance of your ServiceNo
 
 1. You must have the Datadog Agent installed and running. Additionally, you need to be able to connect to the server with the Datadog Agent installed.
 
-### Datadog Integration Installation
+### Installation
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.2.1`
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.2.2`
 
-### Datadog Integration Configuration
+### Configuration
 
 1. Copy the `conf.yaml.example` file.
 
@@ -23,6 +23,37 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
 2. Edit `/etc/datadog/conf.d/rapdev_sevicenow.d/conf.yaml` file. Change `instance_name` to your ServiceNow instance name.
 
 3. Statistics collection from stats.do is enabled by default. See the comments of the `/etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml` for all available configuration options.
+   
+   3.1 In ServiceNow, the stats.do page can be configured to require authentication at a specific endpoint.
+
+   3.2 In the `/etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml`, uncomment the following parameters to require authenticated stats.do:
+   ```yaml
+       
+    ## @param statsdo_auth - boolean - optional - default: false
+    ## require auth to collect metrics from stats.do.
+    #
+    # statsdo_auth: false
+
+    ## @param stats_auth_url - string - optional
+    ## URL for Auth stats
+    #
+    # stats_auth_url: <STATS_AUTH_URL>
+
+    ## @param username - string - optional - default: dd_agent
+    ## the basic auth user name for collecting ITSM credentials
+    #
+    username: {servicenow-username}
+
+    ## @param password - string - optional
+    ## basic auth password for collecting ITSM credentials
+    #
+    password: {servicenow-password}
+    ```
+    
+    3.3 Set `statsdo_auth` to the value `true` and provide the `stats_auth_url` configured in ServiceNow for the authenticated stats endpoint.
+
+    3.4 Provide the user credentials for authentication using Basic Auth to access ServiceNow's authenticated stats.do.
+
 
 4. (Optional) If Incident metrics are being collected, then a ServiceNow Service Account must be configured by a ServiceNow admin.
 

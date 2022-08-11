@@ -158,8 +158,16 @@ def instance_skip_proxy(field, value):
     return False
 
 
+def instance_stats_auth_url(field, value):
+    return get_default_field_value(field, value)
+
+
 def instance_stats_title(field, value):
     return 'Servlet statistics'
+
+
+def instance_statsdo_auth(field, value):
+    return False
 
 
 def instance_tags(field, value):
