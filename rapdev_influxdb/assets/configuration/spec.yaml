@@ -1,0 +1,39 @@
+name: RapDev InfluxDB
+files:
+- name: rapdev_influxdb.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - template: instances/openmetrics
+      overrides:
+        collect_counters_with_distributions.enabled: true
+        collect_counters_with_distributions.example: true
+        collect_counters_with_distributions.value.type: boolean
+        collect_counters_with_distributions.value.example: true
+        collect_counters_with_distributions.value.display_default: true
+        collect_counters_with_distributions.hidden: false
+        collect_counters_with_distributions.display_priority: 2
+        histogram_buckets_as_distributions.display_priority: 3
+        histogram_buckets_as_distributions.enabled: true
+        histogram_buckets_as_distributions.example: true
+        histogram_buckets_as_distributions.hidden: false
+        histogram_buckets_as_distributions.value.type: boolean
+        histogram_buckets_as_distributions.value.example: true
+        histogram_buckets_as_distributions.value.display_default: true
+        metrics.hidden: true
+        openmetrics_endpoint.required: true
+        openmetrics_endpoint.display_priority: 4
+        tag_by_endpoint.enabled: true
+        tag_by_endpoint.example: true
+        tag_by_endpoint.hidden: false
+        tag_by_endpoint.value.type: boolean
+        tag_by_endpoint.value.example: true
+        tag_by_endpoint.value.display_default: true
+        tag_by_endpoint.display_priority: 1
+        exclude_metrics_by_labels.hidden: true
+        raw_metric_prefix.hidden: true
+        namespace.hidden: true
+        metric_patterns.hidden: true
