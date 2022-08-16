@@ -127,8 +127,8 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
         try:
             param = self._get_params(consts.MACHINE_ENDPOINT_NAME, consts.LIST_MACHINE_FILTER_FIELD)
             endpoint_url = endpoint_url % param
-            response = Utils.make_rest_call(self, endpoint_url, headers=self.headers)
-            endpoints = response.json().get("value", [])
+            response = Utils.make_rest_call(self, endpoint_url, headers=self.headers, pagination=True)
+            endpoints = response.get("value", [])
         except Exception as e:
             self.log.error("Could not get endpoints. URL: '%s'", endpoint_url)
             self.log.exception(e)
@@ -152,7 +152,7 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
         try:
             url = consts.BASE_URL + consts.EXPOSURE_LEVEL
             response = Utils.make_rest_call(self, url, headers=self.headers)
-            exposure_level = response.json().get("score") or 0
+            exposure_level = response.get("score") or 0
             Utils.ingest_metric(self, metric_name, exposure_level, [])
         except Exception as e:
             self.log.error("Could not get Organization Exposure Level. Reason: %s", e)
@@ -163,11 +163,7 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
         Ingest vulnerabilities for widgets
         """
         try:
-            vulnerabilities = []
-            vulnerabilities.extend(self.get_vulnerabilities(Utils.VulnerabilitySeverity.Critical))
-            vulnerabilities.extend(self.get_vulnerabilities(Utils.VulnerabilitySeverity.High))
-            vulnerabilities.extend(self.get_vulnerabilities(Utils.VulnerabilitySeverity.Medium))
-            vulnerabilities.extend(self.get_vulnerabilities(Utils.VulnerabilitySeverity.Low))
+            vulnerabilities = self.get_vulnerabilities()
             vulnerabilities = self.sorted_data(vulnerabilities, consts.LIST_VULN_FILTER_FIELD)
             Utils.ingest_logs(
                 self,
@@ -213,7 +209,7 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
         for url in urls:
             try:
                 response = Utils.make_rest_call(self, url, headers=self.headers)
-                endpoint_software_vulns.extend(response.json().get("value", []))
+                endpoint_software_vulns.extend(response.get("value", []))
             except Exception as e:
                 self.log.error("Could not get ednpoint vulns. URL: '%s'", url)
                 self.log.exception(e)
@@ -290,8 +286,8 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
             if severity and severity in dir(Utils.VulnerabilitySeverity):
                 param += self.add_severity_filter(severity)
             vuln_url = vuln_url % param
-            response = Utils.make_rest_call(self, vuln_url, headers=self.headers)
-            vulnerabilities = response.json().get("value", [])
+            response = Utils.make_rest_call(self, vuln_url, headers=self.headers, pagination=True)
+            vulnerabilities = response.get("value", [])
         except Exception as e:
             self.log.error("Could not get vulnerabilities. URL: '%s'", vuln_url)
             self.log.exception(e)
@@ -320,7 +316,7 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
             url = consts.BASE_URL + consts.LIST_SOFTWARE_VULNS.format(software_id)
             try:
                 response = Utils.make_rest_call(self, url, headers=self.headers, handle_429=True)
-                software_vulns.update({software_id: response.json().get("value", [])})
+                software_vulns.update({software_id: response.get("value", [])})
             except Exception as e:
                 self.log.error("Could not get vulnerabilities of '%s' id for 'softwares'", software_id)
                 self.log.exception(e)
@@ -330,7 +326,7 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
             url = consts.BASE_URL + consts.LIST_SOFTWARE_DISTRIBUTIONS.format(software_id)
             try:
                 response = Utils.make_rest_call(self, url, headers=self.headers, handle_429=True)
-                software_distributions.update({software_id: response.json().get("value", [])})
+                software_distributions.update({software_id: response.get("value", [])})
             except Exception as e:
                 self.log.error("Could not get distributions of '%s' id for 'softwares'", software_id)
                 self.log.exception(e)
@@ -402,8 +398,8 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
         softwares = []
         software_url = consts.BASE_URL + consts.LIST_SOFTWARE_ENDPOINT
         try:
-            response = Utils.make_rest_call(self, software_url, headers=self.headers)
-            softwares = response.json().get("value", [])
+            response = Utils.make_rest_call(self, software_url, headers=self.headers, pagination=True)
+            softwares = response.get("value", [])
         except Exception as e:
             self.log.error("Could not get softwares. URL: '%s'", software_url)
             self.log.exception(e)
@@ -420,8 +416,8 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
         try:
             param = self._get_params(consts.INVESTIGATION_ENDPOINT_NAME, consts.LIST_INVEST_FILTER_FIELD)
             investigation_url = investigation_url % param
-            response = Utils.make_rest_call(self, investigation_url, headers=self.headers)
-            investigations = response.json().get("value", [])
+            response = Utils.make_rest_call(self, investigation_url, headers=self.headers, pagination=True)
+            investigations = response.get("value", [])
         except Exception as e:
             self.log.error("Could not get investigations. URL: '%s'", investigation_url)
             self.log.exception(e)
@@ -498,8 +494,8 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
         try:
             param = self._get_params(consts.INCIDENT_ENDPOINT_NAME, consts.LIST_INCIDENT_FILTER_FIELD)
             incident_url = incident_url % param
-            response = Utils.make_rest_call(self, incident_url, headers=self.headers_for_defender)
-            incidents = response.json().get("value", [])
+            response = Utils.make_rest_call(self, incident_url, headers=self.headers_for_defender, pagination=True)
+            incidents = response.get("value", [])
         except Exception as e:
             self.log.error("Could not get incidents. URL: '%s'", incident_url)
             self.log.exception(e)
@@ -550,8 +546,8 @@ class CrestDataSystemsMicrosoftDefenderCheck(AgentCheck):
         try:
             param = self._get_params(consts.ALERT_ENDPOINT_NAME, consts.LIST_ALERT_FILTER_FIELD)
             alert_url = alert_url % param
-            response = Utils.make_rest_call(self, alert_url, headers=self.headers)
-            alerts = response.json().get("value", [])
+            response = Utils.make_rest_call(self, alert_url, headers=self.headers, pagination=True)
+            alerts = response.get("value", [])
         except Exception as e:
             self.log.error("Could not get alerts. URL: '%s'", alert_url)
             self.log.exception(e)

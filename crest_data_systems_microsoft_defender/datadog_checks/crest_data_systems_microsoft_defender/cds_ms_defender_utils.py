@@ -48,6 +48,7 @@ def ingest_logs(instance_check, service, events, timestamp_field=None, fn_to_eva
     """
     Used to ingest Logs
     """
+    ingested_logs_count = 0
     with ApiClientV1(ConfigurationV1(api_key=instance_check.configuration)) as api_client:
         api_instance = logs_api_v1.LogsApi(api_client)
         chunks = list(create_chunks_for_events(events))
@@ -57,9 +58,13 @@ def ingest_logs(instance_check, service, events, timestamp_field=None, fn_to_eva
             try:
                 # Send logs
                 _ = api_instance.submit_log(body)
+                ingested_logs_count += len(chunk)
             except ApiExceptionV1 as error:
                 instance_check.log.error("Could not submit logs")
                 instance_check.log.exception(error)
+    instance_check.log.info(
+        "'%s/%s' Logs are ingested into Datadog platform with service: '%s'", ingested_logs_count, len(events), service
+    )
 
 
 def search_log(instance_check, index, query, **kwargs):
@@ -181,7 +186,7 @@ def make_rest_call_by_id(
                 name = record.get(name_field)
                 if name:
                     id = "%s||%s" % (id, name)
-            record_details.update({id: response.json().get("value", [])})
+            record_details.update({id: response.get("value", [])})
             previous_record = record
         except RateLimitExceedException:
             last_record_date_time[endpoint] = previous_record.get(filter_field)
@@ -201,12 +206,13 @@ def make_rest_call(
     json=None,
     do_retry=True,
     handle_429=False,
+    pagination=False,
 ):
     """Make rest calls"""
 
     if method.lower() == "get":
 
-        response = instance_check.http.get(url, headers=headers, params=params)
+        response = instance_check.http.get(url, headers=headers, params=params, timeout=None)
 
         if response is None:
             raise Exception("Could not make request to API. url: {}".format(url))
@@ -223,31 +229,39 @@ def make_rest_call(
 
         if do_retry and response.status_code == 401:
             instance_check.authentication()
-            response = instance_check.http.get(url, headers=instance_check.headers, params=params)
+            response = instance_check.http.get(url, headers=instance_check.headers, params=params, timeout=None)
             if response is None:
                 raise Exception("Could not make request to API. url: {}".format(url))
         response.raise_for_status()
-        return response
+        if pagination:
+            paginated_response = {"value": []}
+            for res in get_paginated_results(instance_check, response, headers, params):
+                paginated_response["value"].extend(res.get("value") or [])
+            return paginated_response
+        else:
+            return response.json()
 
     if method.lower() == "post":
 
-        response = instance_check.http.post(
-            url,
-            headers=headers,
-            params=params,
-            data=data,
-            json=json,
-        )
+        response = instance_check.http.post(url, headers=headers, params=params, data=data, json=json, timeout=None)
 
         if do_retry and response.status_code == 401:
             instance_check.authentication()
-            response = instance_check.http.post(
-                url,
-                headers=headers,
-                params=params,
-                data=data,
-                json=json,
-            )
+            response = instance_check.http.post(url, headers=headers, params=params, data=data, json=json, timeout=None)
 
         response.raise_for_status()
         return response
+
+
+def get_paginated_results(instance_check, response, headers, params):
+    json_response = response.json()
+    yield json_response
+    next_url = json_response.get("@odata.nextLink")
+    if next_url:
+        splitted_url = next_url.split("?")
+        skip_param = splitted_url[-1].split("&")[-1].split("=")
+        if skip_param[0] == "$skip":
+            no_records = skip_param[1]
+            endpoint = splitted_url[0].split("/")[-1]
+            instance_check.log.info("'%s' data fetched of '%s'.", no_records, endpoint)
+        yield make_rest_call(instance_check, next_url, method="get", headers=headers, params=params, pagination=True)

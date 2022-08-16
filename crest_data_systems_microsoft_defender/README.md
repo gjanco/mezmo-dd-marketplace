@@ -10,7 +10,7 @@ This integration collects endpoint details, vulnerabilities, alerts, and inciden
 
 ### Dashboards
 
- - Microsoft Defender Endpoint Overview
+ - Microsoft 365 Defender Endpoint Overview
  - Endpoint Overview
  - Alerts Overview
  - Threats and Vulnerability Overview
@@ -26,7 +26,7 @@ This integration collects endpoint details, vulnerabilities, alerts, and inciden
 
 ### Datadog Integration Installation
 
-To install the integration, run: `sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_microsoft_defender==1.0.0`
+To install the integration, run: `sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_microsoft_defender==1.0.1`
 
 ### Datadog Integration Configuration
 
@@ -109,3 +109,5 @@ Alternatively, you can get detailed information about the integration using the 
 For support or feature requests, contact Crest Data Systems through the following channel:
 
  - Email: datadog.integrations@crestdatasys.com
+ - Website: [crestdatasys.com](https://www.crestdatasys.com/microsoft-365-defender-integration/)
+ 
