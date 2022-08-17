@@ -34,7 +34,7 @@ class ServicenowCheck(AgentCheck):
 
         if self.collect_statsdo:
             if self.statsdo_auth:
-                self.stats_url = self.stats_auth_url 
+                self.stats_url = self.base_url + self.stats_auth_url 
             else:
                 self.stats_url = self.base_url + Constants.STATSDO_PATH
             self.stats_title = (

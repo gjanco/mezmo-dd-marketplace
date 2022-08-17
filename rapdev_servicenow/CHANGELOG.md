@@ -1,4 +1,7 @@
 # CHANGELOG - rapdev_servicenow
+## 1.2.3 / 2022-08-16
+- [Changed] `stats_auth_url` to take the resource endpoint instead of url
+
 
 ## 1.2.2 / 2022-08-06
 
