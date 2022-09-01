@@ -1,0 +1,1423 @@
+{
+    "title": "RapDev GitLab Dashboard",
+    "description": "GitLab Dashboard",
+    "widgets": [
+        {
+            "id": 5423843139882137,
+            "definition": {
+                "type": "image",
+                "url": "https://s3.amazonaws.com/files.rapdev.io/images/rapdev-dash-logo.png",
+                "sizing": "fill",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            },
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 3,
+                "height": 2
+            }
+        },
+        {
+            "id": 4366030267360421,
+            "definition": {
+                "title": "API Connection Status",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "check_status",
+                "check": "rapdev.gitlab.can_connect",
+                "grouping": "check",
+                "group": "$host",
+                "group_by": [
+                    "host"
+                ],
+                "tags": [
+                    "vendor:rapdev"
+                ]
+            },
+            "layout": {
+                "x": 3,
+                "y": 0,
+                "width": 2,
+                "height": 2
+            }
+        },
+        {
+            "id": 8802242879444623,
+            "definition": {
+                "title": "User Count",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "default_zero(query1)"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:rapdev.gitlab.users{*}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2,
+                "timeseries_background": {
+                    "type": "bars"
+                }
+            },
+            "layout": {
+                "x": 5,
+                "y": 0,
+                "width": 2,
+                "height": 2
+            }
+        },
+        {
+            "id": 2486094877254193,
+            "definition": {
+                "title": "API Token Status",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "check_status",
+                "check": "rapdev.gitlab.get_token",
+                "grouping": "check",
+                "group": "$host",
+                "group_by": [],
+                "tags": [
+                    "*"
+                ]
+            },
+            "layout": {
+                "x": 7,
+                "y": 0,
+                "width": 2,
+                "height": 2
+            }
+        },
+        {
+            "id": 6613613515089101,
+            "definition": {
+                "type": "image",
+                "url": "https://i.imgur.com/AxE6dXf.png",
+                "sizing": "fill",
+                "has_background": false,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            },
+            "layout": {
+                "x": 9,
+                "y": 0,
+                "width": 3,
+                "height": 2
+            }
+        },
+        {
+            "id": 1440237697110977,
+            "definition": {
+                "title": "Project Metrics",
+                "type": "group",
+                "background_color": "vivid_pink",
+                "show_title": true,
+                "layout_type": "ordered",
+                "widgets": [
+                    {
+                        "id": 8469165950640218,
+                        "definition": {
+                            "title": "Project Count",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "sum:rapdev.gitlab.project.count{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "bars"
+                            }
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 2412814749476075,
+                        "definition": {
+                            "title": "Project Fetches from Last 30 Days",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.project.fetches{$project_name}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 2,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 3751910896070715,
+                        "definition": {
+                            "title": "Total Project Labels",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "sum:rapdev.gitlab.project.labels{$project_name}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "bars"
+                            }
+                        },
+                        "layout": {
+                            "x": 4,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 6303324401885366,
+                        "definition": {
+                            "title": "Project Count Over Time",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "show_legend": true,
+                            "legend_layout": "auto",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "queries": [
+                                        {
+                                            "query": "sum:rapdev.gitlab.project.count{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1"
+                                        }
+                                    ],
+                                    "style": {
+                                        "palette": "dog_classic",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ]
+                        },
+                        "layout": {
+                            "x": 6,
+                            "y": 0,
+                            "width": 6,
+                            "height": 2
+                        }
+                    }
+                ]
+            },
+            "layout": {
+                "x": 0,
+                "y": 2,
+                "width": 12,
+                "height": 3
+            }
+        },
+        {
+            "id": 2218691257268676,
+            "definition": {
+                "title": "Sidekiq Metrics",
+                "type": "group",
+                "background_color": "vivid_purple",
+                "show_title": true,
+                "layout_type": "ordered",
+                "widgets": [
+                    {
+                        "id": 258001961765563,
+                        "definition": {
+                            "title": "Sidekiq Queue Count",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.sidekiq.queue_count{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 2845897390223675,
+                        "definition": {
+                            "title": "Sidekiq Jobs Processed",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.sidekiq.jobs_processed{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 2,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 4382739596370148,
+                        "definition": {
+                            "title": "Sidekiq Jobs Failed",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.sidekiq.jobs_failed{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 4,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 3869565090205746,
+                        "definition": {
+                            "title": "Sidekiq Metrics by Host",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_table",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Dead Jobs",
+                                            "conditional_formats": [],
+                                            "limit": {
+                                                "count": 500,
+                                                "order": "desc"
+                                            },
+                                            "cell_display_mode": "bar",
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "Failed Jobs",
+                                            "conditional_formats": [],
+                                            "cell_display_mode": "bar",
+                                            "formula": "query2"
+                                        },
+                                        {
+                                            "alias": "Enqueued Jobs",
+                                            "conditional_formats": [],
+                                            "cell_display_mode": "bar",
+                                            "formula": "query3"
+                                        },
+                                        {
+                                            "alias": "Processed Jobs",
+                                            "conditional_formats": [],
+                                            "cell_display_mode": "bar",
+                                            "formula": "query4"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.sidekiq.jobs_dead{*} by {host}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "avg"
+                                        },
+                                        {
+                                            "query": "max:rapdev.gitlab.sidekiq.jobs_failed{*} by {host}",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "aggregator": "avg"
+                                        },
+                                        {
+                                            "query": "max:rapdev.gitlab.sidekiq.jobs_enqueued{*} by {host}",
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "aggregator": "avg"
+                                        },
+                                        {
+                                            "query": "max:rapdev.gitlab.sidekiq.jobs_processed{*} by {host}",
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "aggregator": "avg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "has_search_bar": "auto"
+                        },
+                        "layout": {
+                            "x": 6,
+                            "y": 0,
+                            "width": 6,
+                            "height": 4
+                        }
+                    },
+                    {
+                        "id": 5228790936302149,
+                        "definition": {
+                            "title": "Sidekiq Jobs Dead",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.sidekiq.jobs_dead{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 2,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 2963504097655615,
+                        "definition": {
+                            "title": "Sidekiq Jobs Enqueued",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.sidekiq.jobs_enqueued{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 2,
+                            "y": 2,
+                            "width": 2,
+                            "height": 2
+                        }
+                    }
+                ]
+            },
+            "layout": {
+                "x": 0,
+                "y": 5,
+                "width": 12,
+                "height": 5,
+                "is_column_break": true
+            }
+        },
+        {
+            "id": 7236215076030280,
+            "definition": {
+                "title": "Instance Metrics",
+                "type": "group",
+                "background_color": "vivid_blue",
+                "show_title": true,
+                "layout_type": "ordered",
+                "widgets": [
+                    {
+                        "id": 1022580851658318,
+                        "definition": {
+                            "title": "Instance SSH Keys",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.instance.ssh_keys{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 3259208736348683,
+                        "definition": {
+                            "title": "Instance Forks",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.instance.forks{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 2,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 3522665539973002,
+                        "definition": {
+                            "title": "Instance Issues",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.instance.issues{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 4,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 4789701366738318,
+                        "definition": {
+                            "title": "Instance Metrics Over Time",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "show_legend": true,
+                            "legend_layout": "auto",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Groups",
+                                            "formula": "default_zero(query1)"
+                                        },
+                                        {
+                                            "alias": "Forks",
+                                            "formula": "default_zero(query2)"
+                                        },
+                                        {
+                                            "alias": "Issues",
+                                            "formula": "default_zero(query3)"
+                                        },
+                                        {
+                                            "alias": "Merge Requests",
+                                            "formula": "default_zero(query5)"
+                                        },
+                                        {
+                                            "alias": "SSH Keys",
+                                            "formula": "default_zero(query6)"
+                                        },
+                                        {
+                                            "alias": "Users",
+                                            "formula": "default_zero(query7)"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "queries": [
+                                        {
+                                            "query": "avg:rapdev.gitlab.instance.groups{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1"
+                                        },
+                                        {
+                                            "query": "avg:rapdev.gitlab.instance.forks{*}",
+                                            "data_source": "metrics",
+                                            "name": "query2"
+                                        },
+                                        {
+                                            "query": "avg:rapdev.gitlab.instance.issues{*}",
+                                            "data_source": "metrics",
+                                            "name": "query3"
+                                        },
+                                        {
+                                            "query": "avg:rapdev.gitlab.instance.merge_requests{*}",
+                                            "data_source": "metrics",
+                                            "name": "query5"
+                                        },
+                                        {
+                                            "query": "avg:rapdev.gitlab.instance.ssh_keys{*}",
+                                            "data_source": "metrics",
+                                            "name": "query6"
+                                        },
+                                        {
+                                            "query": "avg:rapdev.gitlab.instance.users{*}",
+                                            "data_source": "metrics",
+                                            "name": "query7"
+                                        }
+                                    ],
+                                    "style": {
+                                        "palette": "dog_classic",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ]
+                        },
+                        "layout": {
+                            "x": 6,
+                            "y": 0,
+                            "width": 6,
+                            "height": 6
+                        }
+                    },
+                    {
+                        "id": 8158826613538576,
+                        "definition": {
+                            "title": "Instance Notes",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.instance.notes{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 2,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 5272826257158327,
+                        "definition": {
+                            "title": "Instance Active Users",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.instance.active_users{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 2,
+                            "y": 2,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 6214085026886898,
+                        "definition": {
+                            "title": "Instance Active User Percentage",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero((query1 / query2) * 100)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "avg:rapdev.gitlab.instance.active_users{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "avg"
+                                        },
+                                        {
+                                            "query": "avg:rapdev.gitlab.instance.users{*}",
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "aggregator": "avg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "custom_unit": "%",
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 4,
+                            "y": 2,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 98456812742628,
+                        "definition": {
+                            "title": "Instance Users",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.instance.users{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 4,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 8366858183153163,
+                        "definition": {
+                            "title": "Instance Groups",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.instance.groups{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 2,
+                            "y": 4,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 1047454148321910,
+                        "definition": {
+                            "title": "Instance Merge Requests",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.instance.merge_requests{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 4,
+                            "y": 4,
+                            "width": 2,
+                            "height": 2
+                        }
+                    }
+                ]
+            },
+            "layout": {
+                "x": 0,
+                "y": 10,
+                "width": 12,
+                "height": 7
+            }
+        },
+        {
+            "id": 4588843462165572,
+            "definition": {
+                "title": "Runner Metrics",
+                "type": "group",
+                "background_color": "vivid_orange",
+                "show_title": true,
+                "layout_type": "ordered",
+                "widgets": [
+                    {
+                        "id": 5809525504674162,
+                        "definition": {
+                            "title": "Total Runners",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "sum:rapdev.gitlab.runner.data{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "bars"
+                            }
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 3062300946514440,
+                        "definition": {
+                            "title": "Runner Count by Status",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)",
+                                            "limit": {
+                                                "order": "desc"
+                                            }
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.runner.status_count{*} by {runner_status}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "type": "sunburst",
+                            "legend": {
+                                "type": "table"
+                            }
+                        },
+                        "layout": {
+                            "x": 2,
+                            "y": 0,
+                            "width": 5,
+                            "height": 4
+                        }
+                    },
+                    {
+                        "id": 4155287429232103,
+                        "definition": {
+                            "title": "Runner Count by Type",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)",
+                                            "limit": {
+                                                "order": "desc"
+                                            }
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "sum:rapdev.gitlab.runner.data{*} by {type}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "type": "sunburst",
+                            "legend": {
+                                "type": "table"
+                            }
+                        },
+                        "layout": {
+                            "x": 7,
+                            "y": 0,
+                            "width": 5,
+                            "height": 4
+                        }
+                    },
+                    {
+                        "id": 171294648301916,
+                        "definition": {
+                            "title": "Total Online Runners",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "max:rapdev.gitlab.runner.status_count{runner_status:online}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "area"
+                            }
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 2,
+                            "width": 2,
+                            "height": 2
+                        }
+                    }
+                ]
+            },
+            "layout": {
+                "x": 0,
+                "y": 17,
+                "width": 12,
+                "height": 5
+            }
+        },
+        {
+            "id": 8854530480057879,
+            "definition": {
+                "title": "Issue Metrics",
+                "type": "group",
+                "background_color": "vivid_yellow",
+                "show_title": true,
+                "layout_type": "ordered",
+                "widgets": [
+                    {
+                        "id": 3120476904624495,
+                        "definition": {
+                            "title": "Total Issues",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "sum:rapdev.gitlab.issues{*}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "bars"
+                            }
+                        },
+                        "layout": {
+                            "x": 0,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 6798567453554883,
+                        "definition": {
+                            "title": "Opened Issues",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "sum:rapdev.gitlab.issues{state:opened}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "bars"
+                            }
+                        },
+                        "layout": {
+                            "x": 2,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 7837365280823615,
+                        "definition": {
+                            "title": "Closed Issues",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "default_zero(query1)"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "queries": [
+                                        {
+                                            "query": "sum:rapdev.gitlab.issues{state:closed}",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "aggregator": "last"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 2,
+                            "timeseries_background": {
+                                "type": "bars"
+                            }
+                        },
+                        "layout": {
+                            "x": 4,
+                            "y": 0,
+                            "width": 2,
+                            "height": 2
+                        }
+                    },
+                    {
+                        "id": 7200265746687799,
+                        "definition": {
+                            "title": "Issues Over Time",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "show_legend": true,
+                            "legend_layout": "auto",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "time": {},
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Issues Over Time",
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "name": "query1",
+                                            "data_source": "metrics",
+                                            "query": "sum:rapdev.gitlab.issues{$host}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "dog_classic",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ]
+                        },
+                        "layout": {
+                            "x": 6,
+                            "y": 0,
+                            "width": 6,
+                            "height": 2
+                        }
+                    }
+                ]
+            },
+            "layout": {
+                "x": 0,
+                "y": 22,
+                "width": 12,
+                "height": 3
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "project_name",
+            "default": "*",
+            "prefix": "project_name",
+            "available_values": []
+        },
+        {
+            "name": "host",
+            "default": "*",
+            "prefix": "host",
+            "available_values": []
+        }
+    ],
+    "layout_type": "ordered",
+    "is_read_only": false,
+    "notify_list": [],
+    "reflow_type": "fixed",
+    "id": "35u-fmr-ynn"
+}
