@@ -1,0 +1,1087 @@
+{
+    "author_name": "RapDev",
+    "description": "## Microsoft Teams Call Quality User Experience",
+    "layout_type": "ordered",
+    "template_variables": [
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "session_user_name",
+            "prefix": "session_user_name"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "session_user_id",
+            "prefix": "session_user_id"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "call_organizer_name",
+            "prefix": "call_organizer_name"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "call_start",
+            "prefix": "call_start"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "call_id",
+            "prefix": "call_id"
+        }
+    ],
+    "title": "MS Teams CQ User Experience",
+    "widgets": [
+        {
+            "definition": {
+                "has_background": false,
+                "has_border": false,
+                "horizontal_align": "center",
+                "sizing": "cover",
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-dash-logo.png",
+                "vertical_align": "center"
+            },
+            "id": 1757469638055295,
+            "layout": {
+                "height": 2,
+                "width": 4,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "has_background": false,
+                "has_border": false,
+                "horizontal_align": "center",
+                "sizing": "contain",
+                "type": "image",
+                "url": "https://www.marshall.edu/it/files/microsoft-team-2019.png",
+                "vertical_align": "center"
+            },
+            "id": 6508624556640472,
+            "layout": {
+                "height": 2,
+                "width": 2,
+                "x": 4,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.session.duration{$session_user_name,$session_user_id,$call_organizer_name,$call_start,$call_id} by {session_id,session_user_id,session_user_name}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Call Session Duration (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 8978168249543337,
+            "layout": {
+                "height": 3,
+                "width": 6,
+                "x": 6,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.session.caller{$session_user_name,$session_user_id,$call_organizer_name,$call_start,$call_id} by {platform}"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "style": {
+                            "palette": "dogcat"
+                        }
+                    }
+                ],
+                "title": "Platforms",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 2452845481252007,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 0,
+                "y": 2
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.session.caller{$session_user_name,$session_user_id,$call_organizer_name,$call_start,$call_id} by {productfamily}"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "style": {
+                            "palette": "dogcat"
+                        }
+                    }
+                ],
+                "title": "Product Families",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 1664530738086111,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 3,
+                "y": 2
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.msteams.session.duration{$session_user_name,$session_user_id,$call_organizer_name,$call_start,$call_id} by {session_id,session_user_id,session_user_name}"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "time": {},
+                "title": "Average Call Session Distribution (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "distribution"
+            },
+            "id": 2734376368935391,
+            "layout": {
+                "height": 2,
+                "width": 6,
+                "x": 6,
+                "y": 3
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.session.caller{$call_organizer_name,$call_id,$call_start,$session_user_name,$session_user_id} by {call_type}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Call Types",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 328255552171928,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 0,
+                "y": 5
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.session.caller{$call_organizer_name,$call_id,$call_start,$session_user_name,$session_user_id} by {session_modalities}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Modalities",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 4204203111820774,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 3,
+                "y": 5
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.media.device{$session_user_name,$session_user_id,$call_organizer_name,$call_start,$call_id,endpoint:caller} by {capture_device_name}"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "style": {
+                            "palette": "dogcat"
+                        }
+                    }
+                ],
+                "title": "Capture Devices",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 383066800392499,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 6,
+                "y": 5
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.media.device{$session_user_name,$session_user_id,$call_organizer_name,$call_start,$call_id,endpoint:caller} by {capture_device_name}"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "style": {
+                            "palette": "dogcat"
+                        }
+                    }
+                ],
+                "title": "Render Devices",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 5422650966254201,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 9,
+                "y": 5
+            }
+        },
+        {
+            "definition": {
+                "background_color": "blue",
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Network",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.averagebandwidthestimate{$session_user_name,$session_user_id,$call_organizer_name,$call_start,$call_id} by {call_id,session_id,session_user_name}",
+                                    "style": {
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Bandwidth Available Estimate",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 2168274279426458,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.packetutilization{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_name,session_user_id}",
+                                    "style": {
+                                        "palette": "warm"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Packet Utilization",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 2959611075417215,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 2,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.averageroundtriptime{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "cool"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average Round Trip Time",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 1652476512435963,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 4,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.averagejitter{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_name,session_user_id}",
+                                    "style": {
+                                        "palette": "warm"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average Jitter",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 5997670245626666,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 6,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.averagepacketlossrate{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "purple"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average Packet Loss Rate",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 1605303455809479,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 8,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.media.wifisignalstrength{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_name,session_user_id}",
+                                    "style": {
+                                        "palette": "green"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average WiFi Signal Strength",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 5200602025134248,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 10,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.media.bandwidthloweventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Bandwidth Low Event Ratio",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 1940136700116147,
+                        "layout": {
+                            "height": 2,
+                            "width": 4,
+                            "x": 0,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.maxroundtriptime{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "cool"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Maximum Round Trip Time",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 3097152586430489,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 4,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.maxjitter{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_name,session_user_id}",
+                                    "style": {
+                                        "palette": "warm"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Maximum Jitter",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 189628154744546,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 6,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.maxpacketlossrate{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "purple"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Maximum Packet Loss Rate",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 4702918019510220,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 8,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.media.wifibatterycharge{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "green"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average WiFi Battery Charge",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 4686083362681015,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 10,
+                            "y": 2
+                        }
+                    }
+                ]
+            },
+            "id": 4467798926798244,
+            "layout": {
+                "height": 5,
+                "width": 12,
+                "x": 0,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "background_color": "blue",
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Audio",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "legend": {
+                                "type": "automatic"
+                            },
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "query1",
+                                            "limit": {
+                                                "order": "desc"
+                                            }
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "sum",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:rapdev.msteams.stream{$call_organizer_name,$call_id,$call_start,$session_user_name,$session_user_id} by {audio_codec}"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "style": {
+                                        "palette": "dogcat"
+                                    }
+                                }
+                            ],
+                            "title": "Audio Codecs",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "sunburst"
+                        },
+                        "id": 3169011104713284,
+                        "layout": {
+                            "height": 4,
+                            "width": 3,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.averageaudiodegradation{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average Audio Degradation",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 208448011805074,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 3,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.averageratioofconcealedsamples{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "grey"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average Ratio of Concealed Samples",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 719642493365738,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 5,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.averageaudionetworkjitter{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "warm"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average Audio Network Jitter",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 1165521331047739,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 7,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "background_color": "white",
+                            "content": "### Average Audio Degradation\n\nAverage Network Mean Opinion Score degradation for stream. Represents how much the network loss and jitter has impacted the quality of received audio.\n\n---\n###  Poor Quality Event Ratio\n\nFraction of the call that the media endpoint detected the network was causing poor quality of the audio received.\n\n---\n###  Ratio of Concealed Samples\n\nRatio of the number of audio frames with samples generated by packet loss concealment to the total number of audio frames.\n",
+                            "font_size": "12",
+                            "has_padding": true,
+                            "show_tick": false,
+                            "text_align": "left",
+                            "tick_edge": "left",
+                            "tick_pos": "50%",
+                            "type": "note",
+                            "vertical_align": "top"
+                        },
+                        "id": 2184864107038378,
+                        "layout": {
+                            "height": 4,
+                            "width": 3,
+                            "x": 9,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.media.receivedqualityeventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Received Poor Quality Event Ratio",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 4625679333685244,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 3,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.maxratioofconcealedsamples{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "grey"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Maximum Ratio of Concealed Samples",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 4995836481803083,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 5,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.maxaudionetworkjitter{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "warm"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Maximum Audio Network Jitter",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 5373739175852124,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 7,
+                            "y": 2
+                        }
+                    }
+                ]
+            },
+            "id": 7845536958859381,
+            "layout": {
+                "height": 5,
+                "width": 12,
+                "x": 0,
+                "y": 13
+            }
+        },
+        {
+            "definition": {
+                "background_color": "blue",
+                "layout_type": "ordered",
+                "show_title": true,
+                "title": "Video",
+                "type": "group",
+                "widgets": [
+                    {
+                        "definition": {
+                            "legend": {
+                                "type": "automatic"
+                            },
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "query1",
+                                            "limit": {
+                                                "order": "desc"
+                                            }
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "aggregator": "sum",
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:rapdev.msteams.stream{$call_organizer_name,$call_id,$call_start,$session_user_name,$session_user_id} by {video_codec}"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "style": {
+                                        "palette": "dogcat"
+                                    }
+                                }
+                            ],
+                            "title": "Video Codecs",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "sunburst"
+                        },
+                        "id": 937975644503720,
+                        "layout": {
+                            "height": 4,
+                            "width": 3,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.averagevideoframerate{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average Frame Rate",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 5423737785822034,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 3,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.lowframerateratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "warm"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Low Frame Rate Ratio",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 6679095207084382,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 5,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.postforwarderrorcorrectionpacketlossrate{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "red"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "FEC Packet Loss Rate",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 172502428687418,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 7,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "background_color": "white",
+                            "content": "### Low Frame Rate Ratio\n\nFraction of the call where frame rate is less than 7.5 frames per second.\n\n---\n\n### Low Processing Capability Ratio\n\nFraction of the call that the client is running less than 70% expected video processing capability.\n\n---\n\n###  FEC Packet Loss Rate\n\nPacket loss rate after FEC has been applied aggregated across all video streams and codecs.\n",
+                            "font_size": "12",
+                            "has_padding": true,
+                            "show_tick": false,
+                            "text_align": "left",
+                            "tick_edge": "left",
+                            "tick_pos": "50%",
+                            "type": "note",
+                            "vertical_align": "top"
+                        },
+                        "id": 5690686959841896,
+                        "layout": {
+                            "height": 4,
+                            "width": 3,
+                            "x": 9,
+                            "y": 0
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.averagevideoframelosspercentage{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "dog_classic"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Average Frame Loss %",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 5236254718959117,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 3,
+                            "y": 2
+                        }
+                    },
+                    {
+                        "definition": {
+                            "requests": [
+                                {
+                                    "q": "avg:rapdev.msteams.stream.lowvideoprocessingcapabilityratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id} by {call_id,session_user_id,session_user_name}",
+                                    "style": {
+                                        "palette": "warm"
+                                    }
+                                }
+                            ],
+                            "show_legend": false,
+                            "title": "Low Processing Capability Ratio",
+                            "title_align": "left",
+                            "title_size": "16",
+                            "type": "heatmap"
+                        },
+                        "id": 8595481288714883,
+                        "layout": {
+                            "height": 2,
+                            "width": 2,
+                            "x": 5,
+                            "y": 2
+                        }
+                    }
+                ]
+            },
+            "id": 2771538370610866,
+            "layout": {
+                "height": 5,
+                "width": 12,
+                "x": 0,
+                "y": 18
+            }
+        }
+    ]
+}

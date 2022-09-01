@@ -1,0 +1,597 @@
+{
+    "author_name": "RapDev",
+    "description": "## Microsoft Teams Call Quality User Devices",
+    "layout_type": "ordered",
+    "template_variables": [
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "session_user_name",
+            "prefix": "session_user_name"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "session_user_tenant",
+            "prefix": "session_user_tenant"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "session_user_id",
+            "prefix": "session_user_id"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "call_organizer_name",
+            "prefix": "call_organizer_name"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "call_start",
+            "prefix": "call_start"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "call_id",
+            "prefix": "call_id"
+        }
+    ],
+    "title": "MS Teams CQ User Devices",
+    "widgets": [
+        {
+            "definition": {
+                "has_background": false,
+                "has_border": false,
+                "horizontal_align": "center",
+                "sizing": "cover",
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-dash-logo.png",
+                "vertical_align": "center"
+            },
+            "id": 6315021619100005,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Render Muted",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [],
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            },
+                            {
+                                "alias": "Volume Zero",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [],
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Capture Not Functioning",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [],
+                                "formula": "query4"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.msteams.media.rendermuteeventratio{$session_user_name,$session_user_tenant,$session_user_id,$call_organizer_name,$call_start,$call_id} by {session_user_name,call_id,call_start,call_organizer_name}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:rapdev.msteams.media.renderzerovolumeeventratio{$session_user_name,$session_user_tenant,$session_user_id,$call_organizer_name,$call_start,$call_id} by {session_user_name,call_id,call_start,call_organizer_name}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "query": "avg:rapdev.msteams.media.capturenotfunctioningeventratio{$session_user_name,$session_user_tenant,$session_user_id,$call_organizer_name,$call_start,$call_id} by {session_user_name,call_id,call_start,call_organizer_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "User Device Summary",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 4072871238716384,
+            "layout": {
+                "height": 4,
+                "width": 9,
+                "x": 3,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "has_background": false,
+                "has_border": false,
+                "horizontal_align": "center",
+                "sizing": "contain",
+                "type": "image",
+                "url": "https://www.marshall.edu/it/files/microsoft-team-2019.png",
+                "vertical_align": "center"
+            },
+            "id": 6162590306215879,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 0,
+                "y": 2
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.stream{$call_organizer_name,$call_id,$call_start,$session_user_name,$session_user_id,$session_user_tenant} by {label}"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "style": {
+                            "palette": "dogcat"
+                        }
+                    }
+                ],
+                "title": "Media Types",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 2817108253135257,
+            "layout": {
+                "height": 4,
+                "width": 3,
+                "x": 0,
+                "y": 4
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.sentsignallevel{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Sent Signal Level",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 4775546171349201,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 3,
+                "y": 4
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.receivednoiselevel{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Received Noise Level",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 3675251050208989,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 6,
+                "y": 4
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.sentnoiselevel{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Sent Noise Level",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 7538735919951949,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 9,
+                "y": 4
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.deviceclippingeventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Device Clipping Event Ratio",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 7176971557534129,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 3,
+                "y": 6
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.micglitchrate{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Mic Glitch Rate",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 3793129297973798,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 6,
+                "y": 6
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.speakerglitchrate{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Speaker Glitch Rate",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 7915236261972236,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 9,
+                "y": 6
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.receivedsignallevel{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Received Signal Level",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 4956371478216260,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 0,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.lowspeechtonoiseeventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Low Speech To Noise Event Ratio",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 7626011325665792,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 3,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.cpuinsufficenteventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "CPU Insufficient Event Ratio",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 2632558518136355,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 6,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.howlingeventcount{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Howling Event Count",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 6642164296209408,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 9,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.deviceglitcheventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Device Glitch Event Ratio",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 8201737380760116,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 0,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.rendernotfunctioningeventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Render Not Functioning Event Ratio",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 1109526826408686,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 3,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.capturenotfunctioningeventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Capture Not Functioning Event Ratio",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 3944865619014302,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 6,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.rendermuteeventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Render Mute Event Ratio",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 676971834356120,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 9,
+                "y": 10
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.lowspeecheventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Low Speech Event Ratio",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 3011696859619870,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 0,
+                "y": 12
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.initialsignallevelrootmeansquare{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Initial Signal Level Root Mean Square",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 7291776597566885,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 3,
+                "y": 12
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.media.renderzerovolumeeventratio{$call_organizer_name,$call_start,$call_id,$session_user_name,$session_user_id,$session_user_tenant,endpoint:caller} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Render Zero Volume Event Ratio",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 3143148290833562,
+            "layout": {
+                "height": 2,
+                "width": 3,
+                "x": 6,
+                "y": 12
+            }
+        }
+    ]
+}

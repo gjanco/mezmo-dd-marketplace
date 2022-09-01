@@ -1,0 +1,165 @@
+{
+    "author_name": "RapDev",
+    "description": "## Microsoft Teams Call Quality Performance Classifiers Lookup Table",
+    "layout_type": "ordered",
+    "template_variables": [],
+    "title": "MS Teams CQ Lookup Performance Classifiers",
+    "widgets": [
+        {
+            "definition": {
+                "has_search_bar": "auto",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "RTT",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": ">",
+                                        "palette": "red_on_white",
+                                        "value": 0.5
+                                    }
+                                ],
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Packet Loss",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": ">",
+                                        "palette": "red_on_white",
+                                        "value": 0.1
+                                    }
+                                ],
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Jitter",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": ">",
+                                        "palette": "red_on_white",
+                                        "value": 0.03
+                                    }
+                                ],
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Packet Util",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": "<",
+                                        "palette": "yellow_on_white",
+                                        "value": 500
+                                    }
+                                ],
+                                "formula": "query4",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            },
+                            {
+                                "alias": "Frame Loss",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": ">",
+                                        "palette": "red_on_white",
+                                        "value": 50
+                                    }
+                                ],
+                                "formula": "query5"
+                            },
+                            {
+                                "alias": "Frame Rate",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": "<",
+                                        "palette": "red_on_white",
+                                        "value": 7
+                                    }
+                                ],
+                                "formula": "query6"
+                            },
+                            {
+                                "alias": "FECPLR",
+                                "cell_display_mode": "bar",
+                                "conditional_formats": [
+                                    {
+                                        "comparator": ">",
+                                        "palette": "red_on_white",
+                                        "value": 0.15
+                                    }
+                                ],
+                                "formula": "query7"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.stream.averageroundtriptime{*} by {call_id,direction,session_user_id,session_user_name}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "sum:rapdev.msteams.stream.averagepacketlossrate{*} by {call_id,direction,session_user_id,session_user_name}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "query": "sum:rapdev.msteams.stream.averageaudionetworkjitter{*} by {call_id,direction,session_user_id,session_user_name}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "query": "sum:rapdev.msteams.stream.packetutilization{*} by {call_id,direction,session_user_id,session_user_name}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query5",
+                                "query": "sum:rapdev.msteams.stream.averagevideoframelosspercentage{*} by {call_id,direction,session_user_id,session_user_name}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query6",
+                                "query": "sum:rapdev.msteams.stream.averagevideoframerate{*} by {call_id,direction,session_user_id,session_user_name}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query7",
+                                "query": "sum:rapdev.msteams.stream.postforwarderrorcorrectionpacketlossrate{*} by {call_id,direction,session_user_id,session_user_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "time": {},
+                "title": "Microsoft Teams CQ Performance Classifiers Lookup Table",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_table"
+            },
+            "id": 5188720720815242,
+            "layout": {
+                "height": 11,
+                "width": 12,
+                "x": 0,
+                "y": 0
+            }
+        }
+    ]
+}

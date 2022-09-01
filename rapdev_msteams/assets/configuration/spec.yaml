@@ -1,0 +1,76 @@
+name: RapDev MSTeams
+files:
+- name: rapdev_msteams.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+    - name: min_collection_interval
+      required: true
+      value:
+        example: 60
+        type: number
+      description: |
+        This changes the collection interval of the check. For more information, see:
+        https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+  - template: instances
+    options:
+      - name: tenant_id
+        required: true
+        value:
+          type: string
+        description: |
+          Azure Active Directory Organization (Tenant) ID.
+          https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview
+      - name: client_id
+        required: true
+        value:
+          type: string
+        description: |
+          Azure Active Directory app registration or service principal client ID
+          https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps
+      - name: client_secret
+        required: true
+        value:
+          type: string
+          secret: true
+        description: |
+          Azure Active Directory app registration or service principal client secret
+          https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps
+      - name: expire_window
+        value:
+          type: number
+          default: 180
+          minimum: 60
+        description: |
+          Microsoft Graph subscription expiration window, in minutes. Subscriptions for call record
+          notifications are created or updated with the expiration window.
+      - name: renewal_window
+        value:
+          type: number
+          default: 90
+          minimum: 30
+        description: |
+          Microsoft Graph subscription renewal window, in minutes. Subscriptions for call record
+          notifications are renewed when subscription expiration is within the renewal window.
+      - name: msgraph_baseurl
+        value:
+          type: string
+          example: https://graph.microsoft.com
+          default: https://graph.microsoft.com
+        description: |
+          Base url endpoint for Microsoft Graph api invocations. The msgraph_baseurl
+          value should only be changed when specified by RapDev.
+      - name: notifications_baseurl
+        value:
+          type: string
+          example: https://msgraph-subscriptions-notifications.synth-rapdev.io
+          default: https://msgraph-subscriptions-notifications.synth-rapdev.io
+        description: |
+          Base url endpoint for Microsoft Graph subscription notfications. The notifications_baseurl
+          value should only be changed when specified by RapDev.
+      - template: instances/default
+        overrides:
+          min_collection_interval.value.example: 60
+      - template: instances/http
+

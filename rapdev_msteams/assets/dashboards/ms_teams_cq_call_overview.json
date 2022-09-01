@@ -1,0 +1,727 @@
+{
+    "author_name": "RapDev",
+    "description": "## Microsoft Teams Call Quality Call Overview",
+    "layout_type": "ordered",
+    "template_variables": [
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "call_organizer_name",
+            "prefix": "call_organizer_name"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "call_start",
+            "prefix": "call_start"
+        },
+        {
+            "available_values": [],
+            "default": "*",
+            "name": "call_id",
+            "prefix": "call_id"
+        }
+    ],
+    "title": "MS Teams CQ Call Overview",
+    "widgets": [
+        {
+            "definition": {
+                "has_background": true,
+                "has_border": true,
+                "horizontal_align": "center",
+                "sizing": "cover",
+                "type": "image",
+                "url": "https://files.rapdev.io/images/rapdev-dash-logo.png",
+                "vertical_align": "center"
+            },
+            "id": 3910832714623544,
+            "layout": {
+                "height": 2,
+                "width": 4,
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "has_background": false,
+                "has_border": false,
+                "horizontal_align": "center",
+                "sizing": "contain",
+                "type": "image",
+                "url": "https://www.marshall.edu/it/files/microsoft-team-2019.png",
+                "vertical_align": "center"
+            },
+            "id": 5358380485457232,
+            "layout": {
+                "height": 2,
+                "width": 2,
+                "x": 4,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "q": "avg:rapdev.msteams.call.duration{$call_organizer_name,$call_id,$call_start} by {call_id}",
+                        "style": {
+                            "palette": "dog_classic"
+                        }
+                    }
+                ],
+                "show_legend": false,
+                "title": "Average Call Duration (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "heatmap"
+            },
+            "id": 2734376368935391,
+            "layout": {
+                "height": 2,
+                "width": 6,
+                "x": 6,
+                "y": 0
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.call.organizer{$call_organizer_name,$call_id,$call_start} by {call_type}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Call Types",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 864665459512282,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 0,
+                "y": 2
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.session.caller{$call_organizer_name,$call_id,$call_start} by {platform}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Caller Session Platforms",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 1933756757027441,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 3,
+                "y": 2
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.msteams.call.duration{$call_organizer_name,$call_id,$call_start} by {call_id}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "show_legend": false,
+                "title": "Call Duration Distribution (Seconds)",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "distribution",
+                "xaxis": {
+                    "include_zero": true,
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                },
+                "yaxis": {
+                    "include_zero": true,
+                    "max": "auto",
+                    "min": "auto",
+                    "scale": "linear"
+                }
+            },
+            "id": 7370893022506061,
+            "layout": {
+                "height": 2,
+                "width": 6,
+                "x": 6,
+                "y": 2
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1 / 60"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "min",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.msteams.call.duration{$call_organizer_name,$call_id,$call_start}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Shortest Call Minutes",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 6874858693277501,
+            "layout": {
+                "height": 1,
+                "width": 2,
+                "x": 6,
+                "y": 4
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1 / 60"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.msteams.call.duration{$call_organizer_name,$call_id,$call_start}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Average Call Minutes",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 1989635654944963,
+            "layout": {
+                "height": 1,
+                "width": 2,
+                "x": 8,
+                "y": 4
+            }
+        },
+        {
+            "definition": {
+                "autoscale": false,
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1 / 60"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "max",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.msteams.call.duration{$call_organizer_name,$call_id,$call_start}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "text_align": "center",
+                "title": "Longest Call Minutes",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3157182755808353,
+            "layout": {
+                "height": 1,
+                "width": 2,
+                "x": 10,
+                "y": 4
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.call.organizer{$call_organizer_name,$call_id,$call_start} by {call_modalities}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Call Modalities",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 4204203111820774,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 0,
+                "y": 5
+            }
+        },
+        {
+            "definition": {
+                "legend": {
+                    "type": "automatic"
+                },
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.call.organizer{$call_organizer_name,$call_id,$call_start} by {call_modalities}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Call Modalities",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "sunburst"
+            },
+            "id": 6846504384102131,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 3,
+                "y": 5
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.call.participant{$call_organizer_name,$call_id,$call_start} by {call_id}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "thick",
+                            "palette": "cool"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Call Participants",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 1500669991746184,
+            "layout": {
+                "height": 2,
+                "width": 6,
+                "x": 6,
+                "y": 5
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "min",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "min:rapdev.msteams.call.participants{$call_organizer_name,$call_id,$call_start}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Smallest Call Participants",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 3044966066645636,
+            "layout": {
+                "height": 1,
+                "width": 2,
+                "x": 6,
+                "y": 7
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:rapdev.msteams.call.participants{$call_organizer_name,$call_id,$call_start}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Average Call Participants",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2778142088916117,
+            "layout": {
+                "height": 1,
+                "width": 2,
+                "x": 8,
+                "y": 7
+            }
+        },
+        {
+            "definition": {
+                "autoscale": true,
+                "precision": 0,
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "max",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:rapdev.msteams.call.participants{$call_organizer_name,$call_id,$call_start}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Largest Call Participants",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "query_value"
+            },
+            "id": 2635176144966954,
+            "layout": {
+                "height": 1,
+                "width": 2,
+                "x": 10,
+                "y": 7
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.call.organizer{$call_organizer_name,$call_id,$call_start} by {user_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Call Organizers",
+                "type": "treemap"
+            },
+            "id": 1061154795467442,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 0,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.call.organizer{$call_organizer_name,$call_id,$call_start} by {user_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Top Call Organizers",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 889696087828299,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 3,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
+                "requests": [
+                    {
+                        "display_type": "bars",
+                        "formulas": [
+                            {
+                                "formula": "duplicatedquery1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "duplicatedquery1",
+                                "query": "sum:rapdev.msteams.call.participant{$call_organizer_name,$call_id,$call_start} by {user_tenant,call_id}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "warm"
+                        }
+                    }
+                ],
+                "show_legend": true,
+                "title": "Call Participant Tenants",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "timeseries"
+            },
+            "id": 1118579717719440,
+            "layout": {
+                "height": 3,
+                "width": 6,
+                "x": 6,
+                "y": 8
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.call.participant{$call_organizer_name,$call_id,$call_start} by {user_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Call Participants",
+                "type": "treemap"
+            },
+            "id": 6706048726606186,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 0,
+                "y": 11
+            }
+        },
+        {
+            "definition": {
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "sum",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:rapdev.msteams.call.participant{$call_organizer_name,$call_id,$call_start} by {user_name}"
+                            }
+                        ],
+                        "response_format": "scalar"
+                    }
+                ],
+                "title": "Top Call Participants",
+                "title_align": "left",
+                "title_size": "16",
+                "type": "toplist"
+            },
+            "id": 1476929191905366,
+            "layout": {
+                "height": 3,
+                "width": 3,
+                "x": 3,
+                "y": 11
+            }
+        }
+    ]
+}

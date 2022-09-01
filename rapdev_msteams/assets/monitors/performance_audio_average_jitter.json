@@ -1,0 +1,27 @@
+{
+	"name": "[RapDev MSTeams] - average audio network jitter exceeds poor performance classifier",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:rapdev.msteams.stream.averageaudionetworkjitter{*} by {call_id,call_start,call_organizer_name} > 0.03",
+	"message": "{{#is_alert}}The Microsoft Teams call average audio network jitter of {{call_id.name}} organized by {{call_organizer_name.name}} and started at {{call_start.name}} exceeds performance classifier definition.{{/is_alert}}",
+	"tags": [
+		"integration:rapdev-msteams"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 0.03
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"silenced": {},
+		"include_tags": true,
+		"new_group_delay": 60,
+		"timeout_h": 0
+	},
+	"priority": null,
+	"restricted_roles": null,
+	"recommended_monitor_metadata": {
+		"description": "Composite component monitor; monitor when call session network jitter exceeds poor performance qualifier value."
+	}
+}
