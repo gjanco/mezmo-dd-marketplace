@@ -5,32 +5,30 @@ The HP-UX Agent allows you to collect and report on system metrics within Datado
 
 The HP-UX Agent provides the host metadata required to support the Datadog Infrastructure List, enabling your organization to work with HP-UX host systems similar to other supported Datadog host operating systems.
 
-The HP-UX Agent uses the same URLs and ports as the native agents. The HP-UX Agent currently supports core infrastructure metrics, process checks, and log tails. It does not support Agent checks, integrations, or service checks.  
+The HP-UX Agent uses the same URLs and ports as the native agents. The HP-UX Agent currently supports core infrastructure metrics, process checks, and log tails. It does not support custom Agent checks, integrations, or service checks.
 
 ### Pricing
 Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ## Setup
 
-1. A current installation of curl is required on each HP-UX Agent host. The HP-UX Agent was built and tested with [curl-7.73.0](http://hpux.connect.org.uk/hppd/hpux/Networking/WWW/curl-7.73.0/) from the [HP-UX Porting and Archive Centre](http://hpux.connect.org.uk).
+1. Install a current version of cURL if your system does not have one available. The HP-UX Agent was built and tested with [curl-7.73.0](http://hpux.connect.org.uk/hppd/hpux/Networking/WWW/curl-7.73.0/) from the [HP-UX Porting and Archive Centre](http://hpux.connect.org.uk).
 
-2. Download the HP-UX Agent install [package](http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.3.2.tgz).
+2. Download the HP-UX Agent install [package](http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.4.1.tgz).
 ```sh
 cd /tmp
-/usr/local/bin/curl -o DatadogAgent-1.3.2.tgz http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.3.2.tgz 
+/usr/local/bin/curl -o DatadogAgent-1.4.1.tgz http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.4.1.tgz 
 ```
 
-3. Ensure that every HP-UX Agent host has a current installation of Gzip. The HP-UX Agent was built and tested with `gzip v1.3.5`, and defaults to `/usr/contrib/bin/gzip`.
-
-4. Install the HP-UX Agent. You can run the `install.sh` script to update an existing HP-UX Agent install.
+3. Install the HP-UX Agent. You can run the `install.sh` script to update an existing HP-UX Agent install.
 ```sh
 cd /tmp
-gunzip -c DatadogAgent-1.3.2.tgz | tar -xvf -
+gunzip -c DatadogAgent-1.4.1.tgz | tar -xvf -
 cd /tmp/datadog-agent-install
 ./install.sh 
 ```
 
-5. Copy `/etc/datadog/agent.yml.example` to `/etc/datadog/agent.yml` and update the HP-UX Agent settings in the `/etc/datadog/agent.yml` file:
+4. Copy `/etc/datadog/agent.yaml.example` to `/etc/datadog/agent.yaml` and update the HP-UX Agent settings in the `/etc/datadog/agent.yaml` file:
 
     i. (Required) Set the `api_key` value to your Datadog's API key string.
 
@@ -42,30 +40,23 @@ cd /tmp/datadog-agent-install
     iii. (Optional) Uncomment and set the `tags` setting to specify tags to include on all metrics and logs.
     ```yaml
     tags:
-      - environment:dev
+      - environment:production
     #  - <TAG_KEY1>:<TAG_VALUE1>
     #  - <TAG_KEY2>:<TAG_VALUE2>
     ```
 
-    iv. (Optional) Uncomment the `logs:` section in `/etc/datadog/agent.yml` and add a configuration for desired log tail. The `dd-agent` user requires read access to all files configured for log tails.
-    ```yaml
-    logs:
-      - type: file
-        path: /var/adm/syslog/*
-        service: datadog
-        source: agent
+    iv. (Optional) Enable log message collection. Copy `/etc/datadog/logs.yaml.example` to `/etc/datadog/logs.yaml`. Read the `/etc/datdog/logs.yaml` comments and examples for configuration options to support log collection, including the multi-line log feature.
+    ```sh
+    cp /etc/datadog/logs.yaml.example /etc/datadog/logs.yaml
+    vi /etc/datadog/logs.yaml
+    chown datadog:sys /etc/datadog/logs.yaml
     ```
 
-    Standard filesystem path globs are supported.
-
-    v. (Optional) Uncomment the `processes:` section in `/etc/datadog/agent.yml` and add a configuration for desired process checks.
-    ```yaml
-    processes:
-     - name: ssh
-       search_string: (ssh|sshd)
-
-     - name: apache
-       search_string: apache
+    v. (Optional) Enable process checks. Copy `/etc/datadog/process.yaml.example` to `/etc/datadog/process.yaml`. Read the `/etc/datdog/process.yaml` file for comments and examples of the configuration options to support process checks.
+    ```sh
+    cp /etc/datadog/process.yaml.example /etc/datadog/process.yaml
+    vi /etc/datadog/process.yaml
+    chown datadog:sys /etc/datadog/process.yaml
     ```
 
     The following metrics are supported for process checks.
@@ -77,20 +68,38 @@ cd /tmp/datadog-agent-install
     | system.processes.cpu.pct | Process cpu usage (percent) | `process_name`, `process_pid` |
     | system.processes.number | Running process count (matching search_string) | `process_name` |
 
-    vi. (Optional) Add your desired configurations in `/etc/datadog/agent.yml` for include, exclude, and tags to apply on filesystems. See the example `agent.yml` for specific configuration options. See `/etc/datadog/agent.yml.example` for all filesystem configuration options and examples.
-    ```yaml
-    mount_point_tag_re:
-      /home: role:home
-      /tmp: role:temp,disk_size:large
-    ```  
+    vi. (Optional) Configure the filesystem check. Copy `/etc/datadog/filesystem.yaml.example` to `/etc/datadog/filesystem.yaml`. Read the `/etc/datdog/filesystem.yaml` file for comments and examples of the configuration options to support the filesystem check.
+    ```sh
+    cp /etc/datadog/filesystem.yaml.example /etc/datadog/filesystem.yaml
+    vi /etc/datadog/filesystem.yaml
+    chown datadog:sys /etc/datadog/filesystem.yaml
+    ```
 
-    vii. (Optional) If your Datadog instance is located in the EU instead of the US, uncomment the following settings:
+    vii. (Optional) Configure the directories (files) check. Copy `/etc/datadog/directories.yaml.example` to `/etc/datadog/directories.yaml`. Read the `/etc/datdog/directories.yaml` comments and examples for configuration options to support the directories check.
+    ```sh
+    cp /etc/datadog/directories.yaml.example /etc/datadog/directories.yaml
+    vi /etc/datadog/directories.yaml
+    chown datadog:sys /etc/datadog/directories.yaml
+    ```
+
+    The following metrics are supported for the directories check:
+    | Name | Description | Included Tags |
+    | --- | --- | --- |
+    | system.disk.directory.exists | Directory exists on the system (exists = 1) | name |
+    | system.disk.directory.files | Count of files in the directory (recursive) | name |
+    | system.disk.directory.bytes | Size of the directory (recursive) in bytes | name |
+    | system.disk.directory.file.bytes | File size in bytes | name |
+    | system.disk.directory.file.accessed_sec_ago | File last accessed in seconds | name |
+    | system.disk.directory.file.modified_sec_ago | File last modified in seconds | name |
+    | system.disk.directory.file.changed_sec_ago | File last changed in seconds | name |
+
+    viii. (Optional) If your Datadog instance is located in the EU instead of the US, uncomment the following settings:
     ```yaml
     dd_url: https://api.datadoghq.eu
     dd_log_url: https://http-intake.logs.datadoghq.eu
     ```
 
-    viii. (Optional) If your host system requires a proxy to communicate with Datadog's APIs, uncomment and update the following settings:
+    ix. (Optional) If your host system requires a proxy to communicate with Datadog's APIs, uncomment and update the following settings:
     ```yaml
     proxy_host: my-proxy.com
     proxy_port: 3128
@@ -98,12 +107,17 @@ cd /tmp/datadog-agent-install
     proxy_pass: password
     ```
 
-    ix. (Optional) If the host is using an installation of cURL other than `/usr/local/bin/curl`, uncomment and update the following setting. The version of cURL specified here should be current enough to support updated versions of TLS.
+    x. (Optional) If the host is using an installation of cURL that is not in the default PATH, uncomment and update the following setting in `/etc/datadog/agent.yaml`. The version of cURL defined here should be current enough to support updated versions of TLS.
     ```yaml
     curl_bin: /usr/local/bin/curl
     ```
 
-    x. (Optional) The HP-UX Agent includes a recent version of the [CA extract](https://curl.se/docs/caextract.html) PEM file located at `/opt/datadog-agent/ssl/cacert.pem`. Change this setting to your organization's `cacert.pem` bundle when using an SSL traffic inspection proxy for egress internet access. The `dd-agent` user should have directory and file access permissions on the `cacert.pem` file as well as the parent directory to read the CA Bundle.
+    xi. (Optional) If the host does not have gzip available in the datadog user PATH, uncomment and update the following setting in `/etc/datadog/agent.yaml`. Metric submissions to Datadog will be compressed to improve performance when a valid gzip executable is available.
+    ```yaml
+    gzip_bin: /usr/contrib/bin/gzip
+    ```
+
+    xii. (Optional) The HP-UX Agent includes a recent version of the [CA extract](https://curl.se/docs/caextract.html) PEM file located at `/opt/datadog-agent/ssl/cacert.pem`. Change this setting to your organization's `cacert.pem` bundle when using an SSL traffic inspection proxy for egress internet access. The `dd-agent` user should have directory and file access permissions on the `cacert.pem` file as well as the parent directory to read the CA Bundle.
     ```yaml
     cacert: /etc/ssl/cacert.pem
     ```
@@ -113,23 +127,18 @@ cd /tmp/datadog-agent-install
     skip_ssl_validation: yes
     ```
 
-    xii. (Optional) If Gzip is not available on your HP-UX system, disable log compression. However, this setting is not recommended as it degrades performance for log tail message intake.
-    ```yaml
-    compress_logs: no
-    ```
-
-6. Start the HP-UX Agent.
+5. Start the HP-UX Agent.
 ```sh
 /sbin/init.d/datadog-agent start
 ```
 
-7. Verify the HP-UX Agent is running.
+6. Verify the HP-UX Agent is running.
 ```sh
-ps -ef | grep datadog-agent
+pgrep datadog-agent
 tail -n25 -f /var/log/datadog/agent.log
 ```
 
-8. The HP-UX Agent is configured to run on system boot with `/init.d/rc3.d/S999datadog-agent`. If you need to disable the HP-UX Agent on system boot, change the `ENABLED` setting in the `/etc/rc.config.d/datadog-agent` file.
+7. The HP-UX Agent is configured to run on system boot with `/init.d/rc3.d/S999datadog-agent`. If you need to disable the HP-UX Agent on system boot, change the `ENABLED` setting in the `/etc/rc.config.d/datadog-agent` file.
 ```
 ENABLED=0 # <-- disables the agent from running at boot
 USERNAME="datadog"
