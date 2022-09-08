@@ -1,5 +1,17 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.4.1 / 2022-09-06
+
+* [Added] support for multi-line logs.
+* [Added] support for recursive directory and file (stat) checks.
+* [Fixed] filesystem check defaults to local filesystems.
+* [Added] filesystem check 'include_remote_filesystems' configuration option.
+* [Added] 'use_mount' configuration option to use mount points instead of devices metric tags.
+* [Added] multiple configuration files to simplified automated installation and configuration.
+* [Added] improved error handling and reporting for metric and log submissions to Datadog.
+* [Added] support for setting the agent log level in the configuration.
+* [Added] improved configuration option validation and logging.
+
 ## 1.3.9 / 2022-04-22
 
 * [Added] buffered metric submits to address Datadog API maximum limits.

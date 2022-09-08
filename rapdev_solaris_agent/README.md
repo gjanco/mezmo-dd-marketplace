@@ -5,14 +5,14 @@ The Solaris Agent allows you to collect and report on Solaris system metrics wit
 
 The Solaris Agent provides the host metadata required to support the Datadog Infrastructure List, enabling your organization to work with Solaris host systems similar to other supported Datadog host operating systems.
 
-The Solaris Agent uses the same URLs and ports as the native agents. The Solaris Agent supports core infrastructure metrics, process checks and log tails. It does not support Agent checks, integrations, or service checks. 
+The Solaris Agent uses the same URLs and ports as the native agents. The Solaris Agent supports core infrastructure metrics, process checks, and log tails. It does not support custom Agent checks, integrations, or service checks. 
 
 ### Pricing
 Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
 
 ## Setup
 
-1. A current installation of curl is required on each Solaris Agent host system. The Solaris Agent was built and tested with curl from the [OpenCSW](https://www.opencsw.org/about/) project.
+1. Install a current version of cURL if your system does not have one available. The Solaris Agent was built and tested with cURL from the [OpenCSW](https://www.opencsw.org/about/) project.
 ```sh
 pkgadd -d http://get.opencsw.org/now
 /opt/csw/bin/pkgutil -U
@@ -21,21 +21,21 @@ pkgadd -d http://get.opencsw.org/now
 
 2. Install the Solaris Agent using the Solaris Image Packaging System. 
 ```sh
-pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.9.pkg
+pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.4.1.pkg
 ```
 
 3. If you are upgrading an existing Solaris Agent installation, first remove the current Solaris Agent package. The Solaris Agent configuration and log files will be retained.
 ```sh
 pkgrm DatadogAgent
-pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.9.pkg
+pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.4.1.pkg
 ```
 
-4. Copy `/etc/datadog/agent.yml.example` to `/etc/datadog/agent.yml` and update the Solaris Agent configuration settings in the `/etc/datadog/agent.yml` file.
+4. Copy `/etc/datadog/agent.yaml.example` to `/etc/datadog/agent.yaml` and update the Solaris Agent configuration settings in the `/etc/datadog/agent.yaml` file.
 
     ```sh
-    cp /etc/datadog/agent.yml.example /etc/datadog/agent.yml
-    vi /etc/datadog/agent.yml
-    chown datadog:sys /etc/datadog/agent.yml
+    cp /etc/datadog/agent.yaml.example /etc/datadog/agent.yaml
+    vi /etc/datadog/agent.yaml
+    chown datadog:sys /etc/datadog/agent.yaml
     ```
 
     i. (Required) Set the `api_key` value to your Datadog's API key string.
@@ -51,33 +51,26 @@ pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.9.pkg
     iii. (Optional) Uncomment and set the `tags` setting to specify tags to include on all metrics and logs.
     ```yaml
     tags:
-      - environment:dev
+      - environment:production
     #  - <TAG_KEY1>:<TAG_VALUE1>
     #  - <TAG_KEY2>:<TAG_VALUE2>
     ```
 
-    iv. (Optional) Uncomment the `logs:` section in `/etc/datadog/agent.yml` and add a configuration for desired log tail. The `datadog` user requires read access to all files configured for log tails.
-    ```yaml
-    logs:
-      - type: file
-        path: /var/adm/messages
-        service: datadog
-        source: agent
+    iv. (Optional) Enable log message collection. Copy `/etc/datadog/logs.yaml.example` to `/etc/datadog/logs.yaml`. Read the `/etc/datdog/logs.yaml` comments and examples for configuration options to support log collection, including the multi-line log feature.
+    ```sh
+    cp /etc/datadog/logs.yaml.example /etc/datadog/logs.yaml
+    vi /etc/datadog/logs.yaml
+    chown datadog:sys /etc/datadog/logs.yaml
     ```
 
-    Standard filesystem path globs are supported.
-
-    v. (Optional) Uncomment the `processes:` section in `/etc/datadog/agent.yml` and add a configuration for desired process checks.
-    ```yaml
-    processes:
-     - name: ssh
-       search_string: (ssh|sshd)
-
-     - name: apache
-       search_string: apache
+    v. (Optional) Enable process checks. Copy `/etc/datadog/process.yaml.example` to `/etc/datadog/process.yaml`. Read the `/etc/datdog/process.yaml` comments and examples for configuration options to support process checks.
+    ```sh
+    cp /etc/datadog/process.yaml.example /etc/datadog/process.yaml
+    vi /etc/datadog/process.yaml
+    chown datadog:sys /etc/datadog/process.yaml
     ```
 
-    The following metrics are supported for process checks.
+    The following metrics are supported for process checks:
     | Name | Description | Included Tags |
     | --- | --- | --- |
     | system.processes.mem.vms | Process virtual memory size (bytes) | process_name, process_pid |
@@ -87,20 +80,38 @@ pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.9.pkg
     | system.processes.threads | Process lightweight process count (threads) | process_name, process_pid |
     | system.processes.number | Running process count (matching search_string) | process_name |
 
-    vi. (Optional) Add your desired configurations in `/etc/datadog/agent.yml` for include, exclude, and tags to apply on filesystems. See the example `agent.yml` for specific configuration options. See `/etc/datadog/agent.yml.example` for all filesystem configuration options and examples.
-    ```yaml
-    mount_point_tag_re:
-      /export/home[1-3]: role:home
-      /tmp: role:temp,disk_size:large
-    ```  
+    vi. (Optional) Configure the filesystem check. Copy `/etc/datadog/filesystem.yaml.example` to `/etc/datadog/filesystem.yaml`. Read the `/etc/datdog/filesystem.yaml` comments and examples for configuration options to support the filesystem check.
+    ```sh
+    cp /etc/datadog/filesystem.yaml.example /etc/datadog/filesystem.yaml
+    vi /etc/datadog/filesystem.yaml
+    chown datadog:sys /etc/datadog/filesystem.yaml
+    ```
 
-    vii. (Optional) If your Datadog instance is located in the EU instead of the US, uncomment the following settings:
+    vii. (Optional) Configure the directories (files) check. Copy `/etc/datadog/directories.yaml.example` to `/etc/datadog/directories.yaml`. Read the `/etc/datdog/directories.yaml` comments and examples for configuration options to support the directories check.
+    ```sh
+    cp /etc/datadog/directories.yaml.example /etc/datadog/directories.yaml
+    vi /etc/datadog/directories.yaml
+    chown datadog:sys /etc/datadog/directories.yaml
+    ```
+
+    The following metrics are supported for the directories check:
+    | Name | Description | Included Tags |
+    | --- | --- | --- |
+    | system.disk.directory.exists | Directory exists on the system (exists = 1) | name |
+    | system.disk.directory.files | Count of files in the directory (recursive) | name |
+    | system.disk.directory.bytes | Size of the directory (recursive) in bytes | name |
+    | system.disk.directory.file.bytes | File size in bytes | name |
+    | system.disk.directory.file.accessed_sec_ago | File last accessed in seconds | name |
+    | system.disk.directory.file.modified_sec_ago | File last modified in seconds | name |
+    | system.disk.directory.file.changed_sec_ago | File last changed in seconds | name |
+
+    viii. (Optional) If your Datadog instance is located in the EU instead of the US, uncomment the following settings in `/etc/datadog/agent.yaml`:
     ```yaml
     dd_url: https://api.datadoghq.eu
     dd_log_url: https://http-intake.logs.datadoghq.eu
     ```
 
-    viii. (Optional) If your host system requires a proxy to communicate with Datadog's APIs, uncomment and update the following settings:
+    ix. (Optional) If your host system requires a proxy to communicate with Datadog's APIs, uncomment and update the following settings in `/etc/datadog/agent.yaml`:
     ```yaml
     proxy_host: my-proxy.com
     proxy_port: 3128
@@ -108,17 +119,22 @@ pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.3.9.pkg
     proxy_pass: password
     ```
 
-    ix. (Optional) If the host is using an installation of curl other than `/opt/csw/bin/curl`, uncomment and update the following setting. The version of curl specified here should be current enough to support updated versions of TLS.
+    x. (Optional) If the host is using an installation of cURL that is not in the default PATH, uncomment and update the following setting in `/etc/datadog/agent.yaml`. The version of cURL defined here should be current enough to support updated versions of TLS.
     ```yaml
     curl_bin: /opt/csw/bin/curl
     ```
 
-    x. (Optional) The Solaris Agent includes a recent version of the [CA extract](https://curl.se/docs/caextract.html) PEM file located at `/opt/datadog-agent/ssl/cacert.pem`. Change this setting to your organization's cacert.pem bundle when using an SSL traffic inspection proxy for egress internet access. The `datadog` user should have directory and file access permissions on the cacert.pem file as well as the parent directory to read the CA Bundle.
+    xi. (Optional) If the host does not have gzip available in the datadog user PATH, uncomment and update the following setting in `/etc/datadog/agent.yaml`. Metric submissions to Datadog will be compressed to improve performance when a valid gzip executable is available.
+    ```yaml
+    gzip_bin: /opt/csw/bin/gzip
+    ```
+
+    xii. (Optional) The Solaris Agent includes a recent version of the [CA extract](https://curl.se/docs/caextract.html) PEM file located at `/opt/datadog-agent/ssl/cacert.pem`. Change this setting to your organization's `cacert.pem` bundle when using an SSL traffic inspection proxy for egress internet access. The `datadog` user should have directory and file read access permission on the `cacert.pem` file as well as the parent directory to read the CA Bundle.
     ```yaml
     cacert: /etc/ssl/cacert.pem
     ```
 
-    xi. (Optional) If there are issues with the supplied CA Bundle or the custom CA Bundle from your organization, SSL validation can be disabled by setting the following value in the configuration file. However, this setting is not recommended because it disables SSL validation of the Datadog API hosts.
+    xiii. (Optional) If there are issues with the supplied CA Bundle or the custom CA Bundle from your organization, SSL validation can be disabled by setting the following value in the main configuration file. However, this setting is not recommended because it disables SSL validation of the Datadog API hosts.
     ```yaml
     skip_ssl_validation: yes
     ```
@@ -131,7 +147,7 @@ svcadm enable datadog-agent
 6. Verify the Solaris Agent is running.
 ```sh
 svcs datadog-agent
-ps -ef | grep datadog-agent
+pgrep datadog-agent
 tail -f /var/log/datadog/agent.log
 ```
 
