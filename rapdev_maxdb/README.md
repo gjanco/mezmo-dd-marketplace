@@ -22,7 +22,7 @@ To install the MaxDB check on your host:
 
 1. Install the integration.
 ```
-sudo ‐u dd‐agent datadog‐agent integration install --third-party datadog_rapdev_maxdb==1.0.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_maxdb==1.0.0
 ```
 
 ### Prepare the MaxDB
