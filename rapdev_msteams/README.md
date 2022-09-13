@@ -21,12 +21,12 @@ Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](ma
 
 	Linux:
 	```sh
-	sudo -u dd-agent datadog-agent integration install --third-party rapdev_msteams==1.0.0
+	sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_msteams==1.0.0
 	```
 
 	Windows:
 	```sh
-	"%ProgramFiles%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party rapdev_msteams==1.0.0
+	"%ProgramFiles%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_msteams==1.0.0
 	```
 
 2. If your organization uses an egress http proxy, you will need to allow the following URLs:
