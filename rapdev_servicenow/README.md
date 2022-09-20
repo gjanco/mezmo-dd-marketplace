@@ -24,9 +24,11 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
 
 3. Statistics collection from stats.do is enabled by default. See the comments of the `/etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml` for all available configuration options.
    
-   3.1 In ServiceNow, the stats.do page can be configured to require authentication at a specific endpoint.
+   3.1 Default access to `stats.do` is enabled out of the box in ServiceNow. 
 
-   3.2 In the `/etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml`, uncomment the following parameters to require authenticated stats.do:
+   3.2 If authentication is required to access `stats.do` in the ServiceNow account, install the [ServiceNow Monitoring - Datadog UpdateSet](https://files.rapdev.io/public/ServiceNow+Monitoring+-+Datadog+-+1.0.0.xml) following the linked [instructions](https://docs.servicenow.com/en-US/bundle/tokyo-application-development/page/build/system-update-sets/task/t_CommitAnUpdateSet.html)
+
+   3.3 In the `/etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml`, uncomment the following parameters to configure Datadog to use authenticated stats.do:
    ```yaml
        
     ## @param statsdo_auth - boolean - optional - default: false
@@ -50,12 +52,12 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
     password: {servicenow-password}
     ```
     
-    3.3 Set `statsdo_auth` to the value `true` and provide the `stats_auth_url` configured in ServiceNow for the authenticated stats endpoint.
+    3.4 Set `statsdo_auth` to the value `true` and provide the `stats_auth_url` configured in ServiceNow for the authenticated stats endpoint.
     + The value of stats_auth_url should be an api resource not a full url. For example: 
     ```
     stats_auth_url: /api/x_radi_now_mon_dd/monitoring_stats/stats
     ```
-    3.4 Provide the user credentials for authentication using Basic Auth to access ServiceNow's authenticated stats.do.
+    3.5 Provide the user credentials for authentication using Basic Auth to access ServiceNow's authenticated stats.do.
 
 
 4. (Optional) If Incident metrics are being collected, then a ServiceNow Service Account must be configured by a ServiceNow admin.
