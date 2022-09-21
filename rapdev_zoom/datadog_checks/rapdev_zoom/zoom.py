@@ -276,22 +276,7 @@ class ZoomCheck(AgentCheck):
             request_path = "metrics/zoomrooms"
 
         #call to get location hierarchy
-        if account_id:
-            locations_request_path = "accounts/{}/rooms/locations/".format(account_id)
-        else:
-            locations_request_path = "rooms/locations/"
-
-        response = self.call_api(request_path)
-        location_response = self.call_api(locations_request_path)
-        locations = []
-        while True:
-            locations += location_response.get("locations", [])
-            page_token = response.get("next_page_token", "")
-
-            if page_token == "":
-                break
-            else:
-                location_response = self.call_api(locations_request_path, next_page_token=page_token)
+        locations_dict = self.get_rooms_locations(account_id)
 
         # Rooms Health counts
         critical_rooms = 0
@@ -304,6 +289,7 @@ class ZoomCheck(AgentCheck):
         rooms_offline = 0
         rooms_under_construction = 0
 
+        response = self.call_api(request_path)
         while True:
             rooms = response.get("zoom_rooms", [])
 
@@ -323,7 +309,7 @@ class ZoomCheck(AgentCheck):
                 metric_tags = base_tags.copy()
 
                 if location_id:
-                    location_tags = get_room_location_tags(location_id, locations)
+                    location_tags = get_room_location_tags(location_id, locations_dict)
                     for tag in location_tags:
                         metric_tags.append(tag)
                 
@@ -417,6 +403,59 @@ class ZoomCheck(AgentCheck):
         self.gauge("room.status.count", rooms_under_construction, tags=metric_tags)
         metric_tags.remove("zoom_room_status:under_construction")
 
+    def get_rooms_locations(self, account_id):
+        """Gets the room locations that are currently present in the account and adds them to a list"""
+        if account_id:
+            locations_request_path = "accounts/{}/rooms/locations/".format(account_id)
+            structure_request_path = locations_request_path + "structure"
+        else:
+            locations_request_path = "rooms/locations/"
+            structure_request_path = locations_request_path + "structure"
+
+        # Get all the locations structures in use from zoom
+        # this is ordered with the first index being highest (e.g. country)
+        # and last index being lowest (e.g. the room itself)
+        structures = self.call_api(structure_request_path).get("structures", [])
+
+        structure_dict = {}
+
+        # Remove "room" since thats not a location type
+        structures.remove("room")
+
+        # Start building dict for structures 
+        for structure in structures:
+            structure_dict[structure] = {} 
+
+        # Reverse structures so we know a rooms parent, and that parent, etc...
+        # so we can directly just iterate later working from the bottom up
+        structures.reverse()
+        structure_dict["structures"] = structures
+
+        location_response = self.call_api(locations_request_path)
+
+        while True:
+            locations = location_response.get("locations", [])
+
+            for location in locations:
+                location_id = location.get("id")
+                location_name = location.get("name")
+                location_parent_id = location.get("parent_location_id")
+                location_type = location.get("type")
+
+                # Set the location's id to a dict which contains the name and parent id
+                structure_dict[location_type][location_id] = {
+                    "name": location_name,
+                    "parent_id": location_parent_id
+                }
+
+            page_token = location_response.get("next_page_token", "")
+            if page_token == "":
+                break
+            else:
+                location_response = self.call_api(locations_request_path, next_page_token=page_token)
+
+        return structure_dict
+ 
     def parse_and_send_issues(self, issues, room_name, room_id, base_tags):
         """Helper function for parsing room issues"""
         room_controller_is_connected = 1
@@ -613,7 +652,7 @@ class ZoomCheck(AgentCheck):
                         video_input = recent_user_qos.get("video_input", {})
                         video_output = recent_user_qos.get("video_output", {})
                         cpu_usage = recent_user_qos.get("cpu_usage", {})
-
+                        
                         if check_for_metrics(audio_input):
                             valid_audio_input_records += 1
 

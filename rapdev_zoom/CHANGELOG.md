@@ -1,5 +1,9 @@
 # CHANGELOG - rapdev_zoom
 
+## 5.3.0 / 2022-09-08
+* [Added] Fix for location hierarchy 
+* [Added] Increased support for user QOS metrics
+
 ## 5.2.2 / 2022-06-02
 * [Added] Room and room component location hierarchy template variables in Rooms dashboard
 * [Added] Fix for when location hierarchy is not defined

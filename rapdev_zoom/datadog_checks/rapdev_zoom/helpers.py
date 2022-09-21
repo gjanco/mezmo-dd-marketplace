@@ -15,23 +15,31 @@ def generate_token(api_key, api_secret):
     return token
 
 
+VALID_METRICS = [
+    "bitrate",
+    "avg_loss",
+    "jitter",
+    "latency",
+    "max_loss"
+]
 def check_for_metrics(metrics):
-    if any(
-        metrics.get("bitrate"), metrics.get("avg_loss"), metrics.get("jitter"), metrics("latency"), metrics("max_loss")
-    ):
-        return True
+    for VALID_METRIC in VALID_METRICS:
+        if metrics.get(VALID_METRIC):
+            return True
 
     return False
 
 
+VALID_CPU_METRICS = [
+    "system_max_cpu_usage",
+    "zoom_avg_cpu_usage",
+    "zoom_max_cpu_usage",
+    "zoom_min_cpu_usage"
+]
 def check_for_cpu_metrics(metrics):
-    if any(
-        metrics.get("system_max_cpu_usage"),
-        metrics.get("zoom_avg_cpu_usage"),
-        metrics.get("zoom_max_cpu_usage"),
-        metrics.get("zoom_min_cpu_usage"),
-    ):
-        return True
+    for VALID_CPU_METRIC in VALID_CPU_METRICS:
+        if metrics.get(VALID_CPU_METRIC):
+            return True
 
     return False
 
@@ -70,17 +78,21 @@ def parse_kbps(value):
     else:
         return int()
 
-def get_room_location_tags(location_id, locations):
-    tags = []
-    locationtype = ""
-    while locationtype != "country":
-        for i in locations:
-            if location_id == i.get("id"):
-                tags.append("zoom_room_{}:{}".format(i.get("type", ""), i.get("name", "")))
 
-                if i.get("type") != "country":
-                    location_id = i.get("parent_location_id", "")
-                else:
-                    locationtype = "country"
-                    break
+def get_room_location_tags(location_id, locations_dict):
+    """"""
+    tags = []
+
+    # This is a reverse ordered list (room --> parent --> parent 2 --> final parent)
+    location_structure = locations_dict.get("structures")
+
+    for structure in location_structure:
+        # Get the current location's name
+        location_name = locations_dict.get(structure, {}).get(location_id, {}).get("name")
+        
+        # Update the location id to the parent's location id
+        location_id = locations_dict.get(structure, {}).get(location_id, {}).get("parent_id")
+
+        tags.append("zoom_room_{}:{}".format(structure, location_name))
+
     return tags
