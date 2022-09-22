@@ -38,7 +38,7 @@ Code in every language, across macOS, Linux, and Windows. If you can write it, C
 
 ### Plans
 **Scale plan**
-- 2000000 credits included per month
+- 2,000,000 credits included per month
 - Our largest resource classes for complex processes and speed
 - Access to GPU resource classes
 - A dedicated account team
@@ -46,7 +46,7 @@ Code in every language, across macOS, Linux, and Windows. If you can write it, C
 - Audit logging
 - Bulk data export
 
-This plan is available through the Datadog Marketplace for $2000/month.
+This plan is available through the Datadog Marketplace for $2,000/month.
 
 For volume discounts or interest in other plans, please [contact us](mailto:partners@circleci.com) to discuss a private offer.
 
