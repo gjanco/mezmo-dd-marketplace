@@ -1,5 +1,9 @@
 # CHANGELOG - rapdev-snmp-profiles
 
+# 1.0.6 / 2022-09-22
+* [Added] AudioCodes Controller Dashboard
+* [Changed] Added additional cpu/memory metrics to widgets
+
 # 1.0.5 / 2022-05-24
 * [Added] Sophos XG Firewall Dashboard
 

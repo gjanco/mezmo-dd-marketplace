@@ -42,8 +42,20 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP,$Sysname,$channel} / 8640000"
+                        "formulas": [
+                            {
+                                "formula": "query1 / 8640000"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP,$Sysname,$channel}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "System Up Time",
@@ -65,10 +77,29 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:snmp.CPU.Utilization{$Host,$SNMP_Profile,$IP,$Sysname,$channel}"
+                        "formulas": [
+                            {
+                                "formula": "query1 + query2"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.CPU.Utilization{$Host,$SNMP_Profile,$IP,$Sysname,$channel}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:snmp.cpu.usage{$Host,$SNMP_Profile,$IP,$Sysname,$channel}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
+                "time": {},
                 "title": "CPU Usage",
                 "title_align": "left",
                 "title_size": "16",
@@ -991,36 +1022,69 @@
             "definition": {
                 "requests": [
                     {
+                        "display_type": "line",
                         "formulas": [
                             {
-                                "formula": "(query2 / query1) * 100",
-                                "limit": {
-                                    "count": 500,
-                                    "order": "desc"
-                                }
+                                "formula": "(query2 / query1) * 100"
                             }
                         ],
                         "queries": [
                             {
-                                "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query2",
                                 "query": "avg:snmp.Device.Used{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {device,snmp_host}"
                             },
                             {
-                                "aggregator": "last",
                                 "data_source": "metrics",
                                 "name": "query1",
                                 "query": "avg:snmp.Device.Size{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {device,snmp_host}"
                             }
                         ],
-                        "response_format": "scalar"
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query0"
+                            },
+                            {
+                                "formula": "query1"
+                            },
+                            {
+                                "formula": "(query0 / query1) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query0",
+                                "query": "avg:snmp.memory.total{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {mem}"
+                            },
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.memory.used{$Host,$SNMP_Profile,$IP,$Sysname,$channel} by {mem}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
                     }
                 ],
+                "time": {},
                 "title": "Device Utilization",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "toplist"
+                "type": "timeseries"
             },
             "id": 5661858856035126,
             "layout": {

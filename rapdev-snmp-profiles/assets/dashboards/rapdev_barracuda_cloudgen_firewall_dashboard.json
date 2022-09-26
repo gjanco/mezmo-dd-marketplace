@@ -49,7 +49,6 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "avg",
                         "conditional_formats": [
                             {
                                 "comparator": "<",
@@ -67,7 +66,26 @@
                                 "value": 90
                             }
                         ],
-                        "q": "avg:snmp.CPU.Utilization{$Host,$IP,$SNMP_Profile, $Sysname}"
+                        "formulas": [
+                            {
+                                "formula": "query1 + query2"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.CPU.Utilization{$Host,$IP,$SNMP_Profile, $Sysname}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:snmp.cpu.usage{$Host,$IP,$SNMP_Profile,$Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "CPU Usage",
@@ -86,35 +104,80 @@
         {
             "definition": {
                 "custom_links": [],
-                "custom_unit": "%",
-                "precision": 2,
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "conditional_formats": [
+                        "display_type": "line",
+                        "formulas": [
                             {
-                                "comparator": "<",
-                                "palette": "white_on_green",
-                                "value": 80
-                            },
-                            {
-                                "comparator": "<=",
-                                "palette": "white_on_yellow",
-                                "value": 90
-                            },
-                            {
-                                "comparator": ">",
-                                "palette": "white_on_red",
-                                "value": 90
+                                "formula": "(query1 / query2) * 100"
                             }
                         ],
-                        "q": "(avg:snmp.Memory.Used{$Host,$SNMP_Profile,$IP, $Sysname}/avg:snmp.Memory.Total{$Host,$SNMP_Profile,$IP, $Sysname})*100"
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Memory.Used{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                            },
+                            {
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:snmp.Memory.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_host,snmp_device}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query0"
+                            },
+                            {
+                                "formula": "query1"
+                            },
+                            {
+                                "formula": "(query0 / query1) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query0",
+                                "query": "avg:snmp.memory.used{$Host,$IP,$Sysname,$SNMP_Profile} by {mem}"
+                            },
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.memory.total{$Host,$IP,$Sysname,$SNMP_Profile} by {mem}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
                     }
                 ],
+                "show_legend": true,
+                "time": {},
                 "title": "Memory Usage",
                 "title_align": "left",
                 "title_size": "16",
-                "type": "query_value"
+                "type": "timeseries"
             },
             "id": 7483567454399814,
             "layout": {
@@ -131,8 +194,20 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP, $Sysname}/8600000"
+                        "formulas": [
+                            {
+                                "formula": "query1 / 8600000"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.sysUpTimeInstance{$Host,$SNMP_Profile,$IP, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "System Up Time",
@@ -155,8 +230,15 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "q": "avg:snmp.User.Count{*, $Sysname}"
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.User.Count{*, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "VPN Users Connected",
@@ -178,7 +260,14 @@
                 "requests": [
                     {
                         "display_type": "area",
-                        "q": "avg:snmp.DataThroughput.Total{$Host,$SNMP_Profile,$IP, $Sysname} by {snmp_device}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.DataThroughput.Total{$Host,$SNMP_Profile,$IP, $Sysname} by {snmp_device}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -211,11 +300,25 @@
                 "custom_links": [],
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "alias": "Service State (1 Running, 0 Stopped)",
-                        "limit": 10,
-                        "order": "desc",
-                        "q": "avg:snmp.Service.State{$Host,$IP,$SNMP_Profile, $Sysname} by {service}"
+                        "formulas": [
+                            {
+                                "alias": "Service State (1 Running, 0 Stopped)",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Service.State{$Host,$IP,$SNMP_Profile, $Sysname} by {service}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Service States",
@@ -237,7 +340,6 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
                                 "comparator": ">=",
@@ -250,7 +352,15 @@
                                 "value": 1
                             }
                         ],
-                        "q": "max:snmp.ifAdminStatus{$Host,$SNMP_Profile,$IP,$interface, $Sysname}"
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:snmp.ifAdminStatus{$Host,$SNMP_Profile,$IP,$interface, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Admin Status",
@@ -272,7 +382,14 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifHCInOctets.rate{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifHCInOctets.rate{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -281,7 +398,14 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifHCOutOctets.rate{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifHCOutOctets.rate{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -315,7 +439,14 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifHCInBroadcastPkts{$Host,$SNMP_Profile,$Interface,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifHCInBroadcastPkts{$Host,$SNMP_Profile,$Interface,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -324,7 +455,14 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifHCOutBroadcastPkts{$Host,$SNMP_Profile,$Interface,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifHCOutBroadcastPkts{$Host,$SNMP_Profile,$Interface,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -358,7 +496,14 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifHCInUcastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifHCInUcastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -367,7 +512,14 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifHCOutUcastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifHCOutUcastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -401,7 +553,14 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifHCInMulticastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifHCInMulticastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -410,7 +569,14 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifHCOutMulticastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifHCOutMulticastPkts{$Host,$SNMP_Profile,$IP,$Interface,$Interface_Alias, $Sysname} by {interface}.as_count()"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -444,7 +610,14 @@
                 "requests": [
                     {
                         "display_type": "area",
-                        "q": "avg:snmp.ifInErrors{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifInErrors{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -453,7 +626,14 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifOutErrors{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifOutErrors{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}.as_count()"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -487,7 +667,6 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
                         "conditional_formats": [
                             {
                                 "comparator": ">=",
@@ -500,7 +679,15 @@
                                 "value": 1
                             }
                         ],
-                        "q": "max:snmp.ifOperStatus{$Host,$SNMP_Profile,$IP,$interface, $Sysname}"
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:snmp.ifOperStatus{$Host,$SNMP_Profile,$IP,$interface, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Operation Status",
@@ -522,8 +709,15 @@
                 "precision": 0,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "max:snmp.ifHighSpeed{$interface,$Host,$IP,$SNMP_Profile, $Sysname}"
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "max:snmp.ifHighSpeed{$interface,$Host,$IP,$SNMP_Profile, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Interface Speed",
@@ -544,21 +738,45 @@
                 "custom_links": [],
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "alias": "Admin Status",
-                        "q": "avg:snmp.ifAdminStatus{$Host,$SNMP_Profile,$IP, $Sysname} by {interface,interface_alias}"
-                    },
-                    {
-                        "aggregator": "avg",
-                        "alias": "Oper Status",
-                        "limit": 10,
-                        "order": "desc",
-                        "q": "avg:snmp.ifOperStatus{$Host,$SNMP_Profile,$IP, $Sysname} by {interface,interface_alias}"
-                    },
-                    {
-                        "aggregator": "avg",
-                        "alias": "Speed",
-                        "q": "avg:snmp.ifHighSpeed{$Host,$SNMP_Profile,$IP, $Sysname} by {interface,interface_alias}"
+                        "formulas": [
+                            {
+                                "alias": "Admin Status",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Oper Status",
+                                "formula": "query2",
+                                "limit": {
+                                    "count": 10,
+                                    "order": "desc"
+                                }
+                            },
+                            {
+                                "alias": "Speed",
+                                "formula": "query3"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifAdminStatus{$Host,$SNMP_Profile,$IP, $Sysname} by {interface,interface_alias}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:snmp.ifOperStatus{$Host,$SNMP_Profile,$IP, $Sysname} by {interface,interface_alias}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "query": "avg:snmp.ifHighSpeed{$Host,$SNMP_Profile,$IP, $Sysname} by {interface,interface_alias}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Local Interfaces",
@@ -581,8 +799,15 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "q": "avg:snmp.Cpu.System{$Host,$SNMP_Profile,$IP, $Sysname}"
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Cpu.System{$Host,$SNMP_Profile,$IP, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "CPU System Time",
@@ -605,8 +830,15 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "q": "avg:snmp.Cpu.User{$Host,$SNMP_Profile,$IP, $Sysname}"
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Cpu.User{$Host,$SNMP_Profile,$IP, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "CPU User Time",
@@ -629,8 +861,15 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "q": "avg:snmp.Cpu.Idle{$Host,$SNMP_Profile,$IP, $Sysname}"
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Cpu.Idle{$Host,$SNMP_Profile,$IP, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "CPU Idle",
@@ -649,10 +888,67 @@
         {
             "definition": {
                 "custom_links": [],
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "legend_layout": "auto",
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "(avg:snmp.Memory.Used{$Host,$SNMP_Profile,$IP, $Sysname} by {snmp_device}/avg:snmp.Memory.Total{$Host,$SNMP_Profile,$IP, $Sysname} by {snmp_device})*100",
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Memory.Used{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                            },
+                            {
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:snmp.Memory.Total{$Host,$SNMP_Profile,$IP,$Sysname} by {snmp_device,snmp_host}"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "style": {
+                            "line_type": "solid",
+                            "line_width": "normal",
+                            "palette": "dog_classic"
+                        }
+                    },
+                    {
+                        "display_type": "line",
+                        "formulas": [
+                            {
+                                "formula": "query0"
+                            },
+                            {
+                                "formula": "query1"
+                            },
+                            {
+                                "formula": "(query0 / query1) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query0",
+                                "query": "avg:snmp.memory.used{$Host,$SNMP_Profile,$IP,$Sysname} by {mem}"
+                            },
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.memory.total{$Host,$SNMP_Profile,$IP,$Sysname} by {mem}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -661,6 +957,7 @@
                     }
                 ],
                 "show_legend": false,
+                "time": {},
                 "title": "Memory Usage (%)",
                 "title_align": "left",
                 "title_size": "16",
@@ -688,8 +985,26 @@
                 "precision": 2,
                 "requests": [
                     {
-                        "aggregator": "avg",
-                        "q": "(avg:snmp.Memory.Used{$Host,$SNMP_Profile,$IP, $Sysname}/avg:snmp.Memory.Total{$Host,$SNMP_Profile,$IP, $Sysname})*100"
+                        "formulas": [
+                            {
+                                "formula": "(query1 / query2) * 100"
+                            }
+                        ],
+                        "queries": [
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.Memory.Used{$Host,$SNMP_Profile,$IP, $Sysname}"
+                            },
+                            {
+                                "aggregator": "avg",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "query": "avg:snmp.Memory.Total{$Host,$SNMP_Profile,$IP, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "Memory Usage (%)",
@@ -751,8 +1066,15 @@
                 "precision": 3,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:snmp.ifBandwidthInUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname}"
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifBandwidthInUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "% Utilization In",
@@ -776,8 +1098,15 @@
                 "precision": 3,
                 "requests": [
                     {
-                        "aggregator": "last",
-                        "q": "avg:snmp.ifBandwidthOutUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname}"
+                        "queries": [
+                            {
+                                "aggregator": "last",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifBandwidthOutUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname}"
+                            }
+                        ],
+                        "response_format": "scalar"
                     }
                 ],
                 "title": "% Utilization Out",
@@ -799,7 +1128,14 @@
                 "requests": [
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifBandwidthInUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifBandwidthInUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
@@ -808,7 +1144,14 @@
                     },
                     {
                         "display_type": "line",
-                        "q": "avg:snmp.ifBandwidthOutUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:snmp.ifBandwidthOutUsage.rate{$Interface,$Host,$SNMP_Profile,$IP,$Interface_Alias, $Sysname} by {interface}"
+                            }
+                        ],
+                        "response_format": "timeseries",
                         "style": {
                             "line_type": "solid",
                             "line_width": "normal",
