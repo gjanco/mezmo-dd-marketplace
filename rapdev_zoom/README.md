@@ -23,8 +23,8 @@ The Zoom Integration has the capability of monitoring Meetings, Rooms, Users, Ne
 |---|---|---|
 | 1 - 2499 | 0% | $1 |
 | 2500 - 4999 | 25% | $0.75 |
-| 5000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+| 5000 + | Variable | Contact [sales@rapdev.io](mailto:sales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ## Setup
 
@@ -144,7 +144,7 @@ this would look similar to the following example:
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
 
-- Support: datadog-engineering@rapdev.io
+- Support: support@rapdev.io
 - Sales: sales@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
@@ -155,13 +155,13 @@ For support or feature requests, contact RapDev.io through the following channel
 |---|---|---|
 | 1 - 2499 | 0% | $1 |
 | 2500 - 4999 | 25% | $0.75 |
-| 5000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+| 5000 + | Variable | Contact [sales@rapdev.io](mailto:sales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston
 
-*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:datadog-engineering@rapdev.io), and we'll build it!!*
+*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:support@rapdev.io), and we'll build it!!*
 
 [1]: https://marketplace.zoom.us/
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/#start-stop-and-restart-the-agent

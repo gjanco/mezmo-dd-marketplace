@@ -54,7 +54,7 @@ setup(
     keywords='datadog agent rapdev microsoft teams check',
     # Author details
     author='RapDev',
-    author_email='datadog-engineering@rapdev.io',
+    author_email='support@rapdev.io',
     # License
     license='BSD-3-Clause',
     # See https://pypi.org/classifiers

@@ -9,7 +9,7 @@ and MIB files to translate your messages, allowing you to alert on network event
 For a list of all MIBs that are included with this package, [see here][4].
 
 ### Pricing
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ## Setup
 
@@ -53,17 +53,17 @@ Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](ma
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
 
-- Email: datadog-engineering@rapdev.io
+- Email: support@rapdev.io
 - Chat: [rapdev.io][3]
 - Phone: 855-857-0222
 
 ### Pricing
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston
 
-*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:datadog-engineering@rapdev.io), and we'll build it!!*
+*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:support@rapdev.io), and we'll build it!!*
 
 [1]: https://docs.datadoghq.com/logs/guide/enrichment-tables
 [2]: https://docs.datadoghq.com/logs/log_configuration/processors/?tab=ui#log-message-remapper

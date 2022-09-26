@@ -15,8 +15,8 @@ There is no need for you to manage, edit, modify, or update any SNMP profiles on
 | 1 - 99 | 0% | $6 |
 | 100 - 499 | 10% | $5.40 |
 | 500 - 999 | 25% | $4.50 |
-| 1000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+| 1000 + | Variable | Contact [sales@rapdev.io](mailto:sales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ### Supported Devices
 Below is a list of the currently supported devices, please visit our [website](https://www.rapdev.io/products/datadog-snmp-profiles) for a full updated list of all devices.
@@ -83,7 +83,7 @@ Below is a list of the currently supported devices, please visit our [website](h
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
 
- - Email: datadog-engineering@rapdev.io 
+ - Email: support@rapdev.io 
  - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222 
 
@@ -94,10 +94,10 @@ For support or feature requests please contact RapDev.io through the following c
 | 1 - 99 | 0% | $6 |
 | 100 - 499 | 10% | $5.40 |
 | 500 - 999 | 25% | $4.50 |
-| 1000 + | Variable | Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for more information |
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+| 1000 + | Variable | Contact [sales@rapdev.io](mailto:sales@rapdev.io) for more information |
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️  in Boston
 
-*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:datadog-engineering@rapdev.io) and we'll build it!!*
+*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:support@rapdev.io) and we'll build it!!*

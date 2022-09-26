@@ -10,7 +10,7 @@ The MaxDB integration monitors data and log areas and volumes, caches, sessions,
 5. MaxDB Log Area Usage
 
 ### Pricing
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ## Setup
 
@@ -64,14 +64,14 @@ sudo ‐u dd‐agent datadog‐agent check rapdev_maxdb
 
 For support or feature requests, contact RapDev.io through the following channels: 
 
- - Email: datadog-engineering@rapdev.io 
+ - Email: support@rapdev.io 
  - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
  - Phone: 855-857-0222 
 
 ### Pricing
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️  in Boston
 
-*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:datadog-engineering@rapdev.io) and we'll build it!!*
+*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop us a [note](mailto:support@rapdev.io) and we'll build it!!*

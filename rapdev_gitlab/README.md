@@ -41,14 +41,14 @@ For Windows, use `C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integrati
 
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
-- Support: datadog-engineering@rapdev.io
+- Support: support@rapdev.io
 - Sales: sales@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
 
 ### Pricing
 
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston
@@ -56,4 +56,4 @@ Made with ❤️ in Boston
 [note][2], and we'll build it!!*
 
 [1]: https://docs.datadoghq.com/getting_started/agent/
-[2]: mailto:datadog-engineering@rapdev.io
+[2]: mailto:support@rapdev.io

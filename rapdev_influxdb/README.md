@@ -25,13 +25,13 @@ instances:
 
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
-- Support: datadog-engineering@rapdev.io
+- Support: support@rapdev.io
 - Sales: sales@rapdev.io
 - Chat: [rapdev.io][2]
 - Phone: 855-857-0222
 
 ### Pricing
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io][3] for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io][3] for packaged pricing offers.
 
 ---
 
@@ -41,5 +41,5 @@ Made with ❤️ in Boston
 
 [1]: https://www.influxdata.com/
 [2]: https://www.rapdev.io/#Get-in-touch
-[3]: mailto:ddsales@rapdev.io
-[4]: mailto:datadog-engineering@rapdev.io
+[3]: mailto:sales@rapdev.io
+[4]: mailto:support@rapdev.io

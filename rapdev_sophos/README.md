@@ -12,7 +12,7 @@ The Sophos Integration monitors the overall health of your Sophos managed endpoi
 1. RapDev Sophos Dashboard
 
 ### Pricing
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ## Setup
 
@@ -57,18 +57,18 @@ Alternatively, you can get detailed information about the integration using the 
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
 
-- Support: datadog-engineering@rapdev.io
+- Support: support@rapdev.io
 - Sales: sales@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
 
 ### Pricing
-Interested in using multiple RapDev integrations? Contact [ddsales@rapdev.io](mailto:ddsales@rapdev.io) for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston
 
-*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:datadog-engineering@rapdev.io), and we'll build it!!*
+*This isn't the integration you're looking for? Missing a critical feature for your organization? Drop RapDev a [note](mailto:support@rapdev.io), and we'll build it!!*
 
 [1]: https://docs.datadoghq.com/agent/kubernetes/integrations/
 [2]: https://github.com/DataDog/integrations-core/blob/master/rapdev_sophos/datadog_checks/rapdev_sophos/data/conf.yaml.example
