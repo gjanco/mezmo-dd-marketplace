@@ -17,8 +17,14 @@ This integration provides an out-of-the-box dashboard called **RapDev GitLab Das
 You must have the Datadog Agent installed on a host. You also must be able to connect to that host and be able to edit the files so as to configure the Agent and YAML Integration Configs. Refer to [these instructions][1] to install the Datadog Agent.
 
 ### Installation
-For Linux, use `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_gitlab==1.0.0`. \
-For Windows, use `C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_gitlab==1.0.0`. 
+
+Run the following commands to install the integration:
+
+For Linux:
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_gitlab==1.0.0`
+
+For Windows:
+`"%ProgramFiles%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_gitlab==1.0.0`
 
 1. In GitLab, login under an authenticated account with administrator privileges.
 
