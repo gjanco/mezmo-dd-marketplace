@@ -97,6 +97,7 @@ To kick off a Private Offer, the partner must send a copy of the signed contract
 * Itemized price
 * Total price
 * Overage price (if usage-based)
+* Committed Amount (if usage-based)
 * Billing Contact
 * Billing Address
 * Billing cycle: upfront, annually, monthly
