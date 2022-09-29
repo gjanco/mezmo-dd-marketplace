@@ -24,6 +24,15 @@ must be able to connect to that host and be able to edit the files
 so as to configure the Agent and YAML Integration Configs.  Refer to [these instructions](https://docs.datadoghq.com/getting_started/agent/) to install the Datadog Agent.
 
 ### Installation
+
+Run the following commands to install the integration:
+
+For Linux:
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_github==1.0.0`
+
+For Windows:
+`"%ProgramFiles%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_github==1.0.0` 
+
 1. In GitHub, login under an authenticated user and navigate to your organization or enterprise's `Settings`.
 
 2. Within `Devloper Settings`, select `GitHub Apps`.
@@ -48,7 +57,7 @@ so as to configure the Agent and YAML Integration Configs.  Refer to [these inst
 
 12. This should redirect you to the App installation on your org. Within the web address bar, save the 8-digit number at the end of the URL to a secure location.
 
-13. Find where the configuration file is located (usually in `/opt/datadog-agent/etc/conf.d/conf.yaml.example` on Mac and Linux), remove the `.example`, and open the file.
+13. Find where the configuration file is located (usually in `/etc/datadog-agent/conf.d/rapdev_github.d/conf.yaml.example` on Mac and Linux), remove the `.example`, and open the file.
 
 14. Replace `user` with an authenticated user, `org` to the name of your organization or enterprise, `github_mode` to either `organization` or `enterprise` depending on which you are on, and `key_path` to the path to your .pem file that was generated in step 9. The `org_app_id` should be set to the 8-digit ID that was on the end of the URL from step 13, and `gh_app_id` should be set to the 6-digit App ID generated in step 8.
 
