@@ -1,5 +1,13 @@
 # CHANGELOG - rapdev_servicenow
+
+## 1.2.4 / 2022-10-11
+
+- [Added] Constant `AUTH_STATSDO_PATH`
+- [Fixed] Logic to point to constant instead of user provided `stats_auth_url`
+- [Removed] `stats_auth_url` from conf.yaml
+
 ## 1.2.3 / 2022-08-16
+
 - [Changed] `stats_auth_url` to take the resource endpoint instead of url
 
 

@@ -10,7 +10,7 @@ The ServiceNow integration monitors the health and performance of your ServiceNo
 
 ### Installation
 
-1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.2.3`
+1. `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_servicenow==1.2.4`
 
 ### Configuration
 
@@ -36,11 +36,6 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
     #
     # statsdo_auth: false
 
-    ## @param stats_auth_url - string - optional
-    ## URL for Auth stats
-    #
-    # stats_auth_url: <STATS_AUTH_URL>
-
     ## @param username - string - optional - default: dd_agent
     ## the basic auth user name for collecting ITSM credentials
     #
@@ -52,11 +47,8 @@ cp /etc/datadog/conf.d/rapdev_servicenow.d/conf.yaml.example /etc/datadog/conf.d
     password: {servicenow-password}
     ```
     
-    3.4 Set `statsdo_auth` to the value `true` and provide the `stats_auth_url` configured in ServiceNow for the authenticated stats endpoint.
-    + The value of stats_auth_url should be an api resource not a full url. For example: 
-    ```
-    stats_auth_url: /api/x_radi_now_mon_dd/monitoring_stats/stats
-    ```
+    3.4 Set `statsdo_auth` to the value `true`
+
     3.5 Provide the user credentials for authentication using Basic Auth to access ServiceNow's authenticated stats.do.
 
 

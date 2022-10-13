@@ -4,6 +4,7 @@ class Constants:
     ERROR_AT_LEAST_ONE_CHECK = "At least one check must be configured"
     TABLE_API_BASE_PATH = "/api/now/table"
     STATSDO_PATH = "/stats.do"
+    AUTH_STATSDO_PATH = "/api/x_radi_now_mon_dd/monitoring_stats/stats"
     AGG_API_BASE_PATH = "/api/now/stats"
     YEAR_SLUG = "/incident?sysparm_query=sys_created_onONThis%20year%40javascript%3Ags.beginningOfThisYear()%40javascript%3Ags.endOfThisYear()&sysparm_count=true"
     SNC_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"

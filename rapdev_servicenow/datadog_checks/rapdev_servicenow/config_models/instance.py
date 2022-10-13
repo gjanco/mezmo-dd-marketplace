@@ -79,7 +79,6 @@ class InstanceConfig(BaseModel):
     request_size: Optional[float]
     service: Optional[str]
     skip_proxy: Optional[bool]
-    stats_auth_url: Optional[str]
     stats_title: Optional[str]
     statsdo_auth: Optional[bool]
     tags: Optional[Sequence[str]]
