@@ -75,7 +75,14 @@ For support or feature requests, contact AVM Consulting through the following ch
  - Email: integrations@avmconsulting.net 
  - Phone: 855-AVM-0555 
 
+## Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Monitor Workday with AVM Consulting’s integration in the Datadog Marketplace][5]
+
 [1]: https://app.datadoghq.com/account/settings#agent/overview
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent
 [3]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
 [4]: https://docs.datadoghq.com/developers/guide/custom-python-package/?tab=linux
+[5]: https://www.datadoghq.com/blog/workday-monitoring-with-avm-and-datadog/
