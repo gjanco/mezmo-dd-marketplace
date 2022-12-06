@@ -17,7 +17,7 @@ After activating z/IRIS, Datadog users can do the following:
 
 The minimum starting price (Tier Level 1) is covered by the amount stipulated in the pricing tab. Monthly price scales by the aggregated upper limit of licensed logical partition (LPAR) capacity, measured in Million Service Units (MSU).
 
-##### *Volume pricing as listed below is only available upon request through a private offer. Contact [mainstorconcept GmbH](mailto:sales@mainstorconcept.com) for more information.*
+##### *Volume pricing as listed below is only available upon request through a private offer. Contact [mainstorconcept GmbH](mailto:ziris@mainstorconcept.com) for more information.*
 
 |Tier Level             |MSU Upper Limit        |Discount               |Cost/MSU/Month         |
 |-----------------------|-----------------------|-----------------------|-----------------------|
@@ -159,15 +159,9 @@ The following mainframe systems are supported by z/IRIS tracing. Our linked docu
 
 This isn't the metric you're looking for? Missing a critical feature for your organization? Send us a feature request to [info@mainstorconcept.com](mailto:info@mainstorconcept.com).
 
-### Partners by region
+### Private enterprise offers
 
-North-American based organizations can contact our partner SEA:
-* E-mail: [SEA- Software Engineering of America](mailto:support@seasoft.com)
-* Phone: (800) 272-7322 (Voice toll-free)
-* Phone: 516-328-7000
-
-All other regions can contact:
-* E-mail: [mainstorconcept GmbH](mailto:sales@mainstorconcept.com)
+* E-mail: [mainstorconcept GmbH](mailto:ziris@mainstorconcept.com)
 * Phone: +49 721 7907610
 
 ## Setup
@@ -205,9 +199,6 @@ Verify that the relevant components are available and meet the [minimum requirem
 
 ## Support
 
-If you have any questions about z/IRIS, please open a [support request](https://service.mainstorconcept.com/mscportal/login)
-or contact us at [support@mainstorconcept.com](mailto:support@mainstorconcept.com).
+Trial and licensed customers can get assistance by [requesting support](https://service.mainstorconcept.com/mscportal/login) or contacting us at [support@mainstorconcept.com](mailto:support@mainstorconcept.com).
 
-If you want to schedule a demo, please contact [sales@mainstorconcept.com](mailto:sales@mainstorconcept.com).
-
-If you are looking for local support for the North American region, contact our partner [SEA- Software Engineering of America](mailto:support@seasoft.com) per mail or call (800) 272-7322.
+If you would like a demonstration of z/IRIS for your team or have questions about z/IRIS capabilities with Datadog, contact [ziris@mainstorconcept.com](mailto:ziris@mainstorconcept.com).
