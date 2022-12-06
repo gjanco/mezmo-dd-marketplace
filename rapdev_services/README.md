@@ -32,6 +32,10 @@ Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mail
 
 Please refer to the Overview section for setup information. 
 
+## Uninstallation
+
+Once your plan has been canceled, RapDev will reach out to confirm. 
+
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
 
