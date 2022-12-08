@@ -38,7 +38,8 @@ For Windows:
 
 6. Within the Datadog yaml file, set the `base_url` to your organization's url and set the username and password to the ones for the user created earlier from step 4.
 
-### Uninstallation
+## Uninstallation
+
 1. Remove all Datadog files associated with this integration.
 
 2. Within Gitlab, navigate to `Admin` from the Menu and under `Overview`, click on `Users`.
