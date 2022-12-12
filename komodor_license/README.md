@@ -12,8 +12,12 @@ If you have just purchased Komodor, a representative will reach out to you short
 
 To share data between Datadog and Komodor, [set up the integration][1].
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Komodor will then reach out to confirm and disconnect your account.
+
 ## Support
 At Komodor, we're committed to giving you the tools and information you need to be successful. So, we offer multiple ways to get the help you need, when you need it. You can send us messages from inside the Komodor application (the communication button in the bottom right), use the Docs and FAQs to find information, or open a ticket with support by sending an email to [support@komodor.com](mailto:support@komodor.com).
 
 
-[1]: https://app.datadoghq.com/account/settings#integrations/komodor
+[1]: /integrations/komodor

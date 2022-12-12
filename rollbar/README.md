@@ -26,5 +26,9 @@ After purchasing through the Datadog Marketplace, [sign up at the Rollbar websit
 
 Visit the [Rollbar documentation](https://docs.rollbar.com/) for instructions on how to set Rollbar up.
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Rollbar will then reach out to confirm and disconnect your account.
+
 ## Support
 Feel free to [contact us](https://www.rollbar.com/support) for any questions or inquiries.

@@ -7,13 +7,17 @@ BigPanda has out-of-the-box integrations with all of Datadog’s monitoring prod
 
 The end result: IT Ops, NOC, DevOps and SRE teams are able to quickly get a holistic view of their alerts, and understand the root cause of a poorly-performing application, system or service all while significantly reducing alert noise in users’ environments and improving MTTR.
 
-This offering in the Datadog marketplace provides access to the BigPanda platform. If you are already a BigPanda customer and need to connect your instance to Datadog, [click here](/account/settings#integrations/bigpanda) to set up the integration.
+This offering in the Datadog marketplace provides access to the BigPanda platform. If you are already a BigPanda customer and need to connect your instance to Datadog, [click here](/integrations/bigpanda) to set up the integration.
 
 ## Setup
 
 If you have just purchased BigPanda, a representative will reach out to you shortly to set up your environment and guide you through your deployment.
 
-If you need to set up an integration so that data is shared between Datadog and BigPanda, [click here](/account/settings#integrations/bigpanda).
+If you need to set up an integration so that data is shared between Datadog and BigPanda, [click here](/integrations/bigpanda).
+
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. BigPanda will then reach out to confirm and disconnect your account.
 
 ## Support
 At BigPanda, we're committed to giving you the tools and information you need to be successful. So, we offer multiple ways to get the help you need, when you need it. You can send us messages from inside the BigPanda application (the help button in the bottom right), use the Docs and FAQs to find information and ask questions to the community, or open a ticket with support by sending an email to [support@bigpanda.io](mailto:support@bigpanda.io).

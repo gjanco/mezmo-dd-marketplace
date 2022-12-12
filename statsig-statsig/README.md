@@ -6,7 +6,7 @@
 
 As a team of former Facebook engineers, we created Statsig to give everyone the same infrastructure that enables hundreds of teams to launch thousands of features with precision.
 
-This offering in the marketplace provides access to Statsig's platform. If you are already a Statsig customer, you can connect your account to Datadog with the [Datadog Statsig Integration](https://app.datadoghq.com/account/settings#integrations/statsig) to set up the integration.
+This offering in the marketplace provides access to Statsig's platform. If you are already a Statsig customer, you can connect your account to Datadog with the [Datadog Statsig Integration](/integrations/statsig) to set up the integration.
 
 ![Statsig Pulse](images/statsig_pulse.png)
 
@@ -27,6 +27,10 @@ The Statsig integration sends configuration change events on Statsig to Datadog.
 ## Setup
 
 - Click [here](https://console.statsig.com/sign_up) to sign up for your Statsig account.
+
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Statsig will then reach out to confirm and disconnect your account.
 
 ## Support
 

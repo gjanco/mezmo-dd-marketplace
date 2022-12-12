@@ -19,6 +19,11 @@ Use the Firefly unified policy engine to find hazardous misconfigurations or cos
 ## Setup
 After you click purchase, one of Firefly’s Cloud Specialists will contact you to help you set up your account.
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Firefly will then reach out to confirm and disconnect your account.
+
+
 ## Support
 Any questions? Email [contact@gofirefly.io][1] or use the in-app chat.
 

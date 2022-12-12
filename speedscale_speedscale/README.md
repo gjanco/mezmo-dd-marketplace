@@ -10,11 +10,14 @@ If you have just purchased Speedscale, a representative will reach out to you sh
 
 To start sharing data between Datadog and Speedscale, set up the [Speedscale Integration][1].
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Speedscale will then reach out to confirm and disconnect your account.
+
 ## Support
 At Speedscale, we're committed to giving you the tools and information you need to be successful. We offer multiple ways to get the help you need, when you need it, and all of our [Product Docs][3] are publicly available online. You can also join our [Community Slack][4] or email us directly at [support@speedscale.com][5].
 
-[1]: https://app.datadoghq.com/integrations/speedscale
-[2]: https://app.datadoghq.com/account/settings#integrations/speedscale
+[1]: /integrations/speedscale
 [3]: https://docs.speedscale.com/
 [4]: https://slack.speedscale.com/
 [5]: mailto:support@speedscale.com

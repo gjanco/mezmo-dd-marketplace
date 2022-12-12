@@ -39,5 +39,9 @@ Sign up to Rookout at [this link](https://app.rookout.com).
 
 Visit the [Rookout documentation](https://docs.rookout.com/) for instructions on how to set Rookout up.
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Rookout will then reach out to confirm and disconnect your account.
+
 ## Support
 Feel free to [contact us](https://www.rookout.com/company/contact) for any questions or inqueries.

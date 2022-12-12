@@ -20,6 +20,10 @@ Private offers are available should you need SSO connections, additional dashboa
 
 Once you’ve requested your free trial, Skykit will reach out to obtain more information. We will then ship your media player and provide detailed instructions on how to start securely sharing your Datadog dashboards on your large format displays.
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Skykit will then reach out to confirm and disconnect your account.
+
 ## Support
 
 Skykit offers support online at [support.skykit.com](https://support.skykit.com). For support specifically on how to connect your Datadog dashboard to Skykit Beam, visit [Getting Started with Skykit Beam and Datadog Dashboards](https://support.skykit.com/en/articles/324-getting-started-with-skykit-beam-and-datadog-dashboards).

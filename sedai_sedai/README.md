@@ -17,6 +17,10 @@ Pair our software license with our Datadog integration to receive notifications 
 1. To get started, sign up for a [free trial account with Sedai][3] and a member of our team will reach out with further instructions. You can also reach out to our [sales team][4].
 2. Once your Sedai account is set up, you can connect it to the [Sedai integration][2]. 
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Sedai will then reach out to confirm and disconnect your account.
+
 ## Support
 
 For help with this integration, please email [support@sedai.io][1].

@@ -18,6 +18,10 @@
 1. Sign up for a [15-day free trial account with StormForge](https://www.stormforge.io/try-free/) and a member of our team will reach out with further instructions.
 2. Once a StormForge account is set up, you can connect to the [StormForge integration](https://app.datadoghq.com/marketplace/integration/stormforge).
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. StormForge will then reach out to confirm and disconnect your account.
+
 ## Support
 
 For questions or other support, you can contact StormForge at [support@stormforge.io](mailto:support@stormforge.io).

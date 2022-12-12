@@ -57,6 +57,10 @@ If you have just purchased CircleCI, a representative will reach out to you shor
 
 In the meantime, please authenticate in the [CircleCI Application](https://circleci.com/vcs-authorize/) to ensure a smoother experience (this will create your account that will be later linked to your subscription).
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. CircleCI will then reach out to confirm and disconnect your account.
+
 ## Support
 For support, please see our [documentation][1], or feel free to email our support team at [support@circleci.com][2]. You can also view our privacy policy on [our website][3].
 

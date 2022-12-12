@@ -8,6 +8,11 @@
 1. To get started, sign up for a [free trial account with InsightFinder][1] and a member of our team will reach out with further instructions. You can also reach out to our [sales team][6].
 2. Once your InsightFinder account is set up, you can connect it to the [InsightFinder integration][2]. You will need access to your Datadog [API key and application key][3].
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. InsightFinder will then reach out to confirm and disconnect your account.
+
+
 ## Support
 
 Contact [Datadog support][4] or email [InsightFinder support][5].

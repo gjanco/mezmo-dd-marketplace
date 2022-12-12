@@ -30,6 +30,11 @@ All that's needed to integrate Datadog to Moogsoft is, from in Moogsoft's UI, to
 
 Then, for the bi-directional integration from Moogsoft to Datadog, create an outbound Incident Webhook from Moogsoft as detailed [in the Moogsoft documentation](https://docs.moogsoft.com/en/send-incidents-to-datadog.html)
 
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Moogsoft will then reach out to confirm and disconnect your account.
+
+
 
 
 ## Support

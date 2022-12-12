@@ -13,7 +13,7 @@ Here's all that you can do with LambdaTest:
 - Help is always available with 24/7 chat support.
 - Lifetime free access to the platform with 100 free automation testing minutes.
 
-Here, you can purchase a subscription to LambdaTest through the Datadog Marketplace. Once you have your LambdaTest account set up (or if you're already a customer of LambdaTest), please see the [ integration tile](/account/settings#integrations/lambdatest) to start sending data into Datadog.
+Here, you can purchase a subscription to LambdaTest through the Datadog Marketplace. Once you have your LambdaTest account set up (or if you're already a customer of LambdaTest), please see the [ integration tile](/integrations/lambdatest) to start sending data into Datadog.
 
 
 ## Setup
@@ -22,7 +22,11 @@ You can purchase a subscription to LambdaTest directly through this tile. Once y
 
 For detailed pricing information, [click here](https://www.lambdatest.com/pricing).
 
-If you need any help with setting up the integration so that data is shared between Datadog and LambdaTest, see the [LambdaTest integration tile](/account/settings#integrations/lambdatest).
+If you need any help with setting up the integration so that data is shared between Datadog and LambdaTest, see the [LambdaTest integration tile](/integrations/lambdatest).
+
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. LambdaTest will then reach out to confirm and disconnect your account.
 
 
 

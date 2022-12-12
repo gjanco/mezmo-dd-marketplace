@@ -61,7 +61,11 @@ so you can take action before your users complain.
 ## Setup
 
 1. Start a free trial with [Embrace][3] and follow our documentation [here][2] to integrate your mobile app.
-1. Find the Embrace integration [here](/account/settings#integrations/embrace-mobile).
+2. Find the Embrace integration [here](/integrations/embrace-mobile).
+
+## Uninstallation
+
+First, cancel your subscription in Plan & Pricing. Embrace will then reach out to confirm and disconnect your account.
 
 ## Support
 For support or questions, please contact Embrace via the following: 
