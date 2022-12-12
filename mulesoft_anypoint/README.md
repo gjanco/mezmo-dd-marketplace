@@ -76,7 +76,15 @@ Follow the instructions below to install and configure this check for an Agent r
 To install the mulesoft_anypoint check on your host:
 
 1. [Download and install the Datadog Agent](https://app.datadoghq.com/account/settings#agent/overview).
-2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-mulesoft-anypoint==1.2.0`
+2. Run the third-party integration installer using the `datadog-agent` CLI utility. 
+
+* *Linux:* 
+
+```$ sudo -u dd-agent -- datadog-agent integration install --third-party datadog-mulesoft-anypoint==1.2.1```
+
+* *Windows:* 
+
+```"%PROGRAMFILES%\Datadog\Datadog Agent\embedded\agent.exe" integration install --third-party datadog-mulesoft-anypoint==1.2.1```
   
 ### Configuration
 
@@ -291,6 +299,22 @@ instances:
 ### Validation
 
 [Run the Agent's status subcommand][5] and look for `mulesoft_anypoint` under the Checks section.
+
+## Uninstallation
+
+Uninstall the Datadog Mule® Integration from the Datadog agent using the `datadog-agent` CLI utility.
+
+* *Linux:*
+
+```$ sudo -u dd-agent -- datadog-agent integration remove --third-party datadog-mulesoft-anypoint```
+
+* *Windows:*
+
+```"%PROGRAMFILES%\Datadog\Datadog Agent\embedded\agent.exe" integration remove --third-party datadog-mulesoft-anypoint```
+ 
+Ensure the Datadog Mule® Integration is not running. See the [Validation](#Validation) section.
+
+If you have any questions, send an email to [IO Connect Services support][9].
 
 ## Data Collected
 
