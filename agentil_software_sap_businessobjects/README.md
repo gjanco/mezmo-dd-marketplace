@@ -50,7 +50,8 @@ You can configure Pro.Monitor using a web interface.
 - Visit `http://[PRO.MONITOR VM HOSTNAME]:8888` in a web browser. The default username/password combination is `admin`/`admin`.
 - Click the gear icon on the top right to open a menu. Then, select **Plugins**.
 - Select the Datadog type in the plugin selector and press create.
-- Register your Datadog API key and server hostname, then save.
+- Set your Datadog instance URL as `https://api.datadoghq.[SUFFIX]` and replace `[SUFFIX]` with the extension of your instance, for example: `com` or `eu`.
+- Register your Datadog API and application keys.
 - Pro.Monitor is now connected to your Datadog instance.
 #### Connection to SAP
 - Create the necessary groups, systems, and connectors to define how to connect to your SAP systems. You can do this by selecting **Options** in the left panel. A **group** contains multiple **systems**, which are each identified by SID.
@@ -66,6 +67,16 @@ You can configure Pro.Monitor using a web interface.
 
 There are several ways to register your SAP systems. See the [product documentation](https://wiki.agentil-software.com/doku.php?id=products:promonitor:6.8:userguide:configuration) for a complete overview.
 Monitoring is now active for all your systems, which you should see in Datadog.
+
+## Uninstallation
+
+1. Connect to the Pro.Monitor server using an SSH client.
+2. Stop Pro.Monitor service and remove installed files by running the following commands:
+```shell
+systemctl stop promonitor
+rm -rf /opt/Pro.Monitor*
+rm -f /etc/systemd/system/promonitor.service
+```
 ## Support
 For support or feature requests, contact AGENTIL Software at support@agentil-software.com
 
