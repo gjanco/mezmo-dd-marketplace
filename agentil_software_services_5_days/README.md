@@ -1,9 +1,11 @@
+# Agentil Software Services
+
 ## Overview
 Agentil Software offers its professional services to help customers deploy or use our Datadog integrations.
 
 Agentil offers two SAP integrations:
-1. [BusinessObjects](/marketplace/app/agentil-software-sap-businessobjects/overview)
-2. [S/4HANA and NetWeaver systems](/marketplace/app/agentil-software-sap-businessobjects/overview)
+1. [BusinessObjects][1]
+2. [S/4HANA and NetWeaver systems][2]
 
 This service includes understanding and implementing of specific needs, advanced proof of value projects, configuration, and/or training.
 
@@ -19,3 +21,6 @@ Agentil will reach out to confirm.
 
 ## Support
 For questions or support, please contact [sales@agentil-software.com](mailto:sales@agentil-software.com).
+
+[1]: https://docs.datadoghq.com/integrations/agentil_software_sap_businessobjects/
+[2]: https://docs.datadoghq.com/integrations/agentil_software_sap_netweaver/
