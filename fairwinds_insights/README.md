@@ -39,6 +39,14 @@ You can modify your Datadog configuration in your Organization's Settings page.
 
 After providing your API key to Insights an initial Event should appear in Datadog showing that the integration is set up.
 
+## Uninstallation
+1. Run the following command in each of your Kubernetes clusters:
+```bash
+helm delete insights-agent -n insights-agent
+```
+2. Delete your organization in Fairwinds Insights by navigating to Settings > Danger Zone. This will
+remove all your data in Fairwinds Insights, including the Datadog API key.
+
 ## Data Collected
 
 ### Metrics
