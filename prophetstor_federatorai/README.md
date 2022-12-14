@@ -101,6 +101,9 @@ Separate from this Federator.ai license, an official [Datadog Integration][9] wi
 
 6. Refer to the [User Guide][8] for more details.
 
+## Uninstallation
+
+Once you've canceled the subscription, ProphetStor will reach out to confirm.
 
 ## Support
 
@@ -115,4 +118,4 @@ For support or requests, contact [ProphetStor support](mailto:support@prophetsto
 [6]: https://www.datadoghq.com/
 [7]: https://docs.datadoghq.com/account_management/api-app-keys/
 [8]: https://prophetstor.com/wp-content/uploads/documentation/Federator.ai/Latest%20Version/ProphetStor%20Federator.ai%20User%20Guide.pdf
-[9]: https://app.datadoghq.com/account/settings#integrations/federatorai
+[9]: /integrations/federatorai
