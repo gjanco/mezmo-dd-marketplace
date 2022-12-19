@@ -1,5 +1,9 @@
 # CHANGELOG - crest_data_systems_dell_emc_isilon
 
+## 2.0.2 / 2022-12-15
+
+* [Removed] Unused tag 'hdd-time' from Storage Drive Details widget
+
 ## 2.0.1 / 2022-03-09
 
 * [Added] Directory Path information of Quota

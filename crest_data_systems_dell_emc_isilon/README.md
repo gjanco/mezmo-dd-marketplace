@@ -21,7 +21,7 @@ Monitors Summary | This dashboard provides a summary of monitors, which are supp
 
 Run the following:
 
-`sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_dell_emc_isilon==2.0.1`
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_dell_emc_isilon==2.0.2`
 
 ### Configuration
 
@@ -82,6 +82,12 @@ Alternatively, you can get detailed information about the integration using the 
 2. Select a monitor from the list.
 
 3. Update the monitor configuration based on the requirements and save the monitor.
+
+## Uninstallation
+
+Uninstall the integration from the Datadog agent by running the following command on the agent host:
+
+`sudo -u dd-agent datadog-agent integration remove datadog-crest_data_systems_dell_emc_isilon`
 
 ## Support
 

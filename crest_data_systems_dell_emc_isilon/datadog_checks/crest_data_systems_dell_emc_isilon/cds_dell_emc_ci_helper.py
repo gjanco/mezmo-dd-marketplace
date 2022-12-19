@@ -35,7 +35,6 @@ class CDSDellEMCCiHelper(object):
                             INTEGRATION_PREFIX + "logical-number:%s" % logical_number,
                             INTEGRATION_PREFIX + "bay:%s" % bay_name,
                             INTEGRATION_PREFIX + "type:%s" % disk_detail.get("type", ""),
-                            INTEGRATION_PREFIX + "hdd-time:%s" % disk_detail.get("time", ""),
                         ],
                     ]
                 )

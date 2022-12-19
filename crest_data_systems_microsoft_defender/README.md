@@ -104,6 +104,12 @@ Alternatively, you can get detailed information about the integration using the 
  2. Click on **New Monitor** and then click on the **Recommended Monitors** tab.
  3. Search for the **Crest Data Systems Microsoft Defender** monitor.
 
+## Uninstallation
+
+Uninstall the integration from the Datadog agent by running the following command on the agent host:
+
+`sudo -u dd-agent datadog-agent integration remove datadog-crest_data_systems_microsoft_defender`
+
 ## Support
 
 For support or feature requests, contact Crest Data Systems through the following channel:
