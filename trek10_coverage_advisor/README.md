@@ -41,6 +41,10 @@ No big setup required!
   4. After the keys are submitted, we will be automatically clone over your custom dashboard.
   5. Finally head over to Datadog's recommended monitors and clone over the two event monitors `Trek10 Monitoring AWS Coverage Advisor - New Unmonited Metric Available` and `Trek10 Monitoring AWS Coverage Advisor - New Unmonitored Metric Discovered`.
 
+## Uninstallation
+
+1. Navigate to Datadog.
+2. Delete any associated API and Application keys.
 
 
 ## Support
