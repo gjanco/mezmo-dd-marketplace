@@ -44,6 +44,14 @@ Once completed, save the integration and it will start syncing data between Data
 
 Please see our [Nutanix integration documentation](https://zigiwave.com/nutanix-integrations/) for more details on the setup of your integrations.
 
+## Uninstallation
+
+1. Log into your ZigiOps instance.
+2. Navigate to Connected Systems and remove the connection between Datadog and Nutanix.
+3. Log into Datadog.
+4. Delete any associated API and Application keys.
+
+
 ## Support
 
 We at ZigiWave are dedicated to providing the best customer experience 

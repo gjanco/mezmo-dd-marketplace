@@ -63,6 +63,13 @@ Once completed, save the integration and it will start syncing data between Data
 
 Visit our [MicroFocus integration documentation](https://zigiwave.com/microfocus-integrations/) for more details on setting up your integrations.
 
+## Uninstallation
+
+1. Log into your ZigiOps instance.
+2. Navigate to Connected Systems and remove the connection between Datadog and MicroFocus OpsBridge.
+3. Log into Datadog.
+4. Delete any associated API and Application keys.
+
 ## Support
 
 ZigiWave is dedicated to providing the best customer experience 
