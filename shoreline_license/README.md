@@ -6,20 +6,21 @@ Shoreline incident automation enables DevOps and Site Reliability Engineers (SRE
 
 The debug and repair feature allows you to execute commands in real-time across your server farm without needing to SSH into the servers individually. You can execute anything that can be typed at the Linux command prompt such as Linux commands, shell scripts, and calls to cloud provider APIs, and turn these debug sessions into automations connected to Datadog monitors.
 
-The Shoreline app automatically executes the automation when the monitor is triggered, significantly reducing Mean Time To Repair (MTTR) and manual work.
+The Shoreline app automatically executes the automation when the monitor is triggered, significantly reducing Mean Time to Repair (MTTR) and manual work.
 
 Shoreline helps everyone on call be as good as your best SRE. Shoreline arms your on-call team with debugging tools and approved remediation actions, helping you fix incidents faster with fewer escalations and ensuring that incidents are fixed correctly the first time with fewer mistakes.
 
 To get started, set up a trial account on [Shoreline][3].
+
 ## Setup
 
 ### Installation
 
-Follow the steps below to configure the integration:
+Follow the steps below to install and configure Shoreline's Datadog integration.
 
-1. Download the Shoreline Agent.
-2. Install the App from the [Datadog Shoreline tile][10].
-
+1. [Install the Shoreline Agent](https://docs.shoreline.io/installation) on your hosts.
+2. [Install the Shoreline integration](https://docs.shoreline.io/integrations/datadog#install-the-shoreline-integration) from [Shoreline's Datadog marketplace tile][10].
+3. Navigate to your **Shoreline UI > Integrations > Datadog** page (i.e., `https://<SHORELINE_UI_URL>/integrations/datadog/`) to [install the Datadog integration](https://docs.shoreline.io/integrations/datadog#install-the-datadog-integration).
 
 #### Shoreline Agent
 
@@ -35,19 +36,24 @@ To install the Shoreline Agent, follow one of three methods:
 
 1. [Kubernetes][5]
 2. [Kubernetes via Helm][6] 
-3. [Virtual Machines][7] 
+3. [Virtual Machines][7]
 
+#### Datadog integration
 
-#### Shoreline
-
-To configure the Datadog-Shoreline integration in Shoreline, you need your Datadog API and Application Keys.
-
-For example:
+To configure Shoreline's Datadog integration, you need a Datadog API and Application Key.
 
 ![integration_example](images/integrate_shoreline_and_datadog.png)
 
-For in-depth instructions on configuring the app, please see the [Datadog-Shoreline documentation][4]. 
+**Note**: See [Shoreline's Datadog Integration][4] documentation for detailed setup instructions.
 
+## Uninstallation
+
+1. Navigate to your **Shoreline UI > Integrations > Datadog** page (i.e., `https://<SHORELINE_UI_URL>/integrations/datadog/`).  
+2. Click the **Uninstall** button.
+
+   **Note**: Uninstalling the integration automatically removes the associated Datadog dashboard and webhook from your Datadog account.
+
+Once you've canceled the subscription, Shoreline will reach out to confirm and disconnect your account.
 
 ## Support
 
