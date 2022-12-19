@@ -38,7 +38,19 @@ This integration uses the Workday API to collect logs for integration executions
 To install this integration, follow the steps below.
 
 1. [Download and install the Datadog Agent][1].
-2. Run `sudo -u dd-agent datadog-agent integration install --third-party datadog-avmconsulting_workday==1.0.1`.
+2. Run the third-party integration installer using the `datadog-agent` CLI utility.
+
+*For Linux*
+
+```bash
+sudo -u dd-agent datadog-agent integration install --third-party datadog-avmconsulting_workday==1.0.1
+```
+
+*For Windows*
+
+```bash
+"%PROGRAMFILES%\Datadog\Datadog Agent\embedded\agent.exe" integration install --third-party datadog-avmconsulting_workday==1.0.1
+```
 
 ### Configuration
 
@@ -67,6 +79,22 @@ The Workday integration includes the following service checks:
 
 1. **avmconsulting.workday.can_connect**: This service check shows whether a connection to Workday can be established and data can be processed.
 2. **avmconsulting.workday.integration.state**: This service check shows the state of integrations within Workday.
+
+## Uninstallation
+
+Uninstall the Workday integration from the Datadog agent using the `datadog-agent` CLI utility:
+
+*For Linux*
+
+```bash
+sudo -u dd-agent datadog-agent integration remove datadog-avmconsulting_workday
+```
+
+*For Windows*
+
+```bash
+"%PROGRAMFILES%\Datadog\Datadog Agent\embedded\agent.exe" integration remove --third-party datadog-avmconsulting_workday
+```
 
 ## Support
 
