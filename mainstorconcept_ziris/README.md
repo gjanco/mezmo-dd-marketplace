@@ -164,22 +164,28 @@ This isn't the metric you're looking for? Missing a critical feature for your or
 * E-mail: [mainstorconcept GmbH](mailto:ziris@mainstorconcept.com)
 * Phone: +49 721 7907610
 
+### Licensing
+
+After starting your trial period, we will provide your z/IRIS trial license via email within 24 hours.
+
+### Validation
+
+Verify that the relevant components are available and meet the [minimum requirements](https://public.mainstorconcept.com/home/Troubleshooting-OpenTelemetry-integration.1121812489.html).
+
 ## Setup
 
-### Installation
-
 1. z/IRIS server: IronTap
-	1. Login Data:
-		* username: datadog-trial
-		* password: We will provide the password for the repository with the license via email within 24 hours.
+	1. Login Data
+		* **Username:** datadog-trial
+		* **Password:** We will provide the password for the repository with the license via email within 24 hours.
 	2. [IronTap Image](https://public.mainstorconcept.com/home/IronTap-Image.1121255425.html)
 		* Enter the command in your CLI and follow the prompts entering your login data.  
 		
-		    docker login mainstorconcept.jfrog.io
+		  ` docker login mainstorconcept.jfrog.io `
 		
-		* Enter the second command to obtain z/IRIS.  		
+		* Enter the second command to obtain the z/IRIS IronTap Image.  		
 		
-			docker pull mainstorconcept.jfrog.io/ziris-docker-release/irontap:latest-kafka-otel
+		  ` docker pull mainstorconcept.jfrog.io/ziris-docker-release/irontap:latest-kafka-otel `
 	
 	3. [Configure IronTap server](https://public.mainstorconcept.com/home/Configure-IronTap-container.1121517569.html)
 	
@@ -188,14 +194,21 @@ This isn't the metric you're looking for? Missing a critical feature for your or
 	2. [Configure z/IRIS Clients](https://public.mainstorconcept.com/home/Configure-z%2FIRIS-Clients.713228858.html)
 	3. [z/IRIS Client Started Task](https://public.mainstorconcept.com/home/z%2FIRIS-Client-Started-Task.713228925.html)
 
-### License application 
+## Uninstallation
 
-After starting your trial period, we will provide your z/IRIS trial license via email within 24 hours. 
- 	
-### Validation
-
-Verify that the relevant components are available and meet the [minimum requirements](https://public.mainstorconcept.com/home/Troubleshooting-OpenTelemetry-integration.1121812489.html).
-
+1. z/IRIS server: IronTap
+	1. [IronTap Image](https://public.mainstorconcept.com/home/configure-irontap-container)
+   		1. Stop the z/IRIS IronTap container
+   		2. Remove the z/IRIS IronTap container
+   		3. Remove the z/IRIS Irontap image
+   		4. Delete the z/IRIS IronTap directory
+	   
+2. z/IRIS z/OS Client
+	1. Stop z/IRIS z/OS Client address space.
+	2. Remove all files in the $APP_HOME unix file path.
+	3. Unmount the $APP_HOME mounted file system.
+	3. Remove the z/IRIS member for the concatenated PROCLIB. 
+	4. Remove the surrogate userid allocated to be used by the z/IRIS Started Task from the SAF system. 
 
 ## Support
 
