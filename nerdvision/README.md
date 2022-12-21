@@ -48,9 +48,16 @@ Get setup in just a few steps
 1. Copy an **API Key** and **Application Key** from Datadog
 1. Open NerdVision Group Settings **User > Group Settings > Datadog**
 1. Paste the **API Key** and **Application Key** into NerdVision
-1. Select the Datadog **Region** and click **Add Datadog to NerdVision**
+1. Select the Datadog **Region** and click **Add Datadog to nerd.vision**
 
 If you have not already configured an application to use NerdVision, follow the [setup guide](https://app.nerd.vision/setup).
+
+## Uninstallation
+
+
+1. Log in to [nerd.vision](https://app.nerd.vision) and select the group you wish to remove from the Datadog integration.
+2. Open NerdVision Group Settings by navigating to **User** > **Group Settings** > **Datadog**.
+3. Click **Remove Datadog from nerd.vision**.
 
 ## Support
 
