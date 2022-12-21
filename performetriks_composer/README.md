@@ -54,6 +54,12 @@ For more information, please see the [Composer Datadog Product Guide][1]
 
 11. To begin restoring a Datadog configuration in your Datadog environment, navigate to the **Restore** tab.
 
+## Uninstallation
+
+1. To uninstall Composer, close the terminal running the Composer.
+
+2. Delete all files associated with the Composer.
+
 ## Support
 For support or feature requests, please contact Performetriks through the following channel:
 Email: [composer@performetriks.com](mailto:composer@performetriks.com)
