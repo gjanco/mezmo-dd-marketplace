@@ -163,6 +163,18 @@ cat /etc/logadm.conf
 /var/log/datadog/agent.log -C 10 -c -s 10m
 ```
 
+## Uninstallation
+
+### Agent Uninstall
+
+Command:
+- Remove the Agent using the Solaris Packaging system: `pkgrm DatadogAgent`
+
+Config & Log Cleanup:
+- Configuration files and logs are not removed. You must remove them manually from `/var/log/datadog/` and `/etc/datadog/`.
+
+For any questions or problems, view our Support section for ways to get in touch.
+
 ## Support
 
 For support or feature requests, contact RapDev.io through the following channels: 

@@ -263,6 +263,32 @@ This integration has the service check `rapdev.backup.can_connect` which returns
 
 This integration does not include any events.
 
+## Uninstallation
+
+### Agent Integration Uninstall 
+
+1. Run the following command to remove the integration:
+
+    - Linux: `sudo -u dd-agent datadog-agent integration remove datadog-rapdev_backup`
+
+    - Windows: `“C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration remove datadog-rapdev_backup”`
+
+2. Restart the Datadog Agent by using your OS's [Restart Command](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#restart-the-agent).
+
+3. Run the Agent status command as described in the Validation section, and verify the integration is no longer running.
+
+YAML Config Cleanup:
+- If you plan to reinstall or need to keep the config files:
+    - Navigate to your Agent's `conf.d` directory and locate the `rapdev_backup.d` folder to access the YAML configs. **NOTE**: These files contain sensitive information such as API keys and secrets.
+    
+- If you plan to fully uninstall with config removal:
+    - Navigate to your Agent's `conf.d` directory, and remove the `rapdev_backup.d` folder.
+
+Backup Cleanup:
+- As a best practice, remove any associated API keys, repos, or cloud or local storages created exclusively for this integration. For more details, reference the **Backup Configurations** section.
+
+For any questions or problems, view our Support section for ways to get in touch.
+
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
 

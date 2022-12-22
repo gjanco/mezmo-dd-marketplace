@@ -140,6 +140,31 @@ this would look similar to the following example:
     "%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" check rapdev_zoom
     ```
 
+## Uninstallation
+
+### Agent Integration Uninstall 
+
+1. Run the following command to remove the integration:
+
+    - Linux: `sudo -u dd-agent datadog-agent integration remove datadog-rapdev_zoom`
+
+    - Windows: `“C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration remove datadog-rapdev_zoom”`
+        
+2. Restart the Datadog Agent by using your OS's [Restart Command](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#restart-the-agent).
+
+3. Run the Agent status command as described in the Validation section, and verify the integration is no longer running.
+
+YAML Config Cleanup:
+- If you plan to reinstall or need to keep the config files:
+    - Navigate to your Agent's `conf.d` directory and locate the `rapdev_zoom.d` folder to access the YAML configs. **NOTE**: These files contain sensitive information such as API keys.
+    
+- If you plan to fully uninstall with config removal:
+    - Navigate to your Agent's `conf.d` directory, and remove the `rapdev_zoom.d` folder.
+
+Zoom Cleanup:
+- As a best practice, remove any associated API keys, apps or secrets created exclusively for this integration. For more details, reference the Configuration section.
+
+For any questions or problems, view our Support section for ways to get in touch.
 
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:

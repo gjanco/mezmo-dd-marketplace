@@ -80,6 +80,12 @@ Below is a list of the currently supported devices, please visit our [website](h
 
 2. Fill in your conf.yaml with the necessary IP or network addresses for discovery. See the file `snmp-profiles\conf.yaml.example_rapdev` for example configuration.
 
+## Uninstallation
+
+Run the following command to remove the integration: 
+- Linux Command: `sudo rm -rf /etc/datadog-agent/conf.d/snmp.d/profiles/*`
+- Windows (Powershell as administrator) Command: `rm -r C:\ProgramData\Datadog\conf.d\snmp.d\profiles\*`
+
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
 

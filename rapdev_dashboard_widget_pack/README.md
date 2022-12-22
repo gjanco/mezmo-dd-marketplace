@@ -25,6 +25,11 @@ To add the widgets to your dashboard:
  2. Click **Apps**. RapDev Widget Pack is available. 
  3. Drag and drop the widget into your dashboard. You can also clone and import the widget into another dashboard.
 
+## Uninstallation
+Steps to uninstall:
+ - Remove the Widgets from your Dashboards
+ - Navigate to the Plan & Pricing tab to cancel your subscription
+
 ## Support
 
 For support or feature requests, contact RapDev.io through the following channels:

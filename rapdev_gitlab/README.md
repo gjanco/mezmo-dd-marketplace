@@ -40,11 +40,29 @@ For Windows:
 
 ## Uninstallation
 
-1. Remove all Datadog files associated with this integration.
+### Agent Integration Uninstall 
 
-2. Within Gitlab, navigate to `Admin` from the Menu and under `Overview`, click on `Users`.
+1. Run the following command to remove the integration:
 
-3. Delete the user that was created in the installation process.
+    - Linux: `sudo -u dd-agent datadog-agent integration remove datadog-rapdev_gitlab`
+
+    - Windows: `“C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration remove datadog-rapdev_gitlab”`
+        
+2. Restart the Datadog Agent by using your OS's [Restart Command](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#restart-the-agent).
+
+3. Run the Agent status command as described in the Validation section, and verify the integration is no longer running.
+
+YAML Config Cleanup:
+- If you plan to reinstall or need to keep the config files:
+    - Navigate to your Agent's `conf.d` directory and locate the `rapdev_gitlab.d` folder to access the YAML configs. **NOTE**: These files contain sensitive information such as API tokens.
+    
+- If you plan to fully uninstall with config removal:
+    - Navigate to your Agent's `conf.d` directory, and remove the `rapdev_gitlab.d ` folder.
+
+Gitlab Cleanup:
+- As a best practice, remove any associated users and passwords created exclusively for this integration. for more details, reference the Installation section.
+
+For any questions or problems, view our Support section for ways to get in touch.
 
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:

@@ -50,6 +50,13 @@ Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mail
   know the `ccvpEventText` field contains data you want as a log message, add that to the message remapper. Logs not containing that
   field will not be affected, and multiple remapped fields can be added over time.
 
+## Uninstallation
+
+- Stop the LogStash service through your service provider.
+- On the host machine, run `rm -rf /opt/logstash`.
+
+For any questions or problems, view our Support section for ways to get in touch.
+
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
 

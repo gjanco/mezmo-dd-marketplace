@@ -54,6 +54,13 @@ For **Private Dashboards** do the following:
 
 Your reports will be sent by email as an attachement as shown above.
 
+## Uninstallation
+Steps to uninstall Reporter:
+ - Sign into your reporter account in the Reporter Dashboard
+ - In the `Dashboard` tab, delete all active jobs
+ - Navigate to the `Settings` tab, and delete your Datadog credentials
+ - Navigate to the Plan & Pricing tab to cancel your subscription
+
 ## Support
 
 For support or feature requests please contact RapDev.io through the following channels: 

@@ -153,11 +153,22 @@ LOGLEVEL="INFO"
 
 10. The HP-UX Agent log is located at `/var/log/datadog/agent.log`. Since base HP-UX does not come with logrotate, add a logrotate or cron job configuration to your host(s) to prevent disk starvation from the HP-UX Agent logs.
 
-11. The HP-UX Agent can be uninstalled using the `uninstall.sh` script provided in the tarball package. Configuration files and logs are not removed and must be removed manually from `/var/log/datadog/` and `/etc/datadog/`.
+## Uninstallation
+
+### Agent Uninstall
+
+Command:
+- You can uninstall the HP-UX Agent by using the `uninstall.sh` script provided in the tarball package. 
+
 ```sh
 cd /tmp/datadog-agent-install
 ./uninstall.sh
 ```
+
+Config & Log Cleanup:
+- Configuration files and logs are not removed. You must manually remove them from `/var/log/datadog/` and `/etc/datadog/`.
+
+For any questions or problems, view our Support section for ways to get in touch.
 
 ## Support
 

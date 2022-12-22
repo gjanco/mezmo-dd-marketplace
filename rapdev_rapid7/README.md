@@ -60,6 +60,32 @@ sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_
     sudo -u dd-agent datadog-agent check rapdev_rapid7
     ```
 
+## Uninstallation
+
+### Agent Integration Uninstall 
+
+1. Run the following command to remove the integration:
+
+    - Linux: `sudo -u dd-agent datadog-agent integration remove datadog-rapdev_rapid7`
+
+    - Windows: `“C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration remove datadog-rapdev_rapid7”`
+        
+2. Restart the Datadog Agent by using your OS's [Restart Command](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#restart-the-agent).
+
+3. Run the Agent status command as described in the Validation section, and verify the integration is no longer running.
+
+YAML Config Cleanup:
+- If you plan to reinstall or need to keep the config files:
+    - Navigate to your Agent's `conf.d` directory and locate the `rapdev_rapid7.d` folder to access the YAML configs. **NOTE**: These files contain sensitive information such as API keys.
+    
+- If you plan to fully uninstall with config removal:
+    - Navigate to your Agent's `conf.d` directory, and remove the `rapdev_rapid7.d` folder.
+
+Rapid7 Cleanup:
+- As a best practice, remove any associated API keys created exclusively for this integration. For more details, reference the Installation section.
+
+For any questions or problems, view our Support section for ways to get in touch.
+
 ## Support
 For support or feature requests, contact RapDev.io through the following channels:
 

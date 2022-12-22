@@ -26,6 +26,32 @@ Windows:
 
 [Run the Agent's status subcommand](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#agent-status-and-information) and look for `syntheticemail` under the Checks section.
 
+## Uninstallation
+
+### Agent Integration Uninstall 
+
+1. Run the following command to remove the integration:
+
+    - Linux: `sudo -u dd-agent datadog-agent integration remove datadog-syntheticemail`
+
+    - Windows: `“C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration remove datadog-syntheticemail”`
+        
+2. Restart the Datadog Agent by using your OS's [Restart Command](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#restart-the-agent).
+
+3. Run the Agent status command as described in the Validation section, and verify the integration is no longer running.
+
+YAML Config Cleanup:
+- If you plan to reinstall or need to keep the config files:
+    - Navigate to your Agent's `conf.d` directory and locate the `syntheticemail.d` folder to access the YAML configs. **NOTE**: These files contain sensitive information such as API keys.
+    
+- If you plan to fully uninstall with config removal:
+    - Navigate to your Agent's `conf.d` directory, and remove the `syntheticemail.d` folder.
+
+Mailbox Cleanup:
+- As a best practice, remove any associated mailboxes and rules created exclusively for this integration. For more details, reference the **Mailbox Configuration** section.
+
+For any questions or problems, view our Support section for ways to get in touch.
+
 ## Support
 For support or feature requests please contact RapDev.io through the following channels: 
 

@@ -178,7 +178,7 @@ The Microsoft Teams integration supports composite monitors to align with the of
 
 	3.9 `Save` the composite monitor.
 
-### Uninstall
+## Uninstallation
 
 1. Run the Datadog Agent uninstall command for the integration:
 
