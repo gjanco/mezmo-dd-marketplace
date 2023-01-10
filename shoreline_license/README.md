@@ -53,7 +53,7 @@ To configure Shoreline's Datadog integration, you need a Datadog API and Applica
 
    **Note**: Uninstalling the integration automatically removes the associated Datadog dashboard and webhook from your Datadog account.
 
-Once you've canceled the subscription, Shoreline will reach out to confirm and disconnect your account.
+3. Once you've canceled your subscription, Shoreline will reach out to confirm and disconnect your account.
 
 ## Support
 

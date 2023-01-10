@@ -44,8 +44,7 @@ After providing your API key to Insights an initial Event should appear in Datad
 ```bash
 helm delete insights-agent -n insights-agent
 ```
-2. Delete your organization in Fairwinds Insights by navigating to Settings > Danger Zone. This will
-remove all your data in Fairwinds Insights, including the Datadog API key.
+2. Delete your organization in Fairwinds Insights by navigating to Settings > Danger Zone. This will remove all your data in Fairwinds Insights, including the Datadog API key.
 
 ## Data Collected
 
