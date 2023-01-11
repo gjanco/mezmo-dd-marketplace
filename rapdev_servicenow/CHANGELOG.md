@@ -1,5 +1,9 @@
 # CHANGELOG - rapdev_servicenow
 
+## 1.2.4 / 2023-01-11
+
+- [Changed] `title` from ServiceNow Integration to ServiceNow Performance Monitoring in manifest.json
+
 ## 1.2.4 / 2022-10-11
 
 - [Added] Constant `AUTH_STATSDO_PATH`

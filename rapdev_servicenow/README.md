@@ -1,6 +1,6 @@
 ## Overview
 
-The ServiceNow integration monitors the health and performance of your ServiceNow instances with rich insights into transactions, jobs, database, and cache metrics. The integration also tracks open ITSM incidents, providing actionable data points on both SLAs and the age of business impacting incidents.
+The ServiceNow Performance Monitoring integration monitors the health and performance of your ServiceNow instances with rich insights into transactions, jobs, database, and cache metrics. The integration also tracks open ITSM incidents, providing actionable data points on both SLAs and the age of business impacting incidents.
 
 ## Setup
 
