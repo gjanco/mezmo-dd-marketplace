@@ -27,43 +27,43 @@ so as to configure the Agent and YAML Integration Configs.  Refer to [these inst
 
 Run the following commands to install the integration:
 
-For Linux:
+```
+## Linux ##
 `sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_github==1.0.0`
 
-For Windows:
+## Windows ##
 `"%ProgramFiles%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_github==1.0.0` 
+```
 
-1. In GitHub, login under an authenticated user and navigate to your organization or enterprise's `Settings`.
+1. In GitHub, navigate to the [Developer Settings Page](https://github.com/settings/apps). If prompted, login and navigate to **Settings** > **Developer Settings** > **Github Apps**. 
 
-2. Within `Devloper Settings`, select `GitHub Apps`.
+2. Click **New GitHub App** and set the following fields accordingly:
+    - Set `GitHub App Name` to a name of your choice.
+    - `Homepage URL` to `http://127.0.0.1`.
+    - Uncheck `Active` under `Webhook`.
 
-3. Click `New GitHub App`.
+3. Under the **Permissions** section, set the following permissions:
+    - <b>Repository Permissions:</b> set `Actions`, `Issues`, `Metadata`, and `Pull Requests`, to `Read Only`.
+    - <b>Organization Permissions:</b> set `Administration`, `Members`, and `Self-hosted Runners` to `Read Only`.
 
-4. Set `GitHub App Name` to anything, `Homepage URL` to `http://127.0.0.1`, and uncheck `Active` under `Webhook`.
+4. Finally, set `Where can this GitHub App be installed?` to `Any account` and click **Create GitHub App**. Once created, GitHub should redirect you to the App settings. Save the App ID in a secure place as this is used in the configuration file.
 
-5. For Repository Permissions, set `Actions`, `Issues`, `Metadata`, and `Pull Requests`, to `Read Only`.
+5. Scroll down to the `Private Keys` section and click **Generate a private key**. It should automatically save the `.pem` file. If you'd like, you can move this to somewhere more secure.
 
-6. For Organization Permissions, set `Administration`, `Members`, and `Self-hosted Runners` to `Read Only`.
+6. Click `Install App` on the left hand side and select `Install` for the organization you'd like to monitor. Ensure `All Repositories` is selected and select `Install`. Repeat this step for any additional organizations you'd like to monitor.
 
-7. Finally, set `Where can this GitHub App be installed?` to `Only this account` and press `Create GitHub App`.
+    This should redirect you to the App installation on your org. Within the web address bar, save the 8-digit number at the end of the URL to a secure location.
 
-8. Once created, GitHub should redirect you to the App settings. From here, save the App ID in a secure place as it will be used in the configuration file.
+7. Find where the `conf.d/rapdev_github.d/conf.yaml.example` [configuration file](https://docs.datadoghq.com/agent/guide/agent-configuration-files/?tab=agentv6v7#agent-configuration-directory) is located, remove the `.example` from the file name, and open the file to set the following:
+    - `user`: The name of the authenticated user.
+    - `org`: The name of your organization or enterprise.
+    - `github_mode`: Either `organization` or `enterprise`, depending on which you are on.
+    - `key_path`: The path to your `.pem` file that was generated in Step 9.
+    - `org_app_id`: The 8-digit ID that was on the end of the URL from Step 13.
+    - `gh_app_id`: The 6-digit App ID generated in Step 8.
+    - `repo_list`: A list of repositories on your organization or enterprise that the integration should look at. If this is left blank, it goes through all repos (<b>Note</b>: This may increase time between updates by approximately one minute for every 40 repos).
 
-9. Within `Private Keys`, select `Generate a private key`. Save the generated .pem file and the path to a secure location.
-
-10. Click `Install App` and select `Install` for your organization.
-
-11. Ensure `All Repositories` is selected and select `Install`.
-
-12. This should redirect you to the App installation on your org. Within the web address bar, save the 8-digit number at the end of the URL to a secure location.
-
-13. Find where the configuration file is located (usually in `/etc/datadog-agent/conf.d/rapdev_github.d/conf.yaml.example` on Mac and Linux), remove the `.example`, and open the file.
-
-14. Replace `user` with an authenticated user, `org` to the name of your organization or enterprise, `github_mode` to either `organization` or `enterprise` depending on which you are on, and `key_path` to the path to your .pem file that was generated in step 9. The `org_app_id` should be set to the 8-digit ID that was on the end of the URL from step 13, and `gh_app_id` should be set to the 6-digit App ID generated in step 8.
-
-15. `repo_list` is a list of repositories on your organization or enterprise that allow the integration to only look at a set amount of repos. If this is left blank, it will go through all repos (Note: This may increase time between updates by approximately a minute for every 40 repos).
-
-16. Once configured, start the Datadog Agent and begin using the integration.
+8. Once configured, [start the Datadog Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7) and begin using the integration.
 
 ## Uninstallation
 
