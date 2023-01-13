@@ -21,10 +21,10 @@ The minimum starting price (Tier Level 1) is covered by the amount stipulated in
 
 |Tier Level             |MSU Upper Limit        |Discount               |Cost/MSU/Month         |
 |-----------------------|-----------------------|-----------------------|-----------------------|
-|1               (up to)|50                     |0%                     |$96                    |
-|2               (up to)|100                    |50%                    |$48                    |
-|3               (up to)|250                    |75%                    |$24                    |
-|4               (up to)|500                    |84%                    |$15                    |
+|1               (up to)|50                     |0%                     |$80                    |
+|2               (up to)|100                    |50%                    |$41                    |
+|3               (up to)|250                    |75%                    |$18                    |
+|4               (up to)|500                    |84%                    |$12                    |
 |5               (up to)|1000                   |89%                    |$11                    |
 |6               (up to)|2500                   |93%                    |$7                     |
 |7               (up to)|5000                   |96%                    |$4                     |
