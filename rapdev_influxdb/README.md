@@ -2,7 +2,7 @@
 
 ## Overview
 
-This integration reports metrics about the health and operation of [InfluxDB][1].
+This integration reports metrics about the health and operation of [InfluxDB][1] v2.0+.
 
 ### Dashboards
 
