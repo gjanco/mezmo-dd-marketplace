@@ -5,7 +5,7 @@ The Solaris Agent allows you to collect and report on Solaris system metrics wit
 
 The Solaris Agent provides the host metadata required to support the Datadog Infrastructure List, enabling your organization to work with Solaris host systems similar to other supported Datadog host operating systems.
 
-The Solaris Agent uses the same URLs and ports as the native agents. The Solaris Agent supports core infrastructure metrics, process checks, and log tails. It does not support custom Agent checks, integrations, or service checks. 
+The Solaris Agent uses the same URLs and ports as the native agents. The Solaris Agent supports core infrastructure metrics, process checks, and log tails. It does not support integrations or service checks. 
 
 ### Pricing
 Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
@@ -21,13 +21,13 @@ pkgadd -d http://get.opencsw.org/now
 
 2. Install the Solaris Agent using the Solaris Image Packaging System. 
 ```sh
-pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.4.1.pkg
+pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.5.2.pkg
 ```
 
 3. If you are upgrading an existing Solaris Agent installation, first remove the current Solaris Agent package. The Solaris Agent configuration and log files will be retained.
 ```sh
 pkgrm DatadogAgent
-pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.4.1.pkg
+pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.5.2.pkg
 ```
 
 4. Copy `/etc/datadog/agent.yaml.example` to `/etc/datadog/agent.yaml` and update the Solaris Agent configuration settings in the `/etc/datadog/agent.yaml` file.

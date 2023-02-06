@@ -1,5 +1,22 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.5.2 / 2023-02-06
+
+* [Added] dual shipping support for metadata, metrics, and logs.
+
+## 1.5.1 / 2023-02-02
+
+* [Added] support for custom metric script checks.
+
+## 1.5.0 / 2023-02-01
+
+* [Added] multiple processes for metrics and logs.
+* [Fixed] issue with http/2 status responses from Datadog API.
+
+## 1.4.5 / 2023-02-01
+
+* [Fixed] issue with log tails on more than 256 open files on Solaris 10.
+
 ## 1.4.1 / 2022-09-06
 
 * [Added] support for multi-line logs.
