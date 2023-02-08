@@ -1,7 +1,9 @@
 # RapDev LLC Datadog Quickstart
 
 ## Overview
-This service is a fixed-cost package that includes up to four-weeks of Datadog advisory engagement structured as remote workshops, followed by 30 days of access to the RapDev SRE team. As Datadog's 2022 Implementation Partner of the Year, RapDev prides itself on its Datadog expertise, having completed over 100 enterprise-level Datadog rollouts and producing over 20 Datadog Marketplace integrations. The goal with this Quick Start package is to elevate your Datadog skillset, set you up for success with best practices, and leave you feeling confident in your path forward to holistic observability.
+This service is a fixed-cost package that includes up to four-weeks of Datadog advisory engagement structured as remote workshops, followed by 30 days of access to the RapDev SRE team. 
+
+As Datadog's 2022 Implementation Partner of the Year, RapDev prides itself on its Datadog expertise, having completed over 100 enterprise-level Datadog rollouts and producing over 20 Datadog Marketplace integrations. The goal with this Quick Start package is to elevate your Datadog skillset, set you up for success with best practices, and leave you feeling confident in your path forward to holistic observability.
 
 ### The Datadog Quickstart and Advisory Workshop 
 
