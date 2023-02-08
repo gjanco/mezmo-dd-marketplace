@@ -1,32 +1,23 @@
 # RapDev LLC Datadog Quickstart
+
 ## Overview
-This proposal includes a fixed-cost (4) four-week Datadog advisory engagement structured as remote workshops followed by 30 days of access to the RapDev SRE team. RapDev LLC prides itself on being on time and on budget, but more importantly, we understand the need for flexibility as we partner together on this engagement.  Like any great partnership, excellent communication and alignment are key.  
+This service is a fixed-cost package that includes up to four-weeks of Datadog advisory engagement structured as remote workshops, followed by 30 days of access to the RapDev SRE team. As Datadog's 2022 Implementation Partner of the Year, RapDev prides itself on its Datadog expertise, having completed over 100 enterprise-level Datadog rollouts and producing over 20 Datadog Marketplace integrations. The goal with this Quick Start package is to elevate your Datadog skillset, set you up for success with best practices, and leave you feeling confident in your path forward to holistic observability.
 
-### Datadog Quickstart & Advisory Workshop Includes:
-- Assistance on the best practice implementation of the platform
-- Advice on tagging strategies and best practices
-  - Provide and install RapDev’s Tag Validator Plugin on Datadog agent
-    - The tag validator will accept a list of required tag keys and their possible values in the conf.yaml file.
-    - Check the hosts currently in the user's Datadog instance
-    - Ensure that the tag keys are present on the hosts, and that the value of that key is one of the allowed values defined in the conf.yaml. 
-    - Teach the customer’s team how to update tag validator with new tags
-- Implementation of 5 Synthetic Checks 
-  - Can be Browser checks or API checks 
-- Assistance with using OOTB integrations to third party platforms such as MS Teams, Slack, ServiceNow, PagerDuty, and suchlike 
-- Advice on setting up Dashboards and Monitors
-- Implementation of 5 dashboards and 5 monitors to monitor services
-  - Dashboards and monitors will be built using the existing data flowing into Datadog’s platform
-  - The dashboards and monitors will be built based on discovery conversations and collaborative feedback gathered from customer’s teams
-  - Terraform Template for 1 Dashboard
-- Advice on implementing Logging without Limits&trade; best practices
-  - Implementation of a Logging without Limits&trade; filter example (showcasing cost control with existing configured/ingested logs)
-- Advice on the implementation of key management module to keystore (Azure Key Vault or Hashi Vault)
+### The Datadog Quickstart and Advisory Workshop 
 
-Also includes:
-- 30 day access to the RapDev.io Slack channel for instant responses to any Datadog question
-
-### Pricing
-Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
+This workshop includes the following benefits:
+- Assistance with establishing best practices within your organization's Datadog environment to simplify management in the future
+- Creation of a tagging strategy for cost tracking, ownership, and more valuable ways to visualize your data
+- Access to the RapDev Tag Validator and Backup integrations:
+  - Tag Validator will ensure compliance across your infrastructure with the established tagging strategy.
+  - Backup will ensure you can recover your most critical dashboards and alerts in the event of deletion or modification.
+- Implementation of up to 5 Synthetic tests to ensure stability and proper operation of your application's user experience
+- Configuration of a Datadog notification endpoint such as Slack or ServiceNow, enabling your teams to be informed when an issue occurs
+- Advice on best practices for monitors and dashboards
+- Creation of up to 5 dashboards and up to 5 monitors, based on what is most important to your business
+- Instruction on using Datadog's Logs Pipelines and Logging Without Limits™ to increase log value and prevent cost overflow
+- Education on the Datadog Usage Attribution tools to be informed of your Datadog spend and usage
+- 30-day access to the RapDev.io Slack channel for quick responses to any Datadog questions
 
 ## Setup
 
@@ -42,9 +33,6 @@ For support or feature requests, contact RapDev.io through the following channel
 - Email: support@rapdev.io
 - Chat: [rapdev.io](https://www.rapdev.io/#Get-in-touch)
 - Phone: 855-857-0222
-
-### Pricing
-Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston
