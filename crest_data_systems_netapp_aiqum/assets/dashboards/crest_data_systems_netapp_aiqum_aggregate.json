@@ -1,0 +1,345 @@
+{
+    "title": "NetApp AIQUM - Aggregate",
+    "description": "This dashboard provides the aggregate-related details of the servers.",
+    "widgets": [
+        {
+            "id": 1234703098515304,
+            "layout": {
+                "x": 0.2222222222222222,
+                "y": 0.13888884032214127,
+                "width": 30,
+                "height": 15
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "url_dark_theme": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "sizing": "contain",
+                "margin": "md",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 8335218461606562,
+            "layout": {
+                "x": 0,
+                "y": 16,
+                "width": 30,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Overview \n\n- The dashboard provides Aggregate details.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2167212262355856,
+            "layout": {
+                "x": 0,
+                "y": 28,
+                "width": 30,
+                "height": 14
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Widgets\n1. Aggregate Storage Details\n2. Aggregate Details\n3. Aggregate Raid Details\n4. Aggregate Performance Details",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2218210690331980,
+            "layout": {
+                "x": 0,
+                "y": 43,
+                "width": 30,
+                "height": 40
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Metrics\nNote: All metrics are prefixed with `cds.netapp.aiqum`.\n\n1. aggregate_details.space_block_storage\n2. aggregate_raid_details.block_storage_primary_raid_size\n3. aggregate_performance_details.iops\n4. aggregate_performance_details.latency\n5. aggregate_performance_details.throughput\n6. aggregate_performance_details.utilization_percent\n7. aggregate_performance_details.performance_capacity_used_percent\n8. aggregate_performance_details.performance_capacity_available_iops_percent",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 7094035182335756,
+            "layout": {
+                "x": 31,
+                "y": 0,
+                "width": 108,
+                "height": 45
+            },
+            "definition": {
+                "title": "Aggregate Storage Details",
+                "title_size": "16",
+                "title_align": "left",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "style": {
+                            "palette": "datadog16"
+                        },
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.aggregate_details.space_block_storage{$AIQUM_Instance} by {name,size-type}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "type": "sunburst",
+                "legend": {
+                    "type": "automatic"
+                }
+            }
+        },
+        {
+            "id": 246481484244276,
+            "layout": {
+                "x": 140,
+                "y": 0,
+                "width": 110,
+                "height": 45
+            },
+            "definition": {
+                "title": "Aggregate Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Available Block Storage",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            },
+                            {
+                                "alias": "Used Block Storage",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Total Block Storage",
+                                "cell_display_mode": "bar",
+                                "formula": "query1 + query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "max:cds.netapp.aiqum.aggregate_details.space_block_storage{size-type:available,$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name,aggregate-state,snaplock-type,type,create-time}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "max:cds.netapp.aiqum.aggregate_details.space_block_storage{size-type:used,$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name,aggregate-state,snaplock-type,type,create-time}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 8996076391904662,
+            "layout": {
+                "x": 31,
+                "y": 46,
+                "width": 100,
+                "height": 37
+            },
+            "definition": {
+                "title": "Aggregate Raid Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Primary Raid Size",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "max:cds.netapp.aiqum.aggregate_raid_details.block_storage_primary_raid_size{$AIQUM_Instance} by {host,name,uuid,aggregate-raid-state,block-storage-primary-raid-type}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 6461969396103810,
+            "layout": {
+                "x": 132,
+                "y": 46,
+                "width": 118,
+                "height": 37
+            },
+            "definition": {
+                "title": "Aggregate Performance Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "IOPS",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Latency",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Throughput",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Utilization (%)",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query4"
+                            },
+                            {
+                                "alias": "Used Capacity (%)",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query5"
+                            },
+                            {
+                                "alias": "Available IOPS",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query6"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.aggregate_performance_details.iops{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.aggregate_performance_details.latency{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.aggregate_performance_details.throughput{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.aggregate_performance_details.utilization_percent{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.aggregate_performance_details.performance_capacity_used_percent{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query5",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.aggregate_performance_details.performance_capacity_available_iops_percent{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query6",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "AIQUM_Instance",
+            "prefix": "cds_netapp_aiqum_instance",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "ibs-p3f-cis"
+}

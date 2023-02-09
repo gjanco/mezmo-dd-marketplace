@@ -1,0 +1,45 @@
+name: crest_data_systems_netapp_aiqum
+files:
+- name: crest_data_systems_netapp_aiqum.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: host
+      required: true
+      description: "The IP address and port of the NetApp AIQUM Server."
+      value:
+        type: string
+        example: "<PROTOCOL:IP_ADDRESS:PORT>"
+    - name: username
+      required: true
+      description: "Username of the NetApp AIQUM for an API call."
+      value:
+        type: string
+        example: "<USERNAME>"
+    - name: password
+      required: true
+      description: "Password of the NetApp AIQUM for an API call."
+      value:
+        type: string
+        example: "<PASSWORD>"
+    - name: verify_ssl
+      required: false
+      description: "SSL verification of the NetApp AIQUM."
+      value:
+        type: string
+        example: "false"
+    - name: ca_cert_file
+      required: false
+      description: "CA Certificate file path for SSL verification."
+      value:
+        type: string
+        example: "<CA_CERT_FILE_PATH>"
+    - template: instances/default
+      overrides:
+        min_collection_interval.value.display_default: 15
+        min_collection_interval.value.example: 600
+        min_collection_interval.required: true
+

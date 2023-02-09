@@ -1,0 +1,265 @@
+{
+    "title": "NetApp AIQUM - Interfaces",
+    "description": "This dashboard provides the interface-related details of the servers.",
+    "widgets": [
+        {
+            "id": 1234703098515304,
+            "layout": {
+                "x": 0.2222222222222222,
+                "y": 0.13888884032214127,
+                "width": 30,
+                "height": 15
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "url_dark_theme": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "sizing": "contain",
+                "margin": "md",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 8335218461606562,
+            "layout": {
+                "x": 0,
+                "y": 16,
+                "width": 30,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Overview \n\n- The dashboard provides Interface details.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2167212262355856,
+            "layout": {
+                "x": 0,
+                "y": 28,
+                "width": 30,
+                "height": 14
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Widgets\n1.  IP Interface Details\n2.  IP Interface Performance Details",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2218210690331980,
+            "layout": {
+                "x": 0,
+                "y": 43,
+                "width": 30,
+                "height": 38
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Metrics\nNote: All metrics are prefixed with `cds.netapp.aiqum`.\n\n1. ip_interface_performance_details.iops\n2. ip_interface_performance_details.latency\n3. ip_interface_performance_details.throughput",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 8881371250121860,
+            "layout": {
+                "x": 31,
+                "y": 0.08333349227905273,
+                "width": 156,
+                "height": 38
+            },
+            "definition": {
+                "title": "IP Interface Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {
+                    "live_span": "1h"
+                },
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "service:cds.netapp.aiqum.ip_interface_details host:$AIQUM_Instance.value",
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "columns": [
+                            {
+                                "field": "status_line",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "host",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "uuid",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "cluster-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "ipspace-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "svm-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "ip-address",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "ip-netmask",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "ip-family",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "location-failover",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "location-node-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "location-port-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "location-is-home",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "scope",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "interface-state",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "enabled",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        },
+        {
+            "id": 4277640273412124,
+            "layout": {
+                "x": 31,
+                "y": 41,
+                "width": 156,
+                "height": 40
+            },
+            "definition": {
+                "title": "IP Interface Performance Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "IOPS",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Latency",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Throughput",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.ip_interface_performance_details.iops{$AIQUM_Instance} by {host,name,uuid,cluster-name,svm-name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.ip_interface_performance_details.latency{$AIQUM_Instance} by {host,name,uuid,cluster-name,svm-name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.ip_interface_performance_details.throughput{$AIQUM_Instance} by {host,name,uuid,cluster-name,svm-name}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "AIQUM_Instance",
+            "prefix": "cds_netapp_aiqum_instance",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "umg-qk6-a9p"
+}

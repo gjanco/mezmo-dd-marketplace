@@ -1,0 +1,315 @@
+{
+    "title": "NetApp AIQUM - Cluster",
+    "description": "The dashboard provides Cluster related details of the servers.",
+    "widgets": [
+        {
+            "id": 2906230494320342,
+            "layout": {
+                "x": 0.06983024691358024,
+                "y": 0.06944444444444445,
+                "width": 30,
+                "height": 15
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "url_dark_theme": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "sizing": "contain",
+                "margin": "md",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 1187714877403868,
+            "layout": {
+                "x": 0.02141203703703704,
+                "y": 16,
+                "width": 30,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Overview \n\n- The dashboard provides Cluster details.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6000874573539884,
+            "layout": {
+                "x": 0,
+                "y": 28,
+                "width": 30,
+                "height": 14
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Widgets\n1. Cluster Storage Details\n2. Cluster Performance Details\n3. Cluster Node Details\n4. Cluster Licence Details",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4748192266029956,
+            "layout": {
+                "x": 0,
+                "y": 43,
+                "width": 30,
+                "height": 38
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Metrics\nNote: All metrics are prefixed with `cds.netapp.aiqum`.\n\n1. cluster_storage_details.storage\n2. cluster_performance_details.throughput \n3. cluster_performance_details.period\n4. cluster_performance_details.iops\n5. cluster_node_details.performance_capacity_used\n6. cluster_node_details.uptime",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 3113601064662818,
+            "layout": {
+                "x": 31,
+                "y": 0,
+                "width": 92,
+                "height": 42
+            },
+            "definition": {
+                "title": "Cluster Storage Details",
+                "title_size": "16",
+                "title_align": "left",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "style": {
+                            "palette": "datadog16"
+                        },
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.cluster_storage_details.storage{$AIQUM_Instance} by {name,size-type}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "type": "sunburst",
+                "legend": {
+                    "type": "automatic"
+                }
+            }
+        },
+        {
+            "id": 4027153373658064,
+            "layout": {
+                "x": 124,
+                "y": 0,
+                "width": 82,
+                "height": 42
+            },
+            "definition": {
+                "title": "Cluster Performance Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Throughput",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Period",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "IOPS",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.cluster_performance_details.throughput{$AIQUM_Instance} by {host,cluster-name,cluster-uuid}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.cluster_performance_details.period{$AIQUM_Instance} by {host,cluster-name,cluster-uuid}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.cluster_performance_details.iops{$AIQUM_Instance} by {host,cluster-name,cluster-uuid}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 4841599325102736,
+            "layout": {
+                "x": 31,
+                "y": 43,
+                "width": 115,
+                "height": 38
+            },
+            "definition": {
+                "title": "Cluster Node Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Capacity Used",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Uptime",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.cluster_node_details.performance_capacity_used{$AIQUM_Instance} by {host,name,uuid,serial-number,model,location,system-id,health}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.cluster_node_details.uptime{$AIQUM_Instance} by {host,name,uuid,serial-number,model,location,system-id,health}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 5455706366917594,
+            "layout": {
+                "x": 147,
+                "y": 43,
+                "width": 59,
+                "height": 36
+            },
+            "definition": {
+                "title": "Cluster Licence Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {
+                    "live_span": "1h"
+                },
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "service:cds.netapp.aiqum.cluster_licensing_details host:$AIQUM_Instance.value",
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "columns": [
+                            {
+                                "field": "status_line",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "host",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "scope",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "cluster-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "node-name",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "AIQUM_Instance",
+            "prefix": "cds_netapp_aiqum_instance",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "8fg-7h8-fqu"
+}

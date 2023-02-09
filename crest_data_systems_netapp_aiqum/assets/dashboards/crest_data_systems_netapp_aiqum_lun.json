@@ -1,0 +1,222 @@
+{
+    "title": "NetApp AIQUM - LUN",
+    "description": "The dashboard provides details of LUN.",
+    "widgets": [
+        {
+            "id": 2426358661371422,
+            "layout": {
+                "x": 0.06944473584493001,
+                "y": 0.16666671964857313,
+                "width": 30,
+                "height": 15
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "url_dark_theme": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "sizing": "contain",
+                "margin": "md",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 2820998512552964,
+            "layout": {
+                "x": 0,
+                "y": 16,
+                "width": 30,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Overview \n\n- The dashboard provides LUN details.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 7015526970191394,
+            "layout": {
+                "x": 0.07118055555555555,
+                "y": 28,
+                "width": 30,
+                "height": 14
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Widgets\n1. LUN Storage Details\n2. LUN Performance Details",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 8811711670538948,
+            "layout": {
+                "x": 0,
+                "y": 43,
+                "width": 30,
+                "height": 38
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Metrics\nNote: All metrics are prefixed with `cds.netapp.aiqum`.\n\n1. lun_storage_details.space_size\n2. lun_storage_details.space_used\n3. lun_performance_details.iops\n4. lun_performance_details.latency\n5. lun_performance_details.throughput",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1986761466992052,
+            "layout": {
+                "x": 31,
+                "y": 0,
+                "width": 138,
+                "height": 38
+            },
+            "definition": {
+                "title": "LUN Storage Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Total Space",
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Used Space",
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Available Space",
+                                "cell_display_mode": "bar",
+                                "formula": "query2 - query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.lun_storage_details.space_size{$AIQUM_Instance} by {host,name,uuid,cluster-name,svm-name,class,serial-number,location-qtree-name,location-volume-name,os-type,lun-status}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.lun_storage_details.space_used{$AIQUM_Instance} by {host,name,uuid,cluster-name,svm-name,class,serial-number,location-qtree-name,location-volume-name,os-type,lun-status}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6893572808202310,
+            "layout": {
+                "x": 31,
+                "y": 39,
+                "width": 138,
+                "height": 42
+            },
+            "definition": {
+                "title": "LUN Performance Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "IOPS",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Latency",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Throughput",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.lun_performance_details.iops{$AIQUM_Instance} by {host,lun-name,lun-uuid,cluster-name,svm-name,volume-name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.lun_performance_details.latency{$AIQUM_Instance} by {host,lun-name,lun-uuid,cluster-name,svm-name,volume-name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.lun_performance_details.throughput{$AIQUM_Instance} by {host,lun-name,lun-uuid,cluster-name,svm-name,volume-name}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "AIQUM_Instance",
+            "prefix": "cds_netapp_aiqum_instance",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "ikr-xwp-wdn"
+}

@@ -1,0 +1,328 @@
+{
+    "title": "NetApp AIQUM - Port",
+    "description": "This dashboard provides the port-related details of the servers.",
+    "widgets": [
+        {
+            "id": 1234703098515304,
+            "layout": {
+                "x": 0.2222222222222222,
+                "y": 0.13888884032214127,
+                "width": 30,
+                "height": 15
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "url_dark_theme": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "sizing": "contain",
+                "margin": "md",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 8335218461606562,
+            "layout": {
+                "x": 0,
+                "y": 16,
+                "width": 30,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Overview \n\n- The dashboard provides Port details.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2167212262355856,
+            "layout": {
+                "x": 0,
+                "y": 28,
+                "width": 30,
+                "height": 14
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Widgets\n1. Ethernet Port Details\n2. Ethernet Port Performance Details\n3. Fibre Channel Port Details\n4. Fibre Channel Port Performance Details",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 2218210690331980,
+            "layout": {
+                "x": 0,
+                "y": 43,
+                "width": 30,
+                "height": 38
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Metrics\nNote: All metrics are prefixed with `cds.netapp.aiqum`.\n\n1. ethernet_port_performance_details.throughput\n2. ethernet_port_performance_details.utilization_percent\n3. fibre_channel_ports_detail.fabric_connected_speed\n4. fibre_channel_ports_performance_details.throughput\n5. fibre_channel_ports_performance_details.utilization_percent",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 8881371250121860,
+            "layout": {
+                "x": 31,
+                "y": 0.05555550698880796,
+                "width": 156,
+                "height": 36
+            },
+            "definition": {
+                "title": "Ethernet Port Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {
+                    "live_span": "1h"
+                },
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "service:cds.netapp.aiqum.ethernet_port_details host:$AIQUM_Instance.value",
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "columns": [
+                            {
+                                "field": "status_line",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "host",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "uuid",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "cluster-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "node-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "enabled",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "speed",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "port-type",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "port-state",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "broadcast-domain-name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "mac-address",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        },
+        {
+            "id": 4277640273412124,
+            "layout": {
+                "x": 188,
+                "y": 0.08333328035142687,
+                "width": 81,
+                "height": 38
+            },
+            "definition": {
+                "title": "Ethernet Port Performance Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Throughput",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Utilization (%)",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.ethernet_port_performance_details.throughput{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.ethernet_port_performance_details.utilization_percent{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 252692155024866,
+            "layout": {
+                "x": 31,
+                "y": 39,
+                "width": 156,
+                "height": 42
+            },
+            "definition": {
+                "title": "Fibre Channel Port Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Connected Fabric Speed",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.fibre_channel_ports_detail.fabric_connected_speed{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name,enabled,port-state,fabric-connected,physical-protocol}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 8015596482939250,
+            "layout": {
+                "x": 188,
+                "y": 39,
+                "width": 81,
+                "height": 42
+            },
+            "definition": {
+                "title": "Fibre Channel Port Performance Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Throughput",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Utilization (%)",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.aiqum.fibre_channel_ports_performance_details.throughput{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.aiqum.fibre_channel_ports_performance_details.utilization_percent{$AIQUM_Instance} by {host,name,uuid,cluster-name,node-name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "AIQUM_Instance",
+            "prefix": "cds_netapp_aiqum_instance",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "24t-f7x-fye"
+}
