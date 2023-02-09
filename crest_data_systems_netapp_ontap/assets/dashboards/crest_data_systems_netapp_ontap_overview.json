@@ -1,0 +1,917 @@
+{
+    "title": "NetApp OnTap - Overview",
+    "description": "The dashboard provides overview details of LUN, Volume, Disk, and Cluster details.",
+    "widgets": [
+        {
+            "id": 2489371458520476,
+            "layout": {
+                "x": 31,
+                "y": 0,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Number of Nodes",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "custom_bg_color": "#3598ec",
+                                "comparator": ">",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.dc_cluster_node_uuid{$Cluster}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2
+            }
+        },
+        {
+            "id": 3973989892680050,
+            "layout": {
+                "x": 64,
+                "y": 0,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Number of Vservers",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "custom_bg_color": "#3598ec",
+                                "comparator": ">",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.dc_vserver_uuid{$Cluster}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2
+            }
+        },
+        {
+            "id": 7604088648680484,
+            "layout": {
+                "x": 97,
+                "y": 0,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Volumes Contained",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "custom_bg_color": "#3598ec",
+                                "comparator": ">",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.dc_volume_id_attributes_uuid{$Cluster}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2
+            }
+        },
+        {
+            "id": 2398076310158786,
+            "layout": {
+                "x": 130,
+                "y": 0,
+                "width": 32,
+                "height": 15
+            },
+            "definition": {
+                "title": "Aggregates Contained",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_value",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "conditional_formats": [
+                            {
+                                "custom_bg_color": "#3598ec",
+                                "comparator": ">",
+                                "palette": "custom_bg",
+                                "value": 0
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.dc_aggregate_uuid{$Cluster}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "autoscale": true,
+                "precision": 2
+            }
+        },
+        {
+            "id": 2344187010789990,
+            "layout": {
+                "x": 31,
+                "y": 16,
+                "width": 86,
+                "height": 50
+            },
+            "definition": {
+                "title": "Average Latency (ms)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Average Latency",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Write Latency",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Read Latency",
+                                "formula": "query4"
+                            },
+                            {
+                                "alias": "Other Latency",
+                                "formula": "query5"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.avg_latency{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.write_latency{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query3"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.read_latency{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query4"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.other_latency{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query5"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8652589848514296,
+            "layout": {
+                "x": 31,
+                "y": 67,
+                "width": 86,
+                "height": 50
+            },
+            "definition": {
+                "title": "Total IOPS rate",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "vertical",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Total Operations",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Write Operations",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Read Operations",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Other Operations",
+                                "formula": "query4"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.total_ops{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.write_ops{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query2"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.read_ops{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query3"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.other_ops{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query4"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2457614453463580,
+            "layout": {
+                "x": 163,
+                "y": 0,
+                "width": 121,
+                "height": 39
+            },
+            "definition": {
+                "title": "Volumes Summary",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Used (%)",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Available Size",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Used Size",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Total Size",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query4"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.volume_details.percentage_size_used{$Cluster} by {host,server-type,name,uuid,vserver,aggregate,state}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume_details.size_available{$Cluster} by {host,server-type,name,uuid,vserver,aggregate,state}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume_details.size_used{$Cluster} by {host,server-type,name,uuid,vserver,aggregate,state}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume_details.size_total{$Cluster} by {host,server-type,name,uuid,vserver,aggregate,state}",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 3365532003357284,
+            "layout": {
+                "x": 118,
+                "y": 41,
+                "width": 44,
+                "height": 25
+            },
+            "definition": {
+                "title": "Volumes With Highest Latency Over The Past Hour (ms)",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Average Latency",
+                                "cell_display_mode": "bar",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Max Latency",
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.avg_average_latency{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.volume.max_average_latency{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8491797451791606,
+            "layout": {
+                "x": 118,
+                "y": 67,
+                "width": 44,
+                "height": 24
+            },
+            "definition": {
+                "title": "Aggregates With The Highest Transfer Rates Over The Past Hour (Transfers/S)",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Average Transfers",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Max Transfers",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.aggr.avg_total_transfer{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.aggr.max_total_transfer{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 4675172682061634,
+            "layout": {
+                "x": 118,
+                "y": 92,
+                "width": 44,
+                "height": 25
+            },
+            "definition": {
+                "title": "Highest Max User Read Latency Disks Over The Past Hour (ms)",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Average User Read Latency",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Max User Read Latency",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.disk.avg_user_read_latency{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.disk.max_user_read_latency{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 6427610751628922,
+            "layout": {
+                "x": 163,
+                "y": 40,
+                "width": 121,
+                "height": 39
+            },
+            "definition": {
+                "title": "Aggregates Summary",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Used (%)",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Available Size",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Used Size",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Total Size",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query4"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.aggregates_summary.percent_used_capacity{$Cluster} by {host,server-type,name,uuid,volume-count}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.aggregates_summary.size_available{$Cluster} by {host,server-type,name,uuid,volume-count}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.aggregates_summary.size_used{$Cluster} by {host,server-type,name,uuid,volume-count}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.aggregates_summary.size_total{$Cluster} by {host,server-type,name,uuid,volume-count}",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 2839420024822554,
+            "layout": {
+                "x": 118,
+                "y": 16,
+                "width": 44,
+                "height": 24
+            },
+            "definition": {
+                "title": "Capacity (Bytes)",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Used Size",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Total Size",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.volume_details.size_used{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "sum:cds.netapp.ontap.volume_details.size_total{$Cluster} by {host,server-type}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 5100046387939694,
+            "layout": {
+                "x": 0,
+                "y": 16,
+                "width": 30,
+                "height": 12
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Overview \n\n- The dashboard provides overview details of LUN, Volume, Disk, Raid, Plexes, and Cluster details.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6477367047162224,
+            "layout": {
+                "x": 0,
+                "y": 29,
+                "width": 30,
+                "height": 60
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Widgets\n1. Number of Nodes\n2. Number of Vservers\n3. Volumes Contained\n4. Aggregates Contained\n5. Average Latency (ms)\n6. Capacity (Bytes)\n7. Volumes With Highest Latency Over The Past Hour (ms)\n8. Total IOPS rate\n9. Aggregates With The Highest Transfer Rates Over The Past Hour (Transfers/S)\n10. Highest Max User Read Latency Disks Over The Past Hour (ms)\n11. Volumes Summary\n12. Aggregates Summary\n13. System Node Summary\n14. Aggregate Raid Details\n15. Aggregate Plex Details",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6220686755023166,
+            "layout": {
+                "x": 0,
+                "y": 90,
+                "width": 30,
+                "height": 57
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Metrics\nNote: All metrics are prefixed with `cds.netapp.ontap`.\n\n1. dc_cluster_node_uuid\n2. dc_vserver_uuid\n3. dc_volume_id_attributes_uuid\n4. dc_aggregate_uuid\n5. volume.avg_latency\n6. volume.write_latency\n7. volume.read_latency\n8. volume.other_latency\n9. volume.total_ops\n10. volume.write_ops\n11. volume.read_ops\n12. volume.other_ops\n13. volume_details.percentage_size_used\n14. volume_details.size_available\n15. volume_details.size_used\n16. volume_details.size_total\n17. volume.avg_average_latency\n18. volume.max_average_latency\n19. aggr.avg_total_transfer\n20. aggr.max_total_transfer\n21. disk.avg_user_read_latency\n22. disk.max_user_read_latency\n23. aggregates_summary.percent_used_capacity\n24. aggregates_summary.size_available\n25. aggregates_summary.size_used\n26. aggregates_summary.size_total\n27. volume_details.size_used\n28. volume_details.size_total\n29. system_node_summary.failed_fan_count\n30. system_node_summary.failed_power_supply_count\n31. aggregates_raid_details.raid_size\n32. aggregates_plex_details.pool",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 8762453074456582,
+            "layout": {
+                "x": 0,
+                "y": 0,
+                "width": 30,
+                "height": 15
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "url_dark_theme": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "sizing": "contain",
+                "margin": "md",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 5150249627467240,
+            "layout": {
+                "x": 163,
+                "y": 80,
+                "width": 121,
+                "height": 37
+            },
+            "definition": {
+                "title": "System Node Summary",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Failed Fan Count",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Failed Power Supply Count",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.system_node_summary.failed_fan_count{$Cluster} by {host,server-type,node,node-location,node-serial-number,battery-status,is-node-healthy,is-over-temperature}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "sum:cds.netapp.ontap.system_node_summary.failed_power_supply_count{$Cluster} by {host,server-type,node,node-location,node-serial-number,battery-status,is-node-healthy,is-over-temperature}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 4789847825563714,
+            "layout": {
+                "x": 31,
+                "y": 118,
+                "width": 131,
+                "height": 35
+            },
+            "definition": {
+                "title": "Aggregate Raid Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Raid Size",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.aggregates_raid_details.raid_size{$Cluster} by {host,server-type,name,uuid,raid-status,raid-lost-write-state}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 1985737517192860,
+            "layout": {
+                "x": 163,
+                "y": 118,
+                "width": 121,
+                "height": 35
+            },
+            "definition": {
+                "title": "Aggregate Plex Details",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Pool",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.aggregates_plex_details.pool{$Cluster} by {host,server-type,plex-name,plex-status,is-resyncing,is-online}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Cluster",
+            "prefix": "cds_netapp_ontap_instance",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "f9x-fjr-vh9"
+}

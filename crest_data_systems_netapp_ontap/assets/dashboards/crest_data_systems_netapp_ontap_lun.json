@@ -1,0 +1,329 @@
+{
+    "title": "NetApp OnTap - LUN",
+    "description": "The dashboard provides details of LUN.",
+    "widgets": [
+        {
+            "id": 8277048205494224,
+            "layout": {
+                "x": 93,
+                "y": 0,
+                "width": 59,
+                "height": 34
+            },
+            "definition": {
+                "title": "LUN Inventory Details",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Available Size",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query1",
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                }
+                            },
+                            {
+                                "alias": "Used Size",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.lun_inv_details.size{$Cluster,size-type:available} by {host,server-type,path,uuid,serial-number,volume,vserver,online}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "sum:cds.netapp.ontap.lun_inv_details.size{$Cluster,size-type:used} by {host,server-type,path,uuid,serial-number,volume,vserver,online}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 8701670201918086,
+            "layout": {
+                "x": 31,
+                "y": 35,
+                "width": 61,
+                "height": 34
+            },
+            "definition": {
+                "title": "LUN Latency (ms)",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Average Latency",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Average Write Latency",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Average Read Latency",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.lun.avg_latency{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.lun.avg_write_latency{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.lun.avg_read_latency{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 6242089877891502,
+            "layout": {
+                "x": 93,
+                "y": 35,
+                "width": 59,
+                "height": 34
+            },
+            "definition": {
+                "title": "LUN IOPS  (Operations/Second)",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Write Operations",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Read Operations",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Total Operations",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.lun.write_ops{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.lun.read_ops{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.lun.total_ops{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 1379991118905682,
+            "layout": {
+                "x": 0.08333333333333348,
+                "y": 0,
+                "width": 30,
+                "height": 15
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "url_dark_theme": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "sizing": "contain",
+                "margin": "md",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 199930125618962,
+            "layout": {
+                "x": 0,
+                "y": 16,
+                "width": 30,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Overview \n\n- The dashboard provides details of LUN.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 1079873201840010,
+            "layout": {
+                "x": 0,
+                "y": 28,
+                "width": 30,
+                "height": 13
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Widgets\n1. LUN Inventory Details\n2. LUN Latency (ms)\n3. LUN IOPS  (Operations/Second)",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4691378850683286,
+            "layout": {
+                "x": 0,
+                "y": 42,
+                "width": 30,
+                "height": 27
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Metrics\nNote: All metrics are prefixed with `cds.netapp.ontap`.\n\n1. lun_inv_details.size\n2. lun.avg_latency\n3. lun.avg_write_latency\n4. lun.avg_read_latency\n5. lun.write_ops\n6. lun.read_ops\n7. lun.total_ops",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4294728214971126,
+            "layout": {
+                "x": 31,
+                "y": 0,
+                "width": 61,
+                "height": 34
+            },
+            "definition": {
+                "title": "LUN Inventory Size Distribution",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "style": {
+                            "palette": "classic"
+                        },
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.lun_inv_details.size{$Cluster} by {path,size-type}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "type": "sunburst",
+                "legend": {
+                    "type": "inline"
+                }
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Cluster",
+            "prefix": "cds_netapp_ontap_instance",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "zki-9s4-7p3"
+}

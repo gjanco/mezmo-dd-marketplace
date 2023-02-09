@@ -1,0 +1,386 @@
+{
+    "title": "NetApp OnTap - Disk",
+    "description": "The dashboard provides Disk-related details.",
+    "widgets": [
+        {
+            "id": 6919161203232424,
+            "layout": {
+                "x": 139,
+                "y": 5.077432702924353e-7,
+                "width": 107,
+                "height": 38
+            },
+            "definition": {
+                "title": "Disk Latency (ms)",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {},
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "User Write Latency",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "User Read Latency",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "CP Read Latency",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.disk.user_write_latency{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.disk.user_read_latency{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.disk.cp_read_latency{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 1049493329966630,
+            "layout": {
+                "x": 139,
+                "y": 39,
+                "width": 107,
+                "height": 38
+            },
+            "definition": {
+                "title": "Data Transfer Rates (Blocks/S)",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "User Write Blocks",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "User Read Blocks",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "CP Read Blocks",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Skip Blocks",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query4"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:cds.netapp.ontap.disk.user_write_blocks{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.disk.user_read_blocks{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.disk.cp_read_blocks{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "avg:cds.netapp.ontap.disk.skip_blocks{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 8500745169708936,
+            "layout": {
+                "x": 31,
+                "y": 39,
+                "width": 107,
+                "height": 36
+            },
+            "definition": {
+                "title": "Disk Detail",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {
+                    "live_span": "1h"
+                },
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "service:cds.netapp.ontap.disk_details  host:$Cluster.value",
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "response_format": "event_list",
+                        "columns": [
+                            {
+                                "field": "status_line",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "host",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "server-type",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "name",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "uid",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "model",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "disk-type",
+                                "width": "auto"
+                            }
+                        ]
+                    }
+                ],
+                "type": "list_stream"
+            }
+        },
+        {
+            "id": 1120302067802838,
+            "layout": {
+                "x": 0.0769675925925926,
+                "y": 0,
+                "width": 30,
+                "height": 15
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "url_dark_theme": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "sizing": "contain",
+                "margin": "md",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        },
+        {
+            "id": 3239775945249674,
+            "layout": {
+                "x": 0,
+                "y": 16,
+                "width": 30,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Overview \n\n- The dashboard provides Disk-related details.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 3882107206886988,
+            "layout": {
+                "x": 0,
+                "y": 28,
+                "width": 30,
+                "height": 14
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Widgets\n1.  Disk Latency (ms)\n2.  Data Transfer Rates (Blocks/S)\n3.  Disk Busy Percent\n4.  Disk Detail",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 8737709016386716,
+            "layout": {
+                "x": 0,
+                "y": 43,
+                "width": 30,
+                "height": 27
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Metrics\nNote: All metrics are prefixed with `cds.netapp.ontap`.\n\n1. disk.user_write_latency\n2. disk.user_read_latency\n3. disk.cp_read_latency\n4. disk.user_write_blocks\n5. disk.user_read_blocks\n6. disk.cp_read_blocks\n7. disk.skip_blocks\n8. disk.disk_busy_percent",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 5627071658203358,
+            "layout": {
+                "x": 31,
+                "y": 0,
+                "width": 55,
+                "height": 38
+            },
+            "definition": {
+                "title": "Disk Busy (%)",
+                "title_size": "16",
+                "title_align": "left",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1",
+                                "limit": {
+                                    "order": "desc"
+                                }
+                            }
+                        ],
+                        "style": {
+                            "palette": "classic"
+                        },
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.disk.disk_busy_percent{$Cluster} by {name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "type": "sunburst",
+                "hide_total": true,
+                "legend": {
+                    "type": "inline"
+                }
+            }
+        },
+        {
+            "id": 346911187370192,
+            "layout": {
+                "x": 87,
+                "y": 0,
+                "width": 51,
+                "height": 38
+            },
+            "definition": {
+                "title": "Disk Busy Percent",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Disk Busy (%)",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "sum:cds.netapp.ontap.disk.disk_busy_percent{$Cluster} by {host,server-type,name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Cluster",
+            "prefix": "cds_netapp_ontap_instance",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "9i8-wfh-je4"
+}
