@@ -1,0 +1,562 @@
+{
+    "title": "NetApp ESeries SANtricity Configuration - Array Summary",
+    "description": "This dashboard provides a summary of configured Array.",
+    "widgets": [
+        {
+            "id": 6613724146351702,
+            "layout": {
+                "x": 32,
+                "y": 0,
+                "width": 156,
+                "height": 14
+            },
+            "definition": {
+                "title": "Array Configuration Summary",
+                "title_size": "16",
+                "title_align": "left",
+                "type": "query_table",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "alias": "Controllers",
+                                "conditional_formats": [],
+                                "limit": {
+                                    "count": 500,
+                                    "order": "desc"
+                                },
+                                "cell_display_mode": "bar",
+                                "formula": "query1"
+                            },
+                            {
+                                "alias": "Trays",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query2"
+                            },
+                            {
+                                "alias": "Volume Groups",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query3"
+                            },
+                            {
+                                "alias": "Volumes",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query4"
+                            },
+                            {
+                                "alias": "Drives",
+                                "conditional_formats": [],
+                                "cell_display_mode": "bar",
+                                "formula": "query5"
+                            }
+                        ],
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "max:cds.netapp.eseries.santricity.array.configuration.controller.summary{modelname:$Storage_Array.value} by {state,repairing,boottime,modelname}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "max:cds.netapp.eseries.santricity.array.configuration.tray.summary{modelname:$Storage_Array.value} by {state,repairing,boottime,modelname}",
+                                "data_source": "metrics",
+                                "name": "query2",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "max:cds.netapp.eseries.santricity.array.configuration.volumeGroup.summary{modelname:$Storage_Array.value} by {state,repairing,boottime,modelname}",
+                                "data_source": "metrics",
+                                "name": "query3",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "max:cds.netapp.eseries.santricity.array.configuration.volume.summary{modelname:$Storage_Array.value} by {state,repairing,boottime,modelname}",
+                                "data_source": "metrics",
+                                "name": "query4",
+                                "aggregator": "last"
+                            },
+                            {
+                                "query": "max:cds.netapp.eseries.santricity.array.configuration.drive.summary{modelname:$Storage_Array.value} by {state,repairing,boottime,modelname}",
+                                "data_source": "metrics",
+                                "name": "query5",
+                                "aggregator": "last"
+                            }
+                        ]
+                    }
+                ],
+                "has_search_bar": "auto"
+            }
+        },
+        {
+            "id": 6506554770613720,
+            "layout": {
+                "x": 32,
+                "y": 16,
+                "width": 156,
+                "height": 18
+            },
+            "definition": {
+                "title": "Volume Groups/Pools",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {
+                    "live_span": "1h"
+                },
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "service:netapp.eseries.santricity.graph.volume.groups  arrayname:$Storage_Array.value",
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "columns": [
+                            {
+                                "field": "status_line",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "host",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Volume Groups/Pools",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "State",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Offline",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "RAID Level",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Encryption",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Data Assurance",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Protection Type",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Spindle RPM",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Speeds Match",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Unallocated Capacity (GiB)",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Allocated Capacity (GiB)",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Total Capacity (GiB)",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        },
+        {
+            "id": 3581385287184366,
+            "layout": {
+                "x": 32,
+                "y": 38,
+                "width": 156,
+                "height": 19
+            },
+            "definition": {
+                "title": "Disk Pools",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {
+                    "live_span": "1h"
+                },
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "service:netapp.eseries.santricity.graph.disk.pools arrayname:$Storage_Array.value",
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "columns": [
+                            {
+                                "field": "status_line",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "host",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Disk Pool",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "State",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Offline",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Encryption",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Data Assurance",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Protection Type",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Spindle RPM",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Speeds Match",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Unallocated Capacity (GiB)",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Allocated Capacity (GiB)",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Total Capacity (GiB)",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Background Priority",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Critical Reconstruct Priority",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Degraded Reconstruct Priority",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        },
+        {
+            "id": 6462341736617992,
+            "layout": {
+                "x": 32,
+                "y": 61,
+                "width": 156,
+                "height": 28
+            },
+            "definition": {
+                "title": "Volumes",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {
+                    "live_span": "1h"
+                },
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "service:netapp.eseries.santricity.graph.volumes arrayname:$Storage_Array.value",
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "columns": [
+                            {
+                                "field": "status_line",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "host",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Volume",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Volume Groups/Pools",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Status",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Action",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Read Cache Active",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Write Cache Active",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "SSD Read cache",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Volume Role",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "RAID Level",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Capacity (GiB)",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Block Size",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Current Controller",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Preferred Controller",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Preferred",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        },
+        {
+            "id": 5777451957441342,
+            "layout": {
+                "x": 32,
+                "y": 93,
+                "width": 156,
+                "height": 31
+            },
+            "definition": {
+                "title": "Drives",
+                "title_size": "16",
+                "title_align": "left",
+                "time": {
+                    "live_span": "1h"
+                },
+                "requests": [
+                    {
+                        "query": {
+                            "query_string": "service:netapp.eseries.santricity.graph.drives arrayname:$Storage_Array.value",
+                            "data_source": "logs_stream",
+                            "indexes": []
+                        },
+                        "columns": [
+                            {
+                                "field": "status_line",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "host",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Location",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Status",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Available",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Manufacturer",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Firmware",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Drive Type",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Interface",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "SSD Erase Count %",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "SSD Spare Blocks %",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Spindle RPM",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Current Speed",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Max Speed",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Drive Temp",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Usable Capacity (GiB)",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "Raw Capacity (GiB)",
+                                "width": "auto"
+                            }
+                        ],
+                        "response_format": "event_list"
+                    }
+                ],
+                "type": "list_stream"
+            }
+        },
+        {
+            "id": 7113727973098304,
+            "layout": {
+                "x": 0,
+                "y": 17,
+                "width": 30,
+                "height": 11
+            },
+            "definition": {
+                "type": "note",
+                "content": "# Array Summary\n- This dashboard provides summary of configured Array.",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 4164777129414960,
+            "layout": {
+                "x": 0,
+                "y": 30,
+                "width": 30,
+                "height": 19
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Widgets\n1. Array Configuration Summary\n2. Volume Groups/Pools\n3. Disk Pools\n4. Volumes\n5. Drives\n",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 6916518980713690,
+            "layout": {
+                "x": 0,
+                "y": 51,
+                "width": 30,
+                "height": 24
+            },
+            "definition": {
+                "type": "note",
+                "content": "## Metrics\n`Note: All metrics are prefixed with 'cds.netapp.eseries.santricity.'.`\n\n  - array.configuration.controller.summary\n  - array.configuration.tray.summary\n  - array.configuration.volumeGroup.summary\n  - array.configuration.volume.summary\n  - array.configuration.drive.summary",
+                "background_color": "white",
+                "font_size": "14",
+                "text_align": "left",
+                "vertical_align": "top",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left",
+                "has_padding": true
+            }
+        },
+        {
+            "id": 7979201742180944,
+            "layout": {
+                "x": 5.842726907763136e-7,
+                "y": 0,
+                "width": 30,
+                "height": 15
+            },
+            "definition": {
+                "type": "image",
+                "url": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "url_dark_theme": "https://www.netapp.com/media/na_logo_black_rgb_reg-mark_tcm19-21014.jpg",
+                "sizing": "contain",
+                "margin": "md",
+                "has_background": true,
+                "has_border": true,
+                "vertical_align": "center",
+                "horizontal_align": "center"
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "Storage_Array",
+            "prefix": "arrayname",
+            "available_values": [],
+            "default": "*"
+        }
+    ],
+    "layout_type": "free",
+    "is_read_only": false,
+    "notify_list": [],
+    "id": "a2n-pnj-ey7"
+}
