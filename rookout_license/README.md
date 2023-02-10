@@ -2,7 +2,7 @@
 
 ## Overview
 
-[Rookout](https://rookout.com) is a disruptive developer solution for Cloud Native debugging and live-data collection. Rookout’s Non-Breaking Breakpoints let you collect any type of data on the fly with no extra coding, redeployments, or restarts.
+[Rookout][1] is a disruptive developer solution for Cloud Native debugging and live-data collection. Rookout’s Non-Breaking Breakpoints let you collect any type of data on the fly with no extra coding, redeployments, or restarts.
 
 Rookout is designed from the ground up for production environments and modern architecture debugging, such as Kubernetes, microservices, serverless, and service-mesh based applications.
 
@@ -35,13 +35,17 @@ Create the three pillars of observability, logs, metrics and traces, from live d
 
 ## Setup
 
-Sign up to Rookout at [this link](https://app.rookout.com).
-
-Visit the [Rookout documentation](https://docs.rookout.com/) for instructions on how to set Rookout up.
+[Sign up for Rookout][2] and see the [Rookout documentation][3] for instructions on how to set up Rookout.
 
 ## Uninstallation
 
 First, cancel your subscription in Plan & Pricing. Rookout will then reach out to confirm and disconnect your account.
 
 ## Support
-Feel free to [contact us](https://www.rookout.com/company/contact) for any questions or inqueries.
+
+Feel free to [contact us][4] for any questions or inquiries.
+
+[1]: https://rookout.com
+[2]: https://app.rookout.com
+[3]: https://docs.rookout.com
+[4]: https://www.rookout.com/company/contact

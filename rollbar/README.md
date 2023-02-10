@@ -2,7 +2,7 @@
 
 ## Overview
 
-With [Rollbar](https://rollbar.com), you can go beyond traditional error monitoring tools with our AI-assisted grouping that helps development teams pinpoint errors in seconds. Proactively discover errors in real time, alert the right people, automatically rollback, and fix.
+With [Rollbar][1], you can go beyond traditional error monitoring tools with our AI-assisted grouping that helps development teams pinpoint errors in seconds. Proactively discover errors in real time, alert the right people, automatically rollback, and fix.
 
 ### Automation grade grouping
 Reduce noise in error monitoring that builds developer trust. Easier triaging by removing duplicates from error lists and faster response to errors through less manual effort and more automation.
@@ -22,13 +22,19 @@ Fully compliant with stringent industry standards and builds features that help 
 
 ## Setup
 
-After purchasing through the Datadog Marketplace, [sign up at the Rollbar website](https://rollbar.com). One of our team members will reach out once the sign up has been completed to assist you with any further questions. 
+After purchasing through the Datadog Marketplace, [sign up at the Rollbar website][2]. One of our team members will reach out once the sign up has been completed to assist you with any further questions. 
 
-Visit the [Rollbar documentation](https://docs.rollbar.com/) for instructions on how to set Rollbar up.
+Visit the [Rollbar documentation][3] for instructions on how to set Rollbar up.
 
 ## Uninstallation
 
 First, cancel your subscription in Plan & Pricing. Rollbar will then reach out to confirm and disconnect your account.
 
 ## Support
-Feel free to [contact us](https://www.rollbar.com/support) for any questions or inquiries.
+
+Feel free to [contact us][4] for any questions or inquiries.
+
+[1]: https://rollbar.com
+[2]: https://rollbar.com
+[3]: https://docs.rollbar.com/
+[4]: https://www.rollbar.com/support
