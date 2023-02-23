@@ -9,10 +9,6 @@ from datadog_checks.rapdev_sophos import SophosCheck
 import pytest
 from mock import patch
 
-def get_config(self, key):
-    return "fake_api_key"
-
-@patch.object(SophosCheck, "get_config", get_config)
 def test_non_200_from_api(aggregator, instance):
    # type: (AggregatorStub, Dict[str, Any]) -> None
    check = SophosCheck('rapdev_sophos', {}, [{

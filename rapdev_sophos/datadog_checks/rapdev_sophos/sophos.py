@@ -2,6 +2,13 @@ try:
     from datadog_checks.base import AgentCheck, ConfigurationError, is_affirmative
 except ImportError:
     from checks import AgentCheck
+
+try:
+    from datadog_agent import get_config
+except ImportError:
+    def get_config(key):
+        return ""
+
 import re
 import requests
 from .helpers import *
@@ -58,7 +65,7 @@ class SophosCheck(AgentCheck):
         self.oauth_token_data = "grant_type=client_credentials&client_id={}&client_secret={}&scope=token".format(self.client_id, self.client_secret)
         self.billing_metric = "{}.{}".format("datadog.marketplace", self.__NAMESPACE__)
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
-        self.api_key = self.get_config("api_key")
+        self.api_key = get_config("api_key")
 
         dd_host = get_host_name()
         if dd_host:
@@ -66,66 +73,7 @@ class SophosCheck(AgentCheck):
         else:
             self.DD_HOST = "&hostname=not_available"
         
-        self.check_initializations.append(self.validate_config)    
-
-    def get_config(self, key, passthrough_exceptions=False):
-        """
-        function to read in the value for a specific key from the main datadog.yaml config file
-        
-        args:
-            key (str): target key to read the value of
-            passthrough_exceptions (bool): default False, flag to allow exceptions to bubble up normally instead
-                                            of raising a custom exception (used because set_proxy code expects
-                                            a KeyError to bubble up)
-                                            
-        returns:
-            (multiple types): returns the parsed out value from the target key. since it's yaml, technically
-                                can return str, int, list, or dict depending on the target data. here we're only
-                                using it for strings though
-                                
-        raises:
-            (Exception): custom exception is raised if the os platform is not supported, as well as for
-                            all other exceptions if passthrough_exceptions is set to False
-            (FileNotFoundError): raises this exeption if passthrough_exceptions is True and the datadog.yaml file
-                                    can not be found
-            (KeyError): raises this exception if passthrough_exceptions is True and the key specified is not present
-                        (or commented out) in the main datadog.yaml
-        """
-        config_file_name = "datadog.yaml"
-        # Windows
-        if platform == "win32":
-            path = os.path.join(os.getenv("PROGRAMDATA"), "Datadog")
-        # Linux
-        elif platform == "linux" or platform == "linux2":
-            path = "/etc/datadog-agent/"
-        # Mac
-        elif platform == "darwin":
-            path = "/opt/datadog-agent/etc/"
-        # Unsupported
-        else:
-            raise Exception("OS Platform {} not supported.".format(platform))
-
-        target = os.path.join(path, config_file_name)
-        try:
-            with open(target, "r") as infile:
-                parsed_yaml = yaml.load(infile.read(), Loader=yaml.FullLoader)
-
-            return parsed_yaml[key]
-
-        # catching all exeptions and then filtering on type instead of catching each exception
-        # separately to reduce copied code
-        except Exception as e:
-            exception_text = "Unexpected exception when retrieving {} from {}: {}".format(key, target, traceback.format_exc())
-
-            if type(e) is FileNotFoundError:
-                exception_text = "No configuration file {} found. Please try again with a valid configuration file.".format(target)
-            elif type(e) is KeyError:
-                exception_text = "{} not found in {}. Please make sure the target key is defined properly and uncommented.".format(key, target)
-
-            if passthrough_exceptions:
-                raise e
-            else:
-                raise Exception(exception_text)
+        self.check_initializations.append(self.validate_config)
 
     def check(self, instance):
         self.oauth_token = self.generate_token()
@@ -311,10 +259,10 @@ class SophosCheck(AgentCheck):
             for endpoint in endpoints:
                 endpoint_tags = self.tags.copy()
                 if "hostname" in endpoint.keys():
-                    endpoint_tags.append("endpoint_name:{}".format(endpoint["hostname"]))
-                    endpoint_tags.append("endpoint_type:{}".format(endpoint["type"]))
-                    endpoint_tags.append("endpoint_platform:{}".format(endpoint["os"]["platform"]))
-                    endpoint_tags.append("endpoint_os:{}".format(endpoint["os"]["name"]))
+                    endpoint_tags.append("endpoint_name:{}".format(endpoint.get("hostname", "data_missing")))
+                    endpoint_tags.append("endpoint_type:{}".format(endpoint.get("type", "data_missing")))
+                    endpoint_tags.append("endpoint_platform:{}".format(endpoint.get("os", {}).get("platform", "data_missing")))
+                    endpoint_tags.append("endpoint_os:{}".format(endpoint.get("os", {}).get("name", "data_missing")))
                 else:
                     endpoint_tags.append("endpoint_name:data_missing")
                     endpoint_tags.append("endpoint_type:data_missing")
@@ -325,9 +273,9 @@ class SophosCheck(AgentCheck):
                 
                 if "associatedPerson" in endpoint.keys():
                     if "name" in endpoint["associatedPerson"]:
-                        endpoint_tags.append("endpoint_owner:{}".format(endpoint["associatedPerson"]["name"]))
+                        endpoint_tags.append("endpoint_owner:{}".format(endpoint.get("associatedPerson", {}).get("name")))
                     elif not "name" in endpoint["associatedPerson"] and "viaLogin" in endpoint["associatedPerson"]:
-                        endpoint_tags.append("endpoint_owner:{}".format(endpoint["associatedPerson"]["viaLogin"]))
+                        endpoint_tags.append("endpoint_owner:{}".format(endpoint.get("associatedPerson", {}).get("viaLogin")))
                 else:
                     endpoint_tags.append("endpoint_owner:missing")
 
@@ -348,27 +296,27 @@ class SophosCheck(AgentCheck):
                         service_details = endpoint["health"]["services"]["serviceDetails"]
                         for service in service_details:
                             service_tags = endpoint_tags.copy()
-                            service_tags.append("sophos_service:{}".format(service["name"]))
+                            service_tags.append("sophos_service:{}".format(service.get("name")))
                             if service["status"] == "running":
                                 self.service_check("endpoint.service_running", AgentCheck.OK, tags=service_tags)
                             else:
                                 self.service_check("endpoint.service_running", AgentCheck.CRITICAL, tags=service_tags)
 
-                            service_tags.append("service_status:{}".format(service["status"]))
+                            service_tags.append("service_status:{}".format(service.get("status")))
                             self.gauge("endpoint.service_health", 1, tags=service_tags)
                 
-                    endpoint_tags.append("health_status:{}".format(endpoint["health"]["overall"]))
-                    endpoint_tags.append("threat_status:{}".format(endpoint["health"]["threats"]["status"]))
-                    endpoint_tags.append("service_summary_status:{}".format(endpoint["health"]["services"]["status"]))
+                    endpoint_tags.append("health_status:{}".format(endpoint.get("health", {}).get("overall")))
+                    endpoint_tags.append("threat_status:{}".format(endpoint.get("health", {}).get("threats", {}).get("status")))
+                    endpoint_tags.append("service_summary_status:{}".format(endpoint.get("health", {}).get("services", {}).get("status")))
                 
                 if "lastSeenAt" in endpoint.keys():
-                    checkin_elapsed = calculate_last_seen(endpoint["lastSeenAt"])
+                    checkin_elapsed = calculate_last_seen(endpoint.get("lastSeenAt"))
                 else:
                     checkin_elapsed = -1
                 self.gauge("endpoint.last_seen", checkin_elapsed, tags=endpoint_tags)
 
                 if "tamperProtectionEnabled" in endpoint.keys():
-                    endpoint_tags.append("tamper_status:{}".format(str(endpoint["tamperProtectionEnabled"])))
+                    endpoint_tags.append("tamper_status:{}".format(str(endpoint.get("tamperProtectionEnabled"))))
                 else:
                     endpoint_tags.append("tamper_status:false")
 

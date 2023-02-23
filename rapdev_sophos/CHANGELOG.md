@@ -1,5 +1,8 @@
 # CHANGELOG - rapdev_sophos
 
+## 1.1.2 / 2023-02-14
+* [Fix] Added try/catch statements and shielding to get_endpoints function
+
 ## 1.1.1 / 2022-05-10
 * [Added] Added required python imports
 
