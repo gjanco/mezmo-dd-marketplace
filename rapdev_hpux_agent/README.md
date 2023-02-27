@@ -14,17 +14,17 @@ Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mail
 
 1. Install a current version of cURL if your system does not have one available. The HP-UX Agent was built and tested with [curl-7.73.0](http://hpux.connect.org.uk/hppd/hpux/Networking/WWW/curl-7.73.0/) from the [HP-UX Porting and Archive Centre](http://hpux.connect.org.uk).
 
-2. Download the HP-UX Agent install [package](http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.5.2.tgz).
+2. Download the HP-UX Agent install [package](http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.5.3.tgz).
 ```sh
 mkdir -p /tmp/datadog-agent-install
 cd /tmp/datadog-agent-install
-/usr/local/bin/curl -o DatadogAgent-1.5.2.tgz http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.5.2.tgz 
+/usr/local/bin/curl -o DatadogAgent-1.5.3.tgz http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.5.3.tgz 
 ```
 
 3. Install the HP-UX Agent. You can run the `install.sh` script to update an existing HP-UX Agent install.
 ```sh
 cd /tmp/datadog-agent-install
-gunzip -c DatadogAgent-1.5.2.tgz | tar -xvf -
+gunzip -c DatadogAgent-1.5.3.tgz | tar -xvf -
 ./install.sh 
 ```
 
@@ -163,8 +163,8 @@ Command:
 ```sh
 mkdir -p /tmp/datadog-agent-install
 cd /tmp/datadog-agent-install
-/usr/local/bin/curl -o DatadogAgent-1.5.2.tgz http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.5.2.tgz
-gunzip -c DatadogAgent-1.5.2.tgz | tar -xvf -
+/usr/local/bin/curl -o DatadogAgent-1.5.3.tgz http://rapdev-files.s3.amazonaws.com/hpux/DatadogAgent-1.5.3.tgz
+gunzip -c DatadogAgent-1.5.3.tgz | tar -xvf -
 ./uninstall.sh
 ```
 

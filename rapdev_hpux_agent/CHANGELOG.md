@@ -1,5 +1,9 @@
 # CHANGELOG - RapDev HP-UX Agent
 
+## 1.5.3 / 2023-02-24
+
+* [Fixed] issue where new files were not detected for log tails.
+
 ## 1.5.2 / 2023-02-06
 
 * [Added] support for dual shipping of metadata, metrics, and logs.
