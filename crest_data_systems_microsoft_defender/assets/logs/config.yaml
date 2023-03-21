@@ -1,0 +1,200 @@
+id: crest_data_systems_microsoft_defender
+metric_id: crest-data-systems-microsoft-defender
+facets:
+  - 
+    name: Endpoint Id
+    source: log
+    path: endpoint-id
+    groups:
+      - Crest Data Systems
+  - 
+    name: Endpoint Name
+    source: log
+    path: endpoint-name
+    groups:
+      - Crest Data Systems
+  - 
+    name: Endpoint Last Seen Time
+    source: log
+    path: endpoint-seen-time
+    groups:
+      - Crest Data Systems
+  - 
+    name: Last Seen
+    source: log
+    path: lastSeen
+    groups:
+      - Crest Data Systems
+  - 
+    name: Vulnerability Id
+    source: log
+    path: vulnerability-id
+    groups:
+      - Crest Data Systems
+  - 
+    name: Vulnerability Severity
+    source: log
+    path: vuln-severity
+    groups:
+      - Crest Data Systems
+  - 
+    name: Software Id
+    source: log
+    path: software-id
+    groups:
+      - Crest Data Systems
+  - 
+    name: Software Version
+    source: log
+    path: software-version
+    groups:
+      - Crest Data Systems
+  - 
+    name: Alert Id
+    source: log
+    path: alert-id
+    groups:
+      - Crest Data Systems
+  - 
+    name: Alert Status
+    source: log
+    path: alert-status
+    groups:
+      - Crest Data Systems
+  - 
+    name: Alert Category
+    source: log
+    path: alert-category
+    groups:
+      - Crest Data Systems
+  - 
+    name: Alert Severity
+    source: log
+    path: alert-severity
+    groups:
+      - Crest Data Systems
+  - 
+    name: Alert Update Time
+    source: log
+    path: alert-update-time
+    groups:
+      - Crest Data Systems
+  - 
+    name: Last Update Time
+    source: log
+    path: lastUpdateTime
+    groups:
+      - Crest Data Systems
+  - 
+    name: Aad Tenant Id
+    source: log
+    path: aadTenantId
+    groups:
+      - Crest Data Systems
+  - 
+    name: Alert Creation Time
+    source: log
+    path: alertCreationTime
+    groups:
+      - Crest Data Systems
+  - 
+    name: First Event Time
+    source: log
+    path: firstEventTime
+    groups:
+      - Crest Data Systems
+  - 
+    name: Last Event Time
+    source: log
+    path: lastEventTime
+    groups:
+      - Crest Data Systems
+  - 
+    name: Threat Family Name
+    source: log
+    path: threatFamilyName
+    groups:
+      - Crest Data Systems
+  - 
+    name: Threat Name
+    source: log
+    path: threatName
+    groups:
+      - Crest Data Systems
+  - 
+    name: Health Status
+    source: log
+    path: endpoint-health-status
+    groups:
+      - Crest Data Systems
+  - 
+    name: Risk Score
+    source: log
+    path: endpoint-risk
+    groups:
+      - Crest Data Systems
+  - 
+    name: Investigation Id
+    source: log
+    path: investigation-id
+    groups:
+      - Crest Data Systems
+  - 
+    name: Investigation Status
+    source: log
+    path: investigation-status
+    groups:
+      - Crest Data Systems
+  - 
+    name: Incident Id
+    source: log
+    path: incidentId
+    groups:
+      - Crest Data Systems
+  - 
+    name: Incident Severity
+    source: log
+    path: incident-severity
+    groups:
+      - Crest Data Systems
+  - 
+    name: Incident Status
+    source: log
+    path: incident-status
+    groups:
+      - Crest Data Systems
+  - 
+    name: Incident Name
+    source: log
+    path: incidentName
+    groups:
+      - Crest Data Systems
+  - 
+    name: Missing KB Id
+    source: log
+    path: missing-kb-id
+    groups:
+      - Crest Data Systems
+
+pipeline:
+  type: pipeline
+  name: Crest Data Systems
+  enabled: true
+  filter:
+    query: source:crest_data_systems_microsoft_defender
+  processors:    
+    - type: date-remapper
+      name: Define `timestamp` as the official date of the log
+      enabled: true
+      sources:
+        - timestamp
+    - type: message-remapper
+      name: Define `description` as the official message of the log
+      enabled: true
+      sources:
+        - description
+    - type: status-remapper
+      name: Define `healthStatus` as the official status of the log
+      enabled: true
+      sources:
+        - healthStatus
