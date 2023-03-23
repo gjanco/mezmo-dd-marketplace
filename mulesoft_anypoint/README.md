@@ -306,11 +306,11 @@ Uninstall the Datadog Mule® Integration from the Datadog agent using the `datad
 
 * *Linux:*
 
-```$ sudo -u dd-agent -- datadog-agent integration remove --third-party datadog-mulesoft-anypoint```
+```$ sudo -u dd-agent -- datadog-agent integration remove datadog-mulesoft-anypoint```
 
 * *Windows:*
 
-```"%PROGRAMFILES%\Datadog\Datadog Agent\embedded\agent.exe" integration remove --third-party datadog-mulesoft-anypoint```
+```"%PROGRAMFILES%\Datadog\Datadog Agent\embedded\agent.exe" integration remove datadog-mulesoft-anypoint```
  
 Ensure the Datadog Mule® Integration is not running. See the [Validation](#Validation) section.
 
