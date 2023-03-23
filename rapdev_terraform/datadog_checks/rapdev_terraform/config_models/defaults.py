@@ -34,6 +34,10 @@ def instance_aws_service(field, value):
     return get_default_field_value(field, value)
 
 
+def instance_base_api_url(field, value):
+    return 'https://app.terraform.io/api/v2/'
+
+
 def instance_collect_agents(field, value):
     return False
 

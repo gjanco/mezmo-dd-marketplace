@@ -25,9 +25,9 @@ class BearerAuth(requests.auth.AuthBase):
 class TerraformCheck(AgentCheck):
     def __init__(self, *args, **kwargs):
         super(TerraformCheck, self).__init__(*args, **kwargs)
-        self.base_api_url = "https://app.terraform.io/api/v2/"
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
 
+        self.base_api_url = self.instance.get("base_api_url", "https://app.terraform.io/api/v2/")
         self.api_token = self.instance.get("api_token")
         self.metric_prefix = "rapdev.terraform"
         self.billing_metric = "{}.{}".format("datadog.marketplace", self.metric_prefix)

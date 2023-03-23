@@ -43,7 +43,8 @@ can access data from the workspace.
    init_config:
 
    instances:
-     - api_token: <YOUR_API_TOKEN>
+     - base_api_url: "https://app.terraform.io/api/v2/"
+       api_token: <YOUR_API_TOKEN>
        min_collection_interval: 60
        collect_agents: False # If using non-hosted deployments and you want to set this to "True" to collect agent-pools/agent info
    ```
