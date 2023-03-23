@@ -4,7 +4,9 @@
 The RapDev validator solves the problem for monitoring tag and Agent compliance in your Datadog environment. The integration accepts a list of tag keys and their values that you deem as acceptable per your environments tagging strategy, then reports these as metrics and service checks into your Datadog instance. This way, you can display whether the hosts in your environment have the correct tags applied to them.
 
 ### Dashboards
-1. RapDev Validator Dashboard
+1. RapDev Validator Host Dashboard
+2. RapDev Validator Synthetic Dashboard
+3. RapDev Validator Dashboard
 
 ### Monitors
 1. Host is missing required tag key
@@ -25,10 +27,10 @@ To install the Validator check on your host:
 
 - Linux
 
-`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_validator==2.1.2`
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_validator==2.2.0`
 - Windows
 
-`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_validator==2.1.2`
+`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_validator==2.2.0`
 
 ### Prepare the Validator
 
@@ -46,11 +48,13 @@ The only pre-requisite to the RapDev Validator integration is having an applicat
     dd_site: com
     required_tags:
       name:
-        - "*"
+        - ".*"
       env:
         - "dev"
         - "qa"
         - "prod"
+      applicationid:
+        - "^app-[0-9]+$"
     ignore_paas: true
     hosts_to_ignore:
       - "sqlserver_.*"
@@ -63,7 +67,7 @@ The only pre-requisite to the RapDev Validator integration is having an applicat
         - "qa"
         - "prod"
       application:
-        - "*"
+        - ".*"
     empty_default_hostname: true
   ```
 2. [Restart the Datadog Agent](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent).

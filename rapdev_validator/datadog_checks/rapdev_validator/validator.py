@@ -329,10 +329,29 @@ class ValidatorCheck(AgentCheck):
                     otherwise False (should be validated)
         """
         for ignored_host_regex in self.ignore_hosts:
-            if re.match(ignored_host_regex, hostname, re.I):
+            if re.fullmatch(ignored_host_regex, hostname, re.I):
                 return True
                 
         return False
+    
+    def match_tag_value(self, value_regex, value):
+        """
+        function checks if the passed in tag value matches any of the regex for allowed values returning
+        true if it matches, and false otherwise. case insensitive regex matching
+        
+        args:
+            value_regex (str): Value regex pattern to match against the actual tag value
+            value       (str): The current tag value to validate
+            
+        returns:
+            (bool): True if the value matches the regex (is allowed value), 
+                    otherwise False (is not allowed value)
+        """
+        if re.fullmatch(value_regex, value, re.I):
+            return True
+        
+        return False
+
 
     def validate_tags(self, yaml_tag_dict, entity_tag_dict, metric_tags):
         """
@@ -374,15 +393,12 @@ class ValidatorCheck(AgentCheck):
                 # Create a dictionary to be used to check if the key being checked contains any allowed values
                 validator_dict[key_lower] = []
                 for key_value in yaml_tag_dict.get(key):
-                    if key_value == "*":
-                        key_value_lower = key_value
-                    else:
-                        key_value_lower = key_value.lower()
-                    if key_value_lower == entity_tag_dict.get(key_lower, "") or key_value_lower == "*":
+                    if self.match_tag_value(key_value, entity_tag_dict.get(key_lower, "")):
                         validator_dict[key_lower].append(True)
                         break
                     else:
                         validator_dict[key_lower].append(False)
+                    
                 value_tags.append("tag_value:{}".format(entity_tag_dict.get(key_lower)))
 
                 # Validates if this key contains any of the allowed values from the YAML

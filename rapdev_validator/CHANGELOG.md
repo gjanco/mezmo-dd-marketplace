@@ -1,5 +1,9 @@
 # CHANGELOG - rapdev_validator
 
+## 2.2.0 / 2023-03-20
+### Feature Updates
+* [Added] Updated `required_tags` to allow values to be validated against regex patterns
+
 ## 2.1.2 / 2022-05-23
 ### Feature Updates
 * [Added] Added the `dd_org_name` configuration flag in lieu of programatically grabbing the organization information, as this requires billing scoped permissions to Datadog's API
