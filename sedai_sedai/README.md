@@ -23,10 +23,19 @@ First, cancel your subscription in Plan & Pricing. Sedai will then reach out to 
 
 ## Support
 
-For help with this integration, please email [support@sedai.io][1].
+For support or feature requests, contact Sedai through the following channel:
 
+- Email: [support@sedai.io][5]
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Autonomously optimize AWS Lambda deployments with Sedai and Datadog][6]
 
 [1]: mailto:support@sedai.io
 [2]: https://app.datadoghq.com/integrations/sedai
 [3]: https://www.sedai.io/
 [4]: mailto:sales@sedai.io
+[5]: mailto:support@sedai.io
+[6]: https://www.datadoghq.com/blog/autonomous-cloud-management-aws-lambda-sedai-datadog/
