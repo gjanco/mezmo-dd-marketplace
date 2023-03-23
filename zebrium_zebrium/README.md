@@ -16,16 +16,26 @@ Once you are a Zebrium customer, you can begin using the two points of integrati
 2. Log in to your Zebrium account at [cloud.zebrium.com][3] and install a log collector.
 3. Setup the Zebrium integration and app by following the instructions on the Zebrium Integration tile.
 
-**If you have any questions, please don't hesitate to [Contact Zebrium][2].**
+If you have any questions, [contact Zebrium][2].
 
 ## Uninstallation
 
 First, cancel your subscription in Plan & Pricing. Zebrium will then reach out to confirm and disconnect your account.
 
 ## Support
-Need help with the product or have questions about pricing? Contact [Zebrium Support][2].
+
+For support or feature requests, contact Zebrium through the following channel:
+
+- Email: [support@zebrium.com][2]
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Find the root cause faster with Datadog and Zebrium][5]
 
 [1]: https://www.zebrium.com
 [2]: mailto:support@zebrium.com
 [3]: https://cloud.zebrium.com
-[4]: /integrations
+[4]: https://app.datadoghq.com/integrations
+[5]: https://www.datadoghq.com/blog/find-the-root-cause-faster-with-zebrium/

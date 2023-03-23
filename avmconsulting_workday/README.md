@@ -100,7 +100,7 @@ sudo -u dd-agent datadog-agent integration remove datadog-avmconsulting_workday
 
 For support or feature requests, contact AVM Consulting through the following channels: 
 
- - Email: integrations@avmconsulting.net 
+ - Email: [integrations@avmconsulting.net][6] 
  - Phone: 855-AVM-0555 
 
 ## Further Reading
@@ -114,3 +114,4 @@ Additional helpful documentation, links, and articles:
 [3]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
 [4]: https://docs.datadoghq.com/developers/guide/custom-python-package/?tab=linux
 [5]: https://www.datadoghq.com/blog/workday-monitoring-with-avm-and-datadog/
+[6]: mailto:integrations@avmconsulting.net

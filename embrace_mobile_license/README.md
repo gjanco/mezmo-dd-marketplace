@@ -60,20 +60,28 @@ so you can take action before your users complain.
  
 ## Setup
 
-1. Start a free trial with [Embrace][3] and follow our documentation [here][2] to integrate your mobile app.
-2. Find the Embrace integration [here](/integrations/embrace-mobile).
+1. Start a free trial with [Embrace][3] and follow the [Embrace documentation][2] to integrate your mobile app.
+2. Navigate to the [integration tile][5].
 
 ## Uninstallation
 
 First, cancel your subscription in Plan & Pricing. Embrace will then reach out to confirm and disconnect your account.
 
 ## Support
-For support or questions, please contact Embrace via the following: 
+For support or questions, contact Embrace through the following channel: 
 
-Email: datadogsupport@embrace.io 
+Email: [datadogsupport@embrace.io][4] 
 
-Documentation is available [here][2].
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Monitor your mobile apps with Embrace's offering in the Datadog Marketplace][6]
+- [Embrace Documentation][2]
 
 [1]: https://embrace.io
 [2]: https://embrace.io/docs/
 [3]: https://dash.embrace.io
+[4]: mailto:datadogsupport@embrace.io
+[5]: https://app.datadoghq.com/integrations/embrace-mobile
+[6]: https://www.datadoghq.com/blog/mobile-application-monitoring-embrace-datadog/

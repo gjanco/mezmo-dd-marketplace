@@ -29,7 +29,7 @@ Software to protect and optimize your mission-critical Kubernetes applications
 
 ### Installation
 
-Login to Fairwinds Insights and navigate to your Organization's Settings page, then enter your Datadog API key in the API Key field under the Datadog section.
+Login to [Fairwinds Insights][1] and navigate to your Organization's Settings page, then enter your Datadog API key in the API Key field under the Datadog section.
 
 ### Configuration
 
@@ -64,11 +64,10 @@ Fairwinds Insights does not include any service checks.
 
 ## Support
 
-For support or requests, please contact Fairwinds through the following channels:
+For support or requests, contact Fairwinds through the following channels:
 
-Phone: +1 617-202-3659 Email: sales@fairwinds.com
-
-Documentation is available [here](https://insights.docs.fairwinds.com/). It covers setup and integration as well as ongoing usage to get the most out of Fairwinds Insights.
+- Phone: +1 617-202-3659 
+- Email: [sales@fairwinds.com][2]
 
 ### Frequently Asked Questions
 
@@ -99,10 +98,19 @@ Fairwinds Insights provides integrations for a variety of great open source tool
 * Automated notification of Helm charts that are out of date
 * Custom Kubernetes policies and configuration checks
 
-[1]: https://insights.fairwinds.com
-
 ### Refund Policy
 
 Insights Cancellation and Refund Policy:
 
 Fairwinds Insights is provided as a month-to-month subscription that you, the customer, may discontinue at any time in the ways made available to you through your DataDog Marketplace account. If you discontinue your subscription, you will be billed only for the remainder of the monthly billing period then in effect. Insights does not provide refunds of any fees already paid.
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Monitor Kubernetes with Fairwinds Insights' offering in the Datadog Marketplace][2]
+- [Fairwinds Insights Documentation][3]
+
+[1]: https://insights.fairwinds.com
+[2]: https://www.datadoghq.com/blog/fairwinds-insights-datadog-marketplace/
+[3]: https://insights.docs.fairwinds.com/

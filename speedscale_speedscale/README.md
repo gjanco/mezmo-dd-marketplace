@@ -15,9 +15,21 @@ To start sharing data between Datadog and Speedscale, set up the [Speedscale Int
 First, cancel your subscription in Plan & Pricing. Speedscale will then reach out to confirm and disconnect your account.
 
 ## Support
-At Speedscale, we're committed to giving you the tools and information you need to be successful. We offer multiple ways to get the help you need, when you need it, and all of our [Product Docs][3] are publicly available online. You can also join our [Community Slack][4] or email us directly at [support@speedscale.com][5].
+
+For support or feature requests, contact Speedscale through the following channels:
+
+- Email: [support@speedscale.com][5]
+- Slack: [Community][4]
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Stress test your Kubernetes application with Speedscale’s offering in the Datadog Marketplace][6]
+- [Speedscale Documentation][3]
 
 [1]: /integrations/speedscale
 [3]: https://docs.speedscale.com/
 [4]: https://slack.speedscale.com/
 [5]: mailto:support@speedscale.com
+[6]: https://www.datadoghq.com/blog/stress-test-kubernetes-with-speedscale/

@@ -34,7 +34,7 @@ that is triggered will be synced with Datadog as soon as it has been processed b
 
 ### Metrics
 
-NerdVision produces metrics for online clients, and tracepoint triggers.
+NerdVision produces metrics for online clients and tracepoint triggers.
 
 ### Service Checks
 
@@ -42,27 +42,39 @@ NerdVision does not include any service checks.
 
 ## Setup
 
-Get setup in just a few steps
+Get set up in just a few steps:
 
-1. Login to [nerd.vision](https://app.nerd.vision) and select the group you wish to integrate with Datadog.
-1. Copy an **API Key** and **Application Key** from Datadog
-1. Open NerdVision Group Settings **User > Group Settings > Datadog**
-1. Paste the **API Key** and **Application Key** into NerdVision
-1. Select the Datadog **Region** and click **Add Datadog to nerd.vision**
+1. Login to [nerd.vision][1] and select the group you wish to integrate with Datadog.
+1. Copy an **API Key** and **Application Key** from Datadog.
+1. Open NerdVision Group Settings by navigating to **User** > **Group Settings** > **Datadog**.
+1. Paste the **API Key** and **Application Key** into NerdVision.
+1. Select the Datadog **Region** and click **Add Datadog to nerd.vision**.
 
-If you have not already configured an application to use NerdVision, follow the [setup guide](https://app.nerd.vision/setup).
+If you have not already configured an application to use NerdVision, follow the [in-app setup guide][2].
 
 ## Uninstallation
 
 
-1. Log in to [nerd.vision](https://app.nerd.vision) and select the group you wish to remove from the Datadog integration.
+1. Log in to [nerd.vision][3] and select the group you wish to remove from the Datadog integration.
 2. Open NerdVision Group Settings by navigating to **User** > **Group Settings** > **Datadog**.
 3. Click **Remove Datadog from nerd.vision**.
 
 ## Support
 
-For support or requests, please contact NerdVision through the following channels:
+For support or feature requests, contact NerdVision through the following channel:
 
-Email: support@nerd.vision
+- Email: [support@nerd.vision][4]
 
-Documentation is available [here](https://docs.nerd.vision/).
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Monitor debugging data with NerdVision's integration in the Datadog Marketplace][5]
+- [NerdVision Documentation][6]
+
+[1]: https://app.nerd.vision
+[2]: https://app.nerd.vision/setup
+[3]: https://app.nerd.vision
+[4]: mailto:support@nerd.vision
+[5]: https://www.datadoghq.com/blog/monitor-nerdvision-datadog-marketplace/
+[6]: https://docs.nerd.vision/

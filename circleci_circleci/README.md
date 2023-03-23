@@ -48,22 +48,38 @@ Code in every language, across macOS, Linux, and Windows. If you can write it, C
 
 This plan is available through the Datadog Marketplace for $2,000/month.
 
-For volume discounts or interest in other plans, please [contact us](mailto:partners@circleci.com) to discuss a private offer.
+For volume discounts or interest in other plans, reach out to [support@circleci.com][2] to discuss a private offer.
 
 
 
 ## Setup
 If you have just purchased CircleCI, a representative will reach out to you shortly to discuss offers.
 
-In the meantime, please authenticate in the [CircleCI Application](https://circleci.com/vcs-authorize/) to ensure a smoother experience (this will create your account that will be later linked to your subscription).
+In the meantime, please authenticate in the [CircleCI Application][4] to ensure a smoother experience (this will create your account that will be later linked to your subscription).
 
 ## Uninstallation
 
 First, cancel your subscription in Plan & Pricing. CircleCI will then reach out to confirm and disconnect your account.
 
 ## Support
-For support, please see our [documentation][1], or feel free to email our support team at [support@circleci.com][2]. You can also view our privacy policy on [our website][3].
+
+For support or feature requests, contact CircleCI through the following channel:
+
+- Email: [support@circleci.com][2]
+
+To view CircleCI's privacy policy, see the [CircleCI website][3].
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Monitor your CircleCI environment with Datadog][5]
+- [Run Synthetic tests in your CI/CD pipelines with the Datadog CircleCI orb][6]
+- [CircleCI Documentation][1]
 
 [1]: https://circleci.com/docs
 [2]: mailto:support@circleci.com
 [3]: https://privacy.circleci.com/
+[4]: https://circleci.com/vcs-authorize/
+[5]: https://www.datadoghq.com/blog/circleci-monitoring-datadog/
+[6]: https://www.datadoghq.com/blog/run-synthetic-tests-in-circeci-pipelines-with-datadog/

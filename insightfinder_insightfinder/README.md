@@ -15,8 +15,16 @@ First, cancel your subscription in Plan & Pricing. InsightFinder will then reach
 
 ## Support
 
-Contact [Datadog support][4] or email [InsightFinder support][5].
+For support or feature requests, contact InsightFinder through the following channels:
 
+- Email: [support@insightfinder.com][5]
+- Contact [Datadog Support][4]
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Identify and resolve incidents faster with InsightFinder’s offering in the Datadog Marketplace][7]
 
 [1]: https://insightfinder.com/
 [2]: https://app.datadoghq.com/integrations/insightfinder
@@ -24,3 +32,4 @@ Contact [Datadog support][4] or email [InsightFinder support][5].
 [4]: https://docs.datadoghq.com/help/
 [5]: mailto:support@insightfinder.com
 [6]: mailto:info@insightfinder.com
+[7]: https://www.datadoghq.com/blog/resolve-incidents-faster-with-insightfinder/

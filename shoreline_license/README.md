@@ -10,7 +10,7 @@ The Shoreline app automatically executes the automation when the monitor is trig
 
 Shoreline helps everyone on call be as good as your best SRE. Shoreline arms your on-call team with debugging tools and approved remediation actions, helping you fix incidents faster with fewer escalations and ensuring that incidents are fixed correctly the first time with fewer mistakes.
 
-To get started, set up a trial account on [Shoreline][3].
+To get started, set up a trial account on [Shoreline][1].
 
 ## Setup
 
@@ -18,9 +18,9 @@ To get started, set up a trial account on [Shoreline][3].
 
 Follow the steps below to install and configure Shoreline's Datadog integration.
 
-1. [Install the Shoreline Agent](https://docs.shoreline.io/installation) on your hosts.
-2. [Install the Shoreline integration](https://docs.shoreline.io/integrations/datadog#install-the-shoreline-integration) from [Shoreline's Datadog marketplace tile][10].
-3. Navigate to your **Shoreline UI > Integrations > Datadog** page (i.e., `https://<SHORELINE_UI_URL>/integrations/datadog/`) to [install the Datadog integration](https://docs.shoreline.io/integrations/datadog#install-the-datadog-integration).
+1. [Install the Shoreline Agent][3] on your hosts.
+2. [Install the Shoreline integration][4] from [Shoreline's Datadog marketplace tile][10].
+3. Navigate to your **Shoreline UI** > **Integrations** > **Datadog** page (such as `https://<SHORELINE_UI_URL>/integrations/datadog/`) to [install the Datadog integration][8].
 
 #### Shoreline Agent
 
@@ -44,11 +44,11 @@ To configure Shoreline's Datadog integration, you need a Datadog API and Applica
 
 ![integration_example](images/integrate_shoreline_and_datadog.png)
 
-**Note**: See [Shoreline's Datadog Integration][4] documentation for detailed setup instructions.
+For detailed setup instructions, see the [Shoreline documentation][4].
 
 ## Uninstallation
 
-1. Navigate to your **Shoreline UI > Integrations > Datadog** page (i.e., `https://<SHORELINE_UI_URL>/integrations/datadog/`).  
+1. Navigate to your **Shoreline UI** > **Integrations** > **Datadog** page (such as `https://<SHORELINE_UI_URL>/integrations/datadog/`).  
 2. Click the **Uninstall** button.
 
    **Note**: Uninstalling the integration automatically removes the associated Datadog dashboard and webhook from your Datadog account.
@@ -57,18 +57,25 @@ To configure Shoreline's Datadog integration, you need a Datadog API and Applica
 
 ## Support
 
-Contact Shoreline through email for support and requests.
+For support and feature requests, contact Shoreline through the following channel:
 
-Email: [support@shoreline.io][2]
-For more information, see the [Shoreline documentation][9].
+- Email: [support@shoreline.io][2]
 
-[1]: images/integrate_shoreline_and_datadog.png
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Debug issues and automate remediation with Shoreline and Datadog][11]
+- [Shoreline Documentation][9]
+
+[1]: https://shoreline.io/datadog?source=DatadogMarketplace
 [2]: mailto:support@shoreline.io
-[3]: https://shoreline.io/datadog?source=DatadogMarketplace
-[4]: https://docs.shoreline.io/integrations/datadog
+[3]: https://docs.shoreline.io/installation
+[4]: https://docs.shoreline.io/integrations/datadog#install-the-shoreline-integration
 [5]: https://docs.shoreline.io/installation/kubernetes
 [6]: https://docs.shoreline.io/installation/kubernetes#install-with-helm
 [7]: https://docs.shoreline.io/installation/virtual-machines
-[8]: images/link_icon.svg
+[8]: https://docs.shoreline.io/integrations/datadog#install-the-shoreline-integration
 [9]: https://docs.shoreline.io/
-[10]: /account/settings#integrations/shoreline-integration
+[10]: https://app.datadoghq.com/account/settings#integrations/shoreline-integration
+[11]: https://www.datadoghq.com/blog/shoreline-io-marketplace-datadog/

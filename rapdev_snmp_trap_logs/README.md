@@ -6,10 +6,10 @@ the translation of SNMP traps into human-readable log messages.
 This package comes with an install script to setup Logstash as an SNMP trap receiver, with the proper configurations
 and MIB files to translate your messages, allowing you to alert on network events within Datadog.
 
-For a list of all MIBs that are included with this package, [see here][4].
+For a list of all MIBs that are included with this package, see the [mib_yamls.txt file][4].
 
 ### Pricing
-Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io][5] for packaged pricing offers.
 
 ## Setup
 
@@ -33,20 +33,20 @@ Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mail
   To replace `public`, simply replace that value. To add additional strings to listen for, append to the list: `['public', 'my_community']`.
 - Due to the amount of MIB files provided, Logstash may take several minutes to start. If you wish to reduce this startup time, you may want
   to remove the MIB files that you do not need. These can be found in `/opt/logstash/yamlmibs/yamls`. For a list of all MIBs that are included
-  with this package, [see here][4].
+  with this package, see the [mib_yamls.txt file][4].
     - Exercise caution when removing MIB files, as there is a hierarchy within MIBs, and full translations may not occur if some of the base
       MIBs are removed. These include items like `IF-*`, `INET-*`, `IP-*`, and `SNMP-*`. The full list of dependencies can be found by using MIB
-      browsers such as the [Observium MIB Database](https://mibs.observium.org).
+      browsers such as the [Observium MIB Database][6].
 
 ### Filtering and Enriching Data in Datadog
 
 - To create an easy filtering experience in Datadog that will include only SNMP trap messages in Datadog, the field `type` is set 
-  to `snmptrap`. To filter in Datadog, use the query `@type:snmptrap`
-- The use of Enrichment Tables is encouraged - the `host` field will be presented as an IP. If you desire your SNMP traps to contain a hostname,
-  enrichment tables can be provided to translate IPs in the `host` field to hostnames. For more information, see [Enrichment Tables.][1].
-- After setting up enrichment tables, create a facet for the field created via enrichment. We recommend `snmphost.host` as the enrichment field, as
+  to `snmptrap`. To filter in Datadog, use the query `@type:snmptrap`.
+- The use of Enrichment Tables is encouraged—the `host` field will be presented as an IP. If you desire your SNMP traps to contain a hostname,
+  enrichment tables can be provided to translate IPs in the `host` field to host names. For more information, see the [Enrichment Tables documentation][1].
+- After setting up enrichment tables, create a facet for the field created through enrichment. You can use `snmphost.host` as the enrichment field, as
   it is the field used in the provided dashboard to filter logs.
-- For ease of visualization, it is also encouraged to use the [Message Remapper][2] functionality within Datadog. For example, if you 
+- For ease of visualization, you can use the [Message Remapper functionality][2]. For example, if you 
   know the `ccvpEventText` field contains data you want as a log message, add that to the message remapper. Logs not containing that
   field will not be affected, and multiple remapped fields can be added over time.
 
@@ -58,14 +58,21 @@ Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mail
 For any questions or problems, view our Support section for ways to get in touch.
 
 ## Support
+
 For support or feature requests, contact RapDev.io through the following channels:
 
-- Email: support@rapdev.io
+- Email: [support@rapdev.io][7]
 - Chat: [rapdev.io][3]
 - Phone: 855-857-0222
 
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Monitor and diagnose network performance issues with SNMP Traps][8]
+
 ### Pricing
-Interested in using multiple RapDev integrations? Contact [sales@rapdev.io](mailto:sales@rapdev.io) for packaged pricing offers.
+Interested in using multiple RapDev integrations? Contact [sales@rapdev.io][5] for packaged pricing offers.
 
 ---
 Made with ❤️ in Boston
@@ -76,3 +83,7 @@ Made with ❤️ in Boston
 [2]: https://docs.datadoghq.com/logs/log_configuration/processors/?tab=ui#log-message-remapper
 [3]: https://www.rapdev.io/#Get-in-touch
 [4]: https://files.rapdev.io/datadog/configs/mib_yamls.txt
+[5]: mailto:sales@rapdev.io
+[6]: https://mibs.observium.org
+[7]: mailto:support@rapdev.io
+[8]: https://www.datadoghq.com/blog/diagnose-network-performance-with-snmp-trap-monitoring/

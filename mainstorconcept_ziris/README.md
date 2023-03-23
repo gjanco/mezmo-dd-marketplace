@@ -2,14 +2,12 @@
 
 ## Overview
 
-[z/IRIS](https://www.mainstorconcept.com/z-iris-mainframe-observability/z-iris-datadog/?lang=en) is a 
-plug-in software solution, built to provide mainframe-inclusive performance monitoring for the non-mainframe world. 
+[z/IRIS][1] is a plug-in software solution, built to provide mainframe-inclusive performance monitoring for the non-mainframe world. 
 
-DevOps teams want to understand how mainframe performs for their business applications and how peak performance can be 
-maintained or achieved. With z/IRIS, mainframe observability for DevOps is a core concept. Teams can assess the usage of
-mainframe resources, continuously analyze performance, and compare metrics and data across applications using Datadog.
+DevOps teams want to understand how mainframe performs for their business applications and how peak performance can be maintained or achieved. With z/IRIS, mainframe observability for DevOps is a core concept. Teams can assess the usage of mainframe resources, continuously analyze performance, and compare metrics and data across applications using Datadog.
 
 After activating z/IRIS, Datadog users can do the following:
+
 * Identify applications that depend on mainframe-hosted services and applications.
 * Monitor latencies in mainframe services down to a single request level.
 * Create monitors that react to anomalies and exceeded thresholds relevant to your organization’s SLIs.
@@ -17,10 +15,9 @@ After activating z/IRIS, Datadog users can do the following:
 
 ### Pricing
 
-The minimum starting price (Tier Level 1) is covered by the amount stipulated in the pricing tab. Monthly price scales 
-by the aggregated upper limit of licensed logical partition (LPAR) capacity, measured in Million Service Units (MSU).
+The minimum starting price (Tier Level 1) is covered by the amount stipulated in the pricing tab. Monthly price scales by the aggregated upper limit of licensed logical partition (LPAR) capacity, measured in Million Service Units (MSU).
 
-##### *Volume pricing as listed below is only available upon request through a private offer. Contact [mainstorconcept GmbH](mailto:ziris@mainstorconcept.com) for more information.*
+##### *Volume pricing as listed below is only available upon request through a private offer. Contact [mainstorconcept GmbH][2] for more information.*
 
 |Tier Level             |MSU Upper Limit        |Discount               |Cost/MSU/Month         |
 |-----------------------|-----------------------|-----------------------|-----------------------|
@@ -40,54 +37,48 @@ by the aggregated upper limit of licensed logical partition (LPAR) capacity, mea
 z/IRIS integrates with Datadog in two ways:
 
 * **OpenTelemetry (OTEL):** This observability framework standardizes APM integrations and is fully supported by Datadog. You can easily configure z/IRIS to stream traces and metrics to an OpenTelemetry Collector that is configured to export Traces and Metrics to your Datadog environment.
-* **Datadog APIs (BETA):** Users can also elect to stream Traces and Events via the Datadog Agent API and the HTTP REST API, respectively. This integration method can help accelerate proofs of concepts if OpenTelemetry is not yet available in your organization.
+* **Datadog APIs (Beta):** Users can also elect to stream Traces and Events through the Datadog Agent API and the HTTP REST API, respectively. This integration method can help accelerate proofs of concepts if OpenTelemetry is not yet available in your organization.
 
-More detailed information about the integration possibilities of z/IRIS can be found in our 
-[documentation](https://public.mainstorconcept.com/home/observability-with-datadog).
-
+For more detailed information about the integration possibilities of z/IRIS, see the [z/IRIS documentation][3].
 
 ### Distributed Tracing
 
-A Span represents a unit of work or process. Spans are the building blocks for Distributed Traces which depict when a 
-request was triggered and how the requests flowed through applications and services.
+A span represents a unit of work or process. Spans are the building blocks for distributed traces which depict when a request was triggered and how the requests flowed through applications and services.
 
 z/IRIS extends Datadog traces with spans that represent processes and units of work from IBM Z mainframe applications.
 
-Extending traces provides Datadog users with new insights into how applications hosted on Cloud and other on-premise 
-platforms depend on applications hosted on z/OS. Furthermore, users gain standard key performance indicators, i.e. 
-error rate, call rate and request latency for mainframe-based applications.
+Extending traces provides Datadog users with new insights into how applications hosted on Cloud and other on-premise platforms depend on applications hosted on z/OS. Furthermore, users gain standard key performance indicators, such as error rate, call rate, and request latency for mainframe-based applications.
 
 #### Spans
 
 z/IRIS creates spans for the following mainframe applications:
 
-* [Db2 for z/OS](https://public.mainstorconcept.com/home/distributed-db2-for-z-os-observability)
-* [z/OS Connect](https://public.mainstorconcept.com/home/z-os-connect-observability)
-* [Batch Jobs steps and TSO User Session](https://public.mainstorconcept.com/home/z-os-work-observability)
-* [MQ for z/OS](https://public.mainstorconcept.com/home/ibm-mq-for-z-os-observability)
-* [CICS Transaction](https://public.mainstorconcept.com/home/cics-transaction-observability)
+* [Db2 for z/OS][4]
+* [z/OS Connect][5]
+* [Batch Jobs steps and TSO User Session][6]
+* [MQ for z/OS][7]
+* [CICS Transaction][8]
 
-This list is always growing. Please contact [ziris@mainstorconcept.com](mailto:ziris@mainstorconcept.com) to request 
-information about support for z/OS applications or subsystems not listed above.
+This list is always growing. Contact [ziris@mainstorconcept.com][2] to request information about support for z/OS applications or subsystems not listed above.
 
 #### Workflow Tracing
 
-Once a span has been generated, z/IRIS checks if the Span has a logical relationship to an upstream application trace. 
-If so, the required correlation context is added to the span and Datadog will automatically append the Span to the 
-relevant trace. The following request workflows trigger span correlation:
+Once a span has been generated, z/IRIS checks if the span has a logical relationship to an upstream application trace. If so, the required correlation context is added to the span and Datadog will automatically append the span to the relevant trace. 
+
+The following request workflows trigger span correlation:
 
 * REST API request processing z/OS Connect
 * z/OS Connect APIs processed by Db2 for z/OS System-of-Record
 * JDBC calls to Db2 for z/OS
 * JMS application messages to IBM MQ for z/OS (including channel-to-channel)
 * MQ for z/OS to CICS Transactions
-* Steps from a single batch job are correlated to form a Trace
+* Steps from a single batch job are correlated to form a trace
 
 #### Tags
 
-Additional metadata about request processing on z/OS is provided through tags that are useful to filter for specific 
-Traces in the Datadog Trace Explorer as well as additional insight for Datadog’s Watchdog Insights. Below is a complete 
-list of all tags created with z/IRIS.
+Additional metadata about request processing on z/OS is provided through tags that are useful to filter for specific traces in the [Datadog Trace Explorer][9] as well as additional insight for [Datadog Watchdog Insights][10]. 
+
+Below is a complete list of all tags created with z/IRIS.
 
 | Trace Tag Name                                    | Description                                   |
 |---------------------------------------------------|-----------------------------------------------|
@@ -363,39 +354,37 @@ list of all tags created with z/IRIS.
 
 ### Mainframe metrics
 
-* [RMF Metrics](https://public.mainstorconcept.com/home/rmf-metrics-streaming) 
+* [RMF Metrics][11] 
 	* RMF metrics provide resource utilization metrics at customizable intervals and at customizable levels of detail.
 
-* [z/OS Connect Metrics](https://public.mainstorconcept.com/home/z-os-connect-metrics-streaming)
+* [z/OS Connect Metrics][12]
 	* z/IRIS streams metrics created using data from IBM's z/OS Connect SMF type 123 version 1 and 2 records. 
 
-* [MQ Metrics](https://public.mainstorconcept.com/home/mq-metrics-streaming)
+* [MQ Metrics][13]
 	* MQ statistics records (SMF Type 115) contain a multitude of statistics from various resources within the system. z/IRIS introduces z/OS MQ Metrics, focusing on the most vital performance indicators for monitoring, analysis, and alerting purposes.
 
-This isn't the metric you're looking for? Missing a critical feature for your organization? Send us a feature request to 
-[info@mainstorconcept.com](mailto:info@mainstorconcept.com).
+This isn't the metric you're looking for? Missing a critical feature for your organization? Send us a feature request at [info@mainstorconcept.com][2].
 
 ### Private enterprise offers
 
-* E-mail: [mainstorconcept GmbH](mailto:ziris@mainstorconcept.com)
+* E-mail: [mainstorconcept GmbH][2]
 * Phone: +49 721 7907610
 
 ### Licensing
 
-After starting your trial period, we will provide your z/IRIS trial license via email within 24 hours.
+After starting your trial period, we will provide your z/IRIS trial license through email within 24 hours.
 
 ### Validation
 
-Verify that the relevant components are available and meet the 
-[minimum requirements](https://public.mainstorconcept.com/home/troubleshooting-opentelemetry-integration).
+Verify that the relevant components are available and meet the [minimum requirements][14].
 
 ## Setup
 
 1. z/IRIS server: IronTap
 	1. Login Data
 		* **Username:** datadog-trial
-		* **Password:** We will provide the password for the repository with the license via email within 24 hours.
-	2. [IronTap Image](https://public.mainstorconcept.com/home/irontap-image)
+		* **Password:** We will provide the password for the repository with the license through email within 24 hours.
+	2. [IronTap Image][15]
 		* Enter the command in your CLI and follow the prompts entering your login data.  
 		
 		  ` docker login mainstorconcept.jfrog.io `
@@ -404,34 +393,61 @@ Verify that the relevant components are available and meet the
 		
 		  ` docker pull mainstorconcept.jfrog.io/ziris-docker-release/irontap:latest-kafka-otel `
 	
-	3. [Configure IronTap server](https://public.mainstorconcept.com/home/configure-irontap-container)
+	3. [Configure IronTap server][16].
 	
 2. z/IRIS z/OS Client
-	1. [Install z/IRIS z/OS Client](https://public.mainstorconcept.com/home/install-z-iris-clients)
-	2. [Configure z/IRIS Clients](https://public.mainstorconcept.com/home/configure-z-iris-clients)
-	3. [z/IRIS Client Started Task](https://public.mainstorconcept.com/home/z-iris-client-started-task)
+	1. [Install z/IRIS z/OS Client][17].
+	2. [Configure z/IRIS Clients][18].
+	3. [z/IRIS Client Started Task][19].
 
 ## Uninstallation
 
 1. z/IRIS server: IronTap
-	1. [IronTap Image](https://public.mainstorconcept.com/home/configure-irontap-container)
-   		1. Stop the z/IRIS IronTap container
-   		2. Remove the z/IRIS IronTap container
-   		3. Remove the z/IRIS Irontap image
-   		4. Delete the z/IRIS IronTap directory
+	1. [IronTap Image][16]
+   		1. Stop the z/IRIS IronTap container.
+   		2. Remove the z/IRIS IronTap container.
+   		3. Remove the z/IRIS IronTap image.
+   		4. Delete the z/IRIS IronTap directory.
 	   
 2. z/IRIS z/OS Client
 	1. Stop z/IRIS z/OS Client address space.
-	2. Remove all files in the $APP_HOME unix file path.
+	2. Remove all files in the $APP_HOME Unix file path.
 	3. Unmount the $APP_HOME mounted file system.
 	3. Remove the z/IRIS member for the concatenated PROCLIB. 
 	4. Remove the surrogate userid allocated to be used by the z/IRIS Started Task from the SAF system. 
 
 ## Support
 
-Trial and licensed customers can get assistance by 
-[requesting support](https://service.mainstorconcept.com/mscportal/login) or contacting us at 
-[support@mainstorconcept.com](mailto:support@mainstorconcept.com).
+For support or feature requests, contact z/IRIS through the following channels:
 
-If you would like a demonstration of z/IRIS for your team or have questions about z/IRIS capabilities with Datadog, 
-contact [ziris@mainstorconcept.com](mailto:ziris@mainstorconcept.com).
+- Email: [support@mainstorconcept.com][20] or [ziris@mainstorconcept.com](mailto:ziris@mainstorconcept.com) for a demonstration or for questions about z/IRIS capabilities with Datadog
+- Support: [Mainstorconcept Portal][21]
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Monitor mainframe performance with mainstorconcept’s offering in the Datadog Marketplace][22]
+
+[1]: https://www.mainstorconcept.com/z-iris-mainframe-observability/z-iris-datadog/?lang=en
+[2]: mailto:ziris@mainstorconcept.com
+[3]: https://public.mainstorconcept.com/home/observability-with-datadog
+[4]: https://public.mainstorconcept.com/home/distributed-db2-for-z-os-observability
+[5]: https://public.mainstorconcept.com/home/z-os-connect-observability
+[6]: https://public.mainstorconcept.com/home/z-os-work-observability
+[7]: https://public.mainstorconcept.com/home/ibm-mq-for-z-os-observability
+[8]: https://public.mainstorconcept.com/home/cics-transaction-observability
+[9]: https://docs.datadoghq.com/tracing/trace_explorer/
+[10]: https://docs.datadoghq.com/watchdog/
+[11]: https://public.mainstorconcept.com/home/rmf-metrics-streaming
+[12]: https://public.mainstorconcept.com/home/z-os-connect-metrics-streaming
+[13]: https://public.mainstorconcept.com/home/mq-metrics-streaming
+[14]: https://public.mainstorconcept.com/home/troubleshooting-opentelemetry-integration
+[15]: https://public.mainstorconcept.com/home/irontap-image
+[16]: https://public.mainstorconcept.com/home/configure-irontap-container 
+[17]: https://public.mainstorconcept.com/home/install-z-iris-clients
+[18]: https://public.mainstorconcept.com/home/configure-z-iris-clients
+[19]: https://public.mainstorconcept.com/home/z-iris-client-started-task
+[20]: mailto:support@mainstorconcept.com
+[21]: https://service.mainstorconcept.com/mscportal/login
+[22]: https://www.datadoghq.com/blog/mainframe-monitoring-mainstorconcept-datadog-marketplace/

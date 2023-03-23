@@ -26,7 +26,7 @@ Errors in monitoring configuration can be difficult to spot, but Composer simpli
 It's all about monitoring as code these days. Composer allows your team to store monitoring settings in your code repositories, track changes, and upload these settings to existing or new Datadog environments.
 
 
-For more information, please see the [Composer Datadog Product Guide][1]
+For more information, please see the [Composer Datadog Product Guide][1].
 
 
 ## Setup
@@ -42,7 +42,7 @@ For more information, please see the [Composer Datadog Product Guide][1]
 
 5. Open a web browser and enter `localhost:9191` in your address bar. The Composer start page appears.
 
-6. Navigate to the Datadog tab and create an environment JSON file to store your Datadog API and Application keys. For more information, see [API and Application Keys](https://docs.datadoghq.com/account_management/api-app-keys/).
+6. Navigate to the Datadog tab and create an environment JSON file to store your Datadog API and Application keys. For more information, see [API and Application Keys][2].
 
 7. To set up the repository to store your Datadog configuration files, click the Git menu item and create a Gitlab JSON file.
 
@@ -61,7 +61,17 @@ For more information, please see the [Composer Datadog Product Guide][1]
 2. Delete all files associated with the Composer.
 
 ## Support
-For support or feature requests, please contact Performetriks through the following channel:
-Email: [composer@performetriks.com](mailto:composer@performetriks.com)
 
-[1]:https://www.performetriks.com/composer-datadog-product-guide
+For support or feature requests, contact Performetriks through the following channel:
+
+- Email: [composer@performetriks.com][3]
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Store and manage Datadog configurations as code with Performetriks’ offering in the Datadog Marketplace][3]
+
+[1]: https://www.performetriks.com/composer-datadog-product-guide
+[2]: https://docs.datadoghq.com/account_management/api-app-keys/
+[3]: https://www.datadoghq.com/blog/manage-datadog-configurations-as-code-with-performetriks/
