@@ -1,39 +1,50 @@
 # LambdaTest
 
 ## Overview
-LambdaTest is a cloud based test execution platform that allows users to run both manual and automated tests on websites and web apps across 2000+ browsers, browser versions, and operating systems.
 
-This highly reliable and scalable test execution platform can be used to run both manual and automated tests and supports various automation testing frameworks like Selenium, Cypress, TestCafe, etc. In addition, you can log bugs with a single click while performing cross-browser testing of your websites (and web apps) from the LambdaTest platform to Datadog. LambdaTest will automatically include details from the testing environment, such as browser version, OS, resolution, comments, along with screenshots.
+[LambdaTest][4] is a cloud-based test execution platform that allows users to run both manual and automated tests on websites and web applications across 2000+ browsers, browser versions, and operating systems.
 
-Here's all that you can do with LambdaTest:  
+LambdaTest can run manual and automated tests, and supports various automation testing frameworks like Selenium, Cypress, and TestCafe. In addition, you can log bugs with a single click while performing cross-browser testing of your websites (and web applications) from the LambdaTest platform to Datadog. LambdaTest automatically includes details from the testing environment, such as browser version, OS, resolution, comments, along with screenshots.
+
+With LambdaTest, you have access to:  
+
 - Live-interactive testing across 2000+ browsers and real machines hosted on cloud-based infrastructure.
-- An online automation testing grid that supports Selenium & Cypress tests with any CI/CD pipeline to help QA teams validate and ship quality builds faster.
-- A next-gen, developer-friendly browser that helps to build well-performing & responsive websites with speed.
+- An online automation testing grid that supports Selenium and Cypress tests with any CI/CD pipeline to help QA teams validate and ship quality builds faster.
+- A next-gen, developer-friendly browser that helps you build well-performing and responsive websites with speed.
 - 100+ integrations with third-party tools for project management, communication, codeless automation, CI/CD, and more.
-- Help is always available with 24/7 chat support.
+- 24/7 chat support.
 - Lifetime free access to the platform with 100 free automation testing minutes.
 
-Here, you can purchase a subscription to LambdaTest through the Datadog Marketplace. Once you have your LambdaTest account set up (or if you're already a customer of LambdaTest), please see the [ integration tile](/integrations/lambdatest) to start sending data into Datadog.
+You can purchase a subscription to LambdaTest through the Datadog Marketplace. Once you have your LambdaTest account set up (or if you're already a customer of LambdaTest), navigate to the [integration tile][1] to start sending data into Datadog.
 
 
 ## Setup
 
-You can purchase a subscription to LambdaTest directly through this tile. Once you've made your purchase, a representative will reach out to you shortly to help set up your environment.
+If you need help setting up the integration so that data is shared between Datadog and LambdaTest, see the [LambdaTest integration tile][1].
 
-For detailed pricing information, [click here](https://www.lambdatest.com/pricing).
+You can purchase a subscription to LambdaTest directly through the integration tile. Once you've made your purchase, a representative will reach out to you shortly to help set up your environment.
 
-If you need any help with setting up the integration so that data is shared between Datadog and LambdaTest, see the [LambdaTest integration tile](/integrations/lambdatest).
+For more information about pricing, [see the LambdaTest Pricing page][2].
 
 ## Uninstallation
 
 First, cancel your subscription in Plan & Pricing. LambdaTest will then reach out to confirm and disconnect your account.
 
-
-
 ## Support
 
-For support or feature requests, contact LambdaTest on the following channels:
+For support or feature requests, contact LambdaTest through the following channels:
 
-Email: [support@lambdatest.com](mailto:support@lambdatest.com)
+Email: [support@lambdatest.com][3]
 Phone: +1-(866)-430-7087
-Visit: https://www.lambdatest.com/
+
+### Further Reading
+
+Additional helpful documentation, links, and articles:
+
+- [Monitor user-facing bugs with LambdaTest’s subscription in the Datadog Marketplace][5]
+
+[1]: https://app.datadoghq.com/integrations/lambdatest
+[2]: https://www.lambdatest.com/pricing
+[3]: mailto:support@lambdatest.com
+[4]: https://www.lambdatest.com/
+[5]: https://www.datadoghq.com/blog/monitor-user-bugs-with-lambdatest/
