@@ -82,7 +82,7 @@ The Workday integration includes the following service checks:
 
 ## Uninstallation
 
-Uninstall the Workday integration from the Datadog agent using the `datadog-agent` CLI utility:
+Uninstall the Workday integration from the Datadog Agent using the `datadog-agent` CLI utility:
 
 *For Linux*
 
@@ -103,7 +103,7 @@ For support or feature requests, contact AVM Consulting through the following ch
  - Email: [integrations@avmconsulting.net][6] 
  - Phone: 855-AVM-0555 
 
-## Further Reading
+### Further Reading
 
 Additional helpful documentation, links, and articles:
 
