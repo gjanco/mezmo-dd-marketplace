@@ -335,10 +335,12 @@ class NutanixCheck(AgentCheck):
         entity = "license"
         response = self.call_api(entity)
         metric_tags = self.tags.copy()
-        nodes = response["nodeLicenseList"]
+        nodes = response.get("nodeLicenseList", [])
+        if not nodes:
+            nodes = response.get("licenseDTO", {}).get("nodeLicenseList", [])
         cluster_license = response["clusterExpiryUsecs"]
         self.gauge("{}.{}.clusterExpiryUsecs".format(self.metric_prefix, entity), cluster_license, tags=metric_tags)
-        if nodes is not None:
+        if nodes:
             for node in nodes:
                 node_tags = metric_tags.copy()
                 num_days_remaining = node.get("numDaysRemaining", 0)

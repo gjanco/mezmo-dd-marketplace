@@ -1,5 +1,8 @@
 # CHANGELOG - Nutanix
 
+## 1.3.5 / 2023-04-04
+* [BugFix] Fix bug with call for getting license information due to change in Nutanix API
+
 ## 1.3.4 / 2022-05-13
 * [BugFix] Fix bug in reporting days left in node licenses
 * [BugFix] Fix titles and widget names in dashboards due to inconsistency and wrong metric names
