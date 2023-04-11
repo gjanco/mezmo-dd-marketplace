@@ -1,0 +1,60 @@
+## All options defined here are available to all instances.
+#
+init_config:
+
+    ## @param service - string - optional
+    ## Attach the tag `service:<SERVICE>` to every metric, event, and service check emitted by this integration.
+    ##
+    ## Additionally, this sets the default `service` for every log source.
+    #
+    # service: <SERVICE>
+
+## Every instance is scheduled independently of the others.
+#
+instances:
+
+    ## @param host - string - required
+    ## The host of Netskope instance to monitor. Permitted characters are (A-Z), (a-z), (0-9), hyphen(-) and period(.)
+    #
+  - host: demoenterprise.ce.goskope.com
+
+    ## @param v2_api_token - string - required
+    ## The token of Netskope API V2.
+    #
+    v2_api_token: <API_TOKEN>
+
+    ## @param events - list of strings - optional - default: ['infrastructure', 'network', 'connection', 'audit', 'application', 'incident']
+    ## Provide the event endpoints to monitor the events data. Only lower case characters are accepted.
+    #
+    # events:
+    #   - infrastructure
+    #   - network
+    #   - connection
+    #   - audit
+    #   - application
+    #   - incident
+
+    ## @param collect_alerts - boolean - required
+    ## Whether to collect alert data or not. Permitted values are true and false.
+    #
+    collect_alerts: true
+
+    ## @param ingest_metrics - boolean - required
+    ## Whether to ingest custom metrics data to Datadog platform or not. Permitted values are true and false.
+    #
+    ingest_metrics: false
+
+    ## @param tags - list of strings - optional
+    ## A list of tags to attach to every metric and service check emitted by this instance.
+    ##
+    ## Learn more about tagging at https://docs.datadoghq.com/tagging
+    #
+    # tags:
+    #   - <KEY_1>:<VALUE_1>
+    #   - <KEY_2>:<VALUE_2>
+
+    ## @param min_collection_interval - number - required
+    ## This changes the collection interval of the check. For more information, see:
+    ## https://docs.datadoghq.com/developers/write_agent_check/#collection-interval
+    #
+    min_collection_interval: 15

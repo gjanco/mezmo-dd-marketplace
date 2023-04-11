@@ -1,0 +1,68 @@
+name: crest_data_systems_netskope
+version: 1.0.0
+files:
+  - name: crest_data_systems_netskope.yaml
+    options:
+      - template: init_config
+        options:
+          - template: init_config/default
+      - template: instances
+        options:
+          - name: host
+            required: true
+            description: "The host of Netskope instance to monitor. Permitted characters are (A-Z), (a-z), (0-9), hyphen(-) and period(.)"
+            value:
+              type: string
+              example: "demoenterprise.ce.goskope.com"
+          - name: v2_api_token
+            required: true
+            description: "The token of Netskope API V2."
+            value:
+              type: string
+              example: "<API_TOKEN>"
+          - name: events
+            required: false
+            description: "Provide the event endpoints to monitor the events data. Only lower case characters are accepted."
+            value:
+              type: array
+              items:
+                type: string
+              example:
+                [
+                  infrastructure,
+                  network,
+                  connection,
+                  audit,
+                  application,
+                  incident,
+                ]
+              display_default:
+                [
+                  infrastructure,
+                  network,
+                  connection,
+                  audit,
+                  application,
+                  incident,
+                ]
+          - name: collect_alerts
+            required: true
+            description: "Whether to collect alert data or not. Permitted values are true and false."
+            value:
+              type: boolean
+              example: true
+          - name: ingest_metrics
+            required: true
+            description: "Whether to ingest custom metrics data to Datadog platform or not. Permitted values are true and false."
+            value:
+              type: boolean
+              example: false
+          - template: instances/default
+            overrides:
+              min_collection_interval.required: true
+              min_collection_interval.value.example: 15
+              min_collection_interval.value.minimum: 1
+              min_collection_interval.value.maximum: 64800
+              service.hidden: true
+              empty_default_hostname.hidden: true
+              metric_patterns.hidden: true
