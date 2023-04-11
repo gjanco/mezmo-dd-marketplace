@@ -1,5 +1,9 @@
 # CHANGELOG - crest_data_systems_dell_emc_isilon
 
+## 3.0.0 / 2023-04-01
+
+* [Added] Provided support for Dell EMC Isilon version >= 9.*
+
 ## 2.0.2 / 2022-12-15
 
 * [Removed] Unused tag 'hdd-time' from Storage Drive Details widget

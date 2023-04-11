@@ -1,6 +1,8 @@
 """Constants"""
 INTEGRATION_PREFIX = "cds.emc.isilon."
 
+V9_EXCLUSIVE_API = ["/platform/11/quota/quotas", "/platform/11/quota/quotas-summary"]
+
 APIS = [
     {
         "api_interval": 120,

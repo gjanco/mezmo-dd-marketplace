@@ -1,5 +1,6 @@
 """Module for EMC Isilon Integration."""
 import importlib
+import re
 
 from requests.exceptions import ConnectionError
 
@@ -8,7 +9,7 @@ try:
 except ImportError:
     from checks import AgentCheck
 
-from .cds_dell_emc_consts import APIS, INTEGRATION_PREFIX
+from .cds_dell_emc_consts import APIS, INTEGRATION_PREFIX, V9_EXCLUSIVE_API
 
 
 class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
@@ -35,6 +36,7 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
             self.authentication()
 
         if self.is_authenticated:
+            self.get_session_cookie()
             self.set_cluster_name()
             self.gauge(
                 "datadog.marketplace.crest_data_systems.dell_emc_isilon",
@@ -43,11 +45,21 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
             )
             self.ingest_data_for_dashboards(api_list)
 
+    def get_major_version(self, release_version):
+        match = re.findall(r"\d+", release_version)
+        if match:
+            self.major_version = int(match[0])
+            self.log.info(f"Major version of Dell EMC Isilon is '{self.major_version}'.")  # noqa: G00
+        else:
+            self.major_version = 9
+            self.log.info("No major version found of Dell EMC Isilon.")
+
     def set_cluster_name(self):
         """To set the cluster name."""
         url = self.base_uri + "/platform/1/cluster/config"
         try:
             response_json = self._make_request(url)
+            self.get_major_version(response_json.get("onefs_version")["release"])
 
             if "tags" in self.instance and isinstance(self.instance["tags"], list):
                 tag_set = set(self.instance["tags"])
@@ -74,6 +86,11 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
     def ingest_data_for_dashboards(self, api_list):
         """Ingest data for Dashboard by calling API respectively."""
         for api in api_list:
+            if self.major_version < 9 and api.get("api_url") in V9_EXCLUSIVE_API:
+                self.log.info(
+                    "Found dell EMC Isilon version less than 9. "  # noqa: G00*
+                    "Skipping '{}' endpoint as ".format(api.get("api_url"))
+                )
             url = self.base_uri + api.get("api_url", "")
             response_json = None
             try:
@@ -114,6 +131,39 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
 
                     self.log.info("Data for %s panel is ingested successfully.", panel)
 
+    def get_header(self):
+        csrf = self.cookie.get("isicsrf")
+        sessid = self.cookie.get("isisessid")
+        headers = {
+            "X-CSRF-Token": str(csrf),
+            "Cookie": "isisessid=" + str(sessid),
+            "Referer": str(self.base_uri),
+        }
+        return headers
+
+    def get_session_cookie(self):
+        url = "https://%s:%s/session/1/session" % (self.ip_address, self.port)
+        payload = {
+            "username": self.username,
+            "password": self.password,
+            "services": ["platform", "namespace"],
+        }
+        response = None
+        try:
+            response = self.http.post(
+                url,
+                json=payload,
+                headers={"Content-Type": "application/json"},
+                verify=self.instance.get("certificate_path", False),
+            )
+            if response.status_code == 201 and response.cookies:
+                self.cookie = dict(response.cookies)
+            else:
+                self.cookie = None
+                self.node_dict = None
+        except Exception as ex:
+            self.log.exception(ex)
+
     def authentication(self):
         """Method to do Authentication."""
         self.is_authenticated = False
@@ -127,8 +177,7 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
             and "password" in self.instance
             and "port" in self.instance
         ):
-
-            self.service_check(auth_check_name, 2, message="Authentication" " failed")
+            self.service_check(auth_check_name, 2, message="Authentication failed")
             self.event(
                 {
                     "source_type_name": event_source_type,
@@ -225,6 +274,8 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
         self.ip_address = ip_address
         self.port = port
         self.base_uri = "https://%s:%s" % (ip_address, port)
+        self.username = username
+        self.password = password
         return
 
     def _make_request(self, url):
@@ -234,13 +285,15 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
         if isinstance(verify_certificate, str) and len(verify_certificate.strip()) == 0:
             verify_certificate = False
 
-        response = self.http.get(url, verify=verify_certificate)
+        response = self.http.get(url, headers=self.get_header(), verify=verify_certificate)
         if response is None:
             raise Exception("Could not make request to API. url: {}".format(url))
 
         if response.status_code == 401:
+            self.cookie = {}
             self.authentication()
-            if self.is_authenticated:
+            self.get_session_cookie()
+            if self.is_authenticated and self.cookie:
                 response = self.http.get(url, verify=verify_certificate)
                 if response is None:
                     raise Exception("Could not make request to API. url: {}".format(url))
