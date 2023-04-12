@@ -1,0 +1,25 @@
+{
+	"name": "BoomiWatch: Infrastructure - Molecule Node CPU Usage High",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:system.cpu.user{role:molecule} by {boomi-hostname} + avg:system.cpu.system{role:molecule} by {boomi-hostname} >= 90",
+	"message": "{{boomi-hostname.name}}  CPU Usage High",
+	"tags": ["integration:kitepipe-boomiwatch"],
+	"options": {
+		"thresholds": {
+			"critical": 90,
+			"warning": 80
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"include_tags": true,
+		"new_group_delay": 60,
+		"silenced": {}
+	},
+	"priority": null,
+	"restricted_roles": null,
+	"recommended_monitor_metadata": {
+		"description": "Detects if molecule node is at high CPU usage."
+	}
+}

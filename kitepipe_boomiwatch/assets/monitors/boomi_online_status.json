@@ -1,0 +1,26 @@
+{
+	"name": "BoomiWatch: Runtime Online Status",
+	"type": "service check",
+	"query": "\"kitepipe.boomiwatch.runtime_reported_online\".over(\"*\").exclude(\"runtime_name:example\").by(\"runtime_name\").last(2).count_by_status()",
+	"message": "{{#is_alert}}Boomi runtime {{runtime_name.name}} is reported offline; please investigate.{{/is_alert}}\n{{#is_alert_recovery}}Boomi runtime {{runtime_name.name}} is reported online after previous offline alert.{{/is_alert_recovery}} ",
+	"tags": ["integration:kitepipe-boomiwatch"],
+	"options": {
+		"thresholds": {
+			"critical": 1,
+			"warning": 1,
+			"ok": 1
+		},
+		"notify_audit": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"timeout_h": 0,
+		"include_tags": false,
+		"new_group_delay": 310,
+		"silenced": {}
+	},
+	"priority": null,
+	"restricted_roles": null,
+	"recommended_monitor_metadata": {
+		"description": "Triggers an alert when Kitepipe BoomiWatch detects a runtime in the moitored account is not online."
+	}
+}

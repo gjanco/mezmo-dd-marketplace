@@ -1,0 +1,116 @@
+{
+  "manifest_version": "2.0.0",
+  "app_uuid": "193f4f33-2c39-4e6c-be54-279fef405057",
+  "app_id": "kitepipe-boomiwatch",
+  "display_on_public_website": false,
+  "tile": {
+    "overview": "README.md#Overview",
+    "configuration": "README.md#Setup",
+    "uninstallation": "README.md#Uninstallation",
+    "support": "README.md#Support",
+    "changelog": "CHANGELOG.md",
+    "description": "Monitor Boomi processes and infrastructure",
+    "title": "Kitepipe BoomiWatch",
+    "media": [
+      {
+        "media_type": "image",
+        "caption": "Enhanced Process Reporting lets you look back more than 30 days and filter by more fields, with wildcards.",
+        "image_url": "images/enhanced_process_reporting.png"
+      },
+      {
+        "media_type": "image",
+        "caption": "See long-running processes at a glance and receive alerts with anomaly detection.",
+        "image_url": "images/execution_duration_anomalies.png"
+      },
+      {
+        "media_type": "image",
+        "caption": "Extensive infrastructure monitoring including CPU, RAM, Disk, Network.",
+        "image_url": "images/infrastructure_monitoring.png"
+      },
+      {
+        "media_type": "image",
+        "caption": "Cluster monitoring that exceeds Boomi's published recommendations.",
+        "image_url": "images/cluster_monitoring.png"
+      },
+      {
+        "media_type": "image",
+        "caption": "Toplists and graphs of errored Boomi processes.",
+        "image_url": "images/error_monitoring.png"
+      }],
+    "classifier_tags": [
+      "Supported OS::Linux",
+      "Supported OS::macOS",
+      "Category::Alerting",
+      "Category::AWS",
+      "Category::Event Management",
+      "Category::Exceptions",
+      "Category::Log Collection",
+      "Category::Marketplace",
+      "Category::Notification",
+      "Submitted Data Type::Metrics",
+      "Submitted Data Type::Logs",
+      "Submitted Data Type::Events",
+      "Offering::Integration"
+    ]
+  },
+  "assets": {
+    "integration": {
+      "source_type_name": "BoomiWatch",
+      "configuration": {
+        "spec": "assets/configuration/spec.yaml"
+      },
+      "events": {
+        "creates_events": true
+      },
+      "metrics": {
+        "prefix": "kitepipe.boomiwatch.",
+        "check": "kitepipe.boomiwatch.integration_completed",
+        "metadata_path": "metadata.csv"
+      },
+      "service_checks": {
+        "metadata_path": "assets/service_checks.json"
+      }
+    },
+    "dashboards": {
+        "BoomiWatch Overview": "assets/dashboards/boomiwatch_overview.json",
+        "Boomi Workload Monitoring": "assets/dashboards/boomi_workload_monitoring.json",
+        "Boomi Cluster Monitoring": "assets/dashboards/boomi_cluster_monitoring.json",
+        "Boomi Compute Monitoring": "assets/dashboards/boomi_compute_monitoring.json"
+    },
+    "monitors": {
+        "Boomi Cluster Node \"View File\" is Missing": "assets/monitors/cluster_view_file_missing.json",
+        "Execution Duration Anomaly": "assets/monitors/execution_duration_anomaly.json",
+        "BoomiWatch is Down": "assets/monitors/boomiwatch_down.json",
+        "Boomi Cluster Node \"View File\" is Too Old": "assets/monitors/cluster_view_file_too_old.json",
+        "Boomi Cluster Problem": "assets/monitors/cluster_view_file_problem.json",
+        "Boomi Infrastructure: API Gateway Node CPU Usage High": "assets/monitors/api_gw_node_cpu.json",
+        "Boomi Infrastructure: API Gateway Node Disk Usage High": "assets/monitors/api_gw_node_disk.json",
+        "Boomi Infrastructure: API Gateway Node Memory Usage High": "assets/monitors/api_gw_node_ram.json",
+        "Boomi Infrastructure: Molecule Node CPU Usage High": "assets/monitors/molecule_node_cpu.json",
+        "Boomi Infrastructure: Molecule Node Disk Usage High": "assets/monitors/molecule_node_disk.json",
+        "Boomi Infrastructure: Molecule Node Memory Usage High": "assets/monitors/molecule_node_ram.json",
+        "BoomiWatch: Runtime Online Status": "assets/monitors/boomi_online_status.json"
+    }
+  },
+  "pricing": [{
+    "billing_type": "tag_count",
+    "unit_price": 150,
+    "unit_label": "Boomi node",
+    "tag": "billing_key",
+    "metric": "datadog.marketplace.kitepipe.boomiwatch",
+    "product_id": "boomiwatch",
+    "includes_assets": true,
+    "short_description": "Unit price per Boomi node"
+} ],
+  "legal_terms": {
+    "eula": "assets/eula.pdf"
+  },
+  "author": {
+    "name": "Kitepipe",
+    "homepage": "https://www.kitepipe.com",
+    "vendor_id": "kitepipe",
+    "sales_email": "BoomiWatch@kitepipe.com",
+    "support_email": "BoomiWatch@kitepipe.com"
+  },
+  "oauth": {}
+}

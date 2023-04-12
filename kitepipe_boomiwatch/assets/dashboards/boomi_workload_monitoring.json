@@ -1,0 +1,810 @@
+{
+	"title": "Boomi Workload Monitoring",
+	"description": "## Description\nThis dashboard monitors your Boomi integration processes.  Included features:\n* Includes Process Reporting data as far back as your Datadog log retention policy allows.\n* Toplist of errored processes.\n* Search and filter by wildcards.\n* Search by error message.\n* Detect long-running processes.",
+	"widgets": [{
+		"id": 367873069892131,
+		"definition": {
+			"type": "image",
+			"url": "https://www.kitepipe.com/hubfs/Kitepipe_Logo_web.svg",
+			"url_dark_theme": "https://awsmp-logos.s3.amazonaws.com/1c378d37-cef2-4125-81df-10005b2fb6de/797e8cff433d250d452fbbccfa209937.png",
+			"sizing": "contain",
+			"has_background": false,
+			"has_border": false,
+			"vertical_align": "center",
+			"horizontal_align": "center"
+		},
+		"layout": {
+			"x": 0,
+			"y": 0,
+			"width": 2,
+			"height": 6
+		}
+	},
+	{
+		"id": 3463294281160544,
+		"definition": {
+			"title": "Monitoring Status",
+			"background_color": "vivid_blue",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 7885851612987194,
+				"definition": {
+					"title": "BoomiWatch running?",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "check_status",
+					"check": "kitepipe.boomiwatch.completed",
+					"grouping": "cluster",
+					"group_by": ["boomi-hostname",
+					"cluster_node_id"],
+					"tags": ["service_check:true"]
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 3,
+					"height": 1
+				}
+			},
+			{
+				"id": 2324535359481429,
+				"definition": {
+					"title": "",
+					"type": "manage_status",
+					"display_format": "countsAndList",
+					"color_preference": "text",
+					"hide_zero_counts": true,
+					"query": "Runtime Online Status",
+					"sort": "status,asc",
+					"count": 50,
+					"start": 0,
+					"summary_type": "groups",
+					"show_priority": false,
+					"show_last_triggered": false
+				},
+				"layout": {
+					"x": 3,
+					"y": 0,
+					"width": 7,
+					"height": 5
+				}
+			},
+			{
+				"id": 7780923485980672,
+				"definition": {
+					"title": "Boomi running?",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "check_status",
+					"check": "kitepipe.boomiwatch.boomi_daemon_running",
+					"grouping": "cluster",
+					"group_by": ["boomi-hostname"],
+					"tags": ["service_check:true"]
+				},
+				"layout": {
+					"x": 0,
+					"y": 1,
+					"width": 3,
+					"height": 1
+				}
+			},
+			{
+				"id": 7365764306544827,
+				"definition": {
+					"title": "BoomiWatch config OK?",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "check_status",
+					"check": "kitepipe.boomiwatch.config_validated",
+					"grouping": "cluster",
+					"group_by": ["cluster_node_id",
+					"boomi-hostname"],
+					"tags": ["service_check:true"]
+				},
+				"layout": {
+					"x": 0,
+					"y": 2,
+					"width": 3,
+					"height": 1
+				}
+			},
+			{
+				"id": 5552026092228011,
+				"definition": {
+					"title": "Queried Executions?",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "check_status",
+					"check": "kitepipe.boomiwatch.queried_boomi_executions",
+					"grouping": "cluster",
+					"group_by": ["cluster_node_id",
+					"host"],
+					"tags": []
+				},
+				"layout": {
+					"x": 0,
+					"y": 3,
+					"width": 3,
+					"height": 1
+				}
+			},
+			{
+				"id": 6757001122984990,
+				"definition": {
+					"title": "Found Executions?",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "check_status",
+					"check": "kitepipe.boomiwatch.found_boomi_executions",
+					"grouping": "cluster",
+					"group_by": ["cluster_node_id",
+					"boomi-hostname"],
+					"tags": ["service_check:true"]
+				},
+				"layout": {
+					"x": 0,
+					"y": 4,
+					"width": 3,
+					"height": 1
+				}
+			}]
+		},
+		"layout": {
+			"x": 2,
+			"y": 0,
+			"width": 10,
+			"height": 6
+		}
+	},
+	{
+		"id": 2686263096860672,
+		"definition": {
+			"title": "Top Boomi Errors",
+			"background_color": "vivid_blue",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 4976262286586893,
+				"definition": {
+					"title": "Count of Errored Executions",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "toplist",
+					"requests": [{
+						"formulas": [{
+							"formula": "cutoff_min(query1, 1)",
+							"limit": {
+								"count": 10,
+								"order": "desc"
+							}
+						}],
+						"conditional_formats": [{
+							"comparator": ">",
+							"palette": "white_on_red",
+							"value": 0
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"search": {
+								"query": "@executionStatus:error $BoomiProcess $AtomName $Message"
+							},
+							"data_source": "logs",
+							"compute": {
+								"aggregation": "count"
+							},
+							"name": "query1",
+							"indexes": ["*"],
+							"group_by": [{
+								"facet": "@boomiProcessName",
+								"sort": {
+									"aggregation": "count",
+									"order": "desc"
+								},
+								"limit": 10
+							}]
+						}]
+					}]
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 6,
+					"height": 2
+				}
+			},
+			{
+				"id": 641060377671696,
+				"definition": {
+					"title": "Count of Errored Documents",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "toplist",
+					"requests": [{
+						"formulas": [{
+							"formula": "cutoff_min(query1, 1)",
+							"limit": {
+								"count": 15,
+								"order": "desc"
+							}
+						}],
+						"conditional_formats": [{
+							"comparator": ">",
+							"palette": "white_on_red",
+							"value": 0
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"search": {
+								"query": "$BoomiProcess $AtomName $Message"
+							},
+							"data_source": "logs",
+							"compute": {
+								"metric": "@inboundErrorDocumentCount",
+								"aggregation": "sum"
+							},
+							"name": "query1",
+							"indexes": ["*"],
+							"group_by": [{
+								"facet": "@boomiProcessName",
+								"sort": {
+									"metric": "@inboundErrorDocumentCount",
+									"aggregation": "sum",
+									"order": "desc"
+								},
+								"limit": 15
+							}]
+						}]
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 0,
+					"width": 6,
+					"height": 2
+				}
+			},
+			{
+				"id": 18787502624866,
+				"definition": {
+					"title": "Errored Execution Timeseries",
+					"title_size": "16",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "auto",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"formula": "query1"
+						}],
+						"response_format": "timeseries",
+						"queries": [{
+							"search": {
+								"query": "@executionStatus:error $BoomiProcess $AtomName $Message"
+							},
+							"data_source": "logs",
+							"compute": {
+								"aggregation": "count"
+							},
+							"name": "query1",
+							"indexes": ["*"],
+							"group_by": [{
+								"facet": "@boomiProcessName",
+								"sort": {
+									"aggregation": "count",
+									"order": "desc"
+								},
+								"limit": 10
+							}]
+						}],
+						"style": {
+							"palette": "warm",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "bars"
+					}]
+				},
+				"layout": {
+					"x": 0,
+					"y": 2,
+					"width": 12,
+					"height": 2
+				}
+			},
+			{
+				"id": 922999982346328,
+				"definition": {
+					"title": "Boomi Error or Warning Events",
+					"title_size": "16",
+					"title_align": "left",
+					"requests": [{
+						"query": {
+							"query_string": "source:my_apps boomisource:platform_event eventlevel:(error OR warning) $Message",
+							"data_source": "event_stream",
+							"event_size": "s"
+						},
+						"columns": [],
+						"response_format": "event_list"
+					}],
+					"type": "list_stream"
+				},
+				"layout": {
+					"x": 0,
+					"y": 4,
+					"width": 12,
+					"height": 4
+				}
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 6,
+			"width": 12,
+			"height": 9
+		}
+	},
+	{
+		"id": 3809053017884131,
+		"definition": {
+			"title": "Change and Audit Trail",
+			"background_color": "vivid_blue",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 7156899309290016,
+				"definition": {
+					"title": "Boomi Audit Log",
+					"title_size": "16",
+					"title_align": "left",
+					"requests": [{
+						"query": {
+							"query_string": "boomisource:audit_log auditlogtype:(as.atom OR as.extensions OR as.process.properties OR as.schedules OR api.deployment OR as.atom.process OR as.atom.properties OR as.connector) $Message",
+							"data_source": "event_stream",
+							"event_size": "s"
+						},
+						"columns": [],
+						"response_format": "event_list"
+					}],
+					"type": "list_stream"
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 12,
+					"height": 4
+				}
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 15,
+			"width": 12,
+			"height": 5
+		}
+	},
+	{
+		"id": 4197327082431420,
+		"definition": {
+			"title": "Enhanced Process Reporting",
+			"background_color": "vivid_blue",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 4973458203602265,
+				"definition": {
+					"title": "Process Reporting",
+					"title_size": "16",
+					"title_align": "left",
+					"requests": [{
+						"query": {
+							"query_string": "@service:BoomiExecutionRecord $AtomName $BoomiProcess $ExecutionStatus $Message",
+							"sort": {
+								"column": "timestamp",
+								"order": "desc"
+							},
+							"data_source": "logs_stream",
+							"indexes": []
+						},
+						"response_format": "event_list",
+						"columns": [{
+							"field": "status_line",
+							"width": "auto"
+						},
+						{
+							"field": "timestamp",
+							"width": "auto"
+						},
+						{
+							"field": "atomName",
+							"width": "auto"
+						},
+						{
+							"field": "boomiProcessName",
+							"width": "auto"
+						},
+						{
+							"field": "executionStatus",
+							"width": "auto"
+						},
+						{
+							"field": "inboundDocumentCount",
+							"width": "auto"
+						},
+						{
+							"field": "inboundErrorDocumentCount",
+							"width": "auto"
+						},
+						{
+							"field": "message",
+							"width": "auto"
+						},
+						{
+							"field": "nodeId",
+							"width": "auto"
+						}]
+					}],
+					"type": "list_stream"
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 12,
+					"height": 5
+				}
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 0,
+			"width": 12,
+			"height": 6,
+			"is_column_break": true
+		}
+	},
+	{
+		"id": 730074311251000,
+		"definition": {
+			"title": "Boomi Process Performance",
+			"background_color": "vivid_blue",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 5618523471055480,
+				"definition": {
+					"title": "Long-Running Processes In Progress",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "toplist",
+					"requests": [{
+						"formulas": [{
+							"formula": "query1",
+							"limit": {
+								"count": 10,
+								"order": "desc"
+							}
+						}],
+						"conditional_formats": [{
+							"comparator": ">",
+							"palette": "white_on_red",
+							"value": 10
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "max:kitepipe.boomiwatch.execution.measure.inProgressExecutionDuration{$BoomiProcess} by {boomi.process.name}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "avg"
+						}]
+					}]
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 6,
+					"height": 2
+				}
+			},
+			{
+				"id": 2854950600469988,
+				"definition": {
+					"title": "Boomi Process Document Counts",
+					"title_size": "16",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"alias": "Total Doc Count",
+							"formula": "cutoff_min(default_zero(query1) + default_zero(query2), 1)"
+						}],
+						"response_format": "timeseries",
+						"queries": [{
+							"search": {
+								"query": "$BoomiProcess $AtomName $ExecutionStatus $Message"
+							},
+							"data_source": "logs",
+							"compute": {
+								"metric": "@inboundDocumentCount",
+								"aggregation": "avg"
+							},
+							"name": "query1",
+							"indexes": ["*"],
+							"group_by": [{
+								"facet": "@boomiProcessName",
+								"sort": {
+									"metric": "@inboundDocumentCount",
+									"aggregation": "avg",
+									"order": "desc"
+								},
+								"limit": 10
+							}]
+						},
+						{
+							"search": {
+								"query": "$BoomiProcess $AtomName $ExecutionStatus $Message"
+							},
+							"data_source": "logs",
+							"compute": {
+								"metric": "@outboundDocumentCount",
+								"aggregation": "avg"
+							},
+							"name": "query2",
+							"indexes": ["*"],
+							"group_by": [{
+								"facet": "@boomiProcessName",
+								"sort": {
+									"metric": "@outboundDocumentCount",
+									"aggregation": "avg",
+									"order": "desc"
+								},
+								"limit": 10
+							}]
+						}],
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 0,
+					"width": 6,
+					"height": 4
+				}
+			},
+			{
+				"id": 7352240903230934,
+				"definition": {
+					"title": "Execution Duration Anomaly",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "alert_graph",
+					"alert_id": "106045114",
+					"viz_type": "timeseries"
+				},
+				"layout": {
+					"x": 0,
+					"y": 2,
+					"width": 6,
+					"height": 2
+				}
+			},
+			{
+				"id": 3040379179369212,
+				"definition": {
+					"title": "Boomi Process Execution Time (sec.)",
+					"title_size": "16",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"alias": "Execution Seconds",
+							"formula": "cutoff_min(query1, 1) / 1000"
+						}],
+						"response_format": "timeseries",
+						"queries": [{
+							"search": {
+								"query": "$BoomiProcess $AtomName $ExecutionStatus $Message"
+							},
+							"data_source": "logs",
+							"compute": {
+								"metric": "@duration",
+								"aggregation": "median"
+							},
+							"name": "query1",
+							"indexes": ["*"],
+							"group_by": [{
+								"facet": "@boomiProcessName",
+								"sort": {
+									"metric": "@duration",
+									"aggregation": "median",
+									"order": "desc"
+								},
+								"limit": 15
+							}]
+						}],
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"yaxis": {
+						"include_zero": false
+					},
+					"custom_links": []
+				},
+				"layout": {
+					"x": 0,
+					"y": 4,
+					"width": 6,
+					"height": 4
+				}
+			},
+			{
+				"id": 2501135204850850,
+				"definition": {
+					"title": "Total Docs per Minute",
+					"title_size": "16",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"alias": "Total Docs per Minute",
+							"formula": "(query1 + query3) / query2 * 1000 * 60"
+						}],
+						"response_format": "timeseries",
+						"queries": [{
+							"search": {
+								"query": "$BoomiProcess $AtomName $ExecutionStatus $Message"
+							},
+							"data_source": "logs",
+							"compute": {
+								"metric": "@inboundDocumentCount",
+								"aggregation": "avg"
+							},
+							"name": "query1",
+							"indexes": ["*"],
+							"group_by": [{
+								"facet": "@boomiProcessName",
+								"sort": {
+									"metric": "@inboundDocumentCount",
+									"aggregation": "avg",
+									"order": "desc"
+								},
+								"limit": 10
+							}]
+						},
+						{
+							"search": {
+								"query": "$BoomiProcess $AtomName $ExecutionStatus $Message"
+							},
+							"data_source": "logs",
+							"compute": {
+								"metric": "@outboundDocumentCount",
+								"aggregation": "avg"
+							},
+							"name": "query3",
+							"indexes": ["*"],
+							"group_by": [{
+								"facet": "@boomiProcessName",
+								"sort": {
+									"metric": "@outboundDocumentCount",
+									"aggregation": "avg",
+									"order": "desc"
+								},
+								"limit": 10
+							}]
+						},
+						{
+							"search": {
+								"query": "$BoomiProcess $AtomName $ExecutionStatus $Message"
+							},
+							"data_source": "logs",
+							"compute": {
+								"metric": "@duration",
+								"aggregation": "avg"
+							},
+							"name": "query2",
+							"indexes": ["*"],
+							"group_by": [{
+								"facet": "@boomiProcessName",
+								"sort": {
+									"metric": "@duration",
+									"aggregation": "avg",
+									"order": "desc"
+								},
+								"limit": 10
+							}]
+						}],
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"yaxis": {
+						"include_zero": false
+					}
+				},
+				"layout": {
+					"x": 6,
+					"y": 4,
+					"width": 6,
+					"height": 4
+				}
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 6,
+			"width": 12,
+			"height": 9
+		}
+	}],
+	"template_variables": [{
+		"name": "BoomiProcess",
+		"prefix": "boomi.process.name",
+		"available_values": [],
+		"default": "*"
+	},
+	{
+		"name": "AtomName",
+		"prefix": "atom.name",
+		"available_values": [],
+		"default": "*"
+	},
+	{
+		"name": "ExecutionStatus",
+		"prefix": "execution.status",
+		"available_values": [],
+		"default": "*"
+	},
+	{
+		"name": "Message",
+		"prefix": "message",
+		"available_values": [],
+		"default": "*"
+	}],
+	"layout_type": "ordered",
+	"is_read_only": true,
+	"notify_list": [],
+	"reflow_type": "fixed",
+	"id": "8it-65p-brm"
+}

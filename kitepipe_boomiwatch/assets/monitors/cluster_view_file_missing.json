@@ -1,0 +1,27 @@
+{
+	"name": "BoomiWatch: Boomi Cluster Node \"View File\" is missing",
+	"type": "query alert",
+	"query": "max(last_5m):max:kitepipe.boomiwatch.view_file_exist{*} by {cluster_node_id} <= 0",
+	"message": "{{#is_alert}}\"View File\" is missing.  This can happen if your conf.yaml file specifies a Node ID that does not exist or is not actively running as a Boomi Cluster Node.  Verify that \"boomi_molecule_id\" or \"boomi_api_gateway_node_id\" values (as applicable) of your conf.yaml file are correct on each node.  Verify that Boomi is running on all desired nodes.{{/is_alert}}\n\n{{#is_alert_recovery}}\"View File\" is no longer missing.{{/is_alert_recovery}}",
+	"tags": ["integration:kitepipe-boomiwatch"],
+	"options": {
+		"thresholds": {
+			"critical": 0
+                         
+		},
+		"notify_audit": false,
+		"require_full_window": true,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"include_tags": true,
+		"new_group_delay": 60,
+		"silenced": {
+			
+		}
+	},
+	"priority": null,
+	"restricted_roles": null,
+	"recommended_monitor_metadata": {
+		"description": "Detects if a cluster node is not healthy."
+	}
+}

@@ -1,0 +1,278 @@
+{
+	"title": "Boomi Cluster Monitoring",
+	"description": "## Description\nThis dashboard shows your Boomi cluster status, for both Molecule and API Gateway clusters.  It allows you to follow the cluster monitoring [recommendations published by Boomi](https://help.boomi.com/bundle/integration/page/c-atm-Cluster_monitoring_for_Molecules_and_Atom_Clouds.html).\n",
+	"widgets": [{
+		"id": 1470246930430624,
+		"definition": {
+			"type": "image",
+			"url": "https://www.kitepipe.com/hubfs/Kitepipe_Logo_web.svg",
+			"url_dark_theme": "https://awsmp-logos.s3.amazonaws.com/1c378d37-cef2-4125-81df-10005b2fb6de/797e8cff433d250d452fbbccfa209937.png",
+			"sizing": "contain",
+			"has_background": false,
+			"has_border": false,
+			"vertical_align": "center",
+			"horizontal_align": "center"
+		},
+		"layout": {
+			"x": 0,
+			"y": 0,
+			"width": 3,
+			"height": 2
+		}
+	},
+	{
+		"id": 2749429837678830,
+		"definition": {
+			"title": "Molecule Nodes Checked",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "check_status",
+			"check": "kitepipe.boomiwatch.checked_molecule_view_file",
+			"grouping": "cluster",
+			"group_by": ["host",
+			"cluster_node_id"],
+			"tags": ["service_check:true"]
+		},
+		"layout": {
+			"x": 3,
+			"y": 0,
+			"width": 4,
+			"height": 2
+		}
+	},
+	{
+		"id": 5882437401514053,
+		"definition": {
+			"title": "API Gateway Nodes Checked",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "check_status",
+			"check": "kitepipe.boomiwatch.checked_api_gateway_view_file",
+			"grouping": "cluster",
+			"group_by": ["host",
+			"cluster_node_id"],
+			"tags": ["service_check:true"]
+		},
+		"layout": {
+			"x": 7,
+			"y": 0,
+			"width": 5,
+			"height": 2
+		}
+	},
+	{
+		"id": 6710811007102869,
+		"definition": {
+			"type": "note",
+			"content": "### \"View File\" Existence\n* **Each of your Boomi cluster nodes must appear here with green shading.**\n\nEach node in a Boomi cluster maintains a \"view file\".  If the \"view file\" does not exist, the node is not participating successfully in the Boomi cluster.\n\n_Boomi Cluster node IDs may change during node restart.  You must update conf.yaml on each node to keep it up to date._",
+			"background_color": "white",
+			"font_size": "14",
+			"text_align": "left",
+			"vertical_align": "top",
+			"show_tick": false,
+			"tick_pos": "50%",
+			"tick_edge": "left",
+			"has_padding": true
+		},
+		"layout": {
+			"x": 0,
+			"y": 2,
+			"width": 3,
+			"height": 3
+		}
+	},
+	{
+		"id": 5287529812801692,
+		"definition": {
+			"title": "\"View File\" Existence",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "toplist",
+			"requests": [{
+				"formulas": [{
+					"formula": "query1"
+				}],
+				"conditional_formats": [{
+					"custom_bg_color": "#ff0000",
+					"comparator": ">=",
+					"palette": "white_on_green",
+					"value": 1
+				},
+				{
+					"comparator": "<",
+					"palette": "white_on_red",
+					"value": 1
+				}],
+				"response_format": "scalar",
+				"queries": [{
+					"query": "max:kitepipe.boomiwatch.view_file_exist{$host,$boomi_node_id,$boomi_runtime_type} by {cluster_node_id}",
+					"data_source": "metrics",
+					"name": "query1",
+					"aggregator": "last"
+				}]
+			}]
+		},
+		"layout": {
+			"x": 3,
+			"y": 2,
+			"width": 9,
+			"height": 3
+		}
+	},
+	{
+		"id": 1364048625425672,
+		"definition": {
+			"type": "note",
+			"content": "### \"View File\" Age\n* **View File age should be under 10 minutes**\n\nEach node in a Boomi cluster maintains a View File.  If the View File is too old, the node is considered unhealthy.\n\n\n\n_Boomi recommends alerting if a \"view file\" is older than 10 minutes._",
+			"background_color": "white",
+			"font_size": "14",
+			"text_align": "left",
+			"vertical_align": "top",
+			"show_tick": false,
+			"tick_pos": "50%",
+			"tick_edge": "left",
+			"has_padding": true
+		},
+		"layout": {
+			"x": 0,
+			"y": 5,
+			"width": 3,
+			"height": 3
+		}
+	},
+	{
+		"id": 8626929476170393,
+		"definition": {
+			"title": "\"View File\" Age",
+			"title_size": "16",
+			"title_align": "left",
+			"show_legend": true,
+			"legend_layout": "auto",
+			"legend_columns": ["avg",
+			"min",
+			"max",
+			"value",
+			"sum"],
+			"type": "timeseries",
+			"requests": [{
+				"formulas": [{
+					"alias": "View File Age (sec.)",
+					"formula": "query1"
+				}],
+				"response_format": "timeseries",
+				"queries": [{
+					"query": "max:kitepipe.boomiwatch.view_file_age_seconds{$boomi_node_id,$host,$boomi_runtime_type} by {cluster_node_id}",
+					"data_source": "metrics",
+					"name": "query1"
+				}],
+				"style": {
+					"palette": "dog_classic",
+					"line_type": "solid",
+					"line_width": "normal"
+				},
+				"display_type": "line"
+			}],
+			"markers": [{
+				"label": "Warning level: 2 minutes",
+				"value": "y = 120",
+				"display_type": "warning dashed"
+			},
+			{
+				"label": "Alert level: 10 minutes",
+				"value": "y = 600",
+				"display_type": "error dashed"
+			}]
+		},
+		"layout": {
+			"x": 3,
+			"y": 5,
+			"width": 9,
+			"height": 3
+		}
+	},
+	{
+		"id": 17832828481214,
+		"definition": {
+			"type": "note",
+			"content": "### Cluster Problem\n* **Each node ID should be visible in green with the Problem value of \"none\".**\n\n\"Problem\" values are scraped from Cluster Node View Files.  If a problem has occurred in the dashboard timeframe, it will be visible here.  Reduce timeframe to the most recent to check if a problem is now resolved.\n\n_Many cluster problems will resolve themselves promptly, especially during cluster rolling restart.  Investigate if a problem persists longer than a few minutes._",
+			"background_color": "white",
+			"font_size": "14",
+			"text_align": "left",
+			"vertical_align": "top",
+			"show_tick": false,
+			"tick_pos": "50%",
+			"tick_edge": "left",
+			"has_padding": true
+		},
+		"layout": {
+			"x": 0,
+			"y": 8,
+			"width": 3,
+			"height": 3
+		}
+	},
+	{
+		"id": 2023194937593048,
+		"definition": {
+			"title": "Cluster \"Problem\" Value, Node ID",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "toplist",
+			"requests": [{
+				"formulas": [{
+					"formula": "query1",
+					"limit": {
+						"count": 500,
+						"order": "desc"
+					}
+				}],
+				"conditional_formats": [{
+					"comparator": ">",
+					"palette": "white_on_red",
+					"value": 0
+				},
+				{
+					"comparator": "<=",
+					"palette": "white_on_green",
+					"value": 0
+				}],
+				"response_format": "scalar",
+				"queries": [{
+					"query": "sum:kitepipe.boomiwatch.view_file_problem{$host,$boomi_node_id,$boomi_runtime_type} by {cluster_problem,cluster_node_id}",
+					"data_source": "metrics",
+					"name": "query1",
+					"aggregator": "max"
+				}]
+			}]
+		},
+		"layout": {
+			"x": 3,
+			"y": 8,
+			"width": 9,
+			"height": 3
+		}
+	}],
+	"template_variables": [{
+		"name": "host",
+		"prefix": "boomi-hostname",
+		"available_values": [],
+		"default": "*"
+	},
+	{
+		"name": "boomi_node_id",
+		"prefix": "cluster_node_id",
+		"available_values": [],
+		"default": "*"
+	},
+	{
+		"name": "boomi_runtime_type",
+		"prefix": "cluster_node_role",
+		"available_values": [],
+		"default": "*"
+	}],
+	"layout_type": "ordered",
+	"is_read_only": true,
+	"notify_list": [],
+	"reflow_type": "fixed",
+	"id": "gr6-bqg-nrb"
+}

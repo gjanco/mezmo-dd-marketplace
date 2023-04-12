@@ -1,0 +1,24 @@
+{
+	"name": "BoomiWatch: Cluster Node 'View File' is too old",
+	"type": "query alert",
+	"query": "max(last_5m):avg:kitepipe.boomiwatch.view_file_age_seconds{*} by {cluster_node_id} >= 600",
+	"message": "{{#is_alert}}A Boomi Cluster Node \"View File\" timestamp indicates that the Boomi Node has not updated this file for {{value}} seconds.  Boomi may have stopped running on cluster node {{cluster_node_id.name}}, or that node may have lost communication with the shared disk storage.{{/is_alert}} \n{{#is_warning}}A Boomi Cluster Node \"View File\" timestamp indicates that the Boomi Node has not updated this file for {{value}} seconds.  Boomi may have stopped running on cluster node {{cluster_node_id.name}}, or that node may have lost communication with the shared disk storage.{{/is_warning}} \n{{#is_alert_recovery}}Boomi Cluster Node \"View File\" age for node {{cluster_node_id.name}} is now below alert threshold.{{/is_alert_recovery}} \n{{#is_warning_recovery}}Boomi Cluster Node \"View File\" age for node {{cluster_node_id.name}} is now below warning threshold.{{/is_warning_recovery}} ",
+	"tags": ["integration:kitepipe-boomiwatch"],
+	"options": {
+		"thresholds": {
+			"critical": 600,
+			"warning": 120,
+			"critical_recovery": 60,
+			"warning_recovery": 60
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"include_tags": true,
+		"new_group_delay": 60
+	},
+	"recommended_monitor_metadata": {
+		"description": "Detects if a cluster node is not healthy."
+	}
+}

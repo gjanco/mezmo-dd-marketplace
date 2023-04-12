@@ -1,0 +1,25 @@
+{
+	"name": "BoomiWatch: Infrastructure - API Gateway Node Memory Usage High",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:system.mem.pct_usable{role:api_gateway} by {boomi-hostname} <= 0.15",
+	"message": "{{boomi-hostname.name}}  Memory Usage High",
+	"tags": ["integration:kitepipe-boomiwatch"],
+	"options": {
+		"thresholds": {
+			"critical": 0.15,
+			"warning": 0.2
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"renotify_interval": 0,
+		"include_tags": true,
+		"new_group_delay": 60,
+		"silenced": {}
+	},
+	"priority": null,
+	"restricted_roles": null,
+	"recommended_monitor_metadata": {
+		"description": "Detects if API gateway node is at high RAM usage."
+	}
+}
