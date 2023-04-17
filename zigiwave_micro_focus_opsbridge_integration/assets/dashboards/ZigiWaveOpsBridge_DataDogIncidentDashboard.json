@@ -1,1 +1,292 @@
-{"title":"ZigiWave OpsBridge - DataDog Incident Dashboard","description":"## Incidents Dashboard\n\nOverview of incidents, including the average  customer impact duration, active duration, postmortems, etc.\n\n- https://docs.zigiwave.com/zigiops/index.html","widgets":[{"id":2253332278127918,"definition":{"type":"image","url":"https://zigiwave.com/wp-content/uploads/2022/02/zigi_microfocus.png","sizing":"cover","has_background":true,"has_border":true,"vertical_align":"center","horizontal_align":"center"},"layout":{"x":0,"y":0,"width":12,"height":4}},{"id":8423820821115224,"definition":{"title":"Percentage overview of the incidents based on their severity","title_size":"16","title_align":"left","time":{},"requests":[{"formulas":[{"formula":"query1"}],"queries":[{"search":{"query":"severity:(SEV-1 OR SEV-2 OR SEV-3 OR SEV-4 OR SEV-5 OR UNKNOWN)"},"data_source":"incident_analytics","compute":{"aggregation":"count"},"name":"query1","indexes":["*"],"group_by":[{"facet":"severity","sort":{"aggregation":"count","order":"desc"},"limit":10}]}],"response_format":"scalar"}],"type":"sunburst"},"layout":{"x":0,"y":4,"width":6,"height":6}},{"id":2695480665318104,"definition":{"title":"Customer Impact Duration based on the Detection Method","title_size":"16","title_align":"left","time":{},"type":"query_table","requests":[{"formulas":[{"alias":"Customer Impact","conditional_formats":[],"limit":{"count":10,"order":"desc"},"cell_display_mode":"bar","formula":"query1"}],"response_format":"scalar","queries":[{"search":{"query":""},"data_source":"incident_analytics","compute":{"metric":"customer_impact_duration","aggregation":"avg"},"name":"query1","indexes":["*"],"group_by":[{"facet":"detection_method","sort":{"aggregation":"count","order":"desc"},"limit":10}]}]}],"has_search_bar":"auto"},"layout":{"x":6,"y":4,"width":6,"height":2}},{"id":2477959637043162,"definition":{"title":"Active Duration based on the Detection Method","title_size":"16","title_align":"left","time":{},"type":"query_table","requests":[{"formulas":[{"alias":"Customer Impact","conditional_formats":[],"limit":{"count":10,"order":"desc"},"cell_display_mode":"bar","formula":"query1"}],"response_format":"scalar","queries":[{"search":{"query":""},"data_source":"incident_analytics","compute":{"metric":"state_active_duration","aggregation":"avg"},"name":"query1","indexes":["*"],"group_by":[{"facet":"detection_method","sort":{"aggregation":"count","order":"desc"},"limit":10}]}]}],"has_search_bar":"auto"},"layout":{"x":6,"y":6,"width":6,"height":2}},{"id":504745889481908,"definition":{"title":"Repair Duration based on the Detection Method","title_size":"16","title_align":"left","time":{},"type":"query_table","requests":[{"formulas":[{"alias":"Customer Impact","conditional_formats":[],"limit":{"count":10,"order":"desc"},"cell_display_mode":"bar","formula":"query1"}],"response_format":"scalar","queries":[{"search":{"query":""},"data_source":"incident_analytics","compute":{"metric":"time_to_repair","aggregation":"avg"},"name":"query1","indexes":["*"],"group_by":[{"facet":"detection_method","sort":{"aggregation":"count","order":"desc"},"limit":10}]}]}],"has_search_bar":"auto"},"layout":{"x":6,"y":8,"width":6,"height":2}},{"id":8827386508449196,"definition":{"title":"Incident tracking (this month vs last month)","title_size":"16","title_align":"left","show_legend":false,"legend_layout":"auto","legend_columns":["avg","min","max","value","sum"],"type":"timeseries","requests":[{"formulas":[{"formula":"query1"}],"response_format":"timeseries","queries":[{"search":{"query":""},"data_source":"incident_analytics","compute":{"aggregation":"count"},"name":"query1","indexes":["*"],"group_by":[]}],"style":{"palette":"dog_classic"},"display_type":"line"},{"formulas":[{"formula":"month_before(query1)"}],"response_format":"timeseries","queries":[{"search":{"query":""},"data_source":"incident_analytics","compute":{"aggregation":"count"},"name":"query1","indexes":["*"],"group_by":[]}],"style":{"palette":"gray","line_type":"dotted","line_width":"normal"},"display_type":"line"}],"yaxis":{"include_zero":true,"scale":"linear","min":"auto","max":"auto"},"markers":[]},"layout":{"x":0,"y":10,"width":12,"height":3}},{"id":8381703356892670,"definition":{"title":"Resolved incidents with completed documentation","title_size":"16","title_align":"left","show_legend":false,"legend_layout":"auto","legend_columns":["avg","min","max","value","sum"],"type":"timeseries","requests":[{"formulas":[{"formula":"query1"}],"response_format":"timeseries","queries":[{"search":{"query":"postmortem:true"},"data_source":"incident_analytics","compute":{"aggregation":"count"},"name":"query1","indexes":["*"],"group_by":[]}],"style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"},"display_type":"line"}],"yaxis":{"include_zero":true,"scale":"linear","label":"","min":"auto","max":"auto"},"markers":[]},"layout":{"x":0,"y":13,"width":12,"height":3}}],"template_variables":[],"layout_type":"ordered","is_read_only":false,"notify_list":[],"reflow_type":"fixed","id":"h9e-y6q-wm5"}
+{
+  "title": "ZigiWave OpsBridge - DataDog Incident Dashboard",
+  "description": "## Incidents Dashboard\n\nOverview of incidents, including the average  customer impact duration, active duration, postmortems, etc.\n\n- https://docs.zigiwave.com/zigiops/index.html",
+  "widgets": [
+    {
+      "id": 2253332278127918,
+      "definition": {
+        "type": "image",
+        "url": "https://zigiwave.com/wp-content/uploads/2022/02/zigi_microfocus.png",
+        "sizing": "cover",
+        "has_background": true,
+        "has_border": true,
+        "vertical_align": "center",
+        "horizontal_align": "center"
+      },
+      "layout": { "x": 0, "y": 0, "width": 12, "height": 4 }
+    },
+    {
+      "id": 8423820821115224,
+      "definition": {
+        "title": "Percentage overview of the incidents based on their severity",
+        "title_size": "16",
+        "title_align": "left",
+        "time": {},
+        "requests": [
+          {
+            "formulas": [{ "formula": "query1" }],
+            "queries": [
+              {
+                "search": {
+                  "query": "severity:(SEV-1 OR SEV-2 OR SEV-3 OR SEV-4 OR SEV-5 OR UNKNOWN)"
+                },
+                "data_source": "incident_analytics",
+                "compute": { "aggregation": "count" },
+                "name": "query1",
+                "indexes": ["*"],
+                "group_by": [
+                  {
+                    "facet": "severity",
+                    "sort": { "aggregation": "count", "order": "desc" },
+                    "limit": 10
+                  }
+                ]
+              }
+            ],
+            "response_format": "scalar"
+          }
+        ],
+        "type": "sunburst"
+      },
+      "layout": { "x": 0, "y": 4, "width": 6, "height": 6 }
+    },
+    {
+      "id": 2695480665318104,
+      "definition": {
+        "title": "Customer Impact Duration based on the Detection Method",
+        "title_size": "16",
+        "title_align": "left",
+        "time": {},
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "alias": "Customer Impact",
+                "conditional_formats": [],
+                "limit": { "count": 10, "order": "desc" },
+                "cell_display_mode": "bar",
+                "formula": "query1"
+              }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "search": { "query": "" },
+                "data_source": "incident_analytics",
+                "compute": {
+                  "metric": "customer_impact_duration",
+                  "aggregation": "avg"
+                },
+                "name": "query1",
+                "indexes": ["*"],
+                "group_by": [
+                  {
+                    "facet": "detection_method",
+                    "sort": { "aggregation": "count", "order": "desc" },
+                    "limit": 10
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": { "x": 6, "y": 4, "width": 6, "height": 2 }
+    },
+    {
+      "id": 2477959637043162,
+      "definition": {
+        "title": "Active Duration based on the Detection Method",
+        "title_size": "16",
+        "title_align": "left",
+        "time": {},
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "alias": "Customer Impact",
+                "conditional_formats": [],
+                "limit": { "count": 10, "order": "desc" },
+                "cell_display_mode": "bar",
+                "formula": "query1"
+              }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "search": { "query": "" },
+                "data_source": "incident_analytics",
+                "compute": {
+                  "metric": "state_active_duration",
+                  "aggregation": "avg"
+                },
+                "name": "query1",
+                "indexes": ["*"],
+                "group_by": [
+                  {
+                    "facet": "detection_method",
+                    "sort": { "aggregation": "count", "order": "desc" },
+                    "limit": 10
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": { "x": 6, "y": 6, "width": 6, "height": 2 }
+    },
+    {
+      "id": 504745889481908,
+      "definition": {
+        "title": "Repair Duration based on the Detection Method",
+        "title_size": "16",
+        "title_align": "left",
+        "time": {},
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "alias": "Customer Impact",
+                "conditional_formats": [],
+                "limit": { "count": 10, "order": "desc" },
+                "cell_display_mode": "bar",
+                "formula": "query1"
+              }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "search": { "query": "" },
+                "data_source": "incident_analytics",
+                "compute": { "metric": "time_to_repair", "aggregation": "avg" },
+                "name": "query1",
+                "indexes": ["*"],
+                "group_by": [
+                  {
+                    "facet": "detection_method",
+                    "sort": { "aggregation": "count", "order": "desc" },
+                    "limit": 10
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": { "x": 6, "y": 8, "width": 6, "height": 2 }
+    },
+    {
+      "id": 8827386508449196,
+      "definition": {
+        "title": "Incident tracking (this month vs last month)",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "legend_layout": "auto",
+        "legend_columns": ["avg", "min", "max", "value", "sum"],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [{ "formula": "query1" }],
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "search": { "query": "" },
+                "data_source": "incident_analytics",
+                "compute": { "aggregation": "count" },
+                "name": "query1",
+                "indexes": ["*"],
+                "group_by": []
+              }
+            ],
+            "style": { "palette": "dog_classic" },
+            "display_type": "line"
+          },
+          {
+            "formulas": [{ "formula": "month_before(query1)" }],
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "search": { "query": "" },
+                "data_source": "incident_analytics",
+                "compute": { "aggregation": "count" },
+                "name": "query1",
+                "indexes": ["*"],
+                "group_by": []
+              }
+            ],
+            "style": {
+              "palette": "gray",
+              "line_type": "dotted",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": { "x": 0, "y": 10, "width": 12, "height": 3 }
+    },
+    {
+      "id": 8381703356892670,
+      "definition": {
+        "title": "Resolved incidents with completed documentation",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "legend_layout": "auto",
+        "legend_columns": ["avg", "min", "max", "value", "sum"],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [{ "formula": "query1" }],
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "search": { "query": "postmortem:true" },
+                "data_source": "incident_analytics",
+                "compute": { "aggregation": "count" },
+                "name": "query1",
+                "indexes": ["*"],
+                "group_by": []
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": { "x": 0, "y": 13, "width": 12, "height": 3 }
+    }
+  ],
+  "template_variables": [],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed"
+}

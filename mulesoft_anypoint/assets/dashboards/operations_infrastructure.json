@@ -1,1 +1,540 @@
-{"title":"Mule® Operations: Infrastructure","description":"## Operations: Infrastructure\n\nThis Dashboards contains alerts that monitor applications critical behavior, for OnPremise and CloudHub infrastructure.\n\nAlso, will provide you information about applications traffic and CPU usage.\n\nThe Dashboards works by selecting the properly Ids in variables section.","widgets":[{"id":8047814069305214,"definition":{"type":"group","layout_type":"ordered","widgets":[{"id":684638121576633,"definition":{"type":"alert_graph","title":"Stopped applications in CloudHub™","alert_id":"20576931","viz_type":"toplist"}},{"id":8183802126277957,"definition":{"type":"alert_graph","title":"Stopped servers on-premise","alert_id":"20596156","viz_type":"toplist"}},{"id":3283079531661905,"definition":{"type":"alert_graph","title":"Applications with errors in OnPremise","alert_id":"20596117","viz_type":"toplist"}},{"id":2313915780352653,"definition":{"type":"alert_graph","title":"Queue overload","alert_id":"20596741","viz_type":"toplist"}}],"title":"Critical"}},{"id":3525020452753580,"definition":{"type":"group","layout_type":"ordered","widgets":[{"id":830150474454612,"definition":{"type":"timeseries","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.memory.used{$application,$environmentId}","metadata":[{"expression":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.memory.used{$application,$environmentId}","alias_name":"Memory used"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"Memory used by application","show_legend":false,"legend_size":"0"}},{"id":6343356355173414,"definition":{"type":"query_value","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.memory.percentage.used{$application,$environmentId}","aggregator":"avg","conditional_formats":[{"comparator":">","value":80,"palette":"white_on_red"},{"comparator":">=","value":50,"palette":"white_on_yellow"},{"comparator":"<","value":49,"palette":"white_on_green"}]}],"title":"Memory percentage by application","autoscale":true,"precision":2}},{"id":12301840324544,"definition":{"type":"timeseries","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.cpu.used{$application,$environmentId}","metadata":[{"expression":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.cpu.used{$application,$environmentId}","alias_name":"CPU usage"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"CPU usage by application","show_legend":false,"legend_size":"0"}},{"id":6848770177651752,"definition":{"type":"query_value","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.cpu.used{$application,$environmentId}","aggregator":"avg","conditional_formats":[{"comparator":">","value":80,"palette":"white_on_red"},{"comparator":">=","value":50,"palette":"white_on_yellow"},{"comparator":"<","value":49,"palette":"white_on_green"}]}],"title":"CPU percentage by application","autoscale":true,"precision":2}},{"id":515299913713266,"definition":{"type":"timeseries","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.network_in{$application,$environmentId}","metadata":[{"expression":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.network_in{$application,$environmentId}","alias_name":"Network in"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"Network in by application","show_legend":false,"legend_size":"0"}},{"id":6064098797136412,"definition":{"type":"timeseries","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.network_out{$application,$environmentId}","metadata":[{"expression":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.network_out{$application,$environmentId}","alias_name":"Newtwork out"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"Network out by application","show_legend":false,"legend_size":"0"}},{"id":4753060365926188,"definition":{"type":"timeseries","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.queues.queued{$queueName,$application}.as_count()","metadata":[{"expression":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.queues.queued{$queueName,$application}.as_count()","alias_name":"Queued messages"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"Messages queued by application","show_legend":false,"legend_size":"0"}},{"id":4005016332256510,"definition":{"type":"timeseries","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.queues.inflight{$queueName,$environmentId}.as_count()","metadata":[{"expression":"avg:ioconnect.mulesoft.anypoint.cloudhub.applications.queues.inflight{$queueName,$environmentId}.as_count()","alias_name":"InFlight Messages"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"Messages InFlight by application","show_legend":false,"legend_size":"0"}}],"title":"CloudHub™"}},{"id":7684122440273501,"definition":{"type":"group","layout_type":"ordered","widgets":[{"id":8554853583109474,"definition":{"type":"timeseries","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.memory_usage{$targetName,$environmentId}","metadata":[{"expression":"avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.memory_usage{$targetName,$environmentId}","alias_name":"Memory used"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"Memory used by target","show_legend":false,"legend_size":"0"}},{"id":5101606232806864,"definition":{"type":"query_value","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.memory_usage{$targetName,$environmentId}*100/256000","aggregator":"avg","conditional_formats":[{"comparator":">","value":80,"palette":"white_on_red"},{"comparator":">=","value":50,"palette":"white_on_yellow"},{"comparator":"<","value":49,"palette":"white_on_green"}]}],"title":"Memory percentage used by target (base 256 MB)","autoscale":true,"precision":2}},{"id":4609814734073130,"definition":{"type":"timeseries","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.cpu_usage{$targetName,$environmentId}","metadata":[{"expression":"avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.cpu_usage{$targetName,$environmentId}","alias_name":"CPU Used"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"CPU used by target","show_legend":false,"legend_size":"0"}},{"id":2565323025087593,"definition":{"type":"query_value","requests":[{"q":"avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.cpu_usage{$targetName,$environmentId}","aggregator":"avg","conditional_formats":[{"comparator":">","value":80,"palette":"white_on_red"},{"comparator":">=","value":50,"palette":"white_on_yellow"},{"comparator":"<","value":49,"palette":"white_on_green"}]}],"title":"CPU used by target","autoscale":true,"precision":2}},{"id":7346405863876229,"definition":{"type":"timeseries","requests":[{"q":"avg:system.net.bytes_rcvd{$host}","metadata":[{"expression":"avg:system.net.bytes_rcvd{$host}","alias_name":"Network in"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"Network in by machine","show_legend":false,"legend_size":"0"}},{"id":8195441164217341,"definition":{"type":"timeseries","requests":[{"q":"avg:system.net.bytes_sent{$host}","metadata":[{"expression":"avg:system.net.bytes_sent{$host}","alias_name":"Network out"}],"display_type":"line","style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"}}],"yaxis":{"label":"","scale":"linear","min":"auto","max":"auto","include_zero":true},"title":"Network out by machine","show_legend":false,"legend_size":"0"}}],"title":"OnPremise"}}],"template_variables":[{"name":"application","default":"*","prefix":"application_name"},{"name":"environmentId","default":"*","prefix":"env_id"},{"name":"targetName","default":"*","prefix":"target_name"},{"name":"queueName","default":"*","prefix":"queue_name"},{"name":"host","default":"*","prefix":"host"}],"layout_type":"ordered","is_read_only":false,"notify_list":[],"id":"u48-t8m-nhn"}
+{
+  "title": "Mule® Operations: Infrastructure",
+  "description": "## Operations: Infrastructure\n\nThis Dashboards contains alerts that monitor applications critical behavior, for OnPremise and CloudHub infrastructure.\n\nAlso, will provide you information about applications traffic and CPU usage.\n\nThe Dashboards works by selecting the properly Ids in variables section.",
+  "widgets": [
+    {
+      "id": 8047814069305214,
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 684638121576633,
+            "definition": {
+              "type": "alert_graph",
+              "title": "Stopped applications in CloudHub™",
+              "alert_id": "20576931",
+              "viz_type": "toplist"
+            }
+          },
+          {
+            "id": 8183802126277957,
+            "definition": {
+              "type": "alert_graph",
+              "title": "Stopped servers on-premise",
+              "alert_id": "20596156",
+              "viz_type": "toplist"
+            }
+          },
+          {
+            "id": 3283079531661905,
+            "definition": {
+              "type": "alert_graph",
+              "title": "Applications with errors in OnPremise",
+              "alert_id": "20596117",
+              "viz_type": "toplist"
+            }
+          },
+          {
+            "id": 2313915780352653,
+            "definition": {
+              "type": "alert_graph",
+              "title": "Queue overload",
+              "alert_id": "20596741",
+              "viz_type": "toplist"
+            }
+          }
+        ],
+        "title": "Critical"
+      }
+    },
+    {
+      "id": 3525020452753580,
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 830150474454612,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.memory.used{$application,$environmentId}",
+                  "metadata": [
+                    {
+                      "expression": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.memory.used{$application,$environmentId}",
+                      "alias_name": "Memory used"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "Memory used by application",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          },
+          {
+            "id": 6343356355173414,
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.memory.percentage.used{$application,$environmentId}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    },
+                    {
+                      "comparator": ">=",
+                      "value": 50,
+                      "palette": "white_on_yellow"
+                    },
+                    {
+                      "comparator": "<",
+                      "value": 49,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "title": "Memory percentage by application",
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "id": 12301840324544,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.cpu.used{$application,$environmentId}",
+                  "metadata": [
+                    {
+                      "expression": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.cpu.used{$application,$environmentId}",
+                      "alias_name": "CPU usage"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "CPU usage by application",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          },
+          {
+            "id": 6848770177651752,
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.cpu.used{$application,$environmentId}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    },
+                    {
+                      "comparator": ">=",
+                      "value": 50,
+                      "palette": "white_on_yellow"
+                    },
+                    {
+                      "comparator": "<",
+                      "value": 49,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "title": "CPU percentage by application",
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "id": 515299913713266,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.network_in{$application,$environmentId}",
+                  "metadata": [
+                    {
+                      "expression": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.network_in{$application,$environmentId}",
+                      "alias_name": "Network in"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "Network in by application",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          },
+          {
+            "id": 6064098797136412,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.network_out{$application,$environmentId}",
+                  "metadata": [
+                    {
+                      "expression": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.dashboard.stats.network_out{$application,$environmentId}",
+                      "alias_name": "Newtwork out"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "Network out by application",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          },
+          {
+            "id": 4753060365926188,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.queues.queued{$queueName,$application}.as_count()",
+                  "metadata": [
+                    {
+                      "expression": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.queues.queued{$queueName,$application}.as_count()",
+                      "alias_name": "Queued messages"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "Messages queued by application",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          },
+          {
+            "id": 4005016332256510,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.queues.inflight{$queueName,$environmentId}.as_count()",
+                  "metadata": [
+                    {
+                      "expression": "avg:ioconnect.mulesoft.anypoint.cloudhub.applications.queues.inflight{$queueName,$environmentId}.as_count()",
+                      "alias_name": "InFlight Messages"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "Messages InFlight by application",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          }
+        ],
+        "title": "CloudHub™"
+      }
+    },
+    {
+      "id": 7684122440273501,
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 8554853583109474,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.memory_usage{$targetName,$environmentId}",
+                  "metadata": [
+                    {
+                      "expression": "avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.memory_usage{$targetName,$environmentId}",
+                      "alias_name": "Memory used"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "Memory used by target",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          },
+          {
+            "id": 5101606232806864,
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.memory_usage{$targetName,$environmentId}*100/256000",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    },
+                    {
+                      "comparator": ">=",
+                      "value": 50,
+                      "palette": "white_on_yellow"
+                    },
+                    {
+                      "comparator": "<",
+                      "value": 49,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "title": "Memory percentage used by target (base 256 MB)",
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "id": 4609814734073130,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.cpu_usage{$targetName,$environmentId}",
+                  "metadata": [
+                    {
+                      "expression": "avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.cpu_usage{$targetName,$environmentId}",
+                      "alias_name": "CPU Used"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "CPU used by target",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          },
+          {
+            "id": 2565323025087593,
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "avg:ioconnect.mulesoft.anypoint.arm_monitoring_query.targets.cpu_usage{$targetName,$environmentId}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    },
+                    {
+                      "comparator": ">=",
+                      "value": 50,
+                      "palette": "white_on_yellow"
+                    },
+                    {
+                      "comparator": "<",
+                      "value": 49,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "title": "CPU used by target",
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "id": 7346405863876229,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:system.net.bytes_rcvd{$host}",
+                  "metadata": [
+                    {
+                      "expression": "avg:system.net.bytes_rcvd{$host}",
+                      "alias_name": "Network in"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "Network in by machine",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          },
+          {
+            "id": 8195441164217341,
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:system.net.bytes_sent{$host}",
+                  "metadata": [
+                    {
+                      "expression": "avg:system.net.bytes_sent{$host}",
+                      "alias_name": "Network out"
+                    }
+                  ],
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "",
+                "scale": "linear",
+                "min": "auto",
+                "max": "auto",
+                "include_zero": true
+              },
+              "title": "Network out by machine",
+              "show_legend": false,
+              "legend_size": "0"
+            }
+          }
+        ],
+        "title": "OnPremise"
+      }
+    }
+  ],
+  "template_variables": [
+    { "name": "application", "default": "*", "prefix": "application_name" },
+    { "name": "environmentId", "default": "*", "prefix": "env_id" },
+    { "name": "targetName", "default": "*", "prefix": "target_name" },
+    { "name": "queueName", "default": "*", "prefix": "queue_name" },
+    { "name": "host", "default": "*", "prefix": "host" }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": []
+}

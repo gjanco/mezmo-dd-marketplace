@@ -1,1 +1,607 @@
-{"title":"ABAP transactions response times","description":"## ABAP transactions response times dashboard\n","widgets":[{"id":8545746058934700,"definition":{"title":"DIALOG response times","type":"group","show_title":true,"layout_type":"ordered","widgets":[{"id":1333062236762422,"definition":{"title":"Total/step (ms)","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"query1 / query2"}],"response_format":"scalar","queries":[{"query":"avg:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid,task:dialog}","data_source":"metrics","name":"query1","aggregator":"sum"},{"query":"avg:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid,task:dialog}.as_count()","data_source":"metrics","name":"query2","aggregator":"sum"}]}],"autoscale":true,"precision":2},"layout":{"x":0,"y":0,"width":2,"height":2}},{"id":630067055517508,"definition":{"title":"DB/step vs total (%)","title_size":"16","title_align":"left","requests":[{"formulas":[{"alias":"Total/step","formula":"query1 / query2 * 100"}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid,task:dialog} by {task}","data_source":"metrics","name":"query1","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid,task:dialog} by {task}","data_source":"metrics","name":"query2","aggregator":"sum"}]}],"type":"sunburst","hide_total":false,"legend":{"type":"none"}},"layout":{"x":2,"y":0,"width":2,"height":2}},{"id":6666086227191151,"definition":{"title":"CPU/step time (ms)","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"query1 / query2"}],"response_format":"scalar","queries":[{"query":"avg:agentil_software.netweaver.abap.sap_transactions.transaction_cpu_time{$sap_sid,task:dialog}","data_source":"metrics","name":"query1","aggregator":"sum"},{"query":"avg:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid,task:dialog}.as_count()","data_source":"metrics","name":"query2","aggregator":"sum"}]}],"autoscale":true,"precision":2},"layout":{"x":4,"y":0,"width":2,"height":2}},{"id":3311151084892509,"definition":{"title":"Dialog response times / step","title_size":"16","title_align":"left","show_legend":true,"legend_layout":"auto","legend_columns":["avg","min","max","value","sum"],"type":"timeseries","requests":[{"formulas":[{"alias":"Total/step","formula":"anomalies(query2 / query1, 'basic', 2)"},{"alias":"DB/step","formula":"anomalies(query3 / query1, 'basic', 2)"}],"response_format":"timeseries","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid,task:dialog} by {task}","data_source":"metrics","name":"query2"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid,task:dialog} by {task}.as_count()","data_source":"metrics","name":"query1"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid,task:dialog} by {task}","data_source":"metrics","name":"query3"}],"style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"},"display_type":"area"}]},"layout":{"x":6,"y":0,"width":6,"height":2}}]},"layout":{"x":0,"y":0,"width":12,"height":3}},{"id":8788475227527644,"definition":{"title":"Response times / step (ms)","title_size":"16","title_align":"left","type":"query_table","requests":[{"formulas":[{"alias":"Steps","formula":"query2"},{"alias":"Total","limit":{"count":500,"order":"desc"},"formula":"query1 / query2"},{"alias":"Process","formula":"query6 / query2"},{"alias":"CPU","formula":"query3 / query2"},{"alias":"DB","formula":"query4 / query2"},{"alias":"Network","formula":"query5 / query2"},{"alias":"Queue","formula":"query8 / query2"},{"alias":"GUI","formula":"query7 / query2"}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid} by {task}.as_count()","data_source":"metrics","name":"query2","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid} by {task}","data_source":"metrics","name":"query1","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_proc_time{$sap_sid} by {task}","data_source":"metrics","name":"query6","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_cpu_time{$sap_sid} by {task}","data_source":"metrics","name":"query3","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid} by {task}","data_source":"metrics","name":"query4","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_network_time{$sap_sid} by {task}","data_source":"metrics","name":"query5","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_queue_time{$sap_sid} by {task}","data_source":"metrics","name":"query8","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_gui_time{$sap_sid} by {task}","data_source":"metrics","name":"query7","aggregator":"sum"}]}],"has_search_bar":"auto","custom_links":[{"link":"https://app.datadoghq.com/dash/integration/SAP%20ABAP%20Transaction%20Details?tpl_var_sap_sid={{$sap_sid.value}}&from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&tpl_var_task={{task.value}}","label":"Transaction details"}]},"layout":{"x":0,"y":0,"width":6,"height":4}},{"id":1208907310701785,"definition":{"title":"Transactions data volume","title_size":"16","title_align":"left","show_legend":true,"legend_layout":"auto","legend_columns":["avg","min","max","value","sum"],"type":"timeseries","requests":[{"formulas":[{"alias":"Data volume","formula":"query2"},{"formula":"query1"}],"response_format":"timeseries","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_data_volume{$sap_sid}","data_source":"metrics","name":"query2"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid}.as_count()","data_source":"metrics","name":"query1"}],"style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"},"display_type":"area"}],"yaxis":{"include_zero":false}},"layout":{"x":6,"y":0,"width":6,"height":4}},{"id":1932600625592830,"definition":{"title":"Top slowest transactions per step","title_size":"16","title_align":"left","type":"query_table","requests":[{"formulas":[{"alias":"Steps","conditional_formats":[],"cell_display_mode":"bar","formula":"query2"},{"alias":"Avg Resp Time/Step (ms)","limit":{"count":25,"order":"desc"},"formula":"query1 / query2"},{"alias":"Avg Process Time/Step (ms)","formula":"query6 / query2"},{"alias":"Avg CPUTime/Step (ms) ","formula":"query3 / query2"},{"alias":"Avg DB Time/Step (ms)","formula":"query4 / query2"},{"alias":"Avg Queue Time/Step (ms)","formula":"query7 / query2"},{"alias":"Avg Queue time/ S","formula":"query5 / query2"},{"alias":"Avg GUI time / step","formula":"query8 / query2"}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid} by {task,transaction}.as_count()","data_source":"metrics","name":"query2","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid} by {task,transaction}","data_source":"metrics","name":"query1","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_proc_time{$sap_sid} by {task,transaction}","data_source":"metrics","name":"query6","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_cpu_time{$sap_sid} by {task,transaction}","data_source":"metrics","name":"query3","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid} by {task,transaction}","data_source":"metrics","name":"query4","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_queue_time{$sap_sid} by {task,transaction}","data_source":"metrics","name":"query7","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_network_time{$sap_sid} by {task,transaction}","data_source":"metrics","name":"query5","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_gui_time{$sap_sid} by {task,transaction}","data_source":"metrics","name":"query8","aggregator":"sum"}]}],"has_search_bar":"auto"},"layout":{"x":0,"y":4,"width":12,"height":6}},{"id":5563941824433165,"definition":{"title":"Top 20 slowests response time per user","title_size":"16","title_align":"left","type":"toplist","requests":[{"formulas":[{"alias":"Avg Resp Time/Step (ms)","limit":{"count":500,"order":"desc"},"formula":"query1 / query2"}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid,task:dialog} by {user}","data_source":"metrics","name":"query1","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid,task:dialog} by {user}.as_count()","data_source":"metrics","name":"query2","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid,task:dialog} by {user}","data_source":"metrics","name":"query3","aggregator":"sum"}]}]},"layout":{"x":0,"y":0,"width":12,"height":4,"is_column_break":true}},{"id":4441321341133914,"definition":{"title":"Total resp time/step by transaction","title_size":"16","title_align":"left","requests":[{"formulas":[{"formula":"query1 / query2","limit":{"order":"desc"}}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{*} by {transaction}","data_source":"metrics","name":"query1","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{*} by {transaction}.as_count()","data_source":"metrics","name":"query2","aggregator":"sum"}]}],"type":"sunburst","legend":{"type":"inline"}},"layout":{"x":0,"y":4,"width":4,"height":4}},{"id":6858394509133558,"definition":{"title":"DB/step latency by transaction","title_size":"16","title_align":"left","requests":[{"formulas":[{"formula":"query1 / query2","limit":{"order":"desc"}}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{*} by {transaction}","data_source":"metrics","name":"query1","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{*} by {transaction}.as_count()","data_source":"metrics","name":"query2","aggregator":"sum"}]}],"type":"sunburst","legend":{"type":"automatic"}},"layout":{"x":4,"y":4,"width":4,"height":4}},{"id":1532034235919070,"definition":{"title":"CPU utilization by transaction","title_size":"16","title_align":"left","requests":[{"formulas":[{"formula":"query1","limit":{"order":"desc"}}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_cpu_time{*} by {transaction}","data_source":"metrics","name":"query1","aggregator":"sum"}]}],"type":"sunburst","legend":{"type":"automatic"}},"layout":{"x":8,"y":4,"width":4,"height":4}},{"id":5995697009598780,"definition":{"title":"Data volume by user","title_size":"16","title_align":"left","requests":[{"formulas":[{"formula":"query1","limit":{"order":"desc"}}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_data_volume{*} by {user}","data_source":"metrics","name":"query1","aggregator":"sum"}]}],"type":"sunburst","legend":{"type":"inline"}},"layout":{"x":0,"y":8,"width":4,"height":4}},{"id":8792160960226171,"definition":{"title":"Data volume by transaction","title_size":"16","title_align":"left","requests":[{"formulas":[{"formula":"query1","limit":{"order":"desc"}}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_transactions.transaction_data_volume{*} by {transaction}","data_source":"metrics","name":"query1","aggregator":"sum"}]}],"type":"sunburst","legend":{"type":"inline"}},"layout":{"x":4,"y":8,"width":4,"height":4}}],"template_variables":[{"name":"sap_sid","prefix":"sap_sid","available_values":[],"default":"*"},{"name":"sap_type","prefix":"sap_type","available_values":["abap"],"default":"abap"}],"layout_type":"ordered","is_read_only":false,"notify_list":[],"template_variable_presets":[{"name":"SAP Transactions 1 week","template_variables":[{"name":"sap_sid","value":"*"}]}],"reflow_type":"fixed","id":"hy5-wef-p4x"}
+{
+  "title": "ABAP transactions response times",
+  "description": "## ABAP transactions response times dashboard\n",
+  "widgets": [
+    {
+      "id": 8545746058934700,
+      "definition": {
+        "title": "DIALOG response times",
+        "type": "group",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 1333062236762422,
+            "definition": {
+              "title": "Total/step (ms)",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [{ "formula": "query1 / query2" }],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid,task:dialog}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    },
+                    {
+                      "query": "avg:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid,task:dialog}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            },
+            "layout": { "x": 0, "y": 0, "width": 2, "height": 2 }
+          },
+          {
+            "id": 630067055517508,
+            "definition": {
+              "title": "DB/step vs total (%)",
+              "title_size": "16",
+              "title_align": "left",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Total/step",
+                      "formula": "query1 / query2 * 100"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid,task:dialog} by {task}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    },
+                    {
+                      "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid,task:dialog} by {task}",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "type": "sunburst",
+              "hide_total": false,
+              "legend": { "type": "none" }
+            },
+            "layout": { "x": 2, "y": 0, "width": 2, "height": 2 }
+          },
+          {
+            "id": 6666086227191151,
+            "definition": {
+              "title": "CPU/step time (ms)",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [{ "formula": "query1 / query2" }],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:agentil_software.netweaver.abap.sap_transactions.transaction_cpu_time{$sap_sid,task:dialog}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "sum"
+                    },
+                    {
+                      "query": "avg:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid,task:dialog}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            },
+            "layout": { "x": 4, "y": 0, "width": 2, "height": 2 }
+          },
+          {
+            "id": 3311151084892509,
+            "definition": {
+              "title": "Dialog response times / step",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": ["avg", "min", "max", "value", "sum"],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Total/step",
+                      "formula": "anomalies(query2 / query1, 'basic', 2)"
+                    },
+                    {
+                      "alias": "DB/step",
+                      "formula": "anomalies(query3 / query1, 'basic', 2)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid,task:dialog} by {task}",
+                      "data_source": "metrics",
+                      "name": "query2"
+                    },
+                    {
+                      "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid,task:dialog} by {task}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    },
+                    {
+                      "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid,task:dialog} by {task}",
+                      "data_source": "metrics",
+                      "name": "query3"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ]
+            },
+            "layout": { "x": 6, "y": 0, "width": 6, "height": 2 }
+          }
+        ]
+      },
+      "layout": { "x": 0, "y": 0, "width": 12, "height": 3 }
+    },
+    {
+      "id": 8788475227527644,
+      "definition": {
+        "title": "Response times / step (ms)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              { "alias": "Steps", "formula": "query2" },
+              {
+                "alias": "Total",
+                "limit": { "count": 500, "order": "desc" },
+                "formula": "query1 / query2"
+              },
+              { "alias": "Process", "formula": "query6 / query2" },
+              { "alias": "CPU", "formula": "query3 / query2" },
+              { "alias": "DB", "formula": "query4 / query2" },
+              { "alias": "Network", "formula": "query5 / query2" },
+              { "alias": "Queue", "formula": "query8 / query2" },
+              { "alias": "GUI", "formula": "query7 / query2" }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid} by {task}.as_count()",
+                "data_source": "metrics",
+                "name": "query2",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid} by {task}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_proc_time{$sap_sid} by {task}",
+                "data_source": "metrics",
+                "name": "query6",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_cpu_time{$sap_sid} by {task}",
+                "data_source": "metrics",
+                "name": "query3",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid} by {task}",
+                "data_source": "metrics",
+                "name": "query4",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_network_time{$sap_sid} by {task}",
+                "data_source": "metrics",
+                "name": "query5",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_queue_time{$sap_sid} by {task}",
+                "data_source": "metrics",
+                "name": "query8",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_gui_time{$sap_sid} by {task}",
+                "data_source": "metrics",
+                "name": "query7",
+                "aggregator": "sum"
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto",
+        "custom_links": [
+          {
+            "link": "https://app.datadoghq.com/dash/integration/SAP%20ABAP%20Transaction%20Details?tpl_var_sap_sid={{$sap_sid.value}}&from_ts={{timestamp_start}}&to_ts={{timestamp_end}}&tpl_var_task={{task.value}}",
+            "label": "Transaction details"
+          }
+        ]
+      },
+      "layout": { "x": 0, "y": 0, "width": 6, "height": 4 }
+    },
+    {
+      "id": 1208907310701785,
+      "definition": {
+        "title": "Transactions data volume",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": ["avg", "min", "max", "value", "sum"],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              { "alias": "Data volume", "formula": "query2" },
+              { "formula": "query1" }
+            ],
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_data_volume{$sap_sid}",
+                "data_source": "metrics",
+                "name": "query2"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid}.as_count()",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "area"
+          }
+        ],
+        "yaxis": { "include_zero": false }
+      },
+      "layout": { "x": 6, "y": 0, "width": 6, "height": 4 }
+    },
+    {
+      "id": 1932600625592830,
+      "definition": {
+        "title": "Top slowest transactions per step",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "alias": "Steps",
+                "conditional_formats": [],
+                "cell_display_mode": "bar",
+                "formula": "query2"
+              },
+              {
+                "alias": "Avg Resp Time/Step (ms)",
+                "limit": { "count": 25, "order": "desc" },
+                "formula": "query1 / query2"
+              },
+              {
+                "alias": "Avg Process Time/Step (ms)",
+                "formula": "query6 / query2"
+              },
+              {
+                "alias": "Avg CPUTime/Step (ms) ",
+                "formula": "query3 / query2"
+              },
+              {
+                "alias": "Avg DB Time/Step (ms)",
+                "formula": "query4 / query2"
+              },
+              {
+                "alias": "Avg Queue Time/Step (ms)",
+                "formula": "query7 / query2"
+              },
+              { "alias": "Avg Queue time/ S", "formula": "query5 / query2" },
+              { "alias": "Avg GUI time / step", "formula": "query8 / query2" }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid} by {task,transaction}.as_count()",
+                "data_source": "metrics",
+                "name": "query2",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid} by {task,transaction}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_proc_time{$sap_sid} by {task,transaction}",
+                "data_source": "metrics",
+                "name": "query6",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_cpu_time{$sap_sid} by {task,transaction}",
+                "data_source": "metrics",
+                "name": "query3",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid} by {task,transaction}",
+                "data_source": "metrics",
+                "name": "query4",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_queue_time{$sap_sid} by {task,transaction}",
+                "data_source": "metrics",
+                "name": "query7",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_network_time{$sap_sid} by {task,transaction}",
+                "data_source": "metrics",
+                "name": "query5",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_gui_time{$sap_sid} by {task,transaction}",
+                "data_source": "metrics",
+                "name": "query8",
+                "aggregator": "sum"
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": { "x": 0, "y": 4, "width": 12, "height": 6 }
+    },
+    {
+      "id": 5563941824433165,
+      "definition": {
+        "title": "Top 20 slowests response time per user",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "toplist",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "alias": "Avg Resp Time/Step (ms)",
+                "limit": { "count": 500, "order": "desc" },
+                "formula": "query1 / query2"
+              }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{$sap_sid,task:dialog} by {user}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{$sap_sid,task:dialog} by {user}.as_count()",
+                "data_source": "metrics",
+                "name": "query2",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{$sap_sid,task:dialog} by {user}",
+                "data_source": "metrics",
+                "name": "query3",
+                "aggregator": "sum"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 4,
+        "is_column_break": true
+      }
+    },
+    {
+      "id": 4441321341133914,
+      "definition": {
+        "title": "Total resp time/step by transaction",
+        "title_size": "16",
+        "title_align": "left",
+        "requests": [
+          {
+            "formulas": [
+              { "formula": "query1 / query2", "limit": { "order": "desc" } }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_resp_time{*} by {transaction}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{*} by {transaction}.as_count()",
+                "data_source": "metrics",
+                "name": "query2",
+                "aggregator": "sum"
+              }
+            ]
+          }
+        ],
+        "type": "sunburst",
+        "legend": { "type": "inline" }
+      },
+      "layout": { "x": 0, "y": 4, "width": 4, "height": 4 }
+    },
+    {
+      "id": 6858394509133558,
+      "definition": {
+        "title": "DB/step latency by transaction",
+        "title_size": "16",
+        "title_align": "left",
+        "requests": [
+          {
+            "formulas": [
+              { "formula": "query1 / query2", "limit": { "order": "desc" } }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_db_time{*} by {transaction}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_step_count{*} by {transaction}.as_count()",
+                "data_source": "metrics",
+                "name": "query2",
+                "aggregator": "sum"
+              }
+            ]
+          }
+        ],
+        "type": "sunburst",
+        "legend": { "type": "automatic" }
+      },
+      "layout": { "x": 4, "y": 4, "width": 4, "height": 4 }
+    },
+    {
+      "id": 1532034235919070,
+      "definition": {
+        "title": "CPU utilization by transaction",
+        "title_size": "16",
+        "title_align": "left",
+        "requests": [
+          {
+            "formulas": [{ "formula": "query1", "limit": { "order": "desc" } }],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_cpu_time{*} by {transaction}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              }
+            ]
+          }
+        ],
+        "type": "sunburst",
+        "legend": { "type": "automatic" }
+      },
+      "layout": { "x": 8, "y": 4, "width": 4, "height": 4 }
+    },
+    {
+      "id": 5995697009598780,
+      "definition": {
+        "title": "Data volume by user",
+        "title_size": "16",
+        "title_align": "left",
+        "requests": [
+          {
+            "formulas": [{ "formula": "query1", "limit": { "order": "desc" } }],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_data_volume{*} by {user}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              }
+            ]
+          }
+        ],
+        "type": "sunburst",
+        "legend": { "type": "inline" }
+      },
+      "layout": { "x": 0, "y": 8, "width": 4, "height": 4 }
+    },
+    {
+      "id": 8792160960226171,
+      "definition": {
+        "title": "Data volume by transaction",
+        "title_size": "16",
+        "title_align": "left",
+        "requests": [
+          {
+            "formulas": [{ "formula": "query1", "limit": { "order": "desc" } }],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transactions.transaction_data_volume{*} by {transaction}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              }
+            ]
+          }
+        ],
+        "type": "sunburst",
+        "legend": { "type": "inline" }
+      },
+      "layout": { "x": 4, "y": 8, "width": 4, "height": 4 }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "sap_sid",
+      "prefix": "sap_sid",
+      "available_values": [],
+      "default": "*"
+    },
+    {
+      "name": "sap_type",
+      "prefix": "sap_type",
+      "available_values": ["abap"],
+      "default": "abap"
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "template_variable_presets": [
+    {
+      "name": "SAP Transactions 1 week",
+      "template_variables": [{ "name": "sap_sid", "value": "*" }]
+    }
+  ],
+  "reflow_type": "fixed"
+}

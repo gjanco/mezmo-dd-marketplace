@@ -1,1 +1,231 @@
-{"title":"SAP BusinessObjects Overview","description":"## Description\n\nThis dashboard provides a high-level overview of the health and performance of your SAP BusinessObjects systems. You can quickly see the status of your services and report statistics.\n\nYou can extend visibility to other metrics by customising the **Server metrics** monitor in Pro.Monitor.","widgets":[{"id":3398124437397692,"definition":{"title":"BusinessObjects Systems Overview","type":"group","background_color":"vivid_purple","show_title":true,"layout_type":"ordered","widgets":[{"id":1230755930251076,"definition":{"title":"Overview","title_size":"16","title_align":"left","type":"query_table","requests":[{"formulas":[{"alias":"State","conditional_formats":[{"palette":"white_on_green","value":0,"comparator":">"},{"palette":"white_on_red","value":0,"comparator":"<="}],"limit":{"count":10,"order":"desc"},"formula":"query1"},{"alias":"Max users","conditional_formats":[],"formula":"query2"},{"alias":"Avg users","conditional_formats":[],"formula":"query3"},{"alias":"Stopped services","conditional_formats":[{"palette":"white_on_red","value":0,"comparator":">"}],"formula":"query4"},{"alias":"Invalid services","conditional_formats":[{"palette":"white_on_red","value":0,"comparator":">"}],"formula":"query5"},{"alias":"Failed reports","conditional_formats":[{"palette":"white_on_red","value":0,"comparator":">"}],"formula":"query6"},{"alias":"Expired reports","conditional_formats":[{"palette":"white_on_red","value":0,"comparator":">"}],"formula":"query7"}],"response_format":"scalar","queries":[{"query":"avg:agentil_software.systems.availability{sap_type:business_object} by {sap_org,sap_group,sap_sid}","data_source":"metrics","name":"query1","aggregator":"avg"},{"query":"sum:agentil_software.businessobjects.bo_concurrent_users.bo_concurent_users{*} by {sap_org,sap_group,sap_sid}","data_source":"metrics","name":"query2","aggregator":"max"},{"query":"sum:agentil_software.businessobjects.bo_concurrent_users.bo_concurent_users{*} by {sap_org,sap_group,sap_sid}","data_source":"metrics","name":"query3","aggregator":"avg"},{"query":"sum:agentil_software.businessobjects.bo_servers_status.bo_services_status_count{status:invalid} by {sap_org,sap_group,sap_sid}.as_count()","data_source":"metrics","name":"query4","aggregator":"avg"},{"query":"sum:agentil_software.businessobjects.bo_servers_status.bo_services_status_count{status:stopped} by {sap_org,sap_group,sap_sid}.as_count()","data_source":"metrics","name":"query5","aggregator":"avg"},{"query":"sum:agentil_software.businessobjects.bo_schedules_status.bo_schedules_status_count{status:failure} by {sap_org,sap_group,sap_sid}.as_count()","data_source":"metrics","name":"query6","aggregator":"sum"},{"query":"sum:agentil_software.businessobjects.bo_schedules_status.bo_schedules_status_count{status:expired} by {sap_org,sap_group,sap_sid}.as_count()","data_source":"metrics","name":"query7","aggregator":"sum"}]}]},"layout":{"x":0,"y":0,"width":10,"height":3}},{"id":8049056011076241,"definition":{"type":"image","url":"https://dev2.agentil-software.com/wp-content/uploads/2020/12/logo_agentil_software_black.png","sizing":"scale-down","margin":"lg","has_background":true,"has_border":false,"vertical_align":"center","horizontal_align":"center"},"layout":{"x":10,"y":0,"width":2,"height":3}},{"id":4858670242293913,"definition":{"title":"Connected users","title_size":"16","title_align":"left","show_legend":true,"legend_layout":"auto","legend_columns":["avg","min","max","value","sum"],"type":"timeseries","requests":[{"formulas":[{"alias":"concurrent users","formula":"query1"}],"response_format":"timeseries","queries":[{"query":"avg:agentil_software.businessobjects.bo_concurrent_users.bo_concurent_users{$SAP_SID,$SAP_ORG,$SAP_GROUP} by {sap_org,sap_group,sap_sid}","data_source":"metrics","name":"query1"}],"style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"},"display_type":"area"}],"yaxis":{"include_zero":true,"scale":"linear","label":"","min":"auto","max":"auto"},"markers":[]},"layout":{"x":0,"y":3,"width":12,"height":5}}]},"layout":{"x":0,"y":0,"width":12,"height":9}}],"template_variables":[{"name":"SAP_ORG","default":"*","prefix":"sap_org","available_values":[]},{"name":"SAP_GROUP","default":"*","prefix":"sap_group","available_values":[]},{"name":"SAP_SID","default":"*","prefix":"sap_sid","available_values":[]}],"layout_type":"ordered","is_read_only":false,"notify_list":[],"reflow_type":"fixed","id":"nfe-zup-yvc"}
+{
+  "title": "SAP BusinessObjects Overview",
+  "description": "## Description\n\nThis dashboard provides a high-level overview of the health and performance of your SAP BusinessObjects systems. You can quickly see the status of your services and report statistics.\n\nYou can extend visibility to other metrics by customising the **Server metrics** monitor in Pro.Monitor.",
+  "widgets": [
+    {
+      "id": 3398124437397692,
+      "definition": {
+        "title": "BusinessObjects Systems Overview",
+        "type": "group",
+        "background_color": "vivid_purple",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 1230755930251076,
+            "definition": {
+              "title": "Overview",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_table",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "State",
+                      "conditional_formats": [
+                        {
+                          "palette": "white_on_green",
+                          "value": 0,
+                          "comparator": ">"
+                        },
+                        {
+                          "palette": "white_on_red",
+                          "value": 0,
+                          "comparator": "<="
+                        }
+                      ],
+                      "limit": { "count": 10, "order": "desc" },
+                      "formula": "query1"
+                    },
+                    {
+                      "alias": "Max users",
+                      "conditional_formats": [],
+                      "formula": "query2"
+                    },
+                    {
+                      "alias": "Avg users",
+                      "conditional_formats": [],
+                      "formula": "query3"
+                    },
+                    {
+                      "alias": "Stopped services",
+                      "conditional_formats": [
+                        {
+                          "palette": "white_on_red",
+                          "value": 0,
+                          "comparator": ">"
+                        }
+                      ],
+                      "formula": "query4"
+                    },
+                    {
+                      "alias": "Invalid services",
+                      "conditional_formats": [
+                        {
+                          "palette": "white_on_red",
+                          "value": 0,
+                          "comparator": ">"
+                        }
+                      ],
+                      "formula": "query5"
+                    },
+                    {
+                      "alias": "Failed reports",
+                      "conditional_formats": [
+                        {
+                          "palette": "white_on_red",
+                          "value": 0,
+                          "comparator": ">"
+                        }
+                      ],
+                      "formula": "query6"
+                    },
+                    {
+                      "alias": "Expired reports",
+                      "conditional_formats": [
+                        {
+                          "palette": "white_on_red",
+                          "value": 0,
+                          "comparator": ">"
+                        }
+                      ],
+                      "formula": "query7"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "avg:agentil_software.systems.availability{sap_type:business_object} by {sap_org,sap_group,sap_sid}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "avg"
+                    },
+                    {
+                      "query": "sum:agentil_software.businessobjects.bo_concurrent_users.bo_concurent_users{*} by {sap_org,sap_group,sap_sid}",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "max"
+                    },
+                    {
+                      "query": "sum:agentil_software.businessobjects.bo_concurrent_users.bo_concurent_users{*} by {sap_org,sap_group,sap_sid}",
+                      "data_source": "metrics",
+                      "name": "query3",
+                      "aggregator": "avg"
+                    },
+                    {
+                      "query": "sum:agentil_software.businessobjects.bo_servers_status.bo_services_status_count{status:invalid} by {sap_org,sap_group,sap_sid}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query4",
+                      "aggregator": "avg"
+                    },
+                    {
+                      "query": "sum:agentil_software.businessobjects.bo_servers_status.bo_services_status_count{status:stopped} by {sap_org,sap_group,sap_sid}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query5",
+                      "aggregator": "avg"
+                    },
+                    {
+                      "query": "sum:agentil_software.businessobjects.bo_schedules_status.bo_schedules_status_count{status:failure} by {sap_org,sap_group,sap_sid}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query6",
+                      "aggregator": "sum"
+                    },
+                    {
+                      "query": "sum:agentil_software.businessobjects.bo_schedules_status.bo_schedules_status_count{status:expired} by {sap_org,sap_group,sap_sid}.as_count()",
+                      "data_source": "metrics",
+                      "name": "query7",
+                      "aggregator": "sum"
+                    }
+                  ]
+                }
+              ]
+            },
+            "layout": { "x": 0, "y": 0, "width": 10, "height": 3 }
+          },
+          {
+            "id": 8049056011076241,
+            "definition": {
+              "type": "image",
+              "url": "https://dev2.agentil-software.com/wp-content/uploads/2020/12/logo_agentil_software_black.png",
+              "sizing": "scale-down",
+              "margin": "lg",
+              "has_background": true,
+              "has_border": false,
+              "vertical_align": "center",
+              "horizontal_align": "center"
+            },
+            "layout": { "x": 10, "y": 0, "width": 2, "height": 3 }
+          },
+          {
+            "id": 4858670242293913,
+            "definition": {
+              "title": "Connected users",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": ["avg", "min", "max", "value", "sum"],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    { "alias": "concurrent users", "formula": "query1" }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "avg:agentil_software.businessobjects.bo_concurrent_users.bo_concurent_users{$SAP_SID,$SAP_ORG,$SAP_GROUP} by {sap_org,sap_group,sap_sid}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": { "x": 0, "y": 3, "width": 12, "height": 5 }
+          }
+        ]
+      },
+      "layout": { "x": 0, "y": 0, "width": 12, "height": 9 }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "SAP_ORG",
+      "default": "*",
+      "prefix": "sap_org",
+      "available_values": []
+    },
+    {
+      "name": "SAP_GROUP",
+      "default": "*",
+      "prefix": "sap_group",
+      "available_values": []
+    },
+    {
+      "name": "SAP_SID",
+      "default": "*",
+      "prefix": "sap_sid",
+      "available_values": []
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed"
+}

@@ -1,1 +1,109 @@
-{"title":"SAP System IDOCS","description":"## SAP IDOC details\n\nThis dashboard displays detailed information about IDOC messages from your SAP systems.","widgets":[{"id":7375457422959924,"definition":{"title":"FAILED IDOCs","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"query1"}],"conditional_formats":[{"comparator":">","palette":"white_on_red","value":0}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_idocs.failed_idoc_messages_count{$sap_sid}.as_count()","data_source":"metrics","name":"query1","aggregator":"sum"}]}],"autoscale":true,"custom_unit":" ","precision":2},"layout":{"x":0,"y":0,"width":2,"height":2}},{"id":6072325200724623,"definition":{"title":"FAILED IDOCs","title_size":"16","title_align":"left","show_legend":true,"legend_layout":"auto","legend_columns":["avg","min","max","value","sum"],"type":"timeseries","requests":[{"formulas":[{"alias":"FAILED IDOC","formula":"query1"}],"response_format":"timeseries","queries":[{"query":"sum:agentil_software.netweaver.abap.sap_idocs.failed_idoc_messages_count{$sap_sid}.as_count()","data_source":"metrics","name":"query1"}],"style":{"palette":"warm","line_type":"solid","line_width":"normal"},"display_type":"area"}]},"layout":{"x":2,"y":0,"width":10,"height":2}},{"id":5341327486110869,"definition":{"title":"IDOC details","title_size":"16","title_align":"left","requests":[{"response_format":"event_list","query":{"data_source":"logs_stream","query_string":"service:SAP_IDOCS","indexes":[],"storage":"hot","sort":{"order":"desc","column":"timestamp"}},"columns":[{"field":"status_line","width":"auto"},{"field":"timestamp","width":"auto"},{"field":"host","width":"auto"},{"field":"service","width":"auto"},{"field":"content","width":"compact"}]}],"type":"list_stream"},"layout":{"x":0,"y":2,"width":12,"height":6}}],"template_variables":[{"name":"sap_sid","prefix":"sap_sid","available_values":[],"default":"*"}],"layout_type":"ordered","is_read_only":false,"notify_list":[],"reflow_type":"fixed","id":"68n-w28-grc"}
+{
+  "title": "SAP System IDOCS",
+  "description": "## SAP IDOC details\n\nThis dashboard displays detailed information about IDOC messages from your SAP systems.",
+  "widgets": [
+    {
+      "id": 7375457422959924,
+      "definition": {
+        "title": "FAILED IDOCs",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "formulas": [{ "formula": "query1" }],
+            "conditional_formats": [
+              { "comparator": ">", "palette": "white_on_red", "value": 0 }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_idocs.failed_idoc_messages_count{$sap_sid}.as_count()",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "sum"
+              }
+            ]
+          }
+        ],
+        "autoscale": true,
+        "custom_unit": " ",
+        "precision": 2
+      },
+      "layout": { "x": 0, "y": 0, "width": 2, "height": 2 }
+    },
+    {
+      "id": 6072325200724623,
+      "definition": {
+        "title": "FAILED IDOCs",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": ["avg", "min", "max", "value", "sum"],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [{ "alias": "FAILED IDOC", "formula": "query1" }],
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_idocs.failed_idoc_messages_count{$sap_sid}.as_count()",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "style": {
+              "palette": "warm",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "area"
+          }
+        ]
+      },
+      "layout": { "x": 2, "y": 0, "width": 10, "height": 2 }
+    },
+    {
+      "id": 5341327486110869,
+      "definition": {
+        "title": "IDOC details",
+        "title_size": "16",
+        "title_align": "left",
+        "requests": [
+          {
+            "response_format": "event_list",
+            "query": {
+              "data_source": "logs_stream",
+              "query_string": "service:SAP_IDOCS",
+              "indexes": [],
+              "storage": "hot",
+              "sort": { "order": "desc", "column": "timestamp" }
+            },
+            "columns": [
+              { "field": "status_line", "width": "auto" },
+              { "field": "timestamp", "width": "auto" },
+              { "field": "host", "width": "auto" },
+              { "field": "service", "width": "auto" },
+              { "field": "content", "width": "compact" }
+            ]
+          }
+        ],
+        "type": "list_stream"
+      },
+      "layout": { "x": 0, "y": 2, "width": 12, "height": 6 }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "sap_sid",
+      "prefix": "sap_sid",
+      "available_values": [],
+      "default": "*"
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed"
+}

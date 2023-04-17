@@ -1,1 +1,716 @@
-{"title":"RapDev GitHub Dashboard","description":"","widgets":[{"id":2687151797114382,"definition":{"type":"image","url":"https://s3.amazonaws.com/files.rapdev.io/images/rapdev-dash-logo.png","sizing":"fill","has_background":false,"has_border":false,"vertical_align":"center","horizontal_align":"center"},"layout":{"x":0,"y":0,"width":3,"height":2}},{"id":2099065075062705,"definition":{"title":"Total Number of Repos","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero(query1)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.repos.count.total{*}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"autoscale":true,"precision":2},"layout":{"x":3,"y":0,"width":3,"height":2}},{"id":6425134293601044,"definition":{"title":"Total Number of Users","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero(query1)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.users.count{*}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"autoscale":true,"precision":2},"layout":{"x":6,"y":0,"width":3,"height":2}},{"id":3116251360274092,"definition":{"type":"image","url":"https://logos-world.net/wp-content/uploads/2020/11/GitHub-Emblem.png","sizing":"fill","has_background":false,"has_border":false,"vertical_align":"center","horizontal_align":"center"},"layout":{"x":9,"y":0,"width":3,"height":2}},{"id":7858254376682176,"definition":{"title":"Repo Inventory","title_size":"16","title_align":"left","type":"query_table","requests":[{"formulas":[{"alias":"Total Stargazers","conditional_formats":[],"limit":{"count":500,"order":"desc"},"cell_display_mode":"number","formula":"default_zero(query2)"},{"alias":"Total Watchers","conditional_formats":[],"cell_display_mode":"number","formula":"default_zero(query3)"},{"alias":"Total Forks","conditional_formats":[],"cell_display_mode":"number","formula":"default_zero(query4)"},{"alias":"Total Size","conditional_formats":[],"cell_display_mode":"number","formula":"default_zero(query5)"},{"alias":"Total Open Issues","conditional_formats":[],"cell_display_mode":"number","formula":"default_zero(query6)"},{"alias":"Total Pull Requests","conditional_formats":[],"cell_display_mode":"number","formula":"default_zero(query7)"},{"alias":"Total Number of Caches","conditional_formats":[],"cell_display_mode":"number","formula":"default_zero(query8)"},{"alias":"Size of Caches","conditional_formats":[],"cell_display_mode":"number","formula":"default_zero(query9)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.repos.stargazers{$repo_name}","data_source":"metrics","name":"query2","aggregator":"last"},{"query":"sum:rapdev.github.repos.watchers{$repo_name}","data_source":"metrics","name":"query3","aggregator":"last"},{"query":"sum:rapdev.github.repos.forks{$repo_name}","data_source":"metrics","name":"query4","aggregator":"last"},{"query":"sum:rapdev.github.repos.size{$repo_name}","data_source":"metrics","name":"query5","aggregator":"last"},{"query":"sum:rapdev.github.repos.issues{$repo_name}","data_source":"metrics","name":"query6","aggregator":"last"},{"query":"sum:rapdev.github.repos.pull_reqs{$repo_name}","data_source":"metrics","name":"query7","aggregator":"last"},{"query":"sum:rapdev.github.repos.cachecount{$repo_name}","data_source":"metrics","name":"query8","aggregator":"last"},{"query":"sum:rapdev.github.repos.cachesize{$repo_name}","data_source":"metrics","name":"query9","aggregator":"last"}]}],"has_search_bar":"auto"},"layout":{"x":0,"y":2,"width":12,"height":2}},{"id":731645063309509,"definition":{"title":"Number of Repos over Time","title_size":"16","title_align":"left","show_legend":true,"legend_layout":"auto","legend_columns":["avg","min","max","value","sum"],"type":"timeseries","requests":[{"formulas":[{"alias":"Repo Count","formula":"default_zero(query2)"}],"response_format":"timeseries","queries":[{"query":"sum:rapdev.github.repos.count.total{*}","data_source":"metrics","name":"query2"}],"style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"},"display_type":"line"}]},"layout":{"x":0,"y":4,"width":12,"height":3}},{"id":5172518373893586,"definition":{"title":"Repo Metrics","type":"group","background_color":"vivid_blue","show_title":true,"layout_type":"ordered","widgets":[{"id":2053273146161880,"definition":{"title":"Total Repo Commits in Repo","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero(query1)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.repos.commits{$repo_name,$repo_author}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"autoscale":true,"precision":2,"timeseries_background":{"type":"bars","yaxis":{"include_zero":true}}},"layout":{"x":0,"y":0,"width":6,"height":3}},{"id":8593338505276872,"definition":{"title":"Total Number of Watchers in Repo","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero(query1)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.repos.watchers{$repo_name}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"autoscale":true,"precision":2,"timeseries_background":{"type":"bars"}},"layout":{"x":6,"y":0,"width":3,"height":3}},{"id":7985943436226980,"definition":{"title":"Total Number of Stargazers in Repo","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero(query1)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.repos.stargazers{$repo_name}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"autoscale":true,"precision":2,"timeseries_background":{"type":"bars"}},"layout":{"x":9,"y":0,"width":3,"height":3}},{"id":7317124297786825,"definition":{"title":"Total Commits of Watched Repos","title_size":"16","title_align":"left","requests":[{"formulas":[{"formula":"default_zero(query1)","limit":{"order":"desc"}}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.repos.commits{$repo_name,$repo_author} by {repo_name}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"type":"sunburst","legend":{"type":"automatic"}},"layout":{"x":0,"y":3,"width":6,"height":4}},{"id":5295731045014201,"definition":{"title":"Number of Commits Between All Watched Repos","title_size":"16","title_align":"left","show_legend":true,"legend_layout":"auto","legend_columns":["avg","min","max","value","sum"],"type":"timeseries","requests":[{"formulas":[{"alias":"Repo Commits","formula":"default_zero(query1)"}],"response_format":"timeseries","queries":[{"query":"sum:rapdev.github.repos.commits{*} by {repo_name}","data_source":"metrics","name":"query1"}],"style":{"palette":"dog_classic","line_type":"solid","line_width":"normal"},"display_type":"line"}]},"layout":{"x":6,"y":3,"width":6,"height":4}}]},"layout":{"x":0,"y":7,"width":12,"height":8}},{"id":3448262860507482,"definition":{"title":"Runner Metrics","type":"group","background_color":"vivid_green","show_title":true,"layout_type":"ordered","widgets":[{"id":6493806950123387,"definition":{"title":"Total Number of Runner Apps","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero(query1)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.runners.count{*}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"autoscale":true,"precision":2,"timeseries_background":{"type":"bars","yaxis":{"include_zero":false}}},"layout":{"x":0,"y":0,"width":3,"height":3}},{"id":7935848276282639,"definition":{"title":"Total Paid Minutes Used","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero(query1)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.runners.mins_used{*}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"autoscale":true,"precision":2,"timeseries_background":{"type":"bars","yaxis":{"include_zero":false}}},"layout":{"x":3,"y":0,"width":3,"height":3}},{"id":4837467843076197,"definition":{"title":"Number of Paid Minutes Used by OS","title_size":"16","title_align":"left","type":"query_table","requests":[{"formulas":[{"alias":"Total Minutes","limit":{"order":"desc"},"formula":"default_zero(query1)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.runners.mins_used{*} by {os}","data_source":"metrics","name":"query1","aggregator":"last"}]}]},"layout":{"x":6,"y":0,"width":6,"height":3}},{"id":354347986646101,"definition":{"title":"Total Self-Hosted Runners","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero(query1)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.runners.self_hosted_runners_total{*}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"autoscale":true,"precision":2,"timeseries_background":{"type":"bars"}},"layout":{"x":0,"y":3,"width":3,"height":3}},{"id":6824706437702577,"definition":{"title":"Current Status of Self-Hosted Runners","title_size":"16","title_align":"left","type":"check_status","check":"rapdev.github.self_hosted_runner.is_running","grouping":"check","group":"$host","group_by":[],"tags":["*"]},"layout":{"x":3,"y":3,"width":3,"height":3}},{"id":7651359146223425,"definition":{"title":"Percentage Used Mins","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero((query1 / query2) * 100)"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.runners.mins_used{*}","data_source":"metrics","name":"query1","aggregator":"last"},{"query":"sum:rapdev.github.runners.included_mins{*}","data_source":"metrics","name":"query2","aggregator":"last"}]}],"autoscale":true,"custom_unit":"%","precision":2,"timeseries_background":{"type":"bars"}},"layout":{"x":6,"y":3,"width":3,"height":3}},{"id":3527621763789661,"definition":{"title":"Percentage Mins Left","title_size":"16","title_align":"left","type":"query_value","requests":[{"formulas":[{"formula":"default_zero(100 - ((query1 / query2) * 100))"}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.runners.mins_used{*}","data_source":"metrics","name":"query1","aggregator":"last"},{"query":"sum:rapdev.github.runners.included_mins{*}","data_source":"metrics","name":"query2","aggregator":"last"}]}],"autoscale":true,"custom_unit":"%","precision":2,"timeseries_background":{"type":"bars"}},"layout":{"x":9,"y":3,"width":3,"height":3}}]},"layout":{"x":0,"y":15,"width":12,"height":7,"is_column_break":true}},{"id":6765382514104361,"definition":{"title":"Workflows","type":"group","background_color":"vivid_orange","show_title":true,"layout_type":"ordered","widgets":[{"id":698061341637220,"definition":{"title":"Workflows by Status","title_size":"16","title_align":"left","requests":[{"formulas":[{"formula":"default_zero(query1)","limit":{"order":"desc"}}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.repos.workflows{$repo_name} by {status}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"type":"sunburst","hide_total":false,"legend":{"type":"automatic"}},"layout":{"x":0,"y":0,"width":6,"height":4}},{"id":7556292434454424,"definition":{"title":"Workflows by Status and Repo","title_size":"16","title_align":"left","type":"toplist","requests":[{"formulas":[{"formula":"default_zero(query1)","limit":{"count":500,"order":"desc"}}],"response_format":"scalar","queries":[{"query":"sum:rapdev.github.repos.workflows{$repo_name} by {repo_name,status}","data_source":"metrics","name":"query1","aggregator":"last"}]}]},"layout":{"x":6,"y":0,"width":6,"height":4}}]},"layout":{"x":0,"y":22,"width":12,"height":5}}],"template_variables":[{"name":"repo_name","default":"*","prefix":"repo_name","available_values":[]},{"name":"repo_author","default":"*","prefix":"repo_author","available_values":[]},{"name":"host","default":"*","prefix":"host","available_values":[]}],"layout_type":"ordered","is_read_only":false,"notify_list":[],"reflow_type":"fixed","id":"8pz-ezw-kxg"}
+{
+  "title": "RapDev GitHub Dashboard",
+  "description": "",
+  "widgets": [
+    {
+      "id": 2687151797114382,
+      "definition": {
+        "type": "image",
+        "url": "https://s3.amazonaws.com/files.rapdev.io/images/rapdev-dash-logo.png",
+        "sizing": "fill",
+        "has_background": false,
+        "has_border": false,
+        "vertical_align": "center",
+        "horizontal_align": "center"
+      },
+      "layout": { "x": 0, "y": 0, "width": 3, "height": 2 }
+    },
+    {
+      "id": 2099065075062705,
+      "definition": {
+        "title": "Total Number of Repos",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "formulas": [{ "formula": "default_zero(query1)" }],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:rapdev.github.repos.count.total{*}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "last"
+              }
+            ]
+          }
+        ],
+        "autoscale": true,
+        "precision": 2
+      },
+      "layout": { "x": 3, "y": 0, "width": 3, "height": 2 }
+    },
+    {
+      "id": 6425134293601044,
+      "definition": {
+        "title": "Total Number of Users",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "formulas": [{ "formula": "default_zero(query1)" }],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:rapdev.github.users.count{*}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "last"
+              }
+            ]
+          }
+        ],
+        "autoscale": true,
+        "precision": 2
+      },
+      "layout": { "x": 6, "y": 0, "width": 3, "height": 2 }
+    },
+    {
+      "id": 3116251360274092,
+      "definition": {
+        "type": "image",
+        "url": "https://logos-world.net/wp-content/uploads/2020/11/GitHub-Emblem.png",
+        "sizing": "fill",
+        "has_background": false,
+        "has_border": false,
+        "vertical_align": "center",
+        "horizontal_align": "center"
+      },
+      "layout": { "x": 9, "y": 0, "width": 3, "height": 2 }
+    },
+    {
+      "id": 7858254376682176,
+      "definition": {
+        "title": "Repo Inventory",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "alias": "Total Stargazers",
+                "conditional_formats": [],
+                "limit": { "count": 500, "order": "desc" },
+                "cell_display_mode": "number",
+                "formula": "default_zero(query2)"
+              },
+              {
+                "alias": "Total Watchers",
+                "conditional_formats": [],
+                "cell_display_mode": "number",
+                "formula": "default_zero(query3)"
+              },
+              {
+                "alias": "Total Forks",
+                "conditional_formats": [],
+                "cell_display_mode": "number",
+                "formula": "default_zero(query4)"
+              },
+              {
+                "alias": "Total Size",
+                "conditional_formats": [],
+                "cell_display_mode": "number",
+                "formula": "default_zero(query5)"
+              },
+              {
+                "alias": "Total Open Issues",
+                "conditional_formats": [],
+                "cell_display_mode": "number",
+                "formula": "default_zero(query6)"
+              },
+              {
+                "alias": "Total Pull Requests",
+                "conditional_formats": [],
+                "cell_display_mode": "number",
+                "formula": "default_zero(query7)"
+              },
+              {
+                "alias": "Total Number of Caches",
+                "conditional_formats": [],
+                "cell_display_mode": "number",
+                "formula": "default_zero(query8)"
+              },
+              {
+                "alias": "Size of Caches",
+                "conditional_formats": [],
+                "cell_display_mode": "number",
+                "formula": "default_zero(query9)"
+              }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:rapdev.github.repos.stargazers{$repo_name}",
+                "data_source": "metrics",
+                "name": "query2",
+                "aggregator": "last"
+              },
+              {
+                "query": "sum:rapdev.github.repos.watchers{$repo_name}",
+                "data_source": "metrics",
+                "name": "query3",
+                "aggregator": "last"
+              },
+              {
+                "query": "sum:rapdev.github.repos.forks{$repo_name}",
+                "data_source": "metrics",
+                "name": "query4",
+                "aggregator": "last"
+              },
+              {
+                "query": "sum:rapdev.github.repos.size{$repo_name}",
+                "data_source": "metrics",
+                "name": "query5",
+                "aggregator": "last"
+              },
+              {
+                "query": "sum:rapdev.github.repos.issues{$repo_name}",
+                "data_source": "metrics",
+                "name": "query6",
+                "aggregator": "last"
+              },
+              {
+                "query": "sum:rapdev.github.repos.pull_reqs{$repo_name}",
+                "data_source": "metrics",
+                "name": "query7",
+                "aggregator": "last"
+              },
+              {
+                "query": "sum:rapdev.github.repos.cachecount{$repo_name}",
+                "data_source": "metrics",
+                "name": "query8",
+                "aggregator": "last"
+              },
+              {
+                "query": "sum:rapdev.github.repos.cachesize{$repo_name}",
+                "data_source": "metrics",
+                "name": "query9",
+                "aggregator": "last"
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": { "x": 0, "y": 2, "width": 12, "height": 2 }
+    },
+    {
+      "id": 731645063309509,
+      "definition": {
+        "title": "Number of Repos over Time",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": ["avg", "min", "max", "value", "sum"],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              { "alias": "Repo Count", "formula": "default_zero(query2)" }
+            ],
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "query": "sum:rapdev.github.repos.count.total{*}",
+                "data_source": "metrics",
+                "name": "query2"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ]
+      },
+      "layout": { "x": 0, "y": 4, "width": 12, "height": 3 }
+    },
+    {
+      "id": 5172518373893586,
+      "definition": {
+        "title": "Repo Metrics",
+        "type": "group",
+        "background_color": "vivid_blue",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 2053273146161880,
+            "definition": {
+              "title": "Total Repo Commits in Repo",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [{ "formula": "default_zero(query1)" }],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.repos.commits{$repo_name,$repo_author}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": {
+                "type": "bars",
+                "yaxis": { "include_zero": true }
+              }
+            },
+            "layout": { "x": 0, "y": 0, "width": 6, "height": 3 }
+          },
+          {
+            "id": 8593338505276872,
+            "definition": {
+              "title": "Total Number of Watchers in Repo",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [{ "formula": "default_zero(query1)" }],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.repos.watchers{$repo_name}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": { "type": "bars" }
+            },
+            "layout": { "x": 6, "y": 0, "width": 3, "height": 3 }
+          },
+          {
+            "id": 7985943436226980,
+            "definition": {
+              "title": "Total Number of Stargazers in Repo",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [{ "formula": "default_zero(query1)" }],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.repos.stargazers{$repo_name}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": { "type": "bars" }
+            },
+            "layout": { "x": 9, "y": 0, "width": 3, "height": 3 }
+          },
+          {
+            "id": 7317124297786825,
+            "definition": {
+              "title": "Total Commits of Watched Repos",
+              "title_size": "16",
+              "title_align": "left",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "default_zero(query1)",
+                      "limit": { "order": "desc" }
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.repos.commits{$repo_name,$repo_author} by {repo_name}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "type": "sunburst",
+              "legend": { "type": "automatic" }
+            },
+            "layout": { "x": 0, "y": 3, "width": 6, "height": 4 }
+          },
+          {
+            "id": 5295731045014201,
+            "definition": {
+              "title": "Number of Commits Between All Watched Repos",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": ["avg", "min", "max", "value", "sum"],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Repo Commits",
+                      "formula": "default_zero(query1)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.repos.commits{*} by {repo_name}",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ]
+            },
+            "layout": { "x": 6, "y": 3, "width": 6, "height": 4 }
+          }
+        ]
+      },
+      "layout": { "x": 0, "y": 7, "width": 12, "height": 8 }
+    },
+    {
+      "id": 3448262860507482,
+      "definition": {
+        "title": "Runner Metrics",
+        "type": "group",
+        "background_color": "vivid_green",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 6493806950123387,
+            "definition": {
+              "title": "Total Number of Runner Apps",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [{ "formula": "default_zero(query1)" }],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.runners.count{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": {
+                "type": "bars",
+                "yaxis": { "include_zero": false }
+              }
+            },
+            "layout": { "x": 0, "y": 0, "width": 3, "height": 3 }
+          },
+          {
+            "id": 7935848276282639,
+            "definition": {
+              "title": "Total Paid Minutes Used",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [{ "formula": "default_zero(query1)" }],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.runners.mins_used{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": {
+                "type": "bars",
+                "yaxis": { "include_zero": false }
+              }
+            },
+            "layout": { "x": 3, "y": 0, "width": 3, "height": 3 }
+          },
+          {
+            "id": 4837467843076197,
+            "definition": {
+              "title": "Number of Paid Minutes Used by OS",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_table",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "alias": "Total Minutes",
+                      "limit": { "order": "desc" },
+                      "formula": "default_zero(query1)"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.runners.mins_used{*} by {os}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ]
+            },
+            "layout": { "x": 6, "y": 0, "width": 6, "height": 3 }
+          },
+          {
+            "id": 354347986646101,
+            "definition": {
+              "title": "Total Self-Hosted Runners",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [{ "formula": "default_zero(query1)" }],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.runners.self_hosted_runners_total{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "timeseries_background": { "type": "bars" }
+            },
+            "layout": { "x": 0, "y": 3, "width": 3, "height": 3 }
+          },
+          {
+            "id": 6824706437702577,
+            "definition": {
+              "title": "Current Status of Self-Hosted Runners",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "check_status",
+              "check": "rapdev.github.self_hosted_runner.is_running",
+              "grouping": "check",
+              "group": "$host",
+              "group_by": [],
+              "tags": ["*"]
+            },
+            "layout": { "x": 3, "y": 3, "width": 3, "height": 3 }
+          },
+          {
+            "id": 7651359146223425,
+            "definition": {
+              "title": "Percentage Used Mins",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    { "formula": "default_zero((query1 / query2) * 100)" }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.runners.mins_used{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    },
+                    {
+                      "query": "sum:rapdev.github.runners.included_mins{*}",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "custom_unit": "%",
+              "precision": 2,
+              "timeseries_background": { "type": "bars" }
+            },
+            "layout": { "x": 6, "y": 3, "width": 3, "height": 3 }
+          },
+          {
+            "id": 3527621763789661,
+            "definition": {
+              "title": "Percentage Mins Left",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "default_zero(100 - ((query1 / query2) * 100))"
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.runners.mins_used{*}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    },
+                    {
+                      "query": "sum:rapdev.github.runners.included_mins{*}",
+                      "data_source": "metrics",
+                      "name": "query2",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "autoscale": true,
+              "custom_unit": "%",
+              "precision": 2,
+              "timeseries_background": { "type": "bars" }
+            },
+            "layout": { "x": 9, "y": 3, "width": 3, "height": 3 }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 15,
+        "width": 12,
+        "height": 7,
+        "is_column_break": true
+      }
+    },
+    {
+      "id": 6765382514104361,
+      "definition": {
+        "title": "Workflows",
+        "type": "group",
+        "background_color": "vivid_orange",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 698061341637220,
+            "definition": {
+              "title": "Workflows by Status",
+              "title_size": "16",
+              "title_align": "left",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "default_zero(query1)",
+                      "limit": { "order": "desc" }
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.repos.workflows{$repo_name} by {status}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ],
+              "type": "sunburst",
+              "hide_total": false,
+              "legend": { "type": "automatic" }
+            },
+            "layout": { "x": 0, "y": 0, "width": 6, "height": 4 }
+          },
+          {
+            "id": 7556292434454424,
+            "definition": {
+              "title": "Workflows by Status and Repo",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "toplist",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "default_zero(query1)",
+                      "limit": { "count": 500, "order": "desc" }
+                    }
+                  ],
+                  "response_format": "scalar",
+                  "queries": [
+                    {
+                      "query": "sum:rapdev.github.repos.workflows{$repo_name} by {repo_name,status}",
+                      "data_source": "metrics",
+                      "name": "query1",
+                      "aggregator": "last"
+                    }
+                  ]
+                }
+              ]
+            },
+            "layout": { "x": 6, "y": 0, "width": 6, "height": 4 }
+          }
+        ]
+      },
+      "layout": { "x": 0, "y": 22, "width": 12, "height": 5 }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "repo_name",
+      "default": "*",
+      "prefix": "repo_name",
+      "available_values": []
+    },
+    {
+      "name": "repo_author",
+      "default": "*",
+      "prefix": "repo_author",
+      "available_values": []
+    },
+    { "name": "host", "default": "*", "prefix": "host", "available_values": [] }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed"
+}

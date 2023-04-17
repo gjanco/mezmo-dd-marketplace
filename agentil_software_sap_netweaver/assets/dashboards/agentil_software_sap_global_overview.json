@@ -1,1 +1,358 @@
-{"title":"SAP Global Overview","description":"## Top level overview of all you SAP NetWeaver systems","widgets":[{"id":827977955232592,"definition":{"type":"image","url":"https://dev2.agentil-software.com/wp-content/uploads/2020/12/logo_agentil_software_black.png","sizing":"scale-down"},"layout":{"x":0,"y":0,"width":2,"height":1}},{"id":3495182227250304,"definition":{"title":"Netweaver overview","title_size":"16","title_align":"left","type":"query_table","requests":[{"formulas":[{"formula":"query1","cell_display_mode":"bar","limit":{"count":50,"order":"desc"},"alias":"Active users"},{"formula":"query2","conditional_formats":[{"palette":"white_on_green","comparator":"<","value":1},{"palette":"white_on_yellow","comparator":">","value":1},{"palette":"white_on_red","comparator":">","value":100}],"cell_display_mode":"bar","alias":"Shortdumps"},{"formula":"query3","conditional_formats":[{"palette":"white_on_green","comparator":"<","value":1},{"palette":"white_on_yellow","comparator":">","value":1},{"palette":"white_on_red","comparator":">","value":100}],"cell_display_mode":"bar","alias":"Failed jobs"},{"formula":"query4","conditional_formats":[{"palette":"white_on_green","comparator":"<","value":1}],"cell_display_mode":"bar","alias":"Max locks"},{"formula":"query5","conditional_formats":[{"palette":"white_on_green","comparator":"<","value":1}],"cell_display_mode":"bar","alias":"Failed IDOC"},{"formula":"query6","conditional_formats":[{"palette":"white_on_green","comparator":"<","value":1}],"cell_display_mode":"bar","alias":"Spool errors"},{"formula":"query7","conditional_formats":[{"palette":"white_on_green","comparator":"<","value":1}],"cell_display_mode":"bar","alias":"Failed transports"},{"formula":"query8","cell_display_mode":"bar","alias":"Response time"}],"response_format":"scalar","queries":[{"query":"sum:agentil_software.netweaver.abap.users.users_active{*} by {sap_org,sap_sid}","data_source":"metrics","name":"query1","aggregator":"last"},{"query":"sum:agentil_software.netweaver.abap.sap_shortdumps.shortdumps_count{*} by {sap_org,sap_sid}.as_count()","data_source":"metrics","name":"query2","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_jobs.default_sap_jobs_aborted_count{*} by {sap_org,sap_sid}.as_count()","data_source":"metrics","name":"query3","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_exclusive_locks.abap_long_locks_count{*} by {sap_org,sap_sid}.as_count()","data_source":"metrics","name":"query4","aggregator":"max"},{"query":"sum:agentil_software.netweaver.abap.sap_idocs.failed_idoc_messages_count{*} by {sap_org,sap_sid}.as_count()","data_source":"metrics","name":"query5","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_spool.spool_request_errors_count{*} by {sap_org,sap_sid}.as_count()","data_source":"metrics","name":"query6","aggregator":"sum"},{"query":"sum:agentil_software.netweaver.abap.sap_transports.sap_failed_transports_count{*} by {sap_org,sap_sid}.as_count()","data_source":"metrics","name":"query7","aggregator":"sum"},{"query":"avg:agentil_software.netweaver.abap.abap_response_time.abap_response_time{*} by {sap_org,sap_sid}","data_source":"metrics","name":"query8","aggregator":"avg"}]}],"has_search_bar":"auto","custom_links":[{"link":"https://app.datadoghq.com/dash/integration/SAP%20Netweaver%20system%20dashboard?tpl_var_SID={{sap_sid.value}}","label":"System dashboard"}]},"layout":{"x":2,"y":0,"width":10,"height":3}},{"id":431590900125054,"definition":{"title":"System availability","title_size":"16","title_align":"left","type":"query_table","requests":[{"formulas":[{"formula":"query1","conditional_formats":[{"palette":"white_on_green","comparator":">","value":0},{"palette":"white_on_red","comparator":"<","value":1}],"limit":{"count":50,"order":"desc"},"cell_display_mode":"bar","alias":"Availability"}],"response_format":"scalar","queries":[{"query":"max:agentil_software.systems.availability{*} by {sap_sid}","data_source":"metrics","name":"query1","aggregator":"last"}]}],"has_search_bar":"auto"},"layout":{"x":0,"y":1,"width":2,"height":5}},{"id":6180452503180597,"definition":{"title":"HANA DB overview","title_size":"16","title_align":"left","type":"query_table","requests":[{"formulas":[{"alias":"CPU %","cell_display_mode":"bar","limit":{"count":500,"order":"desc"},"formula":"query1"},{"alias":"Memory %","cell_display_mode":"bar","formula":"query2"},{"alias":"Memory GB","cell_display_mode":"bar","formula":"query3"},{"alias":"Disk DATA %","cell_display_mode":"bar","formula":"query4"},{"alias":"Disk LOG %","cell_display_mode":"bar","formula":"query5"},{"alias":"Threads","cell_display_mode":"bar","formula":"query6"}],"response_format":"scalar","queries":[{"query":"avg:agentil_software.hana.hana_cpu.db_cpu_utilization{*} by {sap_sid,instance}","data_source":"metrics","name":"query1","aggregator":"last"},{"query":"avg:agentil_software.hana.hana_memory.memory_percentageused{*} by {sap_sid,instance}","data_source":"metrics","name":"query2","aggregator":"last"},{"query":"avg:agentil_software.hana.hana_memory.memory_used{*} by {sap_sid,instance}","data_source":"metrics","name":"query3","aggregator":"last"},{"query":"avg:agentil_software.hana.hana_disk.disk_data_percentage_used{*} by {sap_sid,instance}","data_source":"metrics","name":"query4","aggregator":"last"},{"query":"avg:agentil_software.hana.hana_disk.disk_log_percentage_used{*} by {sap_sid,instance}","data_source":"metrics","name":"query5","aggregator":"last"},{"query":"avg:agentil_software.hana.hana_threads.threads_count{*} by {sap_sid,instance}.as_count()","data_source":"metrics","name":"query6","aggregator":"last"}]}],"has_search_bar":"auto"},"layout":{"x":2,"y":3,"width":10,"height":3}},{"id":4660855366246244,"definition":{"title":"","title_size":"16","title_align":"left","type":"query_table","requests":[{"formulas":[{"formula":"query1","conditional_formats":[],"limit":{"count":10,"order":"desc"},"cell_display_mode":"bar"}],"response_format":"scalar","queries":[{"search":{"query":""},"data_source":"events","compute":{"aggregation":"count"},"name":"query1","indexes":["*"],"group_by":[{"facet":"module","sort":{"aggregation":"count","order":"desc"},"limit":10}]}]}],"has_search_bar":"auto"},"layout":{"x":0,"y":6,"width":4,"height":4}},{"id":7320899053167947,"definition":{"title":"","type":"manage_status","display_format":"countsAndList","color_preference":"text","hide_zero_counts":true,"query":"","sort":"status,asc","count":50,"start":0,"summary_type":"monitors","show_priority":false,"show_last_triggered":false},"layout":{"x":4,"y":6,"width":4,"height":4}}],"template_variables":[],"layout_type":"ordered","is_read_only":false,"notify_list":[],"reflow_type":"fixed","id":"c9h-zdt-8sz"}
+{
+  "title": "SAP Global Overview",
+  "description": "## Top level overview of all you SAP NetWeaver systems",
+  "widgets": [
+    {
+      "id": 827977955232592,
+      "definition": {
+        "type": "image",
+        "url": "https://dev2.agentil-software.com/wp-content/uploads/2020/12/logo_agentil_software_black.png",
+        "sizing": "scale-down"
+      },
+      "layout": { "x": 0, "y": 0, "width": 2, "height": 1 }
+    },
+    {
+      "id": 3495182227250304,
+      "definition": {
+        "title": "Netweaver overview",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1",
+                "cell_display_mode": "bar",
+                "limit": { "count": 50, "order": "desc" },
+                "alias": "Active users"
+              },
+              {
+                "formula": "query2",
+                "conditional_formats": [
+                  {
+                    "palette": "white_on_green",
+                    "comparator": "<",
+                    "value": 1
+                  },
+                  {
+                    "palette": "white_on_yellow",
+                    "comparator": ">",
+                    "value": 1
+                  },
+                  { "palette": "white_on_red", "comparator": ">", "value": 100 }
+                ],
+                "cell_display_mode": "bar",
+                "alias": "Shortdumps"
+              },
+              {
+                "formula": "query3",
+                "conditional_formats": [
+                  {
+                    "palette": "white_on_green",
+                    "comparator": "<",
+                    "value": 1
+                  },
+                  {
+                    "palette": "white_on_yellow",
+                    "comparator": ">",
+                    "value": 1
+                  },
+                  { "palette": "white_on_red", "comparator": ">", "value": 100 }
+                ],
+                "cell_display_mode": "bar",
+                "alias": "Failed jobs"
+              },
+              {
+                "formula": "query4",
+                "conditional_formats": [
+                  { "palette": "white_on_green", "comparator": "<", "value": 1 }
+                ],
+                "cell_display_mode": "bar",
+                "alias": "Max locks"
+              },
+              {
+                "formula": "query5",
+                "conditional_formats": [
+                  { "palette": "white_on_green", "comparator": "<", "value": 1 }
+                ],
+                "cell_display_mode": "bar",
+                "alias": "Failed IDOC"
+              },
+              {
+                "formula": "query6",
+                "conditional_formats": [
+                  { "palette": "white_on_green", "comparator": "<", "value": 1 }
+                ],
+                "cell_display_mode": "bar",
+                "alias": "Spool errors"
+              },
+              {
+                "formula": "query7",
+                "conditional_formats": [
+                  { "palette": "white_on_green", "comparator": "<", "value": 1 }
+                ],
+                "cell_display_mode": "bar",
+                "alias": "Failed transports"
+              },
+              {
+                "formula": "query8",
+                "cell_display_mode": "bar",
+                "alias": "Response time"
+              }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "sum:agentil_software.netweaver.abap.users.users_active{*} by {sap_org,sap_sid}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "last"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_shortdumps.shortdumps_count{*} by {sap_org,sap_sid}.as_count()",
+                "data_source": "metrics",
+                "name": "query2",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_jobs.default_sap_jobs_aborted_count{*} by {sap_org,sap_sid}.as_count()",
+                "data_source": "metrics",
+                "name": "query3",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_exclusive_locks.abap_long_locks_count{*} by {sap_org,sap_sid}.as_count()",
+                "data_source": "metrics",
+                "name": "query4",
+                "aggregator": "max"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_idocs.failed_idoc_messages_count{*} by {sap_org,sap_sid}.as_count()",
+                "data_source": "metrics",
+                "name": "query5",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_spool.spool_request_errors_count{*} by {sap_org,sap_sid}.as_count()",
+                "data_source": "metrics",
+                "name": "query6",
+                "aggregator": "sum"
+              },
+              {
+                "query": "sum:agentil_software.netweaver.abap.sap_transports.sap_failed_transports_count{*} by {sap_org,sap_sid}.as_count()",
+                "data_source": "metrics",
+                "name": "query7",
+                "aggregator": "sum"
+              },
+              {
+                "query": "avg:agentil_software.netweaver.abap.abap_response_time.abap_response_time{*} by {sap_org,sap_sid}",
+                "data_source": "metrics",
+                "name": "query8",
+                "aggregator": "avg"
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto",
+        "custom_links": [
+          {
+            "link": "https://app.datadoghq.com/dash/integration/SAP%20Netweaver%20system%20dashboard?tpl_var_SID={{sap_sid.value}}",
+            "label": "System dashboard"
+          }
+        ]
+      },
+      "layout": { "x": 2, "y": 0, "width": 10, "height": 3 }
+    },
+    {
+      "id": 431590900125054,
+      "definition": {
+        "title": "System availability",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1",
+                "conditional_formats": [
+                  {
+                    "palette": "white_on_green",
+                    "comparator": ">",
+                    "value": 0
+                  },
+                  { "palette": "white_on_red", "comparator": "<", "value": 1 }
+                ],
+                "limit": { "count": 50, "order": "desc" },
+                "cell_display_mode": "bar",
+                "alias": "Availability"
+              }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "max:agentil_software.systems.availability{*} by {sap_sid}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "last"
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": { "x": 0, "y": 1, "width": 2, "height": 5 }
+    },
+    {
+      "id": 6180452503180597,
+      "definition": {
+        "title": "HANA DB overview",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "alias": "CPU %",
+                "cell_display_mode": "bar",
+                "limit": { "count": 500, "order": "desc" },
+                "formula": "query1"
+              },
+              {
+                "alias": "Memory %",
+                "cell_display_mode": "bar",
+                "formula": "query2"
+              },
+              {
+                "alias": "Memory GB",
+                "cell_display_mode": "bar",
+                "formula": "query3"
+              },
+              {
+                "alias": "Disk DATA %",
+                "cell_display_mode": "bar",
+                "formula": "query4"
+              },
+              {
+                "alias": "Disk LOG %",
+                "cell_display_mode": "bar",
+                "formula": "query5"
+              },
+              {
+                "alias": "Threads",
+                "cell_display_mode": "bar",
+                "formula": "query6"
+              }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "query": "avg:agentil_software.hana.hana_cpu.db_cpu_utilization{*} by {sap_sid,instance}",
+                "data_source": "metrics",
+                "name": "query1",
+                "aggregator": "last"
+              },
+              {
+                "query": "avg:agentil_software.hana.hana_memory.memory_percentageused{*} by {sap_sid,instance}",
+                "data_source": "metrics",
+                "name": "query2",
+                "aggregator": "last"
+              },
+              {
+                "query": "avg:agentil_software.hana.hana_memory.memory_used{*} by {sap_sid,instance}",
+                "data_source": "metrics",
+                "name": "query3",
+                "aggregator": "last"
+              },
+              {
+                "query": "avg:agentil_software.hana.hana_disk.disk_data_percentage_used{*} by {sap_sid,instance}",
+                "data_source": "metrics",
+                "name": "query4",
+                "aggregator": "last"
+              },
+              {
+                "query": "avg:agentil_software.hana.hana_disk.disk_log_percentage_used{*} by {sap_sid,instance}",
+                "data_source": "metrics",
+                "name": "query5",
+                "aggregator": "last"
+              },
+              {
+                "query": "avg:agentil_software.hana.hana_threads.threads_count{*} by {sap_sid,instance}.as_count()",
+                "data_source": "metrics",
+                "name": "query6",
+                "aggregator": "last"
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": { "x": 2, "y": 3, "width": 10, "height": 3 }
+    },
+    {
+      "id": 4660855366246244,
+      "definition": {
+        "title": "",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1",
+                "conditional_formats": [],
+                "limit": { "count": 10, "order": "desc" },
+                "cell_display_mode": "bar"
+              }
+            ],
+            "response_format": "scalar",
+            "queries": [
+              {
+                "search": { "query": "" },
+                "data_source": "events",
+                "compute": { "aggregation": "count" },
+                "name": "query1",
+                "indexes": ["*"],
+                "group_by": [
+                  {
+                    "facet": "module",
+                    "sort": { "aggregation": "count", "order": "desc" },
+                    "limit": 10
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": { "x": 0, "y": 6, "width": 4, "height": 4 }
+    },
+    {
+      "id": 7320899053167947,
+      "definition": {
+        "title": "",
+        "type": "manage_status",
+        "display_format": "countsAndList",
+        "color_preference": "text",
+        "hide_zero_counts": true,
+        "query": "",
+        "sort": "status,asc",
+        "count": 50,
+        "start": 0,
+        "summary_type": "monitors",
+        "show_priority": false,
+        "show_last_triggered": false
+      },
+      "layout": { "x": 4, "y": 6, "width": 4, "height": 4 }
+    }
+  ],
+  "template_variables": [],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed"
+}
