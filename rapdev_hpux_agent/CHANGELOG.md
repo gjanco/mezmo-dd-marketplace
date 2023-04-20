@@ -1,5 +1,9 @@
 # CHANGELOG - RapDev HP-UX Agent
 
+## 1.5.4 / 2023-04-18
+
+* [Added] gzip compression support for metrics.
+
 ## 1.5.3 / 2023-02-24
 
 * [Fixed] issue where new files were not detected for log tails.
