@@ -101,7 +101,7 @@ To kick off a Private Offer, the partner must send a copy of the signed contract
 * Billing Contact
 * Billing Address
 * Billing cycle: upfront, annually, monthly
-* Auto-renewal clause (if you want the agreement to auto-renew) - Please note that renewals can only take place in 1-month, 12-month, 24-month, 36-month, 48-month, and 60-month intervals
+* Auto-renewal clause (if you want the agreement to auto-renew) - Please note that renewals can only take place in 12-month, 24-month, 36-month, 48-month, and 60-month intervals
 
 
 **What is a Marketplace drawdown?**\
