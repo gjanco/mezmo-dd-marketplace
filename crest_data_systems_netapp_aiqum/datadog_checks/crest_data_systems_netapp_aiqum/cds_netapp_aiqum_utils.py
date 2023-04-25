@@ -86,13 +86,13 @@ def create_chunks_for_events(events):
     """
     Used to create chunks of events
     """
-    chunk = list()
+    chunk = []
     buffer_size = 0
     for event in events:
         size_of_event = sys.getsizeof(event)
         if (buffer_size + size_of_event) > constants.MAX_CHUNK_SIZE or len(chunk) >= constants.MAX_CHUNK_LENGTH:
             yield chunk
-            chunk = list()
+            chunk = []
             buffer_size = 0
         chunk.append(event)
         buffer_size += size_of_event
@@ -104,11 +104,11 @@ def _prepare_body(instance_check, service, events, timestamp_field=None, fn_to_e
     """
     Used to prepare body of event
     """
-    http_log_items = list()
-    tags = ", ".join(instance_check.instance.get("tags", list()))
+    http_log_items = []
+    tags = ", ".join(instance_check.instance.get("tags", []))
 
     for event in events:
-        evaluated_tags = list()
+        evaluated_tags = []
         if timestamp_field:
             event["timestamp"] = event.get(timestamp_field)
         if fn_to_evaluate_event:
@@ -148,7 +148,7 @@ def field_parser(event, fields):
     """
     Used to parse multi-level dict structure's fields to single level dictionary
     """
-    result = dict()
+    result = {}
     for field in fields:
         data = None
         field_keys = field.split(".")
@@ -176,7 +176,7 @@ def field_alias_generator(event, alias):
     """
     Used to generate event with provided alias fields
     """
-    result = dict()
+    result = {}
     for new_field in alias:
         if not is_empty(event.get(new_field)):
             result[new_field] = event[new_field]
@@ -196,7 +196,7 @@ def tag_generator(event, fields):
     """
     Used to generate tag list from event with provided field name list
     """
-    tags = list()
+    tags = []
     for field in fields:
         tags.append(f"{field}:{event.get(field)}")
     return tags
@@ -236,7 +236,7 @@ def generate_metrics(
     """
     Used to generate and return metrics list with tags.
     """
-    metric_list = list()
+    metric_list = []
     metric_dc = set()
     for record in response_json.get("records", []):
         raw_event = field_parser(record, event_fields)
@@ -263,7 +263,7 @@ def generate_logs(response_json, event_fields, alias_fields, conditions=None):
     """
     Used to generate logs with tags.
     """
-    logs_list = list()
+    logs_list = []
     for record in response_json.get("records", []):
         raw_event = field_parser(record, event_fields)
         event = field_alias_generator(raw_event, alias_fields)

@@ -15,28 +15,38 @@ This integration monitors NetApp AIQUM Cluster, Aggregate, QTree, Interface, Por
 1. You have the Datadog Agent installed and running.
 2. You can connect to the server with the Datadog Agent.
 
+### NetApp AIQUM Configuration
+
+- A user must have read permissions on the NetApp AIQUM API to configure the integration and collect data.
+
 ### Installation
 
-To install the integration, run: `sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_netapp_aiqum==1.0.0`.
+To install the integration, run the following command:
+
+- Linux:
+  - `sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_netapp_aiqum==1.0.1`.
+- Windows:
+  - `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-crest_data_systems_netapp_aiqum==1.0.1`
 
 ### Configuration
 
-#### Setup datadog.yaml
+#### Set up `datadog.yaml`
 
-1. The app_key and api_key needs to be set in the datadog.yaml if not already configured. ([Read Here][4])
+1. The `app_key` and `api_key` needs to be set in the `datadog.yaml` file if not already configured. For more information, see [Agent Configuration Files][4].
+
    ```yaml
-      ## @param api_key - string - optional
-      ## Datadog API Key
-      #
-      api_key: <API_KEY>
+   ## @param api_key - string - optional
+   ## Datadog API Key
+   #
+   api_key: <API_KEY>
 
-      ## @param app_key - string - required
-      ## Datadog App Key
-      #
-      app_key: <APP_KEY>
+   ## @param app_key - string - required
+   ## Datadog App Key
+   #
+   app_key: <APP_KEY>
    ```
 
-#### Setup conf.yaml
+#### Set up `conf.yaml`
 
 1. Copy the `conf.yaml.example` file.
 
@@ -101,17 +111,27 @@ sudo datadog-agent check crest_data_systems_netapp_aiqum
 
 ## Uninstallation
 
-Uninstall the integration from the Datadog Agent by running the following command on a host:
+Uninstall the integration from the Datadog Agent by running the following command:
 
-`sudo -u dd-agent datadog-agent integration remove datadog-crest_data_systems_netapp_aiqum`
+- Linux:
+  - `sudo -u dd-agent datadog-agent integration remove datadog-crest_data_systems_netapp_aiqum`
+- Windows:
+  - `“C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration remove datadog-crest_data_systems_netapp_aiqum`
+
+YAML Config Cleanup:
+
+- If you plan to reinstall or need to keep the config files:
+  - Navigate to your Agent's `conf.d` directory and locate the `crest_data_systems_netapp_aiqum.d` folder to access the YAML configs. **NOTE**: These files contain sensitive information such as API keys.
+- If you plan to fully uninstall with config removal:
+  - Navigate to your Agent's `conf.d` directory, and remove the `crest_data_systems_netapp_aiqum.d` folder.
 
 ## Support
 
 For support or feature requests, contact Crest Data Systems through the following channels:
 
-- Email: datadog.integrations@crestdatasys.com
+- Support Email: datadog.integrations@crestdatasys.com
+- Sales Email: sales@crestdatasys.com
 - Website: [crestdatasys.com][3]
-
 
 [1]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information

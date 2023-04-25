@@ -63,7 +63,7 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
         # data collection ended
         elapsed_seconds = time.time() - start_time
         self.log.info(
-            "NETAPP AIQUM INFO: End of the data collection."  # noqa: G00
+            "NETAPP AIQUM INFO: End of the data collection."  # noqa: G001
             " Total time taken: {elapsed:.3f} seconds".format(elapsed=elapsed_seconds),
         )
 
@@ -76,7 +76,7 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
                 self.log.exception(ex)
 
             if response is None:
-                self.log.error("NETAPP AIQUM ERROR: Request Failed of url: {url}".format(url=url))  # noqa: G00
+                self.log.error("NETAPP AIQUM ERROR: Request Failed of url: {url}".format(url=url))  # noqa: G001
                 continue
 
             for panel_name, panel_data in api.get("dashboard_panels", {}).items():
@@ -139,14 +139,14 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
 
                 else:
                     self.log.error(
-                        "NETAPP AIQUM ERROR: No valid data type found for '{panel_name}' panel.".format(  # noqa: G00
+                        "NETAPP AIQUM ERROR: No valid data type found for '{panel_name}' panel.".format(  # noqa: G001
                             panel_name=panel_name
                         ),
                     )
                     continue
 
                 self.log.info(
-                    "NETAPP AIQUM INFO: Data for '{panel_name}' panel is ingested successfully.".format(  # noqa: G00
+                    "NETAPP AIQUM INFO: Data for '{panel_name}' panel is ingested successfully.".format(  # noqa: G001
                         panel_name=panel_name
                     ),
                 )
@@ -160,7 +160,7 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
 
         if not api_key or not app_key:
             err_message = "App Key or API Key is missing."
-            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         self.configuration = {"appKeyAuth": app_key, "apiKeyAuth": api_key}
@@ -186,14 +186,14 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
         host = self.instance.get("host")
         if not host:
             err_message = "Host is missing."
-            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         try:
             parsed_url = urlparse.urlsplit(host)
         except Exception as err:
             self.log.error(
-                "NETAPP AIQUM ERROR: Error occurred while parsing host={host}."  # noqa: G00
+                "NETAPP AIQUM ERROR: Error occurred while parsing host={host}."  # noqa: G001
                 " Verify the provided host in configuration file.".format(host=host),
             )
             self.log.exception(err)
@@ -201,15 +201,15 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
 
         if not parsed_url.scheme:
             err_message = f"Host scheme (http or https) is missing in host={host}."
-            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
         if not parsed_url.hostname:
             err_message = f"Hostname is missing in host={host}."
-            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         self.host = parsed_url.hostname
-        self.log.info("NETAPP AIQUM INFO: Initializing server {host}".format(host=self.host))  # noqa: G00
+        self.log.info("NETAPP AIQUM INFO: Initializing server {host}".format(host=self.host))  # noqa: G001
 
         # validate min_collection_interval
         min_collection_interval = self.instance.get("min_collection_interval")
@@ -220,14 +220,14 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
         except (ValueError, TypeError):
             if min_collection_interval is None:
                 err_message = "'min_collection_interval' field is missing."
-                self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+                self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
                 raise ConfigurationError(err_message)
 
             err_message = (
                 "'min_collection_interval' must be a positive integer value greater than 0,"
                 f" but found {min_collection_interval}."
             )
-            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         # set username and password
@@ -237,7 +237,7 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
 
         if not username or not password:
             err_message = "Username or Password is missing."
-            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP AIQUM ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         port = 80
@@ -263,12 +263,12 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
                     "Failed to load CA certificates because provided file path does not exist."
                     " Provide absolute path to the CA certificates file."
                 )
-                self.log.error("NETAPP AIQUM ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G00
+                self.log.error("NETAPP AIQUM ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G001
                 self.log.exception(err)
                 raise err
             except PermissionError as err:
                 err_msg = "Cannot read CA certificates file due to insufficient permission."
-                self.log.error("NETAPP AIQUM ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G00
+                self.log.error("NETAPP AIQUM ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G001
                 self.log.exception(err)
                 raise err
             except ssl.SSLError as err:
@@ -276,12 +276,12 @@ class CrestDataSystemsNetappAiqumCheck(AgentCheck):
                     "Failed to load CA certificates because provided certificates file might"
                     " not contain valid certificates."
                 )
-                self.log.error("NETAPP AIQUM ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G00
+                self.log.error("NETAPP AIQUM ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G001
                 self.log.exception(err)
                 raise err
             except Exception as err:
                 err_msg = "Error occurred while loading CA certificates. Verify ca_cert_file path and its content."
-                self.log.error("NETAPP AIQUM ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G00
+                self.log.error("NETAPP AIQUM ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G001
                 self.log.exception(err)
                 raise err
 
