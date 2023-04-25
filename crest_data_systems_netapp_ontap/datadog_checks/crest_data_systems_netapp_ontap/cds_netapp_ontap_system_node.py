@@ -48,14 +48,14 @@ class SystemNodeIngestor:
             "is-node-healthy",
             "is-over-temperature",
         ]
-        tags = list()
+        tags = []
         event = field_parser(event, fields)
         for field in event:
             tags.append(f"{field}:{event.get(field)}")
         return tags
 
     def system_node_summary(self, system_node_list):
-        events = list()
+        events = []
         for system_node in system_node_list:
             event = self.system_node_summary_field_parser(system_node)
             events.append(event)
@@ -85,7 +85,7 @@ class SystemNodeIngestor:
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in System Node details.")
                 return
 
-            system_node_list = results.get("node-details-info") or list()
+            system_node_list = results.get("node-details-info") or []
             if isinstance(system_node_list, dict):
                 system_node_list = [system_node_list]
 

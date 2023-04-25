@@ -22,13 +22,13 @@ class LunIngestor:
 
     def lun_inv_details_tags_generator(self, event):
         fields = ["serial-number", "path", "online", "volume", "vserver", "uuid"]
-        tags = list()
+        tags = []
         for field in fields:
             tags.append(f"{field}:{event.get(field, '-')}")
         return tags
 
     def lun_inventory_details(self, lun_list):
-        events = list()
+        events = []
         for lun in lun_list:
             # ingest event as a metric
             ingest_metric(
@@ -70,7 +70,7 @@ class LunIngestor:
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in LUN details.")
                 return
 
-            lun_list = results.get("lun-info") or list()
+            lun_list = results.get("lun-info") or []
             if isinstance(lun_list, dict):
                 lun_list = [lun_list]
 

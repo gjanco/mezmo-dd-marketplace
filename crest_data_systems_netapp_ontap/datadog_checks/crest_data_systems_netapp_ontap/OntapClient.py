@@ -205,7 +205,7 @@ class OntapClient(object):
             na.set_style("LOGIN")
             na.set_admin_user(self.username, self.password)
             self.connection = na
-            self.log.info("NETAPP ONTAP INFO: Server {server} initialized".format(server=self.server))  # noqa: G00
+            self.log.info("NETAPP ONTAP INFO: Server {server} initialized".format(server=self.server))  # noqa: G001
         else:
             self.connection = debug_server
 
@@ -377,7 +377,7 @@ class OntapClient(object):
         """
         if isinstance(query, set):
             # TODO: Make this message a part of the query and verify, send to logs also
-            self.log.info("NETAPP ONTAP INFO: Malformed Query {query}".format(query=query.__str__()))  # noqa: G00
+            self.log.info("NETAPP ONTAP INFO: Malformed Query {query}".format(query=query.__str__()))  # noqa: G001
             raise BadQueryError(query)
         for k, v in query.items():
             if isinstance(v, dict):
@@ -410,7 +410,7 @@ class OntapClient(object):
                 """
                 Simple node name extraction from node-details-info
                 """
-                out_array = list()
+                out_array = []
                 for attributes_list in results.children_get():
                     for node_info in attributes_list.children_get():
                         node_tag = node_info.child_get("node")
@@ -421,7 +421,7 @@ class OntapClient(object):
             if return_generator:
                 return self.queryApiIter(query, max_records=10, convert_results=convertResults)
             else:
-                out_array = list()
+                out_array = []
                 for chunk in self.queryApiIter(query, max_records=10, convert_results=convertResults):
                     out_array += chunk
                 return out_array
@@ -462,7 +462,7 @@ class OntapClient(object):
 
         response = self.connection.invoke_elem(api, clean)
         if response.results_status() == "passed":
-            self.log.info("NETAPP ONTAP INFO: Query to server {server} passed".format(server=self.server))  # noqa: G00
+            self.log.info("NETAPP ONTAP INFO: Query to server {server} passed".format(server=self.server))  # noqa: G001
         else:
             errno = int(response.results_errno())
             reason = response.results_reason()
@@ -532,7 +532,7 @@ class OntapClient(object):
         def processResponse(response, next_tag_field, num_records_field):
             next_tag = None
             num_records = None
-            new_children = list()
+            new_children = []
             for node in response.children_get():
                 elem = node.element
                 if elem["name"] == next_tag_field:
@@ -551,7 +551,7 @@ class OntapClient(object):
             response = self.queryApi(api, OntapClient.projectResponse)
             response, next_tag, num_records = processResponse(response, "next-tag", "num-records")
             self.log.info(
-                "NETAPP ONTAP INFO: Query returned an iterator tag for {num_records} records".format(  # noqa: G00
+                "NETAPP ONTAP INFO: Query returned an iterator tag for {num_records} records".format(  # noqa: G001
                     num_records=num_records
                 ),
             )

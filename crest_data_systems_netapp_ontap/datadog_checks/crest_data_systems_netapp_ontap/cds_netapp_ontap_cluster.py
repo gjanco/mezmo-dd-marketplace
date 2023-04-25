@@ -28,7 +28,7 @@ class ClusterIngestor:
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in Cluster details.")
                 return
 
-            cluster_list = results["attributes-list"].get("cluster-node-info") or list()
+            cluster_list = results["attributes-list"].get("cluster-node-info") or []
             if isinstance(cluster_list, dict):
                 cluster_list = [cluster_list]
 

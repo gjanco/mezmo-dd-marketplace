@@ -17,12 +17,12 @@ class SystemPerfIngestor:
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in SYSTEM performance data.")
                 return
 
-            instances = response["instances"].get("instance-data", list())
+            instances = response["instances"].get("instance-data", [])
             if isinstance(instances, dict):
                 instances = [instances]
 
             for instance in instances:
-                event = perf_response_parser(instance.get("counters", dict()).get("counter-data", list()))
+                event = perf_response_parser(instance.get("counters", {}).get("counter-data", []))
                 uuid = event.get("instance_uuid")
                 name = event.get("instance_name")
                 # ingest system details

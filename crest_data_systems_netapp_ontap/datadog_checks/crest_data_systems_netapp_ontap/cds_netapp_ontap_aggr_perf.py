@@ -13,18 +13,18 @@ class AggrPerfIngestor:
     def ingestor(self):
         # collect performance data
         try:
-            total_transfer = list()
+            total_transfer = []
             response = self.perf_handler_obj.collect(self.client)
             if not response or not response.get("instances"):
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in AGGR performance data.")
                 return
 
-            instances = response["instances"].get("instance-data", list())
+            instances = response["instances"].get("instance-data", [])
             if isinstance(instances, dict):
                 instances = [instances]
 
             for instance in instances:
-                event = perf_response_parser(instance.get("counters", dict()).get("counter-data", list()))
+                event = perf_response_parser(instance.get("counters", {}).get("counter-data", []))
                 # Calculate metrics fields
                 total_transfer.append(int(event.get("total_transfers")))
 

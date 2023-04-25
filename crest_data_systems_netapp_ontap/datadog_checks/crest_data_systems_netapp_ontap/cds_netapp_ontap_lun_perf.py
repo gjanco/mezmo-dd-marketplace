@@ -19,14 +19,14 @@ class LunPerfIngestor:
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in LUN performance data.")
                 return
 
-            instances = response["instances"].get("instance-data", list())
+            instances = response["instances"].get("instance-data", [])
             if isinstance(instances, dict):
                 instances = [instances]
 
             for instance in instances:
                 uuid = instance.get("uuid", "")
                 name = instance.get("name", "")
-                event = perf_response_parser(instance.get("counters", dict()).get("counter-data", list()))
+                event = perf_response_parser(instance.get("counters", {}).get("counter-data", []))
 
                 # ingest metrics for LUN Latency
                 ingest_metric(

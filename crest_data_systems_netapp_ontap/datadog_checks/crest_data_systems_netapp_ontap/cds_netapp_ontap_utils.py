@@ -29,8 +29,8 @@ def ingest_metric(instance_check, metric_name, metric_value, metrics_tag=None):
     Used to ingest Metric
     """
     try:
-        metrics_tag = list() if not metrics_tag else metrics_tag
-        modified_metric_tags = list()
+        metrics_tag = [] if not metrics_tag else metrics_tag
+        modified_metric_tags = []
         # add instance host to tag
         modified_metric_tags.append(f"cds_netapp_ontap_instance:{instance_check.host}")
         # add server type (cluster or 7-mode) to tag
@@ -40,11 +40,11 @@ def ingest_metric(instance_check, metric_name, metric_value, metrics_tag=None):
 
         for tag in metrics_tag:
             modified_metric_tags.append(tag)
-        tags = instance_check.instance.get("tags", list()) + modified_metric_tags
+        tags = instance_check.instance.get("tags", []) + modified_metric_tags
         instance_check.gauge(metric_name, metric_value, tags=tags, hostname=instance_check.host)
     except Exception as err:
         instance_check.log.error(
-            "NETAPP ONTAP ERROR: Error occurred while ingesting metric. "  # noqa: G00
+            "NETAPP ONTAP ERROR: Error occurred while ingesting metric. "  # noqa: G001
             "MetricName: '{metric_name}'".format(metric_name=metric_name),
         )
         instance_check.log.exception(err)
@@ -118,13 +118,13 @@ def create_chunks_for_events(events):
     """
     Used to create chunks of events
     """
-    chunk = list()
+    chunk = []
     buffer_size = 0
     for event in events:
         size_of_event = sys.getsizeof(event)
         if (buffer_size + size_of_event) > MAX_CHUNK_SIZE or len(chunk) >= MAX_CHUNK_LENGTH:
             yield chunk
-            chunk = list()
+            chunk = []
             buffer_size = 0
         chunk.append(event)
         buffer_size += size_of_event
@@ -136,12 +136,12 @@ def _prepare_body(instance_check, service, events, timestamp_field=None, fn_to_e
     """
     Used to prepare body of event
     """
-    http_log_items = list()
+    http_log_items = []
     hostname = instance_check.instance.get("hostname", instance_check.host)
-    tags = ", ".join(instance_check.instance.get("tags", list()))
+    tags = ", ".join(instance_check.instance.get("tags", []))
 
     for event in events:
-        evaluated_tags = list()
+        evaluated_tags = []
         if timestamp_field:
             event["timestamp"] = event.get(timestamp_field)
         if fn_to_evaluate_event:
@@ -205,11 +205,11 @@ def field_parser(event, fields):
     """
     Used to parse multi-level dict structure's fields to single level dictionary
     """
-    result = dict()
+    result = {}
     for field in fields:
         data = None
         for key in field.split("."):
-            data = data.get(key, dict()) if data else event.get(key, dict())
+            data = data.get(key, {}) if data else event.get(key, {})
 
         result[field.split(".")[-1]] = data or "-"
 
@@ -220,7 +220,7 @@ def field_alias_generator(event, alias):
     """
     Used to generate event with provided alias fields
     """
-    result = dict()
+    result = {}
     for new_field in alias:
         if event.get(new_field):
             result[new_field] = event[new_field]

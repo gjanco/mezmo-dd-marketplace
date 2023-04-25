@@ -24,7 +24,7 @@ class QTreeIngestor:
         return field_alias_generator(event, alias)
 
     def associated_qtrees(self, qtree_list):
-        events = list()
+        events = []
         # set of cluster uuid for distinct count of clusters
         for qtree in qtree_list:
             event = self.associated_qtrees_field_parser(qtree)
@@ -65,7 +65,7 @@ class QTreeIngestor:
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in qtree details.")
                 return
 
-            qtree_list = results.get("qtree-info") or list()
+            qtree_list = results.get("qtree-info") or []
             if isinstance(qtree_list, dict):
                 qtree_list = [qtree_list]
 

@@ -60,14 +60,14 @@ class AggrIngestor:
             "uuid",
             "volume-count",
         ]
-        tags = list()
+        tags = []
         event = field_parser(event, fields)
         for field in event:
             tags.append(f"{field}:{event.get(field)}")
         return tags
 
     def aggregates_summary(self, aggr_list):
-        events = list()
+        events = []
         for aggr in aggr_list:
             event = self.aggregates_summary_field_parser(aggr)
             events.append(event)
@@ -135,7 +135,7 @@ class AggrIngestor:
 
     def aggregates_raid_details_tag(self, event):
         fields = ["name", "uuid", "raid-status", "raid-lost-write-state"]
-        tags = list()
+        tags = []
         event = field_parser(event, fields)
         for field in event:
             tags.append(f"{field}:{event.get(field)}")
@@ -183,7 +183,7 @@ class AggrIngestor:
             "is-resyncing",
             "is-online",
         ]
-        tags = list()
+        tags = []
         event = field_parser(event, fields)
         for field in event:
             tags.append(f"{field}:{event.get(field)}")
@@ -229,7 +229,7 @@ class AggrIngestor:
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in Aggregate details.")
                 return
 
-            aggr_list = results.get("aggr-attributes" if self.client.isClustered() else "aggr-info") or list()
+            aggr_list = results.get("aggr-attributes" if self.client.isClustered() else "aggr-info") or []
             if isinstance(aggr_list, dict):
                 aggr_list = [aggr_list]
 

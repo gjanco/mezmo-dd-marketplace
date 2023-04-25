@@ -20,7 +20,7 @@ class VServerIngestor:
 
     def ingestor(self):
         try:
-            results = dict()
+            results = {}
             if self.client.isClustered():
                 results = self.client.queryApi("vserver-get-iter")
 
@@ -28,7 +28,7 @@ class VServerIngestor:
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in vserver details.")
                 return
 
-            vserver_list = results["attributes-list"].get("vserver-info") or list()
+            vserver_list = results["attributes-list"].get("vserver-info") or []
             if isinstance(vserver_list, dict):
                 vserver_list = [vserver_list]
 

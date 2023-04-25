@@ -51,14 +51,14 @@ class VolumeIngestor:
             "uuid",
             "aggregate",
         ]
-        tags = list()
+        tags = []
         event = field_parser(event, fields)
         for field in event:
             tags.append(f"{field}:{event.get(field)}")
         return tags
 
     def volume_details(self, volume_list):
-        events = list()
+        events = []
         # set of cluster uuid for distinct count of clusters
         volume_uuid = set()
         for volume in volume_list:
@@ -145,14 +145,14 @@ class VolumeIngestor:
             "name",
             "uuid",
         ]
-        tags = list()
+        tags = []
         event = field_parser(event, fields)
         for field in event:
             tags.append(f"{field}:{event.get(field)}")
         return tags
 
     def vol_associated_aggregate(self, volume_list):
-        events = list()
+        events = []
         # set of cluster uuid for distinct count of clusters
         for volume in volume_list:
             event = self.vol_associated_aggregate_field_parser(volume)
@@ -180,7 +180,7 @@ class VolumeIngestor:
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in Disk details.")
                 return
 
-            volume_list = results.get("volume-attributes" if self.client.isClustered() else "volume-info") or list()
+            volume_list = results.get("volume-attributes" if self.client.isClustered() else "volume-info") or []
             if isinstance(volume_list, dict):
                 volume_list = [volume_list]
 

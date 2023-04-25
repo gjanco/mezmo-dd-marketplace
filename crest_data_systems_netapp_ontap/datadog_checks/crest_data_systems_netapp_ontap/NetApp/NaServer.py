@@ -318,7 +318,7 @@ class NaServer:
             )
 
             if debug_style == "NA_PRINT_DONT_PARSE":
-                self.log.info("INPUT \n{content}".format(content=content))  # noqa: G00
+                self.log.info("INPUT \n{content}".format(content=content))  # noqa: G001
 
             connection.putheader("Content-length", str(len(content)))
             connection.endheaders()

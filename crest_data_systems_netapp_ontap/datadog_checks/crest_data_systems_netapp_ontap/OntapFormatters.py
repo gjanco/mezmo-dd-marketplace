@@ -58,7 +58,7 @@ def recursiveMergeElementsToDict(element):
             elif type(tmp[child_name]) is list:
                 tmp[child_name].append(recursiveMergeElementsToDict(child_elem))
             elif type(tmp[child_name]) is dict or isinstance(tmp[child_name], six.string_types):
-                tmp_array = list()
+                tmp_array = []
                 tmp_array.append(tmp[child_name])
                 tmp_array.append(recursiveMergeElementsToDict(child_elem))
                 tmp[child_name] = tmp_array
@@ -85,7 +85,7 @@ def generalTwoLevelFlatten(results, json_=True):
 
     RETURNS an array of JSON strings
     """
-    out_array = list()
+    out_array = []
     for aggregates in results.children_get():
         for aggr_info in aggregates.children_get():
             tmp = {}

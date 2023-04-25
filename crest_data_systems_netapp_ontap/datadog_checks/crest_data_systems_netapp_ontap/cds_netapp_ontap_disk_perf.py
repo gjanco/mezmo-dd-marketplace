@@ -14,17 +14,17 @@ class DiskPerfIngestor:
         # collect performance data
         try:
             response = self.perf_handler_obj.collect(self.client)
-            avg_read_latency = list()
+            avg_read_latency = []
             if not response or not response.get("instances"):
                 self.log.info("NETAPP ONTAP INFO: Nothing to ingest in Disk performance data.")
                 return
 
-            instances = response["instances"].get("instance-data", list())
+            instances = response["instances"].get("instance-data", [])
             if isinstance(instances, dict):
                 instances = [instances]
 
             for instance in instances:
-                event = perf_response_parser(instance.get("counters", dict()).get("counter-data", list()))
+                event = perf_response_parser(instance.get("counters", {}).get("counter-data", []))
 
                 uuid = instance.get("uuid", "")
                 name = event.get("display_name", "")

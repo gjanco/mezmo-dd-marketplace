@@ -33,9 +33,6 @@ from .cds_netapp_ontap_volume_perf import VolumePerfIngestor
 from .cds_netapp_ontap_vserver import VServerIngestor
 from .OntapClient import AuthenticationError, OntapClient, SSLError
 
-# content of the special variable __version__ will be shown in the Agent status page
-__version__ = "1.0.0"
-
 
 class CrestDataSystemsNetappOntapCheck(AgentCheck):
     def __init__(self, *args, **kwargs):
@@ -117,7 +114,7 @@ class CrestDataSystemsNetappOntapCheck(AgentCheck):
         # data collection ended
         elapsed_seconds = time.time() - start_time
         self.log.info(
-            "NETAPP ONTAP INFO: End of the data collection. "  # noqa: G00
+            "NETAPP ONTAP INFO: End of the data collection. "  # noqa: G001
             "Total time taken: {elapsed:.3f} seconds".format(elapsed=elapsed_seconds),
         )
 
@@ -130,7 +127,7 @@ class CrestDataSystemsNetappOntapCheck(AgentCheck):
 
         if not api_key or not app_key:
             err_message = "App Key or API Key is missing"
-            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         self.configuration = {"appKeyAuth": app_key, "apiKeyAuth": api_key}
@@ -156,14 +153,14 @@ class CrestDataSystemsNetappOntapCheck(AgentCheck):
         host = self.instance.get("host")
         if not host:
             err_message = "Host is missing"
-            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         try:
             parsed_url = urlparse.urlsplit(host)
         except Exception as err:
             self.log.error(
-                "NETAPP ONTAP ERROR: Error occurred while parsing host={host}."  # noqa: G00
+                "NETAPP ONTAP ERROR: Error occurred while parsing host={host}."  # noqa: G001
                 " Verify the provided host in configuration file.".format(host=host),
             )
             self.log.exception(err)
@@ -171,15 +168,15 @@ class CrestDataSystemsNetappOntapCheck(AgentCheck):
 
         if not parsed_url.scheme:
             err_message = f"Host scheme (http or https) is missing in host configuration. Host={host}"
-            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
         if not parsed_url.hostname:
             err_message = f"Hostname is missing. Host={host}"
-            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         self.host = parsed_url.hostname
-        self.log.info("NETAPP ONTAP INFO: Initializing server {host}".format(host=host))  # noqa: G00
+        self.log.info("NETAPP ONTAP INFO: Initializing server {host}".format(host=host))  # noqa: G001
 
         # validate min_collection_interval
         min_collection_interval = self.instance.get("min_collection_interval")
@@ -192,7 +189,7 @@ class CrestDataSystemsNetappOntapCheck(AgentCheck):
                 "'min_collection_interval' must be a positive integer value greater than 0,"
                 f" but found {min_collection_interval}"
             )
-            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         # set username and password
@@ -202,7 +199,7 @@ class CrestDataSystemsNetappOntapCheck(AgentCheck):
 
         if not username or not password:
             err_message = "Username or Password is missing"
-            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G00
+            self.log.error("NETAPP ONTAP ERROR: {err_message}".format(err_message=err_message))  # noqa: G001
             raise ConfigurationError(err_message)
 
         kwargs = {"transport": transport, "port": 80}
@@ -228,12 +225,12 @@ class CrestDataSystemsNetappOntapCheck(AgentCheck):
                     "Failed to load CA certificates because provided file path does not exist."
                     " Provide absolute path to the CA certificates file."
                 )
-                self.log.error("NETAPP ONTAP ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G00
+                self.log.error("NETAPP ONTAP ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G001
                 self.log.exception(err)
                 raise err
             except PermissionError as err:
                 err_msg = "Cannot read CA certificates file due to insufficient permission."
-                self.log.error("NETAPP ONTAP ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G00
+                self.log.error("NETAPP ONTAP ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G001
                 self.log.exception(err)
                 raise err
             except ssl.SSLError as err:
@@ -241,12 +238,12 @@ class CrestDataSystemsNetappOntapCheck(AgentCheck):
                     "Failed to load CA certificates because provided certificates file might not"
                     " contain valid certificates."
                 )
-                self.log.error("NETAPP ONTAP ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G00
+                self.log.error("NETAPP ONTAP ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G001
                 self.log.exception(err)
                 raise err
             except Exception as err:
                 err_msg = "Error occurred while loading CA certificates. Verify ca_cert_file path and its content."
-                self.log.error("NETAPP ONTAP ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G00
+                self.log.error("NETAPP ONTAP ERROR: {err_msg}".format(err_msg=err_msg))  # noqa: G001
                 self.log.exception(err)
                 raise err
 

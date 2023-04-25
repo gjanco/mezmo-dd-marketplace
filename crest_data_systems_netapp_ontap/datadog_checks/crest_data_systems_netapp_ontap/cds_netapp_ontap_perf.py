@@ -25,7 +25,7 @@ class PerfHandler:
                 return
 
             # parse list of instances
-            instances = instances.get("instance-info") or list()
+            instances = instances.get("instance-info") or []
             if isinstance(instances, dict):
                 instances = [instances]
 
@@ -41,7 +41,7 @@ class PerfHandler:
             return oc.queryApi(perf_element)
         except Exception as err:
             oc.log.error(
-                "NETAPP ONTAP ERROR: Error occurred while querying API while collecting "  # noqa: G00
+                "NETAPP ONTAP ERROR: Error occurred while querying API while collecting "  # noqa: G001
                 "performance data of '{object_name}'".format(object_name=self.object_name),
             )
             self.log.exception(err)
