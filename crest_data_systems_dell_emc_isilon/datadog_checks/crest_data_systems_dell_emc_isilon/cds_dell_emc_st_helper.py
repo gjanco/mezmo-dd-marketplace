@@ -11,7 +11,7 @@ class CDSDellEMCStHelper(object):
     def ci_storage_tiers(self, response_json):
         """Method to get Storage Tiers."""
         metric_prefix = "{}".format(self.ci_prefix)
-        metric_list = list()
+        metric_list = []
         storage_tiers = {}
         for storagepool in response_json.get("storagepools", []):
             storage_tier = {
@@ -105,7 +105,7 @@ class CDSDellEMCStHelper(object):
     def ci_node_pools(self, response_json):
         """Method to get Node Pools."""
         metric_prefix = "{}".format(self.ci_prefix)
-        metric_list = list()
+        metric_list = []
         node_pool_details = {}
         for nodepool in response_json.get("nodepools", []):
             node_detail = {

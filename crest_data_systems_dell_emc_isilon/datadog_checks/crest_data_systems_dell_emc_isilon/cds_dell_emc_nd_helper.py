@@ -14,7 +14,7 @@ class CDSDellEMCNdHelper(object):
     def co_client_connections_over_time(self, response_json):
         """Method to get Client COnnections Over Time."""
         metric_prefix = "{}client_connections_over_time".format(self.co_prefix)
-        metric_list = list()
+        metric_list = []
         node_data = {}
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
@@ -35,7 +35,7 @@ class CDSDellEMCNdHelper(object):
     def pd_client_connections(self, response_json):
         """Method to get Client Connections."""
         metric_prefix = "{}client_connections".format(self.pd_prefix)
-        metric_list = list()
+        metric_list = []
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
             node_id = statistics.get("devid")
@@ -78,7 +78,7 @@ class CDSDellEMCNdHelper(object):
         Method to get Event Rate By Node Over Time For Critical Events.
         """
         metric_prefix = "{}event_rate_by_node_over_time_for_critical_events".format(self.fs_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = {}
 
         for statistics in response_json.get("stats", []):
@@ -127,7 +127,7 @@ class CDSDellEMCNdHelper(object):
     def fsp_event_rate_by_type_ot(self, response_json):
         """Method to get Event Rate By Event Type Over Time."""
         metric_prefix = "{}event_rate_by_event_type_over_time".format(self.fs_prefix)
-        metric_list = list()
+        metric_list = []
 
         disk_details = {}
 
@@ -182,7 +182,7 @@ class CDSDellEMCNdHelper(object):
     def fsp_file_system_critical_events(self, response_json):
         """Method to get File System Critical Events."""
         metric_prefix = "{}file_system_critical_events".format(self.fs_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = {}
         for statistics in response_json.get("stats", []):
             disk_detail = {

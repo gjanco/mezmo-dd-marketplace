@@ -13,7 +13,7 @@ class CDSDellEMCHelper(object):
     def co_file_system_throughput_ot(self, response_json):
         """Method to get File System Throughput Over Time."""
         metric_prefix = "{}file_system_throughput_over_time".format(self.co_prefix)
-        metric_list = list()
+        metric_list = []
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
             metric_value = round((statistics.get("value", 0) * 8) / (1000 * 1000), 2)
@@ -40,7 +40,7 @@ class CDSDellEMCHelper(object):
     def co_ex_nw_throughput_rate_ot(self, response_json):
         """Method to get External Network Throughput Over Time."""
         metric_prefix = "{}external_network_throughput_rate_over_time".format(self.co_prefix)
-        metric_list = list()
+        metric_list = []
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
             metric_value = round((statistics.get("value", 0) * 8) / (1024 * 1024), 2)
@@ -67,7 +67,7 @@ class CDSDellEMCHelper(object):
     def fsp_fs_performance_by_node_ot(self, response_json):
         """Method to get File System Performance By Node Over Time."""
         metric_prefix = "{}file_system_performance_by_node_over_time".format(self.fs_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = {}
         for statistics in response_json.get("stats", []):
             disk_detail = {"in-rate": None, "out-rate": None}
@@ -105,7 +105,7 @@ class CDSDellEMCHelper(object):
     def nd_external_network_throughput(self, response_json):
         """Method to get External Network Throughput."""
         metric_prefix = "{}external_network_throughput".format(self.nd_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = {}
         for statistics in response_json.get("stats", []):
             disk_detail = {
@@ -139,7 +139,7 @@ class CDSDellEMCHelper(object):
     def nd_file_system_throughput(self, response_json):
         """Method to get File System Throughput."""
         metric_prefix = "{}file_system_throughput".format(self.nd_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = {}
         for statistics in response_json.get("stats", []):
             disk_detail = {
@@ -180,7 +180,7 @@ class CDSDellEMCHelper(object):
     def nd_cpu_usage_over_time(self, response_json):
         """Method to get CPU Usage Over Time."""
         metric_prefix = "{}cpu_usage_over_time".format(self.nd_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = {}
         for statistics in response_json.get("stats", []):
             disk_detail = {"system": None, "user": None}
@@ -218,7 +218,7 @@ class CDSDellEMCHelper(object):
     def nd_memory_usage(self, response_json):
         """Method to get Memory Usage."""
         metric_prefix = "{}memory_usage".format(self.nd_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = {}
         for statistics in response_json.get("stats", []):
             disk_detail = {

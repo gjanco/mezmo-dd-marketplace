@@ -49,7 +49,7 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
         match = re.findall(r"\d+", release_version)
         if match:
             self.major_version = int(match[0])
-            self.log.info(f"Major version of Dell EMC Isilon is '{self.major_version}'.")  # noqa: G00
+            self.log.info(f"Major version of Dell EMC Isilon is '{self.major_version}'.")  # noqa: G004
         else:
             self.major_version = 9
             self.log.info("No major version found of Dell EMC Isilon.")
@@ -88,7 +88,7 @@ class CrestDataSystemsDellEmcIsilonCheck(AgentCheck):
         for api in api_list:
             if self.major_version < 9 and api.get("api_url") in V9_EXCLUSIVE_API:
                 self.log.info(
-                    "Found dell EMC Isilon version less than 9. "  # noqa: G00*
+                    "Found dell EMC Isilon version less than 9. "  # noqa: G001*
                     "Skipping '{}' endpoint as ".format(api.get("api_url"))
                 )
             url = self.base_uri + api.get("api_url", "")

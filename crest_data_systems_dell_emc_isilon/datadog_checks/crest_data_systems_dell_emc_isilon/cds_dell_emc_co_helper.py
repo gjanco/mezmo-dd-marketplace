@@ -11,7 +11,7 @@ class CDSDellEMCCoHelper(object):
     def co_cpu_usage_over_time(self, response_json):
         """Method for CPU Usage over time"""
         metric_prefix = "{}cpu_usage_over_time".format(self.co_prefix)
-        metric_list = list()
+        metric_list = []
         for statistics in response_json.get("stats", []):
             key = statistics.get("key", "")
             key_type_tags_dict = {

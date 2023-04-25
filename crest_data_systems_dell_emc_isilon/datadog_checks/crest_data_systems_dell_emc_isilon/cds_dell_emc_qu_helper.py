@@ -11,7 +11,7 @@ class CDSDellEMCQuHelper(object):
     def qi_quota_type_count(self, response_json):
         """Method to get Quota Type Count."""
         metric_prefix = "{}quota_type_count".format(self.qi_prefix)
-        metric_list = list()
+        metric_list = []
         quotas_count = response_json.get("summary", {})
 
         quota_type_count = {
@@ -33,7 +33,7 @@ class CDSDellEMCQuHelper(object):
     def qi_quota_type_information(self, response_json):
         """Method to get Quota Type Information."""
         metric_prefix = "{}quota_type_information".format(self.qi_prefix)
-        metric_list = list()
+        metric_list = []
 
         for quotas in response_json.get("quotas", []):
             quota_id = quotas.get("id")

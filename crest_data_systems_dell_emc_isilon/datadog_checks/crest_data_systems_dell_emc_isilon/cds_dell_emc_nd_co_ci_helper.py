@@ -13,7 +13,7 @@ class CDSDellEMCNdCoCiHelper(object):
     def co_disk_usage(self, response_json):
         """Method to get Disk Usage."""
         metric_prefix = "{}disk_usage".format(self.co_prefix)
-        metric_list = list()
+        metric_list = []
         for statistics in response_json.get("stats", []):
             disk_type = statistics.get("key", "")
             disk_type_tags_dict = {
@@ -36,7 +36,7 @@ class CDSDellEMCNdCoCiHelper(object):
     def nd_disk_usage_over_time(self, response_json):
         """Method to get Disk Usage Over Time."""
         metric_prefix = "{}disk_usage_over_time".format(self.nd_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = {}
         for statistics in response_json.get("stats", []):
             node_id = statistics.get("devid")
@@ -67,7 +67,7 @@ class CDSDellEMCNdCoCiHelper(object):
     def nd_disk_usage(self, response_json):
         """Method to get Disk Usage."""
         metric_prefix = "{}disk_usage".format(self.nd_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = {}
         for statistics in response_json.get("stats", []):
             disk_detail = {
@@ -99,7 +99,7 @@ class CDSDellEMCNdCoCiHelper(object):
                 disk_details[node_id]["ssd-used"] = value
 
         for node_id, disk_usage in disk_details.items():
-            if set(list(disk_usage.values())) == {None}:
+            if set(disk_usage.values()) == {None}:
                 continue
             for key, value in disk_usage.items():
                 final_value = round((value / (1024 * 1024 * 1024)), 2)
@@ -118,7 +118,7 @@ class CDSDellEMCNdCoCiHelper(object):
     def co_cluster_disk_usage_over_time(self, response_json):
         """Method to get Cluster Disk Usage Over Time."""
         metric_prefix = "{}cluster_disk_usage_over_time".format(self.co_prefix)
-        metric_list = list()
+        metric_list = []
         for statistics in response_json.get("stats", []):
             key = statistics.get("key", "")
             if key == "ifs.percent.used":
@@ -129,7 +129,7 @@ class CDSDellEMCNdCoCiHelper(object):
     def ci_node_details(self, response_json):
         """Method to get Node Details."""
         metric_prefix = "{}".format(self.ci_prefix)
-        metric_list = list()
+        metric_list = []
         node_details = {}
         for statistics in response_json.get("stats", []):
             node_detail = {
@@ -164,7 +164,7 @@ class CDSDellEMCNdCoCiHelper(object):
                 node_details[node_id][disk_type.replace("node.ifs.", "")] = round(value / 1024, 2)
 
         for node_id, node_detail in node_details.items():
-            if set(list(node_detail.values())) == {None}:
+            if set(node_detail.values()) == {None}:
                 continue
 
             node_detail["total-b/s"] = node_detail["bytes.in.rate"] + node_detail["bytes.out.rate"]

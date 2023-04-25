@@ -11,7 +11,7 @@ class CDSDellEMCPdHelper(object):
     def pd_operations_rate_over_time(self, response_json):
         """Method to get Operations Rate Over Time."""
         metric_prefix = "{}operations_rate_over_time".format(self.pd_prefix)
-        metric_list = list()
+        metric_list = []
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
             node_id = statistics.get("devid")
@@ -42,7 +42,7 @@ class CDSDellEMCPdHelper(object):
     def pd_iops(self, response_json):
         """Method to get IOPS."""
         metric_prefix = "{}iops".format(self.pd_prefix)
-        metric_list = list()
+        metric_list = []
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
             node_id = statistics.get("devid")
@@ -100,7 +100,7 @@ class CDSDellEMCPdHelper(object):
     def pd_latency(self, response_json):
         """Method to get Latency."""
         metric_prefix = "{}latency".format(self.pd_prefix)
-        metric_list = list()
+        metric_list = []
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
             node_id = statistics.get("devid")

@@ -15,7 +15,7 @@ class CDSDellEMCCiHelper(object):
     def ci_storage_drive_details(self, response_json):
         """Method to get Hard Drive Details."""
         metric_prefix = "{}storage_drive_details".format(self.ci_prefix)
-        metric_list = list()
+        metric_list = []
         disk_details = prepare_disk_details(response_json)
 
         for disk_index, nodes in disk_details.items():

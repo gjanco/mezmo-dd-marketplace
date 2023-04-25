@@ -13,7 +13,7 @@ class CDSDellEMCLiHelper(object):
     def ci_license_details(self, response_json):
         """Method to get License Details."""
         metric_prefix = "{}license_details".format(self.ci_prefix)
-        metric_list = list()
+        metric_list = []
         index = 0
         for licenses in response_json.get("licenses", []):
             license_name = licenses.get("name", "")

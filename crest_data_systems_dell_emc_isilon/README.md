@@ -15,13 +15,29 @@ This integration monitors the performance and usage of Dell EMC Isilon cluster a
 
 ### Prerequisites
 
-1. You must have the Datadog Agent installed and running. Additionally, you need to be able to connect to the server with the Datadog Agent installed.
+1. You have the Datadog Agent installed and running.
+2. You can connect to the Dell EMC Isilon server with the Datadog Agent.
+
+### Dell EMC Isilon Configuration
+
+- The Dell EMC Isilon server should be able to connect with the Datadog Agent without any network restrictions.
+- For any custom user of the Dell EMC Isilon server, the following roles and permissions are required:
+  - Platform API
+  - Quota
+  - SmartPools
+  - Statistics
+- Basic Login credentials work to configure the Datadog integration.
+- Datadog Integration works with the Dell EMC Isilon’s admin user without any additional configuration.
+- For more information on user and permission-related settings in the Dell EMC Isilon server, see the [Dell documentation][4].
 
 ### Installation
 
 Run the following:
 
-`sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_dell_emc_isilon==3.0.0`
+- Linux:
+  - `sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_dell_emc_isilon==3.0.1`.
+- Windows:
+  - `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-crest_data_systems_dell_emc_isilon==3.0.1`
 
 ### Configuration
 
@@ -88,14 +104,25 @@ Alternatively, you can get detailed information about the integration using the 
 
 Uninstall the integration from the Datadog agent by running the following command on the agent host:
 
-`sudo -u dd-agent datadog-agent integration remove datadog-crest_data_systems_dell_emc_isilon`
+- Linux:
+  - `sudo -u dd-agent datadog-agent integration remove datadog-crest_data_systems_dell_emc_isilon`
+- Windows:
+  - `“C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration remove datadog-crest_data_systems_dell_emc_isilon==3.0.1`
+
+YAML Config Cleanup:
+
+- If you plan to reinstall or need to keep the config files:
+  - Navigate to your Agent's `conf.d` directory and locate the `crest_data_systems_dell_emc_isilon.d` folder to access the YAML configs. **NOTE**: These files contain sensitive information.
+- If you plan to fully uninstall with config removal:
+  - Navigate to your Agent's `conf.d` directory, and remove the `crest_data_systems_dell_emc_isilon.d` folder.
 
 ## Support
 
-For support or feature requests, contact Crest Data Systems through the following channel:
+For support or feature requests, contact Crest Data Systems through the following channels:
 
-- Email: datadog.integrations@crestdatasys.com
-- Website: [crestdatasys.com](https://www.crestdatasys.com/)
+- Support Email: datadog.integrations@crestdatasys.com
+- Sales Email: sales@crestdatasys.com
+- Website: [crestdatasys.com][3]
 
 ### Further Reading
 
@@ -106,3 +133,5 @@ Additional helpful documentation, links, and articles:
 
 [1]: https://www.datadoghq.com/blog/dell-emc-isilon-monitoring-crest-data-systems-datadog-marketplace/
 [2]: https://www.crestdatasys.com/data_sheet/datadog-setup-monitor/
+[3]: https://www.crestdatasys.com/
+[4]: https://www.dell.com/support/manuals/en-in/isilon-onefs/ifs_pub_administration_guide_cli/administrative-roles-and-privileges

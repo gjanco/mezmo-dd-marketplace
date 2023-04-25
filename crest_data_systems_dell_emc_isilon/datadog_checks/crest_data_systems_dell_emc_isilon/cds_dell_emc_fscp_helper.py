@@ -11,7 +11,7 @@ class CDSDellEMCFscpHelper(object):
     def fscp_fs_cached_data_age(self, response_json):
         """Method to get File System Cached Data Age."""
         metric_prefix = "{}file_system_cached_data_age".format(self.fscp_prefix)
-        metric_list = list()
+        metric_list = []
         node_data = {}
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
@@ -35,7 +35,7 @@ class CDSDellEMCFscpHelper(object):
     def fscp_l2_cache_hit_rate(self, response_json):
         """Method to get L2 Cache Hit Rate."""
         metric_prefix = "{}l2_cache_hit_rate".format(self.fscp_prefix)
-        metric_list = list()
+        metric_list = []
         node_data = {}
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
@@ -59,7 +59,7 @@ class CDSDellEMCFscpHelper(object):
     def fscp_l2_cache_miss_rate(self, response_json):
         """Method to get L2 Cache Miss Rate."""
         metric_prefix = "{}l2_cache_miss_rate".format(self.fscp_prefix)
-        metric_list = list()
+        metric_list = []
         node_data = {}
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
@@ -83,7 +83,7 @@ class CDSDellEMCFscpHelper(object):
     def fscp_l2_cache_read_wait_time(self, response_json):
         """Method to get L2 Cache Read Wait Time."""
         metric_prefix = "{}l2_cache_read_wait_time".format(self.fscp_prefix)
-        metric_list = list()
+        metric_list = []
         node_data = {}
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
@@ -107,7 +107,7 @@ class CDSDellEMCFscpHelper(object):
     def fscp_l2_cache_prefetch_hit_rate(self, response_json):
         """Method to get L2 Cache Prefetch Hit Rate."""
         metric_prefix = "{}l2_cache_prefetch_hit_rate".format(self.fscp_prefix)
-        metric_list = list()
+        metric_list = []
         node_data = {}
         for statistics in response_json.get("stats", []):
             key = statistics.get("key")
