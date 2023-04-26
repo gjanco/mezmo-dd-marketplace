@@ -150,7 +150,7 @@ class NetskopeClient(object):
                     constants.ENDPOINT_MAP[event_type] if constants.ENDPOINT_MAP.get(event_type) else event_type
                 )
                 self.log.error(
-                    f"Netskope | HOST={self.host} | MESSAGE=Authentication failed for '{event_type}'"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=Authentication failed for '{event_type}'"  # noqa: G004
                     " event endpoint, received insufficient permission error. Ensure permission of endpoint"
                     f" '{event_endpoint}'."
                 )
@@ -158,7 +158,7 @@ class NetskopeClient(object):
                 continue
             response.raise_for_status()
             self.log.info(
-                f"Netskope | HOST={self.host} | MESSAGE=Successfully authenticated '{event_type}'"  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=Successfully authenticated '{event_type}'"  # noqa: G004
                 " event endpoint."
             )
             if constants.AUTH_SHOULD_WAIT:
@@ -237,12 +237,12 @@ class NetskopeClient(object):
         if utils.is_float(seconds):
             wait_time = float(seconds) if float(seconds) <= constants.MAX_WAIT_TIME else wait_time
             self.log.info(
-                f"Netskope | HOST={self.host} | MESSAGE=Waiting for {wait_time} seconds before next"  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=Waiting for {wait_time} seconds before next"  # noqa: G004
                 " API call."
             )
         else:
             self.log.info(
-                f"Netskope | HOST={self.host} | MESSAGE=Waiting for the default wait time"  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=Waiting for the default wait time"  # noqa: G004
                 f"(={wait_time} seconds) before next API call."
             )
 

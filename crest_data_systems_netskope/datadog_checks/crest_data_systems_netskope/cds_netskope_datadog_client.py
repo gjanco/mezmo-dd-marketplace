@@ -54,7 +54,7 @@ def retry_on_api_exception(func):
                 forbidden_msg = (
                     "Received access forbidden error from Datadog API. Verify the configured api key and app key."
                 )
-                self.log.exception(f"Netskope | HOST={self.host} | MESSAGE={forbidden_msg}")  # noqa: G00
+                self.log.exception(f"Netskope | HOST={self.host} | MESSAGE={forbidden_msg}")  # noqa: G004
                 raise InvalidKeyError(forbidden_msg) from ex
             except ApiException as ex:
                 if ex.status in constants.DD_STATUS_TO_RETRY and tries < constants.DD_MAX_TRIES:
@@ -71,7 +71,7 @@ def retry_on_api_exception(func):
                         )
                         wait_for = float(ex.headers["x-ratelimit-reset"])
 
-                    self.log.warning(f"Netskope | HOST={self.host} | MESSAGE={warn_msg}")  # noqa: G00
+                    self.log.warning(f"Netskope | HOST={self.host} | MESSAGE={warn_msg}")  # noqa: G004
 
                     time.sleep(wait_for)
                     continue
@@ -115,20 +115,20 @@ class DatadogClient:
 
             if response.get("valid") is True:
                 success_msg = "Connection with datadog is successful."
-                self.log.info(f"Netskope | HOST={self.host} | MESSAGE={success_msg}")  # noqa: G00
+                self.log.info(f"Netskope | HOST={self.host} | MESSAGE={success_msg}")  # noqa: G004
             else:
                 err_message = f"Something went wrong while validating Datadog API key: {response}"
-                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
                 raise InvalidAPIKeyError(err_message)
 
         except ForbiddenException as err:
             forbidden_msg = "Datadog API key validation failed. Verify the configured API key."
-            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={forbidden_msg}")  # noqa: G00
+            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={forbidden_msg}")  # noqa: G004
             raise InvalidAPIKeyError(forbidden_msg) from err
 
         except Exception:
             err_message = "Error occurred while validating datadog API key."
-            self.log.exception(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+            self.log.exception(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
             raise
 
     def validate_keys(self) -> None:
@@ -143,16 +143,16 @@ class DatadogClient:
             self.search_log_in_datadog(self.instance_check.log_index, **params)
 
             success_msg = "Connection with datadog is successful."
-            self.log.info(f"Netskope | HOST={self.host} | MESSAGE={success_msg}")  # noqa: G00
+            self.log.info(f"Netskope | HOST={self.host} | MESSAGE={success_msg}")  # noqa: G004
 
         except InvalidKeyError as err:
             forbidden_msg = "Datadog api/app key validation failed. Verify the configured api key and app key."
-            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={forbidden_msg}")  # noqa: G00
+            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={forbidden_msg}")  # noqa: G004
             raise InvalidKeyError(forbidden_msg) from err
 
         except Exception:
             err_message = "Error occurred while validating datadog api/app key."
-            self.log.exception(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+            self.log.exception(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
             raise
 
     def create_chunks_for_events(
@@ -170,7 +170,7 @@ class DatadogClient:
         :return: list of chunks of events
         :rtype: Generator
         """
-        chunk = list()
+        chunk = []
         buffer_size = 0
         for event in events:
             size_of_event = len(json.dumps(event).encode("utf-8"))
@@ -178,7 +178,7 @@ class DatadogClient:
                 chunk_length_limit is not None and len(chunk) >= chunk_length_limit
             ):
                 yield chunk
-                chunk = list()
+                chunk = []
                 buffer_size = 0
             chunk.append(event)
             buffer_size += size_of_event
@@ -227,17 +227,17 @@ class DatadogClient:
                     submitted_metrics_count += len(chunk)
                 else:
                     self.log.error(
-                        f"Netskope | HOST={self.host} | MESSAGE=Something went wrong while submitting"  # noqa: G00
+                        f"Netskope | HOST={self.host} | MESSAGE=Something went wrong while submitting"  # noqa: G004
                         f" metrics. Response: {response}"
                     )
             except ApiException as err:
                 self.log.exception(
-                    f"Netskope | HOST={self.host} | MESSAGE=API error occurred while submitting"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=API error occurred while submitting"  # noqa: G004
                     f" metrics: {err}"
                 )
                 raise
         self.log.info(
-            f"Netskope | HOST={self.host} | MESSAGE={submitted_metrics_count}/{len(metrics_list)} metrics"  # noqa: G00
+            f"Netskope | HOST={self.host} | MESSAGE={submitted_metrics_count}/{len(metrics_list)} metrics"  # noqa: G004
             " are ingested into Datadog platform.",
         )
 
@@ -270,12 +270,12 @@ class DatadogClient:
                 ingested_logs_count += len(chunk)
             except ApiException as err:
                 self.log.exception(
-                    f"Netskope | HOST={self.host} | MESSAGE=API error occurred while submitting"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=API error occurred while submitting"  # noqa: G004
                     f" logs: {err}"
                 )
                 raise
         self.log.info(
-            f"Netskope | HOST={self.host} | MESSAGE={ingested_logs_count}/{len(events)} Logs"  # noqa: G00
+            f"Netskope | HOST={self.host} | MESSAGE={ingested_logs_count}/{len(events)} Logs"  # noqa: G004
             f" are ingested into Datadog platform with service: '{service}'",
         )
 
@@ -296,11 +296,11 @@ class DatadogClient:
         :return: list of prepare logs
         :rtype: List
         """
-        http_log_items = list()
-        tags = ", ".join(self.instance_check.instance.get("tags", list()))
+        http_log_items = []
+        tags = ", ".join(self.instance_check.instance.get("tags", []))
 
         for event in events:
-            evaluated_tags = list()
+            evaluated_tags = []
             if fn_to_evaluate_event:
                 event, evaluated_tags = fn_to_evaluate_event(event)
 
@@ -362,10 +362,10 @@ class DatadogClient:
                     "Received 'no valid index specified' error while searching logs, which indicates no logs"
                     " are present in the Datadog platform at the moment so returning empty log dictionary."
                 )
-                self.log.info(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+                self.log.info(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
                 return constants.EMPTY_SEARCH_LOG
             self.log.exception(
-                f"Netskope | HOST={self.host} | MESSAGE=Could not search log in Datadog with"  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=Could not search log in Datadog with"  # noqa: G004
                 f" query filter: {filter_query}."
             )
             raise
@@ -431,9 +431,9 @@ class DatadogClient:
                 return checkpoint_data
         except Exception:
             self.log.exception(
-                f"Netskope | HOST={self.host} | MESSAGE=Could not get the checkpoint log of '{name}' from"  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=Could not get the checkpoint log of '{name}' from"  # noqa: G004
                 " datadog platform."
             )
             if raise_error:
                 raise
-        return dict()
+        return {}

@@ -64,7 +64,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
         try:
             self.validate_configurations()
             msg = "All the provided configurations in conf.yaml are valid."
-            self.log.info(f"Netskope | HOST={self.host} | MESSAGE={msg}")  # noqa: G00
+            self.log.info(f"Netskope | HOST={self.host} | MESSAGE={msg}")  # noqa: G004
 
             # Using checks and events, show that validations are successful.
             self.ingest_service_check_and_event(
@@ -96,7 +96,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
         try:
             self.authentication()
             msg = "Authentication with Netskope is successful."
-            self.log.info(f"Netskope | HOST={self.host} | MESSAGE={msg}")  # noqa: G00
+            self.log.info(f"Netskope | HOST={self.host} | MESSAGE={msg}")  # noqa: G004
 
             # Using checks and events, show that authentication is successful.
             self.ingest_service_check_and_event(
@@ -120,7 +120,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
             )
             raise
 
-        self.log.info(f"Netskope | HOST={self.host} | MESSAGE=Start of the data collection.")  # noqa: G00
+        self.log.info(f"Netskope | HOST={self.host} | MESSAGE=Start of the data collection.")  # noqa: G004
         start_time = time.time()
 
         # Netskope event data collection and Datadog ingestion
@@ -132,13 +132,13 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                 event_type == "alert" and not self.collect_alerts
             ):
                 self.log.info(
-                    f"Netskope | HOST={self.host} | MESSAGE=Skipping data collection for"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=Skipping data collection for"  # noqa: G004
                     f" '{event_type}' event, since it's not specified in the configuration."
                 )
                 continue
 
             self.log.info(
-                f"Netskope | HOST={self.host} | MESSAGE=Collecting data for '{event_type}' event."  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=Collecting data for '{event_type}' event."  # noqa: G004
             )
 
             checkpoint = self.dd_client.get_checkpoint(event_type)
@@ -151,7 +151,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                 for events in event_data:
                     event_collected = True
                     self.log.info(
-                        f"Netskope | HOST={self.host} | MESSAGE=Fetched {len(events)} events of"  # noqa: G00
+                        f"Netskope | HOST={self.host} | MESSAGE=Fetched {len(events)} events of"  # noqa: G004
                         f" '{event_type}' event."
                     )
 
@@ -164,7 +164,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                     for panel_name, panel_conf in event_conf.get("dashboard_panels", {}).items():
                         if panel_conf.get("type") not in ["metric", "log"]:
                             self.log.error(
-                                f"Netskope | HOST={self.host} | MESSAGE=Invalid data type provided"  # noqa: G00
+                                f"Netskope | HOST={self.host} | MESSAGE=Invalid data type provided"  # noqa: G004
                                 f" for '{panel_name}' panel, hence skipping data collection of this panel. Allowed"
                                 f" data types are metric and log but found: {panel_conf.get('type')}"
                             )
@@ -174,49 +174,49 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                             self.ingest_dashboard_data(events, panel_name, panel_conf)
                         except Exception:
                             err_msg = (
-                                f"Netskope | HOST={self.host} | MESSAGE=Error occurred while ingesting"  # noqa: G00
+                                f"Netskope | HOST={self.host} | MESSAGE=Error occurred while ingesting"  # noqa: G004
                                 f" {panel_conf['type']}s data of '{panel_name}' panel, hence skipping"
                                 f" {panel_conf['type']}s ingestion of this panel."
                             )
                             self.log.exception(err_msg)
             except BillingSubmitError:
                 err_message = "Error occurred while submitting billing logs/metrics, hence stopping the execution..."
-                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
                 raise
             except InvalidKeyError:
                 self.log.error(
-                    f"Netskope | HOST={self.host} | MESSAGE=Datadog API access forbidden error occurred"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=Datadog API access forbidden error occurred"  # noqa: G004
                     f" while collecting/ingesting data of '{event_type}' event, hence skipping further data"
                     " collection and ingestion for all the events."
                 )
                 raise
             except Exception:
                 self.log.exception(
-                    f"Netskope | HOST={self.host} | MESSAGE=Error occurred while collecting/ingesting"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=Error occurred while collecting/ingesting"  # noqa: G004
                     f" data of '{event_type}' event, hence skipping further data collection and ingestion for"
                     " this event."
                 )
 
             if not event_collected:
                 self.log.info(
-                    f"Netskope | HOST={self.host} | MESSAGE=No data found of '{event_type}' event,"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=No data found of '{event_type}' event,"  # noqa: G004
                     " hence no data will be ingested."
                 )
             else:
                 self.log.info(
-                    f"Netskope | HOST={self.host} | MESSAGE='{event_type}' event data ingestion is"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE='{event_type}' event data ingestion is"  # noqa: G004
                     " completed."
                 )
 
             self.log.info(
-                f"Netskope | HOST={self.host} | MESSAGE=Submitting checkpoint log for '{event_type}'"  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=Submitting checkpoint log for '{event_type}'"  # noqa: G004
                 " event."
             )
             self.dd_client.save_checkpoint(event_type, {"index": index})
 
         elapsed_time = time.time() - start_time
         self.log.info(
-            f"Netskope | HOST={self.host} | MESSAGE=End of the data collection."  # noqa: G00
+            f"Netskope | HOST={self.host} | MESSAGE=End of the data collection."  # noqa: G004
             f" Time taken: {elapsed_time:.3f} seconds"
         )
 
@@ -224,7 +224,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
         """Ingests event data to datadog platform in form of metrics and logs."""
         if panel_conf.get("type") == "metric" and self.ingest_metrics:
             self.log.info(
-                f"Netskope | HOST={self.host} | MESSAGE=Ingesting metrics for '{panel_name}' panel."  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=Ingesting metrics for '{panel_name}' panel."  # noqa: G004
             )
             metrics_list = utils.generate_metrics(
                 event_data,
@@ -259,7 +259,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
 
         elif panel_conf.get("type") == "log":
             self.log.info(
-                f"Netskope | HOST={self.host} | MESSAGE=Ingesting logs for '{panel_name}' panel."  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=Ingesting logs for '{panel_name}' panel."  # noqa: G004
             )
             self.dd_client.submit_logs(
                 panel_name,
@@ -289,7 +289,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                 "any special characters, and slashes. Permitted characters are (A-Z), (a-z), (0-9), "
                 "hyphen(-) and period(.)"
             )
-            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
             raise ConfigTypeError(err_message)
 
         # Validate events field
@@ -298,7 +298,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                 "'events' field is provided but no value is found. No data will be collected for any endpoints."
             )
             self.events = []
-            self.log.info(f"Netskope | HOST={self.host} | MESSAGE={no_events_message}")  # noqa: G00
+            self.log.info(f"Netskope | HOST={self.host} | MESSAGE={no_events_message}")  # noqa: G004
 
         for event in self.events:
             if event not in constants.DEFAULT_EVENTS:
@@ -307,27 +307,27 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                     "Permitted values are 'infrastructure', 'network', 'connection', 'audit', 'application', "
                     "and 'incident'."
                 )
-                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
                 raise ConfigurationError(err_message)
 
         events_conf_msg = f"The list of configured events is {self.events}."
-        self.log.info(f"Netskope | HOST={self.host} | MESSAGE={events_conf_msg}")  # noqa: G00
+        self.log.info(f"Netskope | HOST={self.host} | MESSAGE={events_conf_msg}")  # noqa: G004
 
         # Validate collect_alerts
         if not isinstance(self.collect_alerts, bool):
             err_message = "'collect_alerts' field is not valid. Permitted values are true and false."
-            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
             raise ConfigTypeError(err_message)
 
         alerts_conf_msg = "Alerts data collection is marked true."
         if not self.collect_alerts:
             alerts_conf_msg = "Alerts data collection is marked false."
-        self.log.info(f"Netskope | HOST={self.host} | MESSAGE={alerts_conf_msg}")  # noqa: G00
+        self.log.info(f"Netskope | HOST={self.host} | MESSAGE={alerts_conf_msg}")  # noqa: G004
 
         # Validate ingest_metrics
         if not isinstance(self.ingest_metrics, bool):
             err_message = "'ingest_metrics' field is not valid. Permitted values are true and false."
-            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
             raise ConfigTypeError(err_message)
 
         metrics_conf_msg = (
@@ -335,7 +335,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
         )
         if not self.ingest_metrics:
             metrics_conf_msg = "Metrics data ingestion is marked false, hence metrics data ingestion will be skipped."
-        self.log.info(f"Netskope | HOST={self.host} | MESSAGE={metrics_conf_msg}")  # noqa: G00
+        self.log.info(f"Netskope | HOST={self.host} | MESSAGE={metrics_conf_msg}")  # noqa: G004
 
         # validate min_collection_interval
         try:
@@ -345,14 +345,14 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
         except (ValueError, TypeError):
             if self.min_collection_interval is None:
                 err_message = "'min_collection_interval' field is missing."
-                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
                 raise ConfigurationError(err_message)
 
             err_message = (
                 "'min_collection_interval' must be a positive integer value greater than 0,"
                 f" but found {self.min_collection_interval}."
             )
-            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
             raise ConfigValueError(err_message)
 
     def authentication(self):
@@ -368,17 +368,17 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                     f"Insufficient API permission of following event's endpoints: {forbidden_event_type}."
                     " Verify the V2 token and its permission for mentioned events."
                 )
-                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+                self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
                 raise ConfigurationError(err_message)
 
         except requests.exceptions.SSLError as err:
             err_message = "SSL verification failed."
-            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message} Error: {err}")  # noqa: G00
+            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message} Error: {err}")  # noqa: G004
             raise ConfigurationError(err_message) from err
 
         except requests.exceptions.ConnectionError as err:
             err_message = "Authentication failed for provided credentials. Please check the provided host."
-            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message} Error: {err}")  # noqa: G00
+            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message} Error: {err}")  # noqa: G004
             raise ConfigurationError(err_message) from err
 
         except requests.exceptions.HTTPError as err:
@@ -388,7 +388,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                     " Please check the provided token and its permissions."
                 )
                 self.log.error(
-                    f"Netskope | HOST={self.host} | STATUS_CODE={err.response.status_code} "  # noqa: G00
+                    f"Netskope | HOST={self.host} | STATUS_CODE={err.response.status_code} "  # noqa: G004
                     f"| MESSAGE={err_message} Error: {err}"
                 )
                 raise ConfigurationError(err_message) from err
@@ -397,7 +397,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                     "Error occurred while validating the Netskope credentials. Please check the provided credentials."
                 )
                 self.log.error(
-                    f"Netskope | HOST={self.host} | STATUS_CODE={err.response.status_code} "  # noqa: G00
+                    f"Netskope | HOST={self.host} | STATUS_CODE={err.response.status_code} "  # noqa: G004
                     f"| MESSAGE={err_message} Error: {err}"
                 )
                 raise ConfigurationError(err_message) from err
@@ -406,7 +406,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
             err_message = (
                 "Error occurred while validating the Netskope credentials. Please check the provided credentials."
             )
-            self.log.exception(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+            self.log.exception(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
             raise ConfigurationError(err_message) from err
 
     def initialize_dd_client(self):
@@ -414,7 +414,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
 
         if not self._api_key or not self._app_key:
             err_message = "API Key is missing." if not self._api_key else "App Key is missing."
-            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G00
+            self.log.error(f"Netskope | HOST={self.host} | MESSAGE={err_message}")  # noqa: G004
 
             # Using checks and events, show that Datadog API key or app key is missing.
             self.ingest_service_check_and_event(
@@ -503,7 +503,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
                     [f"event_tag:{time.time()}", f"event-count:{event_count}", f"tag-count:{tag_count}"],
                 )
                 self.log.info(
-                    f"Netskope | HOST={self.host} | MESSAGE=Submitting marketplace billing metric"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=Submitting marketplace billing metric"  # noqa: G004
                     " with current timestamp."
                 )
                 self.dd_client.submit_metrics([billing_metrics_body], latest=True, include_prefix=False)
@@ -530,7 +530,7 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
 
         if not checkpoint:
             self.log.info(
-                f"Netskope | HOST={self.host} | MESSAGE=No checkpoint found of '{event_type}' event,"  # noqa: G00
+                f"Netskope | HOST={self.host} | MESSAGE=No checkpoint found of '{event_type}' event,"  # noqa: G004
                 f" hence data will be collected from default collection time(={constants.TIMESTAMP_OFFSET} seconds)."
             )
         else:
@@ -538,14 +538,14 @@ class CrestDataSystemsNetskopeCheck(AgentCheck):
             checkpoint_timestamp = utils.get_epoch_timestamp(checkpoint.get("timestamp"))
             if checkpoint_timestamp and int(time.time()) - checkpoint_timestamp > constants.TIMESTAMP_OFFSET:
                 self.log.info(
-                    f"Netskope | HOST={self.host} | MESSAGE=Found checkpoint for '{event_type}' event,"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=Found checkpoint for '{event_type}' event,"  # noqa: G004
                     " but checkpoint time is older than default collection time so data will be collected"
                     f" from default collection time(={constants.TIMESTAMP_OFFSET} seconds). Checkpoint: {checkpoint}"
                 )
             else:
                 from_timestamp = False
                 self.log.info(
-                    f"Netskope | HOST={self.host} | MESSAGE=Found checkpoint for '{event_type}' event,"  # noqa: G00
+                    f"Netskope | HOST={self.host} | MESSAGE=Found checkpoint for '{event_type}' event,"  # noqa: G004
                     f" hence collecting the data from last checkpoint. Checkpoint: {checkpoint}"
                 )
 

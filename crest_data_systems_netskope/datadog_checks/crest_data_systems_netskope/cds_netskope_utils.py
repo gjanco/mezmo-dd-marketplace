@@ -18,7 +18,7 @@ def field_parser(event: Dict, fields: List) -> Dict:
     :return: resulted parsed event data
     :rtype: dict
     """
-    result = dict()
+    result = {}
     for field in fields:
         data = None
         field_keys = field.split(".")
@@ -50,7 +50,7 @@ def field_alias_generator(event, alias):
     :param alias: alias fields
     :type alias: dict
     """
-    result = dict()
+    result = {}
     for new_field in alias:
         if not is_empty(event.get(new_field)):
             result[new_field] = event[new_field]
@@ -68,7 +68,7 @@ def field_alias_generator(event, alias):
 
 def tag_generator(event, fields):
     """Generates tag list from event with provided field name list"""
-    tags = list()
+    tags = []
     for field in fields:
         tags.append(f"{field}:{event.get(field)}")
     return tags
@@ -112,7 +112,7 @@ def generate_metrics(
     timestamp_field=None,
 ):
     """Generate and returns metrics list with tags."""
-    metric_list = list()
+    metric_list = []
     for record in response:
         raw_event = field_parser(record, event_fields)
         event = field_alias_generator(raw_event, alias_fields)
@@ -135,7 +135,7 @@ def generate_metrics(
 
 def generate_logs(response, event_fields, alias_fields, conditions=None):
     """Generates and returns logs list with tags."""
-    logs_list = list()
+    logs_list = []
     for record in response:
         raw_event = field_parser(record, event_fields)
         event = field_alias_generator(raw_event, alias_fields)
