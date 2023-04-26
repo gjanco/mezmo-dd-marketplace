@@ -27,14 +27,14 @@ To install the Validator check on your host:
 
 - Linux
 
-`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_validator==2.2.0`
+`sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_validator==2.2.1`
 - Windows
 
-`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_validator==2.2.0`
+`C:\Program Files\Datadog\Datadog Agent\bin\agent.exe integration install --third-party datadog-rapdev_validator==2.2.1`
 
 ### Prepare the Validator
 
-The only pre-requisite to the RapDev Validator integration is having an application key. Create an application key in the Datadog application by following the [Datadog documentation](https://docs.datadoghq.com/account_management/api-app-keys/#add-application-keys).
+The only pre-requisite to the RapDev Validator integration is having an application key. Create an application key in the Datadog application by following the [Datadog documentation](https://docs.datadoghq.com/account_management/api-app-keys/#add-application-keys). To send data through a custom intake server, set `dd_url` equal to the root URL of the custom domain in the `conf.yaml` file. 
 
 ### Configuration
 
@@ -46,6 +46,7 @@ The only pre-requisite to the RapDev Validator integration is having an applicat
   - api_key: ********************************
     app_key: ****************************************
     dd_site: com
+    dd_url: ""
     required_tags:
       name:
         - ".*"

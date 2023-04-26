@@ -53,7 +53,12 @@ class ValidatorCheck(AgentCheck):
     def __init__(self, *args, **kwargs):
         super(ValidatorCheck, self).__init__(*args, **kwargs)
         self.dd_site = self.instance.get("dd_site", "com")
-        self.api_url = API_URL_MAP.get(self.dd_site)
+        self.dd_url = self.instance.get("dd_url", "")
+        
+        if self.dd_url:
+            self.api_url = self.dd_url
+        else:
+            self.api_url = API_URL_MAP.get(self.dd_site)
         self.options = self.get_keys()
         self.check_initializations.append(self.validate_config)
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])

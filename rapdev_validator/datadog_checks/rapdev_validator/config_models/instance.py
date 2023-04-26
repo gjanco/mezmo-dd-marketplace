@@ -55,6 +55,7 @@ class InstanceConfig(BaseModel):
     connect_timeout: Optional[float]
     dd_org_name: Optional[str]
     dd_site: Optional[str]
+    dd_url: Optional[str]
     disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]
     extra_headers: Optional[Mapping[str, Any]]

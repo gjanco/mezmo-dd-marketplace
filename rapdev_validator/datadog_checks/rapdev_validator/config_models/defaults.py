@@ -74,6 +74,10 @@ def instance_dd_site(field, value):
     return 'com'
 
 
+def instance_dd_url(field, value):
+    return 'example.com:3834'
+
+
 def instance_disable_generic_tags(field, value):
     return False
 
