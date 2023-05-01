@@ -70,7 +70,7 @@ class CrestDataSystemsNetappEseriesSantricityCheck(AgentCheck):
                 response = self.getEndpoint(endpoint)
                 if response.status_code != 200:
                     self.log.error(
-                        "NetApp ESeries SANtricity: Unsuccessful response: "  # noqa: G00
+                        "NetApp ESeries SANtricity: Unsuccessful response: "  # noqa: G001
                         "status_code = {} response = {}".format(response.status_code, response.text),
                     )
                     self.ingest_service_check_and_event_for_auth(
@@ -80,14 +80,14 @@ class CrestDataSystemsNetappEseriesSantricityCheck(AgentCheck):
                     )
                     continue
                 self.log.info(
-                    "NetApp ESeries SANtricity: Successful response "  # noqa: G00
+                    "NetApp ESeries SANtricity: Successful response "  # noqa: G001
                     "from netapp endpoint={}".format(endpoint),
                 )
                 response = response.json()
                 ENDPOINT_MAPPING_DICT[endpoint](response)
             except requests.exceptions.HTTPError as ex:
                 self.log.error(
-                    "NetApp ESeries SANtricity: Unsuccessful response: "  # noqa: G00
+                    "NetApp ESeries SANtricity: Unsuccessful response: "  # noqa: G001
                     "status_code = {} response = {}".format(ex.response.status_code, ex.response.text),
                 )
                 self.log.exception(ex)
@@ -98,7 +98,7 @@ class CrestDataSystemsNetappEseriesSantricityCheck(AgentCheck):
                 )
             except Exception as ex:
                 self.log.error(
-                    "NetApp ESeries SANtricity: Unexpected error while validation: {}".format(str(ex))  # noqa: G00
+                    "NetApp ESeries SANtricity: Unexpected error while validation: {}".format(str(ex))  # noqa: G001
                 )
                 self.log.exception(ex)
                 self.ingest_service_check_and_event_for_auth(
@@ -109,7 +109,7 @@ class CrestDataSystemsNetappEseriesSantricityCheck(AgentCheck):
         # data collection ended
         elapsed_seconds = time.time() - start_time
         self.log.info(
-            "NetApp ESeries SANtricity: End of the data collection."  # noqa: G00
+            "NetApp ESeries SANtricity: End of the data collection."  # noqa: G001
             " Total time taken: {:.3f} seconds".format(elapsed_seconds),
         )
 
@@ -128,8 +128,6 @@ class CrestDataSystemsNetappEseriesSantricityCheck(AgentCheck):
             "username",
             "password",
             "verify_ssl",
-            "api_key",
-            "app_key",
             "system_id",
             "min_collection_interval",
         ]
@@ -174,7 +172,7 @@ class CrestDataSystemsNetappEseriesSantricityCheck(AgentCheck):
             self.log.info("NetApp ESeries SANtricity: Successful authentication to Netapp Eseries Santricity.")
         except requests.exceptions.HTTPError as ex:
             self.log.error(
-                "NetApp ESeries SANtricity: Unsuccessful response: status_code = {} response = {}".format(  # noqa: G00
+                "NetApp ESeries SANtricity: Unsuccessful response: status_code = {} response = {}".format(  # noqa: G001
                     ex.response.status_code, ex.response.text
                 ),
             )
@@ -187,7 +185,7 @@ class CrestDataSystemsNetappEseriesSantricityCheck(AgentCheck):
             raise ex
         except Exception as ex:
             self.log.error(
-                "NetApp ESeries SANtricity: Unexpected error while validation: {}".format(str(ex))  # noqa: G00
+                "NetApp ESeries SANtricity: Unexpected error while validation: {}".format(str(ex))  # noqa: G001
             )
             self.log.exception(ex)
             self.ingest_service_check_and_event_for_auth(

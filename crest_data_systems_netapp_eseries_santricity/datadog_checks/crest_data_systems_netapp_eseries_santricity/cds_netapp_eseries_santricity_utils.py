@@ -27,12 +27,12 @@ def ingest_metric(instance_check, metric_name, metric_value, metrics_tag):
         tags = instance_check.instance.get("tags", []) + metrics_tag
         instance_check.gauge(metric_name, metric_value, tags=tags, hostname=hostname)
         instance_check.log.info(
-            "NetApp ESeries SANtricity: Metric is ingested successfully."  # noqa: G00
+            "NetApp ESeries SANtricity: Metric is ingested successfully."  # noqa: G001
             " metric_name={}".format(metric_name),
         )
     except Exception as ex:
         instance_check.log.error(
-            "NetApp ESeries SANtricity: Exception occurred while"  # noqa: G00
+            "NetApp ESeries SANtricity: Exception occurred while"  # noqa: G001
             " metric ingestion: {} metric={}".format(str(ex), metric_name),
         )
         instance_check.log.exception(ex)
@@ -45,7 +45,7 @@ def ingest_logs(instance_check, service, events, timestamp_field=None, fn_to_eva
     # check if log ingestion flag is set
     if not instance_check.ingest_log:
         instance_check.log.info(
-            "NetApp ESeries SANtricity: Skipping log ingestion of service: {}".format(service)  # noqa: G00
+            "NetApp ESeries SANtricity: Skipping log ingestion of service: {}".format(service)  # noqa: G001
         )
         return
     try:
@@ -64,12 +64,12 @@ def ingest_logs(instance_check, service, events, timestamp_field=None, fn_to_eva
                     instance_check.log.error("NetApp ESeries SANtricity: Could not submit logs")
                     instance_check.log.exception(error)
         instance_check.log.info(
-            "NetApp ESeries SANtricity: {}/{} Logs are ingested into Datadog "  # noqa: G00
+            "NetApp ESeries SANtricity: {}/{} Logs are ingested into Datadog "  # noqa: G001
             "platform with service: {}".format(ingested_logs_count, len(events), service),
         )
     except Exception as ex:
         instance_check.log.error(
-            "NetApp ESeries SANtricity: Exception occurred "  # noqa: G00
+            "NetApp ESeries SANtricity: Exception occurred "  # noqa: G001
             "while log ingestion: {} service={}".format(str(ex), service),
         )
         instance_check.log.exception(ex)

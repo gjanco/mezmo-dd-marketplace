@@ -11,28 +11,38 @@ This integration collects configuration and performance details from the NetApp 
 1. You have the Datadog Agent installed and running.
 2. You can connect to the server with the Datadog Agent.
 
+### NetApp ESeries SANtricity Configuration
+
+- A user must have read permissions on the NetApp ESeries SANtricity API to configure the integration and collect data.
+
 ### Installation
 
-To install the integration, run: `sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_netapp_eseries_santricity==1.0.0`.
+To install the integration, run the following command:
+
+- Linux:
+  - `sudo -u dd-agent datadog-agent integration install --third-party datadog-crest_data_systems_netapp_eseries_santricity==1.1.0`.
+- Windows:
+  - `"C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-crest_data_systems_netapp_eseries_santricity==1.1.0`
 
 ### Configuration
 
-#### Setup datadog.yaml
+#### Set up `datadog.yaml`
 
-1. The app_key and api_key needs to be set in the datadog.yaml. ([Read Here][4])
+1. The app_key and api_key needs to be set in the `datadog.yaml` file. For more information, see [Agent Configuration Files][4].
+
    ```yaml
-      ## @param api_key - string - optional
-      ## Datadog API Key
-      #
-      api_key: <API_KEY>
+   ## @param api_key - string - optional
+   ## Datadog API Key
+   #
+   api_key: <API_KEY>
 
-      ## @param app_key - string - required
-      ## Datadog App Key
-      #
-      app_key: <APP_KEY>
+   ## @param app_key - string - required
+   ## Datadog App Key
+   #
+   app_key: <APP_KEY>
    ```
 
-#### Setup conf.yaml
+#### Set up `conf.yaml`
 
 1. Copy the `conf.yaml.example` file.
 
@@ -49,7 +59,7 @@ To install the integration, run: `sudo -u dd-agent datadog-agent integration ins
 
         ## @param address - string - required
         ## The IP address and port (separated by a colon) of the Web Services Proxy. For example: 10.1.1.1:8443
-        # 
+        #
        - address: <ADDRESS>
 
         ## @param username - string - required
@@ -76,7 +86,7 @@ To install the integration, run: `sudo -u dd-agent datadog-agent integration ins
         ## Index of Log in Datadog platform
         #
         log_index: main
-        
+
         min_collection_interval: 600
    ```
 
@@ -100,17 +110,27 @@ sudo datadog‐agent check crest_data_systems_netapp_eseries_santricity
 
 ## Uninstallation
 
-Uninstall the integration from the Datadog Agent by running the following command on a host:
+Uninstall the integration from the Datadog Agent by running the following command:
 
-`sudo -u dd-agent datadog-agent integration remove datadog-crest_data_systems_netapp_eseries_santricity`
+- Linux:
+  - `sudo -u dd-agent datadog-agent integration remove datadog-crest_data_systems_netapp_eseries_santricity`
+- Windows:
+  - `“C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" integration remove datadog-crest_data_systems_netapp_eseries_santricity`
+
+YAML Config Cleanup:
+
+- If you plan to reinstall or need to keep the config files:
+  - Navigate to your Agent's `conf.d` directory and locate the `crest_data_systems_netapp_eseries_santricity.d` folder to access the YAML configs. **NOTE**: These files contain sensitive information such as API keys.
+- If you plan to fully uninstall with config removal:
+  - Navigate to your Agent's `conf.d` directory, and remove the `crest_data_systems_netapp_eseries_santricity.d` folder.
 
 ## Support
 
 For support or feature requests, contact Crest Data Systems through the following channels:
 
-- Email: datadog.integrations@crestdatasys.com
+- Support Email: datadog.integrations@crestdatasys.com
+- Sales Email: sales@crestdatasys.com
 - Website: [crestdatasys.com][3]
-
 
 [1]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent
 [2]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
