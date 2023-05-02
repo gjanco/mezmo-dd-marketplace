@@ -54,21 +54,20 @@ Run the following command to enable the Backup Integration on your Datadog Agent
 
 ```
 *Linux*
-sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==2.3.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_backup==2.3.1
 
 *Powershell*
-& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.3.0
+& "$env:ProgramFiles\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.3.1
 
 *Command Prompt*
-"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.3.0
+"%PROGRAMFILES%\Datadog\Datadog Agent\bin\agent.exe" integration install --third-party datadog-rapdev_backup==2.3.1
 ```
 
 ### Datadog Configuration
 
 Begin by generating Datadog [API & Application keys][4]. 
 and pass that value into the `instances` section(s) of your `conf.d/rapdev_backup.d/conf.yaml` under the fields 
-`api_key` and `app_key` as shown below:
-
+`api_key` and `app_key`.
 ```
 init_config:
 
@@ -227,7 +226,7 @@ environment variables and shared credential files.
 
 If you'd like to delete the backups that were created locally (even when storing to cloud), 
 leave the default `delete_local_backups` set to `true`, otherwise set it to `false`. If `backup_storage_platform` is set to `LOCAL`, this 
-variable will be ignored. Please be aware that this can eventually use up all available space on your machine(s) if you don't perform a periodic manual clean up when required (resource usage is based on your run interval).
+variable will be ignored. Please be aware that this can eventually use up all available space on your machine(s) if you don't perform a periodic manual clean up when required (resource usage is based on your run interval). To send API requests through a custom intake server, set `dd_url` equal to the root URL of the custom domain in the `conf.yaml` file. 
 
 
 Once all of your configurations are set up correctly, [restart the Agent][1].

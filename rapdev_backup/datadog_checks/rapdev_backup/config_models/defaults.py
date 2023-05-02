@@ -86,6 +86,10 @@ def instance_dd_site(field, value):
     return 'com'
 
 
+def instance_dd_url(field, value):
+    return 'example.com:3834'
+
+
 def instance_delete_local_backups(field, value):
     return True
 

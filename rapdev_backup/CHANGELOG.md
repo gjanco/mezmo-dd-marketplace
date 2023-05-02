@@ -1,5 +1,8 @@
 # CHANGELOG - rapdev
 
+## 2.3.1 / 2023-04-19
+ * [Added] Added a configuration flag for `dd_url` to allow support for custom Datadog intake servers so customers can utilize the integration with different API endpoints  
+
 ## 2.3.0 / 2022-07-26
  * [Added] Support for specifying Github repos with different org names
  * [Added] Added more detail into documentation

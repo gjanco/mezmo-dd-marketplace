@@ -66,7 +66,11 @@ class BackupCheck(AgentCheck):
         super(BackupCheck, self).__init__(*args, **kwargs)
         # Get the appropriate URL for datadog account
         self.dd_site = self.instance.get("dd_site", "com")
-        self.api_url = API_URL_MAP.get(self.dd_site)
+        self.dd_url = self.instance.get("dd_url", "")
+        if self.dd_url:
+            self.api_url = self.dd_url
+        else:
+            self.api_url = API_URL_MAP.get(self.dd_site)
         self.dd_api_key = self.get_key("dd_api_key")
         self.dd_app_key = self.get_key("dd_app_key")
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])

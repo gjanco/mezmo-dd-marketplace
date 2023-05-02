@@ -65,6 +65,7 @@ class InstanceConfig(BaseModel):
     dd_api_key: Optional[str]
     dd_app_key: Optional[str]
     dd_site: Optional[str]
+    dd_url: Optional[str]
     delete_local_backups: Optional[bool]
     disable_generic_tags: Optional[bool]
     empty_default_hostname: Optional[bool]
