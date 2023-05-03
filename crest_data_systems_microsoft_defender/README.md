@@ -186,5 +186,5 @@ YAML Config Cleanup:
 For support or feature requests, contact Crest Data Systems through the following channels:
 
 - Support Email: datadog.integrations@crestdatasys.com
-- Sales Email: sales@crestdatasys.com
+- Sales Email: datadog-sales@crestdatasys.com
 - Website: [crestdatasys.com](https://www.crestdatasys.com/microsoft-365-defender-integration/)
