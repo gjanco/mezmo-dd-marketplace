@@ -57,7 +57,7 @@ To install the integration, run the following command:
 
     instances:
         ## @param host - string - required
-        ## The IP address and port (separated by a colon) where the Web Services Proxy is running with protocol (HTTP or HTTPS). For example: https://10.1.1.1:8443.
+        ## The IP address and port (separated by a colon) where the Web Services Proxy is running with protocol (HTTP or HTTPS). For example: https://10.1.0.1:8443.
         #
        - host: <HOST>
 
@@ -126,7 +126,7 @@ YAML Config Cleanup:
 For support or feature requests, contact Crest Data Systems through the following channels:
 
 - Support Email: datadog.integrations@crestdatasys.com
-- Sales Email: sales@crestdatasys.com
+- Sales Email: datadog-sales@crestdatasys.com
 - Website: [crestdatasys.com][3]
 
 [1]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6v7#start-stop-and-restart-the-agent
