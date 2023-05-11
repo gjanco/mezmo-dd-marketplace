@@ -2,16 +2,31 @@
 
 ## Overview
 
-[z/IRIS][1] is a plug-in software solution, built to provide mainframe-inclusive performance monitoring for the non-mainframe world. 
+Boost your enterprise observability practices with additional traces and metrics from your backend mainframe applications, and use the following benefits with [z/IRIS][1]:
 
-DevOps teams want to understand how mainframe performs for their business applications and how peak performance can be maintained or achieved. With z/IRIS, mainframe observability for DevOps is a core concept. Teams can assess the usage of mainframe resources, continuously analyze performance, and compare metrics and data across applications using Datadog.
+* Visualize relationships between services and applications hosted on cloud or servers, and mainframe.
+* Discover how mainframe applications contribute to the end user experience.
+* Reduce mean-time-to-restore (MTTR) by leveraging [Datadog Watchdog][23] to automatically detect anomalies in z/OS applications that impact digital business services.
+* Drastically improve communication between application teams and mainframe platform administrators by using shareable dashboards and interfaces to assist with cross-platform incident analysis.
 
-After activating z/IRIS, Datadog users can do the following:
 
-* Identify applications that depend on mainframe-hosted services and applications.
-* Monitor latencies in mainframe services down to a single request level.
-* Create monitors that react to anomalies and exceeded thresholds relevant to your organization’s SLIs.
-* Analyze mainframe application performance from end to end within the context of the business service.
+ z/IRIS sends telemetry (traces and metrics) from transactions and applications running on IBM System Z mainframes to Datadog. 
+ 
+ Once activated:
+ 
+ * The Datadog [Service Map][24] displays the integration with z/OS services such as CICS, MQ, and Db2.
+ * Call rate, error rate, and latency are performance indicators enabled for mainframe services.
+ * Flame graphs and span lists visualize the request's flow into mainframe applications.
+ * Trace pages contain error messages z/OS systems where relevant.
+
+
+z/IRIS telemetry improves developer and operations experience by extending their visibility into the mainframe's internal operations. Datadog users will be able to:
+
+* Activate z/IRIS dashboards to monitor z/OS systems and application health.
+* Create monitors to alert teams on SLO breaches in mainframe applications.
+* Analyze how mainframe applications contribute to total response time and overall availability.
+* Examine how changes inside and outside the mainframe change application behavior and stability.
+* Access error messages reported from mainframe applications that impact the end user experience.
 
 ### Pricing
 
@@ -36,8 +51,8 @@ The minimum starting price (Tier Level 1) is covered by the amount stipulated in
 
 z/IRIS integrates with Datadog in two ways:
 
-* **OpenTelemetry (OTEL):** This observability framework standardizes APM integrations and is fully supported by Datadog. You can easily configure z/IRIS to stream traces and metrics to an OpenTelemetry Collector that is configured to export Traces and Metrics to your Datadog environment.
-* **Datadog APIs (Beta):** Users can also elect to stream Traces and Events through the Datadog Agent API and the HTTP REST API, respectively. This integration method can help accelerate proofs of concepts if OpenTelemetry is not yet available in your organization.
+* **OpenTelemetry (OTEL):** This observability framework standardizes APM integrations and is fully supported by Datadog. z/IRIS will stream traces and metrics to an OpenTelemetry Collector that is configured to export telemetry to your Datadog environment.
+* **Datadog APIs (Beta):** z/IRIS is able to stream traces using the Datadog Agent API as well as events using Datadog's HTTP REST API. This integration is only available for trials and proof of concept (POC) projects to reduce administrative effort while evaluating z/IRIS and is not ideal for production use cases. 
 
 For more detailed information about the integration possibilities of z/IRIS, see the [z/IRIS documentation][3].
 
@@ -45,38 +60,36 @@ For more detailed information about the integration possibilities of z/IRIS, see
 
 A span represents a unit of work or process. Spans are the building blocks for distributed traces which depict when a request was triggered and how the requests flowed through applications and services.
 
-z/IRIS extends Datadog traces with spans that represent processes and units of work from IBM Z mainframe applications.
-
-Extending traces provides Datadog users with new insights into how applications hosted on Cloud and other on-premise platforms depend on applications hosted on z/OS. Furthermore, users gain standard key performance indicators, such as error rate, call rate, and request latency for mainframe-based applications.
+z/IRIS extends traces in Datadog with spans that represent processes and transactions from IBM Z mainframe applications. Extending traces provides users with new insights into how services on mainframe are consumed by cloud and server applications. Performance indicators, such as error rate, call rate, and request latency, for mainframe-based applications are enabled so you can identify the health of the mainframe integration.
 
 #### Spans
 
-z/IRIS creates spans for the following mainframe applications:
+z/IRIS creates spans for transactions and operations processed on the following mainframe systems:
 
 * [Db2 for z/OS][4]
 * [z/OS Connect][5]
-* [Batch Jobs steps and TSO User Session][6]
-* [MQ for z/OS][7]
-* [CICS Transaction][8]
+* [IBM MQ for z/OS][7]
+* [CICS Transaction Server (i.e. CICS TS)][8]
+* [Batch jobs][6]
+* [TSO user activity][6]
 
 This list is always growing. Contact [ziris@mainstorconcept.com][2] to request information about support for z/OS applications or subsystems not listed above.
 
 #### Workflow Tracing
 
-Once a span has been generated, z/IRIS checks if the span has a logical relationship to an upstream application trace. If so, the required correlation context is added to the span and Datadog will automatically append the span to the relevant trace. 
+z/IRIS is able to identify when operations on mainframe were triggered by an external application request and will ensure that the generated spans are added to the trace for the application request. For example, a cloud application sends a request to a mainframe application for processing, z/IRIS will detect that the mainframe application processing is related to an external request and will ensure that the span from the mainframe application is added to the trace for the cloud application request.
 
-The following request workflows trigger span correlation:
+The following request workflows are tracked by z/IRIS Workflow tracing:
 
-* REST API request processing z/OS Connect
-* z/OS Connect APIs processed by Db2 for z/OS System-of-Record
-* JDBC calls to Db2 for z/OS
-* JMS application messages to IBM MQ for z/OS (including channel-to-channel)
-* MQ for z/OS to CICS Transactions
-* Steps from a single batch job are correlated to form a trace
+* REST API request -> z/OS Connect EE -> SOR (CICS TS, Db2 for z/OS, IMS or IBM MQ) -> Db2 for z/OS 
+* JDBC -> Db2 for z/OS
+* IBM MQ (Linux, Windows, AIX) -> IBM MQ for z/OS -> CICS TS -> Db2 for z/OS 
+* CICS TS -> Db2 for z/OS
+
 
 #### Tags
 
-Additional metadata about request processing on z/OS is provided through tags that are useful to filter for specific traces in the [Datadog Trace Explorer][9] as well as additional insight for [Datadog Watchdog Insights][10]. 
+Metadata about the request, its resource utilization, and the relevant z/OS system are provided through tags that you can use to make queries in the [Trace Explorer][9], and this information is processed by [Watchdog Insights][10] to alert users to anomalies detected in mainframe services. 
 
 Below is a complete list of all tags created with z/IRIS.
 
@@ -354,16 +367,16 @@ Below is a complete list of all tags created with z/IRIS.
 
 ### Mainframe metrics
 
-* [RMF Metrics][11] 
-	* RMF metrics provide resource utilization metrics at customizable intervals and at customizable levels of detail.
+* [Infrastructure Metrics][11] 
+	* Monitors resource utilization in the z/OS system. Infrastructure metrics support CPU (such as general processors and zIIP engines) utilization and contention.
 
 * [z/OS Connect Metrics][12]
-	* z/IRIS streams metrics created using data from IBM's z/OS Connect SMF type 123 version 1 and 2 records. 
+	* Monitors the activity and performance of z/OS Connect servers including incoming requests, return codes, request methods, server latency, and service provider (such as SOR) latency. 
 
 * [MQ Metrics][13]
-	* MQ statistics records (SMF Type 115) contain a multitude of statistics from various resources within the system. z/IRIS introduces z/OS MQ Metrics, focusing on the most vital performance indicators for monitoring, analysis, and alerting purposes.
+	* Monitors the activity of MQ Queue Managers on z/OS and the health of their resources (such as storage, buffer pools, logs, and channels).
 
-This isn't the metric you're looking for? Missing a critical feature for your organization? Send us a feature request at [info@mainstorconcept.com][2].
+This isn't the metric you're looking for? Missing a critical feature for your organization? Send us a feature request at [ziris@mainstorconcept.com][2].
 
 ### Private enterprise offers
 
@@ -451,3 +464,5 @@ Additional helpful documentation, links, and articles:
 [20]: mailto:support@mainstorconcept.com
 [21]: https://service.mainstorconcept.com/mscportal/login
 [22]: https://www.datadoghq.com/blog/mainframe-monitoring-mainstorconcept-datadog-marketplace/
+[23]: https://docs.datadoghq.com/watchdog/
+[24]: https://docs.datadoghq.com/tracing/services/services_map/

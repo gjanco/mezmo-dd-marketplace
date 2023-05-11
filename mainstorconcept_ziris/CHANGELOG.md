@@ -1,4 +1,23 @@
 # CHANGELOG
+## 1.13.0 / 2023-04-13
+
+This release extends [z/IRIS Mainframe Workflow Tracing](https://public.mainstorconcept.com/home/z-iris-mainframe-workflow-tracing), 
+which provides transaction tracking within z/OS, so that users gain more insights into back-end processing on mainframe.
+
+### z/OS Connect to CICS Tracing
+Before this update, users could only identify z/OS Connect APIs backed by CICS by analyzing data available in the System-of-Record (SOR) 
+child span for [z/OS Connect traces](https://public.mainstorconcept.com/home/z-os-connect-spans). However, with the latest release of z/IRIS, 
+a [CICS Transaction child span](https://public.mainstorconcept.com/home/cics-transaction-spans) is added to the REST API request trace. 
+This child span provides valuable transaction, program, performance, and resource-related data for the CICS call, resulting in faster 
+root-cause identification and improved analysis through supplemented CICS identification and performance metrics.
+See [z/OS Connect to CICS](https://public.mainstorconcept.com/home/z-os-connect-observability#z%2FOS-Connect-to-CICS) for more information 
+about z/OS Connect to CICS Transaction workflows.
+
+### CICS to Db2 Tracinge
+z/IRIS now adds a [Db2 child span](https://public.mainstorconcept.com/home/db2-accounting-spans) to a CICS Transaction trace whenever 
+CICS transactions execute Db2 calls. This new correlation context exposes the dependencies between CICS transactions and Db2 resources 
+on z/OS, enabling DevOps engineers to obtain a deeper understanding of the performance of mainframe applications in digital 
+business services. Rerer to [CICS to Db2](https://public.mainstorconcept.com/home/cics-transaction-observability#CICS-to-Db2) for more details
 
 ## 1.12.0 / 2023-02-27
 
