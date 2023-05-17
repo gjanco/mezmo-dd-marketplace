@@ -1,5 +1,9 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.5.5 / 2023-05-15
+
+* [Fixed] iostat metrics (system.io.\*) not properly reporting current values.
+
 ## 1.5.4 / 2023-04-18
 
 * [Added] gzip compression support for metrics.

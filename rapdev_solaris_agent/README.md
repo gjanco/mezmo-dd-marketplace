@@ -21,13 +21,13 @@ pkgadd -d http://get.opencsw.org/now
 
 2. Install the Solaris Agent using the Solaris Image Packaging System. 
 ```sh
-pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.5.4.pkg
+pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.5.5.pkg
 ```
 
 3. If you are upgrading an existing Solaris Agent installation, first remove the current Solaris Agent package. The Solaris Agent configuration and log files will be retained.
 ```sh
 pkgrm DatadogAgent
-pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.5.4.pkg
+pkgadd -d http://rapdev-files.s3.amazonaws.com/solaris/DatadogAgent-1.5.5.pkg
 ```
 
 4. Copy `/etc/datadog/agent.yaml.example` to `/etc/datadog/agent.yaml` and update the Solaris Agent configuration settings in the `/etc/datadog/agent.yaml` file.
