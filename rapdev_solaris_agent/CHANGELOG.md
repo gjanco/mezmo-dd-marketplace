@@ -1,5 +1,9 @@
 # CHANGELOG - RapDev Solaris Agent
 
+## 1.5.6 / 2023-05-23
+
+* [Fixed] pkgrm terminating all zones' agent processes when run in the global zone.
+
 ## 1.5.5 / 2023-05-15
 
 * [Fixed] iostat metrics (system.io.\*) not properly reporting current values.
