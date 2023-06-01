@@ -8,6 +8,8 @@ import time
 import datetime
 from requests.auth import HTTPBasicAuth
 from requests.exceptions import HTTPError
+import json
+import jwt
 
 REQUIRED_SETTINGS = [
     "base_api_url",
@@ -17,6 +19,10 @@ REQUIRED_SETTINGS = [
 ]
 REQUIRED_TAGS = [
     "vendor:rapdev",
+]
+AUTHENTICATION_METHODS = [
+    "jwt",
+    "oauth"
 ]
 
 
@@ -37,27 +43,37 @@ class ZoomCheck(AgentCheck):
         super(ZoomCheck, self).__init__(*args, **kwargs)
         
         # Base tags/params
-        self.base_api_url = self.instance.get("base_api_url")
-        self.account_name = self.instance.get("account_name")
-        self.billing_metric = "{}.{}".format("datadog.marketplace", self.__NAMESPACE__)
+        self.base_api_url = self.instance.get("base_api_url", "https://api.zoom.us/v2/")
+        self.account_name = self.instance.get("account_name", "")
+        self.authentication_method = self.instance.get("authentication_method", "jwt")
+        self.billing_metric = f"datadog.marketplace.{self.__NAMESPACE__}"
 
         # Initialize tags
         self.tags = REQUIRED_TAGS + self.instance.get("tags", [])
-        self.tags.append("zoom_api:{}".format(self.base_api_url))
 
         # Zoom authentication params
-        self.api_key = self.instance.get("api_key")
-        self.api_secret = self.instance.get("api_secret")
+        if self.authentication_method == "jwt":
+            self.api_key = self.instance.get("api_key", "")
+            self.api_secret = self.instance.get("api_secret", "")
+        elif self.authentication_method == "oauth":
+            self.account_id = self.instance.get("account_id", "")
+            self.client_id = self.instance.get("client_id", "")
+            self.client_secret = self.instance.get("client_secret", "")
 
         # Run mode params
+        ## Meetings
         self.collect_participant_details = self.instance.get("collect_participant_details", True)
         self.collect_usernames = self.instance.get("collect_usernames", True)
         self.users_to_track = self.instance.get("users_to_track", [])
+        
+        ## Rooms
         self.room_only_mode = self.instance.get("room_only_mode", False)
         
-        # Master API flags
-        self.is_sub_account = self.instance.get("is_sub_account", False)
-        self.master_api_mode = self.instance.get("master_api_mode", False)
+        ## Phones
+        self.enable_phone_mode = self.instance.get("enable_phone_mode", False)
+        self.phone_only_mode = self.instance.get("phone_only_mode", False)
+        self.enable_phone_call_logs = self.instance.get("enable_phone_call_logs", True)
+        self.call_timer_ingest = self.instance.get("call_timer_ingest", 10)
 
         # Initialize API trackers
         self.successful_api_calls = 0
@@ -68,25 +84,39 @@ class ZoomCheck(AgentCheck):
         self.validate_config()
         self.test_api_connection()
 
-        # Append master account name at start of every run (in case it was removed)
-        base_tags = list(self.tags)
+        # Get current start time
+        self.current_time = datetime.datetime.now(datetime.timezone.utc)
 
-        if self.is_sub_account:
-            base_tags.append("zoom_account_name:{}_sub-account".format(self.account_name))
-        else:
-            base_tags.append("zoom_account_name:{}".format(self.account_name))
+        # Reset tags if required
+        base_tags = list(self.tags)
 
         # Reset API trackers at the start of every check run
         self.reset_trackers()
 
-        # Check if we only care about rooms metrics
         if self.room_only_mode:
             self.get_rooms_metrics(base_tags)
-        # Otherwise get all metrics
         else:
-            self.get_users(base_tags)
-            self.get_rooms_metrics(base_tags)
-            self.get_meetings(base_tags)
+            # We will parse phone information at this point, need to read from cache
+            self.persistent = self.read_from_cache()
+
+            if self.phone_only_mode:
+                self.get_phones_metrics(base_tags)
+            # Otherwise get all metrics
+            else:
+                self.get_users(base_tags)
+
+                if self.enable_phone_mode:
+                    self.get_phones_metrics(base_tags)
+
+                self.get_rooms_metrics(base_tags)
+                self.get_meetings(base_tags)
+
+            # Write out the persistent cache
+            self.write_to_cache()
+
+        if self.account_name:
+            # Append account name at the end of run to submit with service checks
+            base_tags.append(f"zoom_account_name:{self.account_name}")
 
         # Send OK if the API daily limit wasn't encountered during this run 
         if self.api_rate_limits_hit == 0:
@@ -96,64 +126,100 @@ class ZoomCheck(AgentCheck):
         self.gauge("api.successful_calls", self.successful_api_calls, tags=base_tags)
         self.gauge("api.failed_calls", self.failed_api_calls, tags=base_tags)
 
-        # Check if we should poll for sub-accounts, this will only run if we are running
-        # the integration using credentials from the master account
-        if self.master_api_mode:
-            # Get all sub accounts via API
-            sub_accounts = self.get_sub_accounts()
-
-            for sub_account_name, sub_account_id in sub_accounts.items():
-                # Reset trackers for each "sub-account" so we have API metrics for each
-                self.reset_trackers()
-
-                # Recopy list of tags
-                sub_account_tags = list(self.tags)
-
-                # Add the zoom sub-account name as a tag for all the metrics
-                sub_account_tags.append("zoom_account_name:{}_sub-account".format(sub_account_name))
-
-                if self.room_only_mode:
-                    self.get_rooms_metrics(sub_account_tags, account_id=sub_account_id)
-                else:
-                    self.get_users(sub_account_tags, account_id=sub_account_id)
-                    self.get_rooms_metrics(sub_account_tags, account_id=sub_account_id)
-                    self.get_meetings(sub_account_tags, account_id=sub_account_id)
-
-                # Send OK if the API daily limit wasn't encountered during this run 
-                if self.api_rate_limits_hit == 0:
-                    self.service_check("can_call_api", AgentCheck.OK, tags=sub_account_tags)
-
-                self.gauge("api.successful_calls", self.successful_api_calls, tags=sub_account_tags)
-                self.gauge("api.failed_calls", self.failed_api_calls, tags=sub_account_tags)
 
     def test_api_connection(self):
         self.log.debug("Attempting connection test to Zoom API URL %s.", self.base_api_url)
 
+        # add account name if present
+        base_tags = list(self.tags)
+        if self.account_name:
+            base_tags.append(f"zoom_account_name:{self.account_name}")
+
         try:
-            x = self.http.get(self.base_api_url + "rooms",
-                              auth=BearerAuth(generate_token(self.api_key, self.api_secret)))
+            if self.room_only_mode:
+                x = self.http.get(
+                        self.base_api_url + "rooms",
+                        auth=BearerAuth(self.generate_token())
+                    )
+            elif self.phone_only_mode:
+                x = self.http.get(
+                    self.base_api_url + "phone/devices",
+                    auth=BearerAuth(self.generate_token())
+                )
+            else:
+                x = self.http.get(
+                    self.base_api_url + "users",
+                    auth=BearerAuth(self.generate_token())
+                )
+
             x.raise_for_status()
         except Exception as e:
-            self.service_check("can_connect", AgentCheck.CRITICAL, tags=self.tags)
-            raise Exception("Cannot authenticate to ZOOM API. The check will not run: {}".format(e))
+            self.service_check("can_connect", AgentCheck.CRITICAL, tags=base_tags)
+            raise Exception(f"Cannot authenticate to ZOOM API. The check will not run: {e}")
         else:
             self.log.debug("Connection successful")
-            self.service_check("can_connect", AgentCheck.OK, tags=self.tags)
+            self.service_check("can_connect", AgentCheck.OK, tags=base_tags)
 
     def validate_config(self):
-        if not self.base_api_url:
-            raise ConfigurationError("The zoom API url is required.")
-        if not self.api_key:
-            raise ConfigurationError("Your Zoom Account API Key is required.")
-        if not self.api_secret:
-            raise ConfigurationError("Your Zoom Account API Secret is required..")
-        if not self.account_name:
-            raise ConfigurationError("An account name is required.")
+        errors = []
 
-    def call_api(self, request_path, next_page_token="", from_date="", to_date="", page_size=300):
+        if self.authentication_method not in AUTHENTICATION_METHODS:
+            errors.append("Please provide a valid authentication method.")
+
+        if self.authentication_method == "jwt":
+            if not self.api_key:
+                errors.append("Your Zoom Account API Key is required for JWT.")
+            if not self.api_secret:
+                errors.append("Your Zoom Account API Secret is required for JWT.")
+        elif self.authentication_method == "oauth":
+            if not self.account_id:
+                errors.append("Your Zoom Account Account ID is required for Server-To-Server oAuth.")
+            if not self.client_id:
+                errors.append("Your Zoom Account Client ID is required for Server-To-Server oAuth.")
+            if not self.client_secret:
+                errors.append("Your Zoom Account Client Secret is required for Server-To-Server oAuth.")
+        
+        if self.room_only_mode and self.phone_only_mode:
+            errors.append("room_only_mode and phone_only_mode are set to True. Please fix this and restart the agent.")
+
+        if errors:
+            raise ConfigurationError(f"Please fix the following errors: {', '.join(errors)}")
+
+    def generate_token(self):
+        if self.authentication_method == "jwt":
+            token = jwt.encode(
+                {"iss": self.api_key, "exp": time.time() + 60},
+                self.api_secret,
+                algorithm='HS256'
+            )
+        
+            if float(jwt.__version__.split('.')[0]) < 2:
+                token = token.decode('utf-8')
+
+        elif self.authentication_method == "oauth":
+            client_auth = requests.auth.HTTPBasicAuth(self.client_id, self.client_secret)
+            post_data = {
+                "grant_type": "account_credentials",
+                "account_id": self.account_id
+            }
+
+            oauth_response = self.http.post(
+                "https://zoom.us/oauth/token",
+                auth=client_auth,
+                data=post_data
+            ).json()
+        
+            token = oauth_response.get("access_token", "")
+
+        return token
+
+
+
+    def call_api(self, request_path, phone_type="", next_page_token="", from_date="", to_date="", page_size=300):
         """Helper function to call the zoom api via desired query params
 
         :param string request_path: the path for which to append to the base api url
+        :param string phone_type: if collecting phones, what type of phone (assigned or unassigned)
         :param string next_page_token: the token for the next page if pagination is required
         :param string from_date: the start date from where to begin the query range
         :param string to_date: the end date for where to end the query range
@@ -161,25 +227,25 @@ class ZoomCheck(AgentCheck):
         :raises Exception: when a non-200 and non-429 (zoom rate limit code) is returned
         :return: json of the API response
         """
+    
+        # Only time page_size is false is on line 669 which means none of the other conditions will hit anyways
+        # since we're making a single query for the user so this should be safe
         if page_size:
-            request_path = request_path + "?page_size={}".format(page_size)
-
+            request_path = f"{request_path}?page_size={page_size}"
+        if phone_type:
+            request_path = f"{request_path}&type={phone_type}"
         if next_page_token:
-            request_path = request_path + "&next_page_token={}".format(next_page_token)
-
-        if from_date and to_date and page_size:
-            request_path = request_path + "&from={}".format(from_date)
-            request_path = request_path + "&to={}".format(to_date)
-        elif from_date and to_date and not page_size:
-            request_path = request_path + "?from={}".format(from_date)
-            request_path = request_path + "&to={}".format(to_date)
+            request_path = f"{request_path}&next_page_token={next_page_token}"
+        if from_date and to_date:
+            request_path = f"{request_path}&from={from_date}&to={to_date}"
 
         while True:
             # Make Zoom API request
             results = self.http.get(
                 self.base_api_url + request_path,
-                auth=BearerAuth(generate_token(self.api_key, self.api_secret))
+                auth=BearerAuth(self.generate_token())
             )
+
             # Grab status code
             response_code = results.status_code
 
@@ -190,7 +256,7 @@ class ZoomCheck(AgentCheck):
             # 400 is response code for not supported calls (e.g. free plan making paid plan calls)
             elif response_code == 400:
                 self.failed_api_calls += 1
-                self.log.warning("Error making API call: {}".format(results.text))    
+                self.log.warning(f"Error making API call: {results.text}")    
                 return {}
             # If 429, that means we hit rate limit
             elif response_code == 429:
@@ -201,10 +267,9 @@ class ZoomCheck(AgentCheck):
 
                 # Need to append the account name in case the service checks fail
                 api_base_tags = list(self.tags)
-                if self.is_sub_account:
-                    api_base_tags.append("zoom_account_name:{}_sub-account".format(self.account_name))
-                else:
-                    api_base_tags.append("zoom_account_name:{}".format(self.account_name))
+
+                if self.account_name:
+                    api_base_tags.append(f"zoom_account_name:{self.account_name}")
 
                 # If we hit the queries per second limit, sleep for a sec and retry
                 if limit_type == "QPS":
@@ -221,16 +286,13 @@ class ZoomCheck(AgentCheck):
                 try:
                     results.raise_for_status()
                 except HTTPError as e:
-                    raise HTTPError("Non-200 response code returned from Zoom API: {}".format(e))
+                    raise HTTPError(f"Non-200 response code returned from Zoom API: {e}")
                 except Exception as e:
-                    raise Exception("Unknown exception was caught during Zoom API request: {}".format(e))
+                    raise Exception(f"Unknown exception was caught during Zoom API request: {e}")
             
-    def get_users(self, base_tags, account_id=None):
+    def get_users(self, base_tags):
         """Gets the users from Zoom API and sends in the active count and billing metric for each"""
-        if account_id:
-            request_path = "accounts/{}/users".format(account_id)
-        else:
-            request_path = "users"
+        request_path = "users"
 
         response = self.call_api(request_path)
 
@@ -245,9 +307,9 @@ class ZoomCheck(AgentCheck):
                 user_type = user.get("type")
 
                 if user_email:
-                    metric_tags.append("zoom_user_email:{}".format(user_email))
+                    metric_tags.append(f"zoom_user_email:{user_email}")
                 if user_timezone:
-                    metric_tags.append("zoom_user_timezone:{}".format(user_timezone))
+                    metric_tags.append(f"zoom_user_timezone:{user_timezone}")
 
                 if user_type == 1:
                     metric_tags.append("zoom_user_account_type:basic")
@@ -257,9 +319,7 @@ class ZoomCheck(AgentCheck):
                     metric_tags.append("zoom_user_account_type:on-prem")
 
                 self.gauge("users.active.count", 1, tags=metric_tags)
-
-                if not self.room_only_mode:
-                    self.gauge(self.billing_metric, 1, tags=metric_tags, raw=True)
+                self.gauge(self.billing_metric, 1, tags=metric_tags, raw=True)
 
             page_token = response.get("next_page_token", "")
 
@@ -268,15 +328,174 @@ class ZoomCheck(AgentCheck):
             else:
                 response = self.call_api(request_path, next_page_token=page_token)
 
-    def get_rooms_metrics(self, base_tags, account_id=None):
+    def get_phones_metrics(self, base_tags):
+        """Gets the metrics for phones and calls"""
+        self.get_phone_devices(base_tags, "assigned")
+
+        if self.enable_phone_call_logs:
+            self.get_phone_sites()
+            self.get_phone_call_logs(base_tags)
+
+    def get_phone_devices(self, base_tags, assign_type):
+        request_path = "phone/devices"
+
+        response = self.call_api(request_path, phone_type=assign_type)
+
+        while True:
+            phones = response.get("devices", [])
+
+            for phone in phones:
+                metric_tags = base_tags.copy()
+
+                phone_name = phone.get("display_name", "")
+                phone_type = phone.get("device_type", "")
+                phone_status = 1 if phone.get("status", "") == "online" else 2
+
+                phone_site = phone.get("site", {})
+                site_name = phone_site.get("name", "")
+
+                # Add tags to metrics
+                metric_tags.append(f"phone_name:{phone_name}")                
+                metric_tags.append(f"phone_type:{phone_type}")
+                metric_tags.append(f"site_name:{site_name}")
+
+                # If we're collecting phones, submit as a metric
+                self.gauge(self.billing_metric, 1, tags=metric_tags, raw=True)
+
+                self.gauge("phone.count", 1, tags=metric_tags)
+                self.gauge("phone.status", phone_status, tags=metric_tags)
+
+            page_token = response.get("next_page_token", "")
+
+            if page_token == "":
+                break
+            else:
+                response = self.call_api(request_path, phone_type=assign_type, next_page_token=page_token)
+
+    def get_phone_sites(self):
+        """ Builds the map of site id's to site names to be submitted in phone call runs"""
+        request_path = "/phone/sites"
+
+        response = self.call_api(request_path, page_size=300)
+
+        self.sites = {}
+
+        while True:
+            sites = response.get("sites", [])
+
+            for site in sites:
+                self.sites[site.get("id")] = site.get("name") 
+
+            page_token = response.get("next_page_token", "")
+
+            if page_token == "":
+                break
+            else:
+                response = self.call_api(request_path, next_page_token=page_token, page_size=300)
+
+
+    def get_phone_call_logs(self, base_tags):
+        request_path = "phone/metrics/call_logs"
+    
+        parsed_call_ids = self.persistent.get('calls', {}).keys()
+
+        # Calcuate our "stop" point in terms of old calls
+        old_calls_break = False
+        past_time = (self.current_time - datetime.timedelta(minutes=self.call_timer_ingest)).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+        response = self.call_api(request_path, page_size=100)
+        while True:
+            call_logs = response.get("call_logs", [])
+
+            for call_log in call_logs:
+                metric_tags = base_tags.copy()
+
+                call_id = call_log.get("call_id", "")
+                call_timestamp = call_log.get("date_time", "")
+
+                # Check if call has hit our ingest threshold
+                if call_timestamp < past_time:
+                    self.log.info("Old calls hit, exitting out of calls ingestion...")
+                    old_calls_break = True
+                    break
+                # Check if this call's ID is already in our cache, if so we can stop ingestion
+                elif call_id in parsed_call_ids:
+                    self.log.info("Hit previously parsed calls, exitting out of calls ingestion...")
+                    old_calls_break = True
+                    break
+                # Otherwise add to cache because this is a new call
+                else:
+                    self.persistent['calls'][call_id] = call_timestamp
+
+                direction = call_log.get("direction", "")
+                duration = call_log.get("duration", 0)
+                mos = call_log.get("mos", "")
+
+                # Add tags to metrics
+                metric_tags.append(f"call_id:{call_id}")
+                metric_tags.append(f"call_direction:{direction}")
+
+                callee = call_log.get("callee", {})
+                caller = call_log.get("caller", {})
+
+                callee_device_type = callee.get("device_type", "")
+                callee_extension_number = callee.get("extension_number", "")
+                callee_isp = callee.get("isp", "")
+                callee_phone_number = callee.get("phone_number", "")
+                callee_site_id = callee.get("site_id", "")
+
+                if callee_site_id:
+                    callee_site_name = self.sites.get(callee_site_id, "")
+                    metric_tags.append(f"callee_site_name:{callee_site_name}")
+                if callee_device_type:
+                    metric_tags.append(f"callee_device_type:{callee_device_type}")
+                if callee_extension_number:
+                    metric_tags.append(f"callee_extension_number:{callee_extension_number}")
+                if callee_isp:
+                    metric_tags.append(f"callee_isp:{callee_isp}")
+                if callee_phone_number:
+                    metric_tags.append(f"callee_phone_number:{callee_phone_number}")
+
+                caller_device_type = caller.get("device_type", "")
+                caller_extension_number = caller.get("extension_number", "")
+                caller_isp = caller.get("isp", "")
+                caller_phone_number = caller.get("phone_number", "")
+                caller_site_id = caller.get("site_id", "")
+
+                if caller_site_id:
+                    caller_site_name = self.sites.get(caller_site_id, "")
+                    metric_tags.append(f"caller_site_name:{caller_site_name}")
+                if caller_device_type:
+                    metric_tags.append(f"caller_device_type:{caller_device_type}")
+                if caller_extension_number:
+                    metric_tags.append(f"caller_extension_number:{caller_extension_number}")
+                if caller_isp:
+                    metric_tags.append(f"caller_isp:{caller_isp}")   
+                if caller_phone_number:
+                    metric_tags.append(f"caller_phone_number:{caller_phone_number}")
+                
+                self.gauge("call.count", 1, tags=metric_tags)
+                self.gauge("call.mean_opinion_score", mos, tags=metric_tags)
+                self.gauge("call.duration", duration, tags=metric_tags)
+
+            page_token = response.get("next_page_token", "")
+
+            # First break condition is we've hit old calls
+            if old_calls_break:
+                break
+            # Second is no more pages to parse
+            elif page_token == "":
+                break
+            # Otherwise make new request
+            else:
+                response = self.call_api(request_path, next_page_token=page_token, page_size=100)
+                
+    def get_rooms_metrics(self, base_tags):
         """Gets the metrics for each room such as component status, names, participants, etc..."""
-        if account_id:
-            request_path = "accounts/{}/metrics/zoomrooms".format(account_id)
-        else:
-            request_path = "metrics/zoomrooms"
+        request_path = "metrics/zoomrooms"
 
         #call to get location hierarchy
-        locations_dict = self.get_rooms_locations(account_id)
+        locations_dict = self.get_rooms_locations()
 
         # Rooms Health counts
         critical_rooms = 0
@@ -314,17 +533,17 @@ class ZoomCheck(AgentCheck):
                         metric_tags.append(tag)
                 
                 if room_name:
-                    metric_tags.append("zoom_room_name:{}".format(room_name))
+                    metric_tags.append(f"zoom_room_name:{room_name}")
                 if room_id:
-                    metric_tags.append("zoom_room_id:{}".format(room_id))
+                    metric_tags.append(f"zoom_room_id:{room_id}")
                 if device_ip:
-                    metric_tags.append("zoom_room_device_ip:{}".format(device_ip))
+                    metric_tags.append(f"zoom_room_device_ip:{device_ip}")
                 if camera:
-                    metric_tags.append("zoom_room_camera:{}".format(camera))
+                    metric_tags.append(f"zoom_room_camera:{camera}")
                 if microphone:
-                    metric_tags.append("zoom_room_microphone:{}".format(microphone))
+                    metric_tags.append(f"zoom_room_microphone:{microphone}")
                 if speaker:
-                    metric_tags.append("zoom_room_speaker:{}".format(speaker))
+                    metric_tags.append(f"zoom_room_speaker:{speaker}")
 
                 if self.room_only_mode:
                     self.gauge(self.billing_metric, 1, tags=metric_tags, raw=True)
@@ -403,14 +622,10 @@ class ZoomCheck(AgentCheck):
         self.gauge("room.status.count", rooms_under_construction, tags=metric_tags)
         metric_tags.remove("zoom_room_status:under_construction")
 
-    def get_rooms_locations(self, account_id):
+    def get_rooms_locations(self):
         """Gets the room locations that are currently present in the account and adds them to a list"""
-        if account_id:
-            locations_request_path = "accounts/{}/rooms/locations/".format(account_id)
-            structure_request_path = locations_request_path + "structure"
-        else:
-            locations_request_path = "rooms/locations/"
-            structure_request_path = locations_request_path + "structure"
+        locations_request_path = "rooms/locations/"
+        structure_request_path = locations_request_path + "structure"
 
         # Get all the locations structures in use from zoom
         # this is ordered with the first index being highest (e.g. country)
@@ -420,7 +635,10 @@ class ZoomCheck(AgentCheck):
         structure_dict = {}
 
         # Remove "room" since thats not a location type
-        structures.remove("room")
+        try:
+            structures.remove("room")
+        except Exception as e:
+            pass
 
         # Start building dict for structures 
         for structure in structures:
@@ -480,8 +698,8 @@ class ZoomCheck(AgentCheck):
                 is_bandwidth_ok = 0
 
         metric_tags = base_tags.copy()
-        metric_tags.append("zoom_room_name:{}".format(room_name))
-        metric_tags.append("zoom_room_id:{}".format(room_id))
+        metric_tags.append(f"zoom_room_name:{room_name}")
+        metric_tags.append(f"zoom_room_id:{room_id}")
 
         metric_tags.append("zoom_room_component:controller")
         self.gauge("room.component.status", room_controller_is_connected, tags=metric_tags)
@@ -507,15 +725,12 @@ class ZoomCheck(AgentCheck):
         self.gauge("room.component.status", is_bandwidth_ok, tags=metric_tags)
         metric_tags.remove("zoom_room_component:bandwidth")
 
-    def get_meetings(self, base_tags, account_id=None):
+    def get_meetings(self, base_tags):
         """Gets all the current meetings with the participants and calls the QOS function on each"""
-        if account_id:
-            request_path = "accounts/{}/metrics/meetings".format(account_id)
-        else:
-            request_path = "metrics/meetings"
+        request_path = "metrics/meetings"
         
         todays_date = str(datetime.date.today())
-        response = self.call_api(request_path, next_page_token="", from_date=todays_date, to_date=todays_date)
+        response = self.call_api(request_path, from_date=todays_date, to_date=todays_date)
 
         while True:
             meetings = response.get("meetings", [])
@@ -526,16 +741,16 @@ class ZoomCheck(AgentCheck):
                 
                 metric_tags = base_tags.copy()
                 
-                metric_tags.append("zoom_meeting_id:{}".format(meeting_id))
+                metric_tags.append(f"zoom_meeting_id:{meeting_id}")
 
                 if self.collect_usernames:
-                    metric_tags.append("zoom_meeting_host:{}".format(host_name))
+                    metric_tags.append(f"zoom_meeting_host:{host_name}")
 
                 # Get the QOS metrics for every particpant in the meeting
                 try:
-                    self.get_meeting_qos(meeting_id, host_name, metric_tags, account_id=account_id)
+                    self.get_meeting_qos(meeting_id, metric_tags)
                 except Exception as e:
-                    self.log.error("Get Meeting QOS FAILED. Caught exception: {}".format(e))
+                    self.log.error(f"Get Meeting QOS FAILED. Caught exception: {e}")
 
                 # Send in a count for this meeting 
                 self.gauge("meetings.count", 1, tags=metric_tags)
@@ -550,14 +765,11 @@ class ZoomCheck(AgentCheck):
             else:
                 response = self.call_api(request_path, next_page_token=page_token, from_date=todays_date, to_date=todays_date)
 
-    def get_meeting_qos(self, meeting_id, host_name, base_tags, account_id=None):
+    def get_meeting_qos(self, meeting_id, base_tags):
         """Gets the QOS for each participant in the current meeting"""
-        if account_id:
-            request_path = "accounts/{}/metrics/meetings/{}/participants/qos".format(account_id, meeting_id)
-        else:
-            request_path = "metrics/meetings/{}/participants/qos".format(meeting_id)
+        request_path = f"metrics/meetings/{meeting_id}/participants/qos"
         
-        response = self.call_api(request_path, next_page_token="", from_date="", to_date="", page_size=10)
+        response = self.call_api(request_path, page_size=10)
 
         # Base tags provided here should already have meeting id and host (if ingesting)
         base_metric_tags = base_tags.copy()
@@ -614,32 +826,27 @@ class ZoomCheck(AgentCheck):
 
                         # Only need users email if the users_to_track list is set
                         if self.users_to_track and user_id:
-                            if account_id:
-                                user_request_path = "accounts/{}/users/{}".format(account_id, user_id)
-                            else:
-                                user_request_path = "users/{}".format(user_id)                            
+                            user_request_path = f"users/{user_id}"                       
                             
                             # noinspection PyTypeChecker
-                            user_response = self.call_api(user_request_path, next_page_token="", from_date="", to_date="", page_size=None)
+                            user_response = self.call_api(user_request_path, page_size=None)
                             user_email = user_response.get("email", "")
 
                             if user_email:
-                                metric_tags.append("zoom_user_email:{}".format(user_email))
+                                metric_tags.append(f"zoom_user_email:{user_email}")
 
                         if user_location:
                             country = get_country(user_location)
-                            metric_tags.append("zoom_user_location:{}".format(user_location))
-                            metric_tags.append("zoom_user_country:{}".format(country))
-                        if domain:
-                            metric_tags.append("zoom_user_domain:{}".format(domain))
-                        if ip_address:
-                            metric_tags.append("zoom_user_ip:{}".format(ip_address))
-                        if data_center:
-                            metric_tags.append("zoom_user_data_center:{}".format(data_center))
-                        if network_type:
-                            metric_tags.append("zoom_user_network_type:{}".format(network_type))
+                            metric_tags.append(f"zoom_user_location:{user_location}")
+                            metric_tags.append(f"zoom_user_country:{country}")
+
+                        metric_tags.append(f"zoom_user_domain:{domain}")
+                        metric_tags.append(f"zoom_user_ip:{ip_address}")
+                        metric_tags.append(f"zoom_user_data_center:{data_center}")
+                        metric_tags.append(f"zoom_user_network_type:{network_type}")
+
                         if self.collect_usernames:
-                            metric_tags.append("zoom_user_name:{}".format(user_name))
+                            metric_tags.append(f"zoom_user_name:{user_name}")
 
                     if (self.users_to_track and user_email in self.users_to_track) or (not self.users_to_track):
                         self.gauge("users.in_meetings.count", 1, tags=metric_tags)
@@ -746,7 +953,7 @@ class ZoomCheck(AgentCheck):
             if page_token == "":
                 break
             else:
-                response = self.call_api(request_path, next_page_token=page_token, from_date="", to_date="", page_size=10)
+                response = self.call_api(request_path, next_page_token=page_token, page_size=10)
 
         if valid_audio_input_records > 0:
             avg_audio_input_avg_loss = calculate_average(audio_input_avg_loss, valid_audio_input_records)
@@ -819,52 +1026,43 @@ class ZoomCheck(AgentCheck):
         if max_loss:
             self.gauge("user.qos.max_loss", max_loss, tags=metric_tags)
 
-    def get_sub_accounts(self):
-        """Gets the sub accounts from Zoom API and returns the IDs as a list"""
-        request_path = "accounts/"
-        response = self.call_api(request_path)
-
-        account_ids = {}
-
-        while True:
-            accounts = response.get("accounts", [])
-
-            for account in accounts:
-                metric_tags = self.tags.copy()
-
-                account_id = account.get("id", "")
-                account_name = account.get("account_name", "")
-                account_owner = account.get("owner_email", "")
-                account_type = account.get("account_type", "")
-                account_seats = account.get("seats", 0)
-
-                # Only add account if it's not free, free accounts have minimal API access
-                if account_type != "free":
-                    account_ids[account_name] = account_id
-
-                if account_name:
-                    metric_tags.append("zoom_account_name:{}_sub-account".format(account_name))
-                if account_owner:
-                    metric_tags.append("zoom_sub_account_owner:{}".format(account_owner))
-                if account_type:
-                    metric_tags.append("zoom_sub_account_type:{}".format(account_type))
-                if account_seats:
-                    metric_tags.append("zoom_sub_account_seats:{}".format(account_seats))
-
-                self.gauge("sub_accounts.count", 1, tags=metric_tags)
-
-            page_token = response.get("next_page_token", "")
-
-            if page_token == "":
-                break
-            else:
-                response = self.call_api(request_path, next_page_token=page_token)
-        
-        return account_ids
-
     def reset_trackers(self):
         """Helper function that resets any desired values"""
         self.successful_api_calls = 0
         self.failed_api_calls = 0
         self.api_rate_limits_hit = 0
 
+    def read_from_cache(self):
+        # READ LASTEST STATE OF DICT FROM PERSISTENT STORAGE AND LOAD AS JSON
+        persistent = self.read_persistent_cache('dict')
+        # TRY TO LOAD CACHE AS JSON
+        try:
+            persistent = json.loads(persistent)
+        except ValueError:
+            persistent = {
+                'calls': {}
+            }
+            self.log.error(
+                f'ERROR READING PERSISTENT DICTIONARY TO JSON\nCREATING NEW DICT: {persistent}')
+
+        return persistent
+
+    def write_to_cache(self):
+        old_call_ids = set()
+
+        # Remove any call IDs older than today since these shouldn't show up in requests anymore
+        for call_id, call_time in self.persistent.get('calls', {}).items():
+
+            # Check if call time is older than 5 minutes of ingest period (for grace)
+            if call_time < (self.current_time - datetime.timedelta(minutes=(self.call_timer_ingest + 5))).strftime('%Y-%m-%dT%H:%M:%SZ'):
+                old_call_ids.add(call_id)
+
+        for old_id in old_call_ids:
+            del self.persistent['calls'][old_id]
+            self.log.info(f"Dropping call_id from cache: {old_id}")
+
+        try:
+            self.write_persistent_cache('dict', json.dumps(self.persistent))
+        except ValueError:
+            self.log.error(
+                f'ERROR WRITING DICTIONARY TO CACHE')

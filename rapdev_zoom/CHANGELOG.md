@@ -1,5 +1,10 @@
 # CHANGELOG - rapdev_zoom
 
+## 6.0.0 / 2023-05-19
+* [Added] Server-to-Server Zoom API OAuth support
+* [Added] Zoom Phone devices and calls ingestion with dashboard (with additional params)
+* [Removed] Master API Params (functionality still supported via instances)
+
 ## 5.3.0 / 2022-09-08
 * [Added] Fix for location hierarchy 
 * [Added] Increased support for user QOS metrics

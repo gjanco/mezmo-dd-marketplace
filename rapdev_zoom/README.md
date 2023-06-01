@@ -16,6 +16,7 @@ The Zoom Integration has the capability of monitoring Meetings, Rooms, Users, Ne
 3. RapDev Zoom Meeting Quality
 4. RapDev Zoom User Details
 5. RapDev Zoom Geo Overview
+6. RapDev Zoom Phones Overview
 
 ### Pricing
 ##### *Volume pricing is only available upon request through a private offer*
@@ -52,76 +53,41 @@ sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_
 ``` 
 
 ### Configuration
-1. Start by navigating to the [Zoom Marketplace][1] to generate an `API Key` and `API Secret` to authenticate to the Zoom API. 
+1. Start by navigating to the [Zoom Marketplace][1] to generate the authentication parameters for the integration. 
 
 2. Once there, click on `Develop` in the upper right hand-corner and then select `Build App`. If prompted, please sign in.
 
-3. If you don't already have `JWT` enabled under the JWT section, click on `Create`. Otherwise, select `View Here`.
+3. You can authenticate via `Server-to-Server OAuth` (recommended) or `JWT`: 
+  - <b>Server-To-Server OAuth</b>: 
+    1. Click `Create` under the `Server-to-Server OAuth` section. Begin by copying the 3 values under `App Credentials` into the Datadog Zoom configuration file and select `Continue`.
+    2. Enter the information for your app including `App Name` (such as Datadog Zoom integration), `Company Name`, your `Name`, and `Email`, and hit `Continue`. 
+    3. On the `Scopes` page, provide all `*:read:admin` permissions and hit `Continue`.
+    4. Finally, activate the application and your authentication setup should be good to go!
+  - <b>JWT</b>: If you don't already have `JWT` enabled under the JWT section, click `Create`. Otherwise, select `View Here`. You should see an `API Key` and an `API Secret` on the page.
+  
 
-4. You should see an `API Key` and an `API Secret` on the page. You will need to copy and paste both these values accordingly into your agent's zoom configuration file `conf.d/rapdev_zoom.d/conf.yaml`. 
-Finish the configuration by filling in your Zoom Account name. See below for an example:
+You will need to copy and paste both the values from above accordingly into your Agent's Zoom configuration file `conf.d/rapdev_zoom.d/conf.yaml`. 
+
+See the following for an example of each authentication type (there are many more parameters available in the configuration YAML file):
    
    ```
    init_config: 
    
    instances:
-     - base_api_url: "https://api.zoom.us/v2/"
-       api_key: <YOUR_API_KEY>
+    ## This is an example oAuth configuration
+     - account_id: <ACCOUNT_ID>
+       client_id: <CLIENT_ID>
+       client_secret: <CLIENT_SECRET>
+       authentication_type: "oauth"
+       account_name: <ACCOUNT_NAME_TAG>
+
+    ## This is an example JWT Configuration
+     - api_key: <YOUR_API_KEY>
        api_secret: <YOUR_API_SECRET>
        account_name: <YOUR_ACCOUNT_NAME>
-
-       # Set to true to collect only rooms metrics
-       room_only_mode: False
-
-       collect_usernames: True
-       collect_participant_details: True
-
-       # Only collect metrics on specific users (not required)
-       users_to_track:
-         - "bob_smith@myorg.com"
-         - "jane_doe@myorg.com"
-         - "my_user@myorg2.com"
    ```
    
-5. [Restart the Agent][2].
-
-#### Sub Account Data Ingestion
-
-When pulling data in for Zoom sub-accounts, you have two options:
-
-1. (Recommended) Log in to your sub-account using the owner email and generate an API key and secret for each sub-account (see steps above for how-to).
-Using your credentials, define an instance for each account in your `conf.yaml`. With this approach, each Zoom account has their own rate limit.
-See the example below for a correct minimal configuration for this setup (`master_api_mode` defaults to `False` so you are not required to include it here):
-
-    ```
-    init_config: 
-   
-    instances:
-      - base_api_url: "https://api.zoom.us/v2/"
-        api_key: <YOUR_API_KEY>
-        api_secret: <YOUR_API_SECRET>
-        account_name: <YOUR_ACCOUNT_NAME>
-
-      - base_api_url: "https://api.zoom.us/v2/"
-        api_key: <YOUR_API_KEY2>
-        api_secret: <YOUR_API_SECRET2>
-        account_name: <YOUR_ACCOUNT_NAME2>
-    ```
-
-2. Use the master account API credentials to access your sub-accounts. **Note**: This contributes towards the rate limit of the main account. It is only suggested that
-you use this approach if you don't have a limit on your Zoom API. To run in this mode, set the `master_api_mode` in the `conf.yaml` to `True`. The configuration for
-this would look similar to the following example:
-
-    ```
-    init_config: 
-   
-    instances:
-      - base_api_url: "https://api.zoom.us/v2/"
-        api_key: <YOUR_API_KEY>
-        api_secret: <YOUR_API_SECRET>
-        account_name: <YOUR_ACCOUNT_NAME>
-        master_api_mode: True
-    ```
+4. [Restart the Agent][2].
 
 ### Validation
 

@@ -8,56 +8,97 @@ files:
   - template: instances
     options:
       - name: base_api_url
-        required: true
+        required: false
         value:
           type: string
           example: https://api.zoom.us/v2/
         description: |
-          The API url that the agent needs to target to pull data from.
-      - name: api_key
-        required: true
+          The API URL that the Agent needs to target to pull data from.
+      - name: authentication_method
+        required: false
         value:
           type: string
+          default: jwt
+          example: jwt
         description: |
-          The Zoom Account API Key that the agent can use to generate a JWT token.
-      - name: api_secret
-        required: true
+          The type of authentication being used for Zoom's API ("oauth" or "jwt").
+      - name: account_id
+        required: false
         secret: true
         value:
           type: string
         description: |
-          The Zoom Account API Secret that the agent can use to encode a JWT token.
-      - name: account_name
-        required: true
+          If using Server-to-Server OAuth, the Zoom Account ID.
+      - name: client_id
+        required: false
+        secret: true
         value:
           type: string
         description: |
-          The name of the Zoom account. If running in "master api" mode this is the
+          If using Server-to-Server OAuth, the Zoom App Client ID.
+      - name: client_secret
+        required: false
+        secret: true
+        value:
+          type: string
+        description: |
+          If using Server-to-Server OAuth, the Zoom App Client Secret.  
+      - name: api_key
+        required: false
+        secret: true
+        value:
+          type: string
+        description: |
+          If using JWT, the Zoom Account API Key.
+      - name: api_secret
+        required: false
+        secret: true
+        value:
+          type: string
+        description: |
+          If using JWT, the Zoom Account API Secret.
+      - name: account_name
+        required: false
+        value:
+          type: string
+        description: |
+          The name of the Zoom account. If running in "master api" mode, this is the
           name of the master account.
-      - name: is_sub_account
-        required: false
-        value:
-          default: false
-          example: false
-          type: boolean
-        description: |
-          Whether this account is a "sub account". Set to true to append "_sub-account"
-          to the account name tag ingested with every metric for this account.
-      - name: master_api_mode
-        required: false
-        value:
-          default: false
-          example: false
-          type: boolean
-        description: |
-          When set to true, the integration collects metrics on sub-accounts. 
       - name: room_only_mode
         value:
           default: false
           example: false
           type: boolean
         description: |
-          When set to true, the integration collects data for Zoom rooms.
+          When set to true, the integration only collects data for Zoom Rooms.
+      - name: phone_only_mode
+        value:
+          default: false
+          example: false
+          type: boolean
+        description: |
+          When set to true, the integration only collects data for Zoom Phones.
+      - name: enable_phone_mode
+        value:
+          default: false
+          example: false
+          type: boolean
+        description: |
+          When set to true, will collect phone information on top of users, meetings, and rooms.
+      - name: enable_phone_call_logs
+        value:
+          default: false
+          example: false
+          type: boolean
+        description: |
+          When set to true, will collect phone call information on top of phone devices.
+      - name: call_timer_ingest
+        value:
+          default: 10
+          example: 10
+          type: integer
+        description: |
+          When collecting call logs, can set how far back to initially ingest call logs (in minutes).
       - name: collect_usernames
         value:
           example: true

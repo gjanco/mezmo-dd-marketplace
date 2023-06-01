@@ -10,8 +10,24 @@ def shared_service(field, value):
     return get_default_field_value(field, value)
 
 
+def instance_account_id(field, value):
+    return get_default_field_value(field, value)
+
+
+def instance_account_name(field, value):
+    return get_default_field_value(field, value)
+
+
 def instance_allow_redirects(field, value):
     return True
+
+
+def instance_api_key(field, value):
+    return get_default_field_value(field, value)
+
+
+def instance_api_secret(field, value):
+    return get_default_field_value(field, value)
 
 
 def instance_auth_token(field, value):
@@ -20,6 +36,10 @@ def instance_auth_token(field, value):
 
 def instance_auth_type(field, value):
     return 'basic'
+
+
+def instance_authentication_method(field, value):
+    return 'jwt'
 
 
 def instance_aws_host(field, value):
@@ -31,6 +51,22 @@ def instance_aws_region(field, value):
 
 
 def instance_aws_service(field, value):
+    return get_default_field_value(field, value)
+
+
+def instance_base_api_url(field, value):
+    return 'https://api.zoom.us/v2/'
+
+
+def instance_call_timer_ingest(field, value):
+    return 10
+
+
+def instance_client_id(field, value):
+    return get_default_field_value(field, value)
+
+
+def instance_client_secret(field, value):
     return get_default_field_value(field, value)
 
 
@@ -54,16 +90,20 @@ def instance_empty_default_hostname(field, value):
     return False
 
 
+def instance_enable_phone_call_logs(field, value):
+    return False
+
+
+def instance_enable_phone_mode(field, value):
+    return False
+
+
 def instance_extra_headers(field, value):
     return get_default_field_value(field, value)
 
 
 def instance_headers(field, value):
     return get_default_field_value(field, value)
-
-
-def instance_is_sub_account(field, value):
-    return False
 
 
 def instance_kerberos_auth(field, value):
@@ -98,10 +138,6 @@ def instance_log_requests(field, value):
     return False
 
 
-def instance_master_api_mode(field, value):
-    return False
-
-
 def instance_metric_patterns(field, value):
     return get_default_field_value(field, value)
 
@@ -119,6 +155,10 @@ def instance_password(field, value):
 
 
 def instance_persist_connections(field, value):
+    return False
+
+
+def instance_phone_only_mode(field, value):
     return False
 
 
