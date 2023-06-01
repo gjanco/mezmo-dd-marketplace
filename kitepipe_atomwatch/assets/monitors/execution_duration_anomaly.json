@@ -1,0 +1,30 @@
+{
+	"name": "AtomWatch: Execution Duration Anomaly",
+	"type": "query alert",
+	"query": "avg(last_1w):anomalies(avg:kitepipe.atomwatch.execution.measure.duration{*} by {boomi.process.name}, 'agile', 3, direction='above', interval=3600, alert_window='last_1d', count_default_zero='true', seasonality='weekly') >= 1",
+	"message": "{{#is_alert}}Currently in alert.{{/is_alert}}\n\n{{#is_alert_recovery}}Currently in recovery.{{/is_alert_recovery}}",
+	"tags": ["integration:kitepipe-atomwatch"],
+	"options": {
+		"thresholds": {
+			"critical": 1,
+			"critical_recovery": 0
+		},
+		"notify_audit": false,
+		"require_full_window": false,
+		"notify_no_data": false,
+		"no_data_timeframe": 10,
+		"renotify_interval": 0,
+		"threshold_windows": {
+			"trigger_window": "last_1d",
+			"recovery_window": "last_15m"
+		},
+		"include_tags": true,
+		"new_group_delay": 60,
+		"silenced": {}
+	},
+	"priority": null,
+	"restricted_roles": null,
+	"recommended_monitor_metadata": {
+		"description": "Detects long- and short-running executions."
+	}
+}

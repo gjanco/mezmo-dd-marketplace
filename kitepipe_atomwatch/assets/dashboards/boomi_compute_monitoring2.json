@@ -1,0 +1,1085 @@
+{
+	"title": "Boomi Compute Monitoring",
+	"description": "## Description\nMonitors key resource metrics from your servers hosting the Boomi runtimes.  ",
+	"widgets": [{
+		"id": 5598283888245340,
+		"definition": {
+			"title": "Boomi Runtime Server Health Overview",
+			"background_color": "green",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 5964552841613943,
+				"definition": {
+					"type": "image",
+					"url": "https://kitepipe-marketplace-public.s3.amazonaws.com/mcs/atomwatch_logo.png",
+					"url_dark_theme": "https://kitepipe-marketplace-public.s3.amazonaws.com/mcs/AtomWatch+WHITE+-+Transparent+bkg.png",
+					"sizing": "contain",
+					"has_background": false,
+					"has_border": false,
+					"vertical_align": "center",
+					"horizontal_align": "center"
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 3,
+					"height": 1
+				}
+			},
+			{
+				"id": 6211278440885832,
+				"definition": {
+					"title": "Hosts with DD Agent Up",
+					"title_size": "13",
+					"title_align": "center",
+					"type": "check_status",
+					"check": "datadog.agent.up",
+					"grouping": "cluster",
+					"group_by": [],
+					"tags": ["integration:kitepipe-atomwatch"]
+				},
+				"layout": {
+					"x": 3,
+					"y": 0,
+					"width": 4,
+					"height": 2
+				}
+			},
+			{
+				"id": 4941547019931460,
+				"definition": {
+					"title": "Hosts with DD Agent Running",
+					"title_size": "13",
+					"title_align": "left",
+					"type": "query_value",
+					"requests": [{
+						"formulas": [{
+							"formula": "query1"
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "sum:datadog.agent.running{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "max"
+						}]
+					}],
+					"autoscale": true,
+					"text_align": "center",
+					"precision": 2
+				},
+				"layout": {
+					"x": 7,
+					"y": 0,
+					"width": 5,
+					"height": 2
+				}
+			},
+			{
+				"id": 399098669542769,
+				"definition": {
+					"type": "note",
+					"content": "[Help for this page](https://atomwatch.refined.site/space/CS/11108679/Boomi+Infrastructure+Monitoring+Dashboard)",
+					"background_color": "vivid_blue",
+					"font_size": "14",
+					"text_align": "center",
+					"vertical_align": "top",
+					"show_tick": false,
+					"tick_pos": "50%",
+					"tick_edge": "left",
+					"has_padding": true
+				},
+				"layout": {
+					"x": 0,
+					"y": 1,
+					"width": 3,
+					"height": 1
+				}
+			},
+			{
+				"id": 6759302869099248,
+				"definition": {
+					"title": "Host Map - CPU Usage",
+					"title_size": "16",
+					"title_align": "left",
+					"type": "hostmap",
+					"requests": {
+						"fill": {
+							"q": "min:system.cpu.idle{integration:kitepipe-atomwatch,$env,$boomi-hostname,$boomi_runtime_type} by {host}"
+						}
+					},
+					"node_type": "host",
+					"no_metric_hosts": true,
+					"no_group_hosts": true,
+					"group": ["env",
+					"role",
+					"boomi-hostname"],
+					"scope": ["integration:kitepipe-atomwatch",
+					"$env",
+					"$boomi-hostname",
+					"$boomi_runtime_type"],
+					"style": {
+						"palette": "green_to_orange",
+						"palette_flip": true,
+						"fill_min": "0",
+						"fill_max": "1"
+					}
+				},
+				"layout": {
+					"x": 0,
+					"y": 2,
+					"width": 7,
+					"height": 4
+				}
+			},
+			{
+				"id": 4832156751777392,
+				"definition": {
+					"title": "Hosts Up by Environment and Role",
+					"type": "treemap",
+					"requests": [{
+						"formulas": [{
+							"formula": "query1"
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "sum:datadog.agent.running{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {env,role}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "max"
+						}]
+					}]
+				},
+				"layout": {
+					"x": 7,
+					"y": 2,
+					"width": 5,
+					"height": 4
+				}
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 0,
+			"width": 12,
+			"height": 7
+		}
+	},
+	{
+		"id": 2602400150279726,
+		"definition": {
+			"title": "Network Performance",
+			"background_color": "vivid_yellow",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 602552310019958,
+				"definition": {
+					"type": "note",
+					"content": "\nThese metrics report the network throughput, in bytes, of your instances. Drops or fluctuations can be correlated with other application-level metrics to pinpoint possible issues.",
+					"background_color": "yellow",
+					"font_size": "14",
+					"text_align": "left",
+					"vertical_align": "center",
+					"show_tick": false,
+					"tick_pos": "50%",
+					"tick_edge": "bottom",
+					"has_padding": true
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 6,
+					"height": 2
+				}
+			},
+			{
+				"id": 6821338331401118,
+				"definition": {
+					"title": "Total Network In",
+					"title_size": "13",
+					"title_align": "left",
+					"type": "query_value",
+					"requests": [{
+						"formulas": [{
+							"formula": "query1"
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "sum:system.net.bytes_rcvd{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "sum"
+						}]
+					}],
+					"autoscale": true,
+					"precision": 1
+				},
+				"layout": {
+					"x": 6,
+					"y": 0,
+					"width": 3,
+					"height": 2
+				}
+			},
+			{
+				"id": 2724241497375432,
+				"definition": {
+					"title": "Total Network Out",
+					"title_size": "13",
+					"title_align": "left",
+					"type": "query_value",
+					"requests": [{
+						"formulas": [{
+							"formula": "query1"
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "sum:system.net.bytes_sent{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "sum"
+						}]
+					}],
+					"autoscale": true,
+					"precision": 1
+				},
+				"layout": {
+					"x": 9,
+					"y": 0,
+					"width": 3,
+					"height": 2
+				}
+			},
+			{
+				"id": 7755909043463084,
+				"definition": {
+					"title": "Network In by Host - Top 5",
+					"title_size": "13",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"formula": "top(query1, 5, 'mean', 'desc')"
+						}],
+						"queries": [{
+							"query": "avg:system.net.bytes_rcvd{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "blue",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"custom_links": []
+				},
+				"layout": {
+					"x": 0,
+					"y": 2,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 1360387173410916,
+				"definition": {
+					"title": "Network In by Host - Top 5 - Last 5 Minutes",
+					"title_size": "13",
+					"title_align": "left",
+					"time": {
+						"live_span": "5m"
+					},
+					"type": "query_table",
+					"requests": [{
+						"formulas": [{
+							"alias": "Average Bytes",
+							"formula": "query1",
+							"limit": {
+								"count": 5,
+								"order": "desc"
+							}
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "avg:system.net.bytes_rcvd{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "avg"
+						}]
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 2,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 798350065596464,
+				"definition": {
+					"title": "Network Out by Host - Top 5",
+					"title_size": "13",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"formula": "top(query1, 5, 'mean', 'desc')"
+						}],
+						"queries": [{
+							"query": "avg:system.net.bytes_sent{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "red",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"custom_links": []
+				},
+				"layout": {
+					"x": 0,
+					"y": 5,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 4527524803376124,
+				"definition": {
+					"title": "Network Out by Host - Top 5 - Last 5 Minutes",
+					"title_size": "13",
+					"title_align": "left",
+					"time": {
+						"live_span": "5m"
+					},
+					"type": "query_table",
+					"requests": [{
+						"formulas": [{
+							"alias": "Average Bytes",
+							"formula": "query1",
+							"limit": {
+								"count": 5,
+								"order": "desc"
+							}
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "avg:system.net.bytes_sent{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "avg"
+						}]
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 5,
+					"width": 6,
+					"height": 3
+				}
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 7,
+			"width": 12,
+			"height": 9
+		}
+	},
+	{
+		"id": 4854325100873916,
+		"definition": {
+			"title": "CPU",
+			"background_color": "vivid_blue",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 777534401171686,
+				"definition": {
+					"title": "CPU Utilization by Host - Top 5",
+					"title_size": "13",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"alias": "CPU Used %",
+							"formula": "top(query1, 5, 'mean', 'desc') + top(query2, 5, 'mean', 'desc')"
+						}],
+						"queries": [{
+							"query": "avg:system.cpu.user{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						},
+						{
+							"query": "avg:system.cpu.system{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query2"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"markers": [{
+						"label": " Max CPU ",
+						"value": "y = 100",
+						"display_type": "error dashed"
+					},
+					{
+						"label": "CPU Warning",
+						"value": "y = 80",
+						"display_type": "warning dashed"
+					}],
+					"custom_links": []
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 6,
+					"height": 4
+				}
+			},
+			{
+				"id": 6586391600184304,
+				"definition": {
+					"title": "CPU Utilization by Host - Top 5 - Last 5 Minutes",
+					"title_size": "16",
+					"title_align": "left",
+					"time": {
+						"live_span": "5m"
+					},
+					"type": "query_table",
+					"requests": [{
+						"formulas": [{
+							"alias": "CPU Used %",
+							"formula": "query2 + query1",
+							"limit": {
+								"count": 5,
+								"order": "desc"
+							}
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "avg:system.cpu.user{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query2",
+							"aggregator": "avg"
+						},
+						{
+							"query": "avg:system.cpu.system{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "avg"
+						}]
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 0,
+					"width": 6,
+					"height": 4
+				}
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 16,
+			"width": 12,
+			"height": 5
+		}
+	},
+	{
+		"id": 8830640349795874,
+		"definition": {
+			"title": "Host Metrics",
+			"background_color": "vivid_purple",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 4148570508886194,
+				"definition": {
+					"title": "Memory Used %",
+					"show_legend": true,
+					"legend_layout": "auto",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"alias": "Pct. Memory Used",
+							"formula": "1 - query1"
+						}],
+						"queries": [{
+							"query": "max:system.mem.pct_usable{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"markers": [{
+						"label": " Out of Memory ",
+						"value": "y = 1",
+						"display_type": "error dashed"
+					},
+					{
+						"label": " Memory Warning ",
+						"value": "y = 0.8",
+						"display_type": "warning dashed"
+					}]
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 7833989929785484,
+				"definition": {
+					"title": "Disk Used %",
+					"show_legend": true,
+					"legend_layout": "auto",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"formula": "query1"
+						}],
+						"queries": [{
+							"query": "max:system.disk.in_use{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"markers": [{
+						"label": " Disk Full ",
+						"value": "y = 1",
+						"display_type": "error dashed"
+					},
+					{
+						"label": "Disk Warning",
+						"value": "y = 0.8",
+						"display_type": "warning dashed"
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 0,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 1824936286196414,
+				"definition": {
+					"title": "Used Swap %",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"alias": "Used Swap %",
+							"formula": "1 - query1"
+						}],
+						"queries": [{
+							"query": "avg:system.swap.pct_free{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"markers": [{
+						"label": " Out of Swap ",
+						"value": "y = 1",
+						"display_type": "error dashed"
+					},
+					{
+						"label": " Low Swap Warning ",
+						"value": "y = 0.8",
+						"display_type": "warning dashed"
+					}]
+				},
+				"layout": {
+					"x": 0,
+					"y": 3,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 2974238820069780,
+				"definition": {
+					"title": "Waiting for IO %",
+					"show_legend": true,
+					"legend_layout": "auto",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"alias": "Await Time",
+							"formula": "query2"
+						}],
+						"queries": [{
+							"query": "max:system.cpu.iowait{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query2"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 3,
+					"width": 6,
+					"height": 3
+				}
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 0,
+			"width": 12,
+			"height": 7,
+			"is_column_break": true
+		}
+	},
+	{
+		"id": 3218228010526868,
+		"definition": {
+			"title": "Disk Performance",
+			"background_color": "vivid_orange",
+			"show_title": true,
+			"type": "group",
+			"layout_type": "ordered",
+			"widgets": [{
+				"id": 8113155050172662,
+				"definition": {
+					"type": "note",
+					"content": "This metric pair can help determine if degraded performance is the result of consistently high storage throughput and/or IOPS, causing bottlenecks as disk requests become queued. These metrics can help you see when moving to faster provisioned disk storage is necessary.",
+					"background_color": "orange",
+					"font_size": "14",
+					"text_align": "left",
+					"vertical_align": "center",
+					"show_tick": true,
+					"tick_pos": "50%",
+					"tick_edge": "bottom",
+					"has_padding": true
+				},
+				"layout": {
+					"x": 0,
+					"y": 0,
+					"width": 12,
+					"height": 1
+				}
+			},
+			{
+				"id": 7039203707836940,
+				"definition": {
+					"title": "Disk Reads in KB/s by Host - Top 5",
+					"title_size": "13",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"formula": "top(query1, 5, 'mean', 'desc')"
+						}],
+						"queries": [{
+							"query": "avg:system.io.rkb_s{integration:kitepipe-atomwatch,$env,$boomi-hostname,$boomi_runtime_type} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"custom_links": []
+				},
+				"layout": {
+					"x": 0,
+					"y": 1,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 7196831557446260,
+				"definition": {
+					"title": "Disk Reads in KB/s by Host - Last 5 Minutes",
+					"title_size": "13",
+					"title_align": "left",
+					"time": {
+						"live_span": "5m"
+					},
+					"type": "query_table",
+					"requests": [{
+						"formulas": [{
+							"alias": "Average Rate",
+							"formula": "query1",
+							"limit": {
+								"count": 5,
+								"order": "desc"
+							}
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "avg:system.io.rkb_s{integration:kitepipe-atomwatch,$env,$boomi-hostname,$boomi_runtime_type} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "avg"
+						}]
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 1,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 7770875801336088,
+				"definition": {
+					"title": "Disk Writes in KB/s by Host - Top 5",
+					"title_size": "13",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"formula": "top(query1, 5, 'mean', 'desc')"
+						}],
+						"response_format": "timeseries",
+						"queries": [{
+							"query": "avg:system.io.wkb_s{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch,$boomi-hostname} by {name,boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						}],
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"custom_links": []
+				},
+				"layout": {
+					"x": 0,
+					"y": 4,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 929772352936484,
+				"definition": {
+					"title": "Disk Writes in KB/s by Host - Last 5 Minutes",
+					"title_size": "13",
+					"title_align": "left",
+					"time": {
+						"live_span": "5m"
+					},
+					"type": "query_table",
+					"requests": [{
+						"formulas": [{
+							"alias": "Average Rate",
+							"formula": "query1",
+							"limit": {
+								"count": 5,
+								"order": "desc"
+							}
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "avg:system.io.wkb_s{$boomi-hostname,$env,$boomi_runtime_type} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "avg"
+						}]
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 4,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 5467265667468778,
+				"definition": {
+					"title": "Disk Read IOs by Host - Top 5",
+					"title_size": "13",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"formula": "top(query1, 5, 'mean', 'desc')"
+						}],
+						"queries": [{
+							"query": "avg:system.io.r_s{integration:kitepipe-atomwatch,$env,$boomi-hostname,$boomi_runtime_type} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"custom_links": []
+				},
+				"layout": {
+					"x": 0,
+					"y": 7,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 554311741474266,
+				"definition": {
+					"title": "Disk Read IOs by Host - Last 5 Minutes",
+					"title_size": "13",
+					"title_align": "left",
+					"time": {
+						"live_span": "5m"
+					},
+					"type": "query_table",
+					"requests": [{
+						"formulas": [{
+							"alias": "Average Rate",
+							"formula": "query1",
+							"limit": {
+								"count": 5,
+								"order": "desc"
+							}
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "avg:system.io.r_s{integration:kitepipe-atomwatch,$env,$boomi-hostname,$boomi_runtime_type} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "avg"
+						}]
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 7,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 2789808721480636,
+				"definition": {
+					"title": "Disk Write IOs by Host - Top 5",
+					"title_size": "13",
+					"title_align": "left",
+					"show_legend": true,
+					"legend_layout": "horizontal",
+					"legend_columns": ["avg",
+					"min",
+					"max",
+					"value",
+					"sum"],
+					"type": "timeseries",
+					"requests": [{
+						"formulas": [{
+							"formula": "top(query1, 5, 'mean', 'desc')"
+						}],
+						"queries": [{
+							"query": "avg:system.io.w_s{$boomi-hostname,$env,$boomi_runtime_type,integration:kitepipe-atomwatch} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1"
+						}],
+						"response_format": "timeseries",
+						"style": {
+							"palette": "dog_classic",
+							"line_type": "solid",
+							"line_width": "normal"
+						},
+						"display_type": "line"
+					}],
+					"custom_links": []
+				},
+				"layout": {
+					"x": 0,
+					"y": 10,
+					"width": 6,
+					"height": 3
+				}
+			},
+			{
+				"id": 3972204163040440,
+				"definition": {
+					"title": "Disk Write IOs by Host - Last 5 Minutes",
+					"title_size": "13",
+					"title_align": "left",
+					"time": {
+						"live_span": "5m"
+					},
+					"type": "query_table",
+					"requests": [{
+						"formulas": [{
+							"alias": "Average Rate",
+							"formula": "query1",
+							"limit": {
+								"count": 5,
+								"order": "desc"
+							}
+						}],
+						"response_format": "scalar",
+						"queries": [{
+							"query": "avg:system.io.w_s{integration:kitepipe-atomwatch,$env,$boomi-hostname,$boomi_runtime_type} by {boomi-hostname}",
+							"data_source": "metrics",
+							"name": "query1",
+							"aggregator": "avg"
+						}]
+					}]
+				},
+				"layout": {
+					"x": 6,
+					"y": 10,
+					"width": 6,
+					"height": 3
+				}
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 7,
+			"width": 12,
+			"height": 14
+		}
+	}],
+	"template_variables": [{
+		"name": "env",
+		"prefix": "env",
+		"available_values": [],
+		"default": "*"
+	},
+	{
+		"name": "boomi-hostname",
+		"prefix": "boomi-hostname",
+		"available_values": [],
+		"default": "*"
+	},
+	{
+		"name": "boomi_runtime_type",
+		"prefix": "role",
+		"available_values": [],
+		"default": "*"
+	}],
+	"layout_type": "ordered",
+	"is_read_only": true,
+	"notify_list": [],
+	"reflow_type": "fixed"
+}

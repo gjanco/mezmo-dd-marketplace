@@ -1,0 +1,80 @@
+name: AtomWatch
+files:
+- name: kitepipe_atomwatch.yaml
+  options:
+  - template: init_config
+    options:
+    - template: init_config/default
+  - template: instances
+    options:
+    - name: dd_api_key
+      required: true
+      description: Datadog API Key.
+      secret: true
+      value: 
+        type: string
+        example: <API_KEY>
+    - name: boomi_api_url
+      required: false
+      description: Protocol and host for the Boomi AtomSphere API. Omit to skip Boomi API calls.
+      value: 
+        type: string
+        example: https://api.boomi.com
+    - name: boomi_api_userid
+      required: false
+      description: User login ID on the Boomi AtomSphere platform to be used for making AtomSphere API calls.
+      value: 
+        type: string
+        example: service-user@yourdomain.com
+    - name: boomi_api_token
+      required: false
+      description: API token for the user specified in `boomi_api_userid`.
+      secret: true
+      value: 
+        type: string
+        example: <GUID>
+    - name: boomi_account_id
+      required: false
+      description: Client's Boomi Account ID (found in the URL when logged in to Boomi AtomSphere).
+      value: 
+        type: string
+        example: <ACCOUNT_ID>
+    - name: boomi_atom_or_molecule_install_dir
+      required: true
+      description: Boomi Atom or Molecule installation directory.
+      value: 
+        type: string
+        example: <some absolute disk path>
+    - name: boomi_molecule_node_id
+      description: Boomi Molecule node ID as seen in the Cluster Status page. Leave empty if this server is not a molecule node.
+      multiple: false
+      required: false
+      value:
+        type: string
+        example: "10_10_0_1"
+    - name: boomi_api_gateway_install_dir
+      required: false
+      description: Second Boomi installation directory used for monitoring the API Gateway cluster status.
+      value: 
+        type: string
+        example: <some absolute disk path>
+    - name: boomi_api_gateway_node_id
+      description: API Gateway node ID as seen in the Cluster Status page. Leave empty if this server is not an API Gateway node.
+      multiple: false
+      required: false
+      value:
+        type: string
+        example: "10_10_1_1"
+    - name: seconds_of_lag
+      required: true
+      description: Query Boomi API with "n" seconds of lag to prevent querying too many in-progress executions.
+      value: 
+        type: integer
+        example: 300
+    - name: min_boomi_api_interval
+      required: true
+      description: How often to query the Boomi API. Querying more often than every 5 minutes (300 seconds) is not supported.
+      value: 
+        type: integer
+        example: 300
+    - template: instances/default

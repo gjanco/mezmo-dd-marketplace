@@ -1,0 +1,442 @@
+{
+	"title": "AtomWatch Overview",
+	"description": "Summary dashboard for a high-level view of Infrastructure, Cluster, and Workload metrics.",
+	"widgets": [{
+		"id": 5427325397209201,
+		"definition": {
+			"type": "note",
+			"content": "[Help for this page](https://atomwatch.refined.site/space/CS/11108395/AtomWatch+Overview+Dashboard)",
+			"background_color": "vivid_blue",
+			"font_size": "16",
+			"text_align": "center",
+			"vertical_align": "center",
+			"show_tick": false,
+			"tick_pos": "50%",
+			"tick_edge": "left",
+			"has_padding": true
+		},
+		"layout": {
+			"x": 0,
+			"y": 0,
+			"width": 2,
+			"height": 1
+		}
+	},
+	{
+		"id": 4259796953019792,
+		"definition": {
+			"type": "note",
+			"content": "[AtomWatch Boomi Workload Monitoring](/dash/integration/AtomWatch%20Boomi%20Workload%20Monitoring)",
+			"background_color": "vivid_blue",
+			"font_size": "18",
+			"text_align": "left",
+			"vertical_align": "center",
+			"show_tick": true,
+			"tick_pos": "50%",
+			"tick_edge": "bottom",
+			"has_padding": true
+		},
+		"layout": {
+			"x": 2,
+			"y": 0,
+			"width": 6,
+			"height": 1
+		}
+	},
+	{
+		"id": 7070504742684021,
+		"definition": {
+			"type": "note",
+			"content": "[AtomWatch Boomi Cluster Monitoring](/dash/integration/AtomWatch%20Boomi%20Cluster%20Monitoring)",
+			"background_color": "vivid_blue",
+			"font_size": "18",
+			"text_align": "left",
+			"vertical_align": "center",
+			"show_tick": true,
+			"tick_pos": "50%",
+			"tick_edge": "bottom",
+			"has_padding": true
+		},
+		"layout": {
+			"x": 8,
+			"y": 0,
+			"width": 4,
+			"height": 1
+		}
+	},
+	{
+		"id": 850392229666094,
+		"definition": {
+			"type": "image",
+			"url": "https://kitepipe-marketplace-public.s3.amazonaws.com/mcs/atomwatch_logo.png",
+			"url_dark_theme": "https://kitepipe-marketplace-public.s3.amazonaws.com/mcs/AtomWatch+WHITE+-+Transparent+bkg.png",
+			"sizing": "contain",
+			"has_background": false,
+			"has_border": false,
+			"vertical_align": "center",
+			"horizontal_align": "center"
+		},
+		"layout": {
+			"x": 0,
+			"y": 1,
+			"width": 2,
+			"height": 2
+		}
+	},
+	{
+		"id": 7831211038302684,
+		"definition": {
+			"title": "AtomWatch running?",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "check_status",
+			"check": "kitepipe.atomwatch.completed",
+			"grouping": "cluster",
+			"group_by": ["boomi-hostname",
+			"cluster_node_id"],
+			"tags": ["service_check:true"]
+		},
+		"layout": {
+			"x": 2,
+			"y": 1,
+			"width": 2,
+			"height": 1
+		}
+	},
+	{
+		"id": 5755658512427087,
+		"definition": {
+			"title": "Boomi running?",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "check_status",
+			"check": "kitepipe.atomwatch.boomi_daemon_running",
+			"grouping": "cluster",
+			"group_by": ["boomi-hostname"],
+			"tags": ["service_check:true"]
+		},
+		"layout": {
+			"x": 4,
+			"y": 1,
+			"width": 2,
+			"height": 1
+		}
+	},
+	{
+		"id": 4592785295734301,
+		"definition": {
+			"title": "Found Executions?",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "check_status",
+			"check": "kitepipe.atomwatch.found_boomi_executions",
+			"grouping": "cluster",
+			"group_by": ["cluster_node_id",
+			"boomi-hostname"],
+			"tags": ["service_check:true"]
+		},
+		"layout": {
+			"x": 6,
+			"y": 1,
+			"width": 2,
+			"height": 1
+		}
+	},
+	{
+		"id": 7665629557370386,
+		"definition": {
+			"title": "\"View File\" age in seconds",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "alert_graph",
+			"alert_id": "TBD",
+			"viz_type": "timeseries"
+		},
+		"layout": {
+			"x": 8,
+			"y": 1,
+			"width": 4,
+			"height": 2
+		}
+	},
+	{
+		"id": 6415640872796048,
+		"definition": {
+			"title": "Count of Errored Executions",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "toplist",
+			"requests": [{
+				"formulas": [{
+					"formula": "cutoff_min(query1, 1)",
+					"limit": {
+						"count": 10,
+						"order": "desc"
+					}
+				}],
+				"conditional_formats": [{
+					"comparator": ">",
+					"palette": "white_on_red",
+					"value": 0
+				}],
+				"response_format": "scalar",
+				"queries": [{
+					"search": {
+						"query": "@executionStatus:error"
+					},
+					"data_source": "logs",
+					"compute": {
+						"aggregation": "count"
+					},
+					"name": "query1",
+					"storage": "hot",
+					"indexes": ["*"],
+					"group_by": [{
+						"facet": "@boomiProcessName",
+						"sort": {
+							"aggregation": "count",
+							"order": "desc"
+						},
+						"limit": 10
+					}]
+				}]
+			}]
+		},
+		"layout": {
+			"x": 2,
+			"y": 2,
+			"width": 3,
+			"height": 3
+		}
+	},
+	{
+		"id": 5055213358200747,
+		"definition": {
+			"title": "Execution Duration Anomaly",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "alert_graph",
+			"alert_id": "TBD",
+			"viz_type": "timeseries"
+		},
+		"layout": {
+			"x": 5,
+			"y": 2,
+			"width": 3,
+			"height": 3
+		}
+	},
+	{
+		"id": 5771519119750741,
+		"definition": {
+			"title": "",
+			"type": "manage_status",
+			"display_format": "counts",
+			"color_preference": "text",
+			"hide_zero_counts": true,
+			"query": "Runtime Online Status",
+			"sort": "status,asc",
+			"count": 50,
+			"start": 0,
+			"summary_type": "groups",
+			"show_priority": false,
+			"show_last_triggered": false
+		},
+		"layout": {
+			"x": 0,
+			"y": 3,
+			"width": 2,
+			"height": 2
+		}
+	},
+	{
+		"id": 1928272997432144,
+		"definition": {
+			"title": "Cluster \"Problem\" Value, Node ID",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "toplist",
+			"requests": [{
+				"formulas": [{
+					"formula": "query1",
+					"limit": {
+						"order": "desc"
+					}
+				}],
+				"conditional_formats": [{
+					"comparator": ">",
+					"palette": "white_on_red",
+					"value": 0
+				},
+				{
+					"comparator": "<=",
+					"palette": "white_on_green",
+					"value": 0
+				}],
+				"response_format": "scalar",
+				"queries": [{
+					"query": "sum:kitepipe.atomwatch.view_file_problem{*} by {cluster_problem,cluster_node_id}",
+					"data_source": "metrics",
+					"name": "query1",
+					"aggregator": "max"
+				}]
+			}]
+		},
+		"layout": {
+			"x": 8,
+			"y": 3,
+			"width": 4,
+			"height": 2
+		}
+	},
+	{
+		"id": 5798168220810728,
+		"definition": {
+			"type": "note",
+			"content": "[AtomWatch Boomi Compute Monitoring](/dash/integration/AtomWatch%20Boomi%20Compute%20Monitoring)",
+			"background_color": "vivid_blue",
+			"font_size": "18",
+			"text_align": "center",
+			"vertical_align": "center",
+			"show_tick": true,
+			"tick_pos": "50%",
+			"tick_edge": "bottom",
+			"has_padding": true
+		},
+		"layout": {
+			"x": 0,
+			"y": 5,
+			"width": 12,
+			"height": 1
+		}
+	},
+	{
+		"id": 5058680157685232,
+		"definition": {
+			"title": "Hosts with DD Agent Up",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "check_status",
+			"check": "datadog.agent.up",
+			"grouping": "cluster",
+			"group": "availability-zone:us-east-1a,aws_account:117231210219,boomi-hostname:_ip-10-1-0-84.ec2.internal,boomi_runtime_type:molecule,customer:kitepipemcs,dd_collect:true,env:sandbox,host:i-0f9e1388cc4075f01,iam_profile:ssm_profile-20220418233400961800000006,image:ami-033f230e26210618e,instance-type:t3a.medium,integration:kitepipe-atomwatch,kernel:none,name:boomi-molecule-head-kitepipemcs-sandbox,patch_group:amazon_linux_2,region:us-east-1,role:molecule,security-group:sg-06929fe95561355f8,security-group:sg-0f8a0ad56298ec763",
+			"group_by": [],
+			"tags": ["integration:kitepipe-atomwatch"]
+		},
+		"layout": {
+			"x": 0,
+			"y": 6,
+			"width": 3,
+			"height": 1
+		}
+	},
+	{
+		"id": 252716076673644,
+		"definition": {
+			"title": "Host Map - CPU Usage",
+			"title_size": "16",
+			"title_align": "left",
+			"type": "hostmap",
+			"requests": {
+				"fill": {
+					"q": "min:system.cpu.idle{integration:kitepipe-atomwatch} by {host}"
+				}
+			},
+			"node_type": "host",
+			"no_metric_hosts": true,
+			"no_group_hosts": true,
+			"group": ["env",
+			"role",
+			"boomi-hostname"],
+			"scope": ["integration:kitepipe-atomwatch"],
+			"style": {
+				"palette": "green_to_orange",
+				"palette_flip": true,
+				"fill_min": "0",
+				"fill_max": "1"
+			}
+		},
+		"layout": {
+			"x": 3,
+			"y": 6,
+			"width": 3,
+			"height": 4
+		}
+	},
+	{
+		"id": 363405594595355,
+		"definition": {
+			"title": "Boomi Cluster View Files",
+			"type": "manage_status",
+			"display_format": "countsAndList",
+			"color_preference": "text",
+			"hide_zero_counts": true,
+			"query": "Boomi Cluster",
+			"sort": "triggered,desc",
+			"count": 50,
+			"start": 0,
+			"summary_type": "monitors",
+			"show_priority": false,
+			"show_last_triggered": true
+		},
+		"layout": {
+			"x": 6,
+			"y": 6,
+			"width": 3,
+			"height": 4
+		}
+	},
+	{
+		"id": 7045626875223458,
+		"definition": {
+			"title": "Boomi Server Health",
+			"type": "manage_status",
+			"display_format": "countsAndList",
+			"color_preference": "text",
+			"hide_zero_counts": true,
+			"query": "\"AtomWatch: Infrastructure:\"",
+			"sort": "triggered,desc",
+			"count": 50,
+			"start": 0,
+			"summary_type": "monitors",
+			"show_priority": false,
+			"show_last_triggered": true
+		},
+		"layout": {
+			"x": 9,
+			"y": 6,
+			"width": 3,
+			"height": 4
+		}
+	},
+	{
+		"id": 685556709028785,
+		"definition": {
+			"title": "Hosts Up by Environment and Role",
+			"type": "treemap",
+			"requests": [{
+				"formulas": [{
+					"formula": "query1"
+				}],
+				"response_format": "scalar",
+				"queries": [{
+					"query": "sum:datadog.agent.running{integration:kitepipe-atomwatch} by {env,role}",
+					"data_source": "metrics",
+					"name": "query1",
+					"aggregator": "max"
+				}]
+			}]
+		},
+		"layout": {
+			"x": 0,
+			"y": 7,
+			"width": 3,
+			"height": 3
+		}
+	}],
+	"template_variables": [],
+	"layout_type": "ordered",
+    "is_read_only": true,                   
+	"notify_list": [],
+	"reflow_type": "fixed"
+}

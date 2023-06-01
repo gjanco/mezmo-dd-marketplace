@@ -1,0 +1,28 @@
+{
+	"name": "AtomWatch is Down",
+	"type": "service check",
+	"query": "\"kitepipe.atomwatch.completed\".over(\"*\").by(\"*\").last(2).count_by_status()",
+	"message": "{{#is_alert}} Kitepipe AtomWatch failed to run successfully.{{/is_alert}} \n\n{{#is_alert_recovery}}Kitepipe AtomWatch has run successfully after prior failure.{{/is_alert_recovery}}",
+	"tags": ["integration:kitepipe-atomwatch"],
+	"options": {
+		"thresholds": {
+			"critical": 1,
+			"warning": 1,
+			"ok": 1
+		},
+		"notify_audit": false,
+		"locked": false,
+		"notify_no_data": true,
+		"renotify_interval": 30,
+		"timeout_h": 0,
+		"include_tags": true,
+		"no_data_timeframe": 3,
+		"renotify_statuses": ["alert",
+		"no data"],
+		"escalation_message": "",
+		"new_host_delay": 300
+	},
+	"recommended_monitor_metadata": {
+		"description": "Triggers an alert when Kitepipe AtomWatch has not run or has errored."
+	}
+}

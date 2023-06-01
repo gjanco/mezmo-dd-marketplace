@@ -1,0 +1,76 @@
+id: kitepipe-boomi
+metric_id: kitepipe-atomwatch
+facets:
+  - path: shape.subtype
+    source: log
+    name: Shape Subtype
+    groups:
+      - Kitepipe
+  - path: nodeId
+    source: log
+    name: Node ID
+    groups:
+      - Kitepipe
+  - path: boomiProcessName
+    source: log
+    name: Boomi Process Name
+    groups:
+      - Kitepipe
+  - path: outboundDocumentCount
+    source: log
+    name: Outbound Document Count
+    type: integer
+    facetType: range
+    groups:
+      - Kitepipe
+  - path: shape.label
+    source: log
+    name: Shape Label
+    groups:
+      - Kitepipe
+  - path: java.method
+    source: log
+    name: Java Method
+    groups:
+      - Kitepipe
+  - path: atomName
+    source: log
+    name: Atom Name
+    groups:
+      - Kitepipe
+  - path: inboundDocumentCount
+    source: log
+    name: Inbound Document Count
+    type: integer
+    facetType: range
+    groups:
+      - Kitepipe
+  - path: shape.type
+    source: log
+    name: Shape Type
+    groups:
+      - Kitepipe
+  - path: executionStatus
+    source: log
+    name: Execution Status
+    groups:
+      - Kitepipe
+  - path: inboundErrorDocumentCount
+    source: log
+    name: Inbound Error Document Count
+    type: integer
+    facetType: range
+    groups:
+      - Kitepipe
+pipeline:
+  type: pipeline
+  name: Boomi Execution Logs
+  enabled: true
+  filter:
+    query: source:kitepipe-boomi
+  processors:
+    - type: date-remapper
+      name: Define `executionTime` as the official date of the log
+      enabled: true
+      sources:
+        - executionTime
