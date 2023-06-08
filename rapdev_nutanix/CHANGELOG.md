@@ -1,5 +1,9 @@
 # CHANGELOG - Nutanix
 
+## 1.3.6 / 2023-05-15
+* [BugFix] Fix bug with call for getting license information for cluster-wide licensing
+* [BugFix] Fix bug with clusterExpiryUsecs metric in cluster-wide licensing
+
 ## 1.3.5 / 2023-04-04
 * [BugFix] Fix bug with call for getting license information due to change in Nutanix API
 

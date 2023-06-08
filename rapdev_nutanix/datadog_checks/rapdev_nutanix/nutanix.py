@@ -1,6 +1,6 @@
 from datadog_checks.base import AgentCheck, ConfigurationError, is_affirmative
 import time
-import datetime
+from datetime import datetime
 
 REQUIRED_SETTINGS = [
     "cvm_host",
@@ -335,10 +335,26 @@ class NutanixCheck(AgentCheck):
         entity = "license"
         response = self.call_api(entity)
         metric_tags = self.tags.copy()
-        nodes = response.get("nodeLicenseList", [])
-        if not nodes:
+        if response.get("nodeLicenseList", []):
+            nodes = response.get("nodeLicenseList", [])
+            cluster_license = response.get("clusterExpiryUsecs")
+        elif response.get("licenseDTO", {}):
             nodes = response.get("licenseDTO", {}).get("nodeLicenseList", [])
-        cluster_license = response["clusterExpiryUsecs"]
+            cluster_license = response.get("licenseDTO").get("clusterExpiryUsecs")
+        elif response.get("licenseInfoDTO", {}):
+            nodes = response.get("licenseInfoDTO", {}).get("pcDetailsDTO", {}).get("clusters", [])
+            for node in nodes:
+                node_tags = metric_tags.copy()
+                node_tags.append("license_id:{}".format(node.get("uuid", "")))
+                node_tags.append("license_name:{}".format(node.get("name", "")))
+                for license in node.get("licenseDetails", []):
+                    if license.get("type") == "AOS":
+                        now = datetime.now().date()
+                        expiry_date = datetime.strptime(license.get("expiryDate"), "%Y-%m-%d").date()
+                        num_days_remaining = (expiry_date - now).days
+                        self.gauge("{}.{}.days_left".format(self.metric_prefix, entity), num_days_remaining, tags=node_tags)
+            return
+        
         self.gauge("{}.{}.clusterExpiryUsecs".format(self.metric_prefix, entity), cluster_license, tags=metric_tags)
         if nodes:
             for node in nodes:
@@ -420,6 +436,6 @@ class NutanixCheck(AgentCheck):
                 self.gauge(metric_name, value, tags=metric_tags, hostname=host)
 
     def retrieve_cluster_name(self):
-        results = self.http.get("https://" + self.cvm_host + "/PrismGateway/services/rest/v1/clusters").json()
-        cluster_name = results["entities"][0]["name"]
+        results = self.call_api("clusters")
+        cluster_name = results.get("entities")[0].get("name")
         return cluster_name
