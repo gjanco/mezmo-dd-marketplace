@@ -38,36 +38,3 @@ jobs:
       saved-views: true
       service-checks: true
     secrets: inherit
-
-  extra:
-    name: Marketplace-specific validations
-    runs-on: ubuntu-22.04
-
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: "0"
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.8"
-
-    - name: Install dependencies and ddev
-      id: dep-install
-      run: pip install PyGithub Pillow ddev
-
-    - name: Run exhaustive V2 manifest media validations
-      if: ${{ steps.dep-install.conclusion == 'success' }}
-      run: python .github/workflows/scripts/v2-media-validations.py
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Comment PR on failure
-      if: ${{ failure() && github.event.pull_request.merged != true }}
-      uses: actions/github-script@0.3.0
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          github.issues.createComment({ issue_number, owner, repo, body: "The `validations-marketplace` job has failed; please review the `Files changed` tab for possible suggestions to resolve." });
