@@ -2,7 +2,7 @@
 
 ## Overview
 
-[IsDown][1] is a status page aggregator and outage monitoring tool that helps businesses monitor their dependencies. Using IsDown, provide your team with real-time monitoring and instant notifications for outages in all your tools and cloud providers. IsDown monitors more than 2500 status pages.
+[IsDown][1] is a status page aggregator and outage monitoring tool that helps businesses monitor their dependencies. Using IsDown, provide your team with real-time monitoring and instant notifications for outages in all your tools and cloud providers. IsDown monitors more than 2600 status pages.
 
 Through the [out-of-the-box integration][3], you can receive alerts from third-party dependencies in Datadog, monitor business critical services, and understand the frequency of outages all within the out-of-the-box dashboard.
 
@@ -34,9 +34,10 @@ First, cancel your subscription in Datadog. The IsDown team then reaches out to 
 
 ## Support
 
-For support or feature requests, contact Instabug through the following channel:
+For support or feature requests, contact IsDown through any of the following channels:
 
 - Email: [support@isdown.app][2]
+- Chat Support in Web App
 
 
 [1]: https://isdown.app
