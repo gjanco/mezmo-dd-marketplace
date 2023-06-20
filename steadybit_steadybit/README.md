@@ -2,13 +2,14 @@
 
 ## Overview
 
-[Steadybit][1] is a chaos engineering platform that allows you to simulate turbulent conditions like network latency or container crashes in a controlled way to improve system reliability and guide your organization to better incident management. You benefit from an easy-to-use drag and drop user interface that allows you to rebuild past incidents. Simulate a slow network, stressed resources or an unavailable DNS into your system and check how your system reacts to it and whether your observability solution notices these faults.
+[Steadybit][1] is a chaos engineering platform that allows you to simulate turbulent conditions like network latency or container crashes in a controlled way to improve system reliability and guide your organization to better incident management.
 
-Using the [Steadybit DataDog integration][2], you benefit from additional status checks that validate your Datadog monitors while running a chaos engineering experiment. The integration also monitors your chaos engineering experiment runs by making its result, start and end time available as Datadog events.
+You benefit from an easy-to-use drag and drop user interface that allows you to rebuild past incidents. Simulate a slow network, stressed resources or an unavailable DNS into your system and check how your system reacts to it and whether your observability solution notices these faults.
 
-This Marketplace offering is for a [Professional Plan][3] license of Steadybit for 3 teams. Price is per month. 
 
-If you have different needs, please reach out to us at [office@steadybit.com][4] to discuss a private offer.
+Using the [Steadybit DataDog integration][2], you get additional status checks that validate your Datadog monitors while running a chaos engineering experiment. The integration also monitors your chaos engineering experiment runs by making its result, start and end time available as Datadog events.
+
+This Marketplace offering is for a [Professional Plan][3] license for one team. If you have different needs, please reach out to us at [office@steadybit.com][4] to discuss a private offer.
 
 
 ## Setup
