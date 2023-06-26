@@ -22,7 +22,7 @@ You must have the Datadog Agent installed and running. Additionally, you need to
 ### Installation
 
 ```
-sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_terraform==1.2.0
+sudo -u dd-agent datadog-agent integration install --third-party datadog-rapdev_terraform==1.3.0
 ``` 
 
 ### Configuration
